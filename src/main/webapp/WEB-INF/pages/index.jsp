@@ -18,6 +18,6 @@
     <%--<link href="<c:url value="/resources/css/styles.css" />" rel="stylesheet"/>--%>
 </head>
 <body>
-    <h1>Hello from Yanber Taxi :)</h1>
+    <marquee><h1>Hello from Yanber Taxi :)</h1></marquee>
 </body>
 </html>
