@@ -1,0 +1,8 @@
+h1 {
+    color: aqua;
+}
+
+h1:hover {
+    color: lawngreen;
+    text-decoration: underline;
+}

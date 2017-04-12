@@ -1,3 +1,6 @@
+<%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%--
   Created by IntelliJ IDEA.
   User: Anton Rynkovoy
@@ -8,9 +11,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <spring:url value="/resources/css/styles.css" var="indexCss" />
+    <link href="${indexCss}" rel="stylesheet">
+    <link href="/resources/css/styles.css" rel="stylesheet">
     <title>Yaber Taxi :)</title>
+    <%--<link href="<c:url value="/resources/css/styles.css" />" rel="stylesheet"/>--%>
 </head>
 <body>
-    <h1>Hello from Yanber Taxi :)<h1>
+    <h1>Hello from Yanber Taxi :)</h1>
 </body>
 </html>
