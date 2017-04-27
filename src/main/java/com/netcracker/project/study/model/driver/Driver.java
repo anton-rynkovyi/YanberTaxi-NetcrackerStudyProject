@@ -7,6 +7,8 @@ import java.util.Date;
  */
 public class Driver {
 
+    public final int OBJECT_TYPE_ID=1;
+
     private String last_name;
     private String first_name;
     private String middle_name;

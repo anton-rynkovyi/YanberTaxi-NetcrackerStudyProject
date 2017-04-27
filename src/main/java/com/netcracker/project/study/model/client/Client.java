@@ -6,6 +6,8 @@ import java.util.Date;
  * Created by Mark on 25.04.2017.
  */
 public class Client {
+    public final int OBJECT_TYPE_ID=2;
+
     private String last_name;
     private String first_name;
     private String middle_name;

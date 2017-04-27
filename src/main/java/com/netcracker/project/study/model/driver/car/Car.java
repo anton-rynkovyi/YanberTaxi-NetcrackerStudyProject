@@ -7,6 +7,8 @@ import java.util.Date;
  * Created by Mark on 25.04.2017.
  */
 public class Car {
+    public final int OBJECT_TYPE_ID=4;
+
    private String name;
    private String modelType;
    private Date releaseDate;
