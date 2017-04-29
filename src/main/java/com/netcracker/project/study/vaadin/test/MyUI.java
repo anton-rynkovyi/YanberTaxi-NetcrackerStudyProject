@@ -39,6 +39,8 @@ public class MyUI extends UI{
         button.addClickListener( e -> {
             layout.addComponent(new Label("Thanks " + name.getValue()
                     + ", it works!"));
+
+            Notification.show("Hello, " + name.getValue());
         });
 
         button2.addClickListener(new Button.ClickListener() {

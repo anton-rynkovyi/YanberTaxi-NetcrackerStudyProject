@@ -1,12 +1,10 @@
 package com.netcracker.project.study.model;
 
-public class Model {
+public abstract class Model {
 
     private String name;
     private String description;
 
-
-    public Model() {}
 
     public String getName() {
         return name;
