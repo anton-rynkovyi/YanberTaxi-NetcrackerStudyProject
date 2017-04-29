@@ -10,6 +10,8 @@ public class Car {
     public final int OBJECT_TYPE_ID=4;
 
    private String name;
+   private String description;
+
    private String modelType;
    private Date releaseDate;
    private int seatsCount;
@@ -17,13 +19,28 @@ public class Car {
    private int stateNumber;
    private boolean childSeat;
 
-   public String getName(){
-       return name;
-   }
+    public int getObjectId() {
+        return OBJECT_TYPE_ID;
+    }
 
-   public void setName(String name){
-       this.name=name;
-   }
+
+    public String getName() {
+        return name;
+    }
+
+
+    public void setName(String name) {
+        this.name=name;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description=description;
+    }
 
    public String getModelType(){
        return modelType;

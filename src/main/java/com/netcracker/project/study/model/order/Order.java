@@ -6,6 +6,9 @@ package com.netcracker.project.study.model.order;
 public class Order {
     public final int OBJECT_TYPE_ID=3;
 
+    private String name;
+    private String description;
+
     private int driverId;
     private int clientId;
     private String status;
@@ -13,6 +16,29 @@ public class Order {
     private int distance;
     private int driverRating;
     private String driverMemo;
+
+    public int getObjectId() {
+        return OBJECT_TYPE_ID;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+
+    public void setName(String name) {
+        this.name=name;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description=description;
+    }
 
     public int getDriverId(){
         return  driverId;

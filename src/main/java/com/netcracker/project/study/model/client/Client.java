@@ -1,43 +1,71 @@
 package com.netcracker.project.study.model.client;
 
-import java.util.Date;
 
 /**
  * Created by Mark on 25.04.2017.
  */
-public class Client {
-    public final int OBJECT_TYPE_ID=2;
+public class Client  {
+    private final int OBJECT_TYPE_ID=2;
 
-    private String last_name;
-    private String first_name;
-    private String middle_name;
+    private String name;
+    private String description;
+
+    private String lastName;
+    private String firstName;
+    private String middleName;
 
     private int phoneNumber;
     private int points;
 
-    public String getLast_name(){
-        return last_name;
+
+    public int getObjectId() {
+        return OBJECT_TYPE_ID;
     }
 
-    public void setLast_name(String last_name){
-        this.last_name=last_name;
+
+    public String getName() {
+        return name;
     }
 
-    public String getFirst_name(){
-        return first_name;
+
+    public void setName(String name) {
+        this.name=name;
     }
 
-    public void setFirst_name(String first_name){
-        this.first_name=first_name;
+
+    public String getDescription() {
+        return description;
     }
 
-    public String getMiddle_name(){
-        return middle_name;
+
+    public void setDescription(String description) {
+        this.description=description;
     }
 
-    public void setMiddle_name(String middle_name){
-        this.middle_name=middle_name;
+    public String getLastName(){
+        return lastName;
     }
+
+    public void setLastName(String lastName){
+        this.lastName = lastName;
+    }
+
+    public String getFirstName(){
+        return firstName;
+    }
+
+    public void setFirstName(String firstName){
+        this.firstName = firstName;
+    }
+
+    public String getMiddleName(){
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName){
+        this.middleName = middleName;
+    }
+
 
     public int getPhoneNumber(){
         return phoneNumber;
@@ -54,6 +82,7 @@ public class Client {
     public void setPoints(int points){
         this.points=points;
     }
+
 
 
 }
