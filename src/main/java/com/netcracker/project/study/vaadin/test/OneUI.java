@@ -1,4 +1,4 @@
-package com.netcracker.project.study;
+package com.netcracker.project.study.vaadin.test;
 
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;

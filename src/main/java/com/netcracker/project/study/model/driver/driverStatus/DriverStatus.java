@@ -1,17 +1,16 @@
 package com.netcracker.project.study.model.driver.driverStatus;
 
+import com.netcracker.project.study.model.Model;
+
 import java.sql.Time;
 
-public class DriverStatus {
+public class DriverStatus extends Model {
 
     public final int OBJECT_TYPE_ID = 6;
 
     private int driverId;
     private String status;
     private Time timeStamp;
-
-    private String name;
-    private String description;
 
     public DriverStatus(){}
 
@@ -39,19 +38,4 @@ public class DriverStatus {
         this.timeStamp = timeStamp;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

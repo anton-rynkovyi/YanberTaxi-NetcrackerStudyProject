@@ -1,9 +1,11 @@
 package com.netcracker.project.study.model.driver.car;
 
+import com.netcracker.project.study.model.Model;
+
 import java.util.Date;
 
 
-public class Car {
+public class Car extends Model {
 
     public final int OBJECT_TYPE_ID = 4;
 
@@ -13,9 +15,6 @@ public class Car {
     private int driverId;
     private int stateNumber;
     private boolean childSeat;
-
-    private String name;
-    private String description;
 
     public Car(){}
 
@@ -67,19 +66,4 @@ public class Car {
         this.childSeat = childSeat;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

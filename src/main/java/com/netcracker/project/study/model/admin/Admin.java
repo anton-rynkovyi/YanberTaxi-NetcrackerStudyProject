@@ -1,12 +1,11 @@
 package com.netcracker.project.study.model.admin;
 
-public class Admin {
+import com.netcracker.project.study.model.Model;
+
+public class Admin extends Model {
 
     private String phoneNumber;
     private String email;
-
-    private String name;
-    private String description;
 
     public Admin(){}
 
@@ -24,22 +23,6 @@ public class Admin {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
 }

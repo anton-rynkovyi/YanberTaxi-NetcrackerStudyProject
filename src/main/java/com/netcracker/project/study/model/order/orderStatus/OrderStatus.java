@@ -1,17 +1,15 @@
 package com.netcracker.project.study.model.order.orderStatus;
 
+import com.netcracker.project.study.model.Model;
+
 import java.sql.Time;
 
-public class OrderStatus {
-
+public class OrderStatus extends Model {
     public final int OBJECT_TYPE_ID = 5;
 
     private int orderId;
     private String status;
     private Time timeStamp;
-
-    private String name;
-    private String description;
 
     public OrderStatus(){}
 
@@ -39,19 +37,4 @@ public class OrderStatus {
         this.timeStamp = timeStamp;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

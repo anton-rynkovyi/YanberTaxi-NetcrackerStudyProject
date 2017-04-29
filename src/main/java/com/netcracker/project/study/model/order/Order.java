@@ -1,6 +1,8 @@
 package com.netcracker.project.study.model.order;
 
-public class Order {
+import com.netcracker.project.study.model.Model;
+
+public class Order extends Model {
 
     public final int OBJECT_TYPE_ID = 3;
 
@@ -11,9 +13,6 @@ public class Order {
     private int distance;
     private int driverRating;
     private String driverMemo;
-
-    private String name;
-    private String description;
 
     public Order(){}
 
@@ -73,19 +72,4 @@ public class Order {
         this.driverMemo = driverMemo;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

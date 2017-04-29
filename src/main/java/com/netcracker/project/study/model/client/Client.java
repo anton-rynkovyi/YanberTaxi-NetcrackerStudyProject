@@ -1,7 +1,9 @@
 package com.netcracker.project.study.model.client;
 
 
-public class Client  {
+import com.netcracker.project.study.model.Model;
+
+public class Client  extends Model {
 
     private final int OBJECT_TYPE_ID = 2;
 
@@ -12,26 +14,7 @@ public class Client  {
     private String phoneNumber;
     private int points;
 
-    private String name;
-    private String description;
-
     public Client(){}
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public String getLastName() {
         return lastName;

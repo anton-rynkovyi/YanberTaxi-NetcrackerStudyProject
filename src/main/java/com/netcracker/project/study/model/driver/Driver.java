@@ -1,9 +1,11 @@
 package com.netcracker.project.study.model.driver;
 
 
+import com.netcracker.project.study.model.Model;
+
 import java.util.Date;
 
-public class Driver {
+public class Driver extends Model {
 
     public final int OBJECT_TYPE_ID = 1;
 
@@ -20,9 +22,6 @@ public class Driver {
 
     private Date hireDate;
     private Date unbanDate;
-
-    private String name;
-    private String description;
 
     public Driver(){}
 
@@ -106,19 +105,4 @@ public class Driver {
         this.unbanDate = unbanDate;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }
