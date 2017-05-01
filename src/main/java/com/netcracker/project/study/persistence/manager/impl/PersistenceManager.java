@@ -1,6 +1,7 @@
-package com.netcracker.project.study.persistence.impl;
+package com.netcracker.project.study.persistence.manager.impl;
 
-import com.netcracker.project.study.persistence.Manager;
+import com.netcracker.project.study.persistence.entity.impl.PersistenceEntity;
+import com.netcracker.project.study.persistence.manager.Manager;
 
 import java.util.List;
 

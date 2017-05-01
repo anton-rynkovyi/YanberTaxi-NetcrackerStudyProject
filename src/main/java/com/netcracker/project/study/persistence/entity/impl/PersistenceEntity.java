@@ -1,4 +1,4 @@
-package com.netcracker.project.study.persistence.impl;
+package com.netcracker.project.study.persistence.entity.impl;
 
 import java.util.HashMap;
 import java.util.Map;
