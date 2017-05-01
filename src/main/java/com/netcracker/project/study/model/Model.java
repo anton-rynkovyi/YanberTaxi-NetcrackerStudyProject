@@ -4,7 +4,7 @@ public abstract class Model {
 
     private String name;
     private String description;
-
+    protected long objectId;
 
     public String getName() {
         return name;
@@ -21,4 +21,9 @@ public abstract class Model {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public long getObjectId() {
+        return objectId;
+    }
+
 }

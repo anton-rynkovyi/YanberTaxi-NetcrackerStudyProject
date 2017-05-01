@@ -5,19 +5,19 @@ import java.util.Map;
 
 public class PersistenceEntity {
 
-    private int objectId;
+    private long objectId;
     private int objectTypeId;
     private int parentId;
 
-    private Map<Integer, Object> entity;
+    private Map<Integer, Object> attributes;
 
-    public PersistenceEntity(){entity = new HashMap<>();}
+    public PersistenceEntity(){attributes = new HashMap<>();}
 
-    public int getObjectId() {
+    public long getObjectId() {
         return objectId;
     }
 
-    public void setObjectId(int objectId) {
+    public void setObjectId(long objectId) {
         this.objectId = objectId;
     }
 
@@ -37,11 +37,11 @@ public class PersistenceEntity {
         this.parentId = parentId;
     }
 
-    public Map<Integer, Object> getEntity() {
-        return entity;
+    public Map<Integer, Object> getAttributes() {
+        return attributes;
     }
 
-    public void setEntity(Map<Integer, Object> entity) {
-        this.entity = entity;
+    public void setAttributes(Map<Integer, Object> entity) {
+        this.attributes = entity;
     }
 }

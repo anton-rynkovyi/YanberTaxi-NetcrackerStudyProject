@@ -14,7 +14,9 @@ public class Order extends Model {
     private int driverRating;
     private String driverMemo;
 
-    public Order(){}
+    public Order(long objectId){
+        this.objectId = objectId;
+    }
 
     public int getDriverId() {
         return driverId;

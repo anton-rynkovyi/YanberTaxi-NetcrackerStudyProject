@@ -9,6 +9,7 @@ public class Car extends Model {
 
     public final int OBJECT_TYPE_ID = 4;
 
+    private String makeOfCar;
     private String modelType;
     private Date releaseDate;
     private int seatsCount;
@@ -16,10 +17,20 @@ public class Car extends Model {
     private int stateNumber;
     private boolean childSeat;
 
-    public Car(){}
+    public Car(long objectId){
+        this.objectId = objectId;
+    }
 
     public String getModelType() {
         return modelType;
+    }
+
+    public String getMakeOfCar() {
+        return makeOfCar;
+    }
+
+    public void setMakeOfCar(String makeOfCar) {
+        this.makeOfCar = makeOfCar;
     }
 
     public void setModelType(String modelType) {

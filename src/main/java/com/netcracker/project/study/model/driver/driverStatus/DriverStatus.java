@@ -12,7 +12,9 @@ public class DriverStatus extends Model {
     private String status;
     private Time timeStamp;
 
-    public DriverStatus(){}
+    public DriverStatus(long objectId){
+        this.objectId = objectId;
+    }
 
     public int getDriverId() {
         return driverId;

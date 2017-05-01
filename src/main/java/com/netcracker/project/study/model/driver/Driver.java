@@ -23,7 +23,9 @@ public class Driver extends Model {
     private Date hireDate;
     private Date unbanDate;
 
-    public Driver(){}
+    public Driver(long objectId){
+        this.objectId=objectId;
+    }
 
     public String getLastName() {
         return lastName;

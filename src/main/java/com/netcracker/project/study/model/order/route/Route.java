@@ -9,6 +9,10 @@ public class Route extends Model {
     private int orderId;
     private String checkPoint;
 
+    public Route(long objectId){
+        this.objectId = objectId;
+    }
+
     public int getOrderId(){
         return orderId;
     }

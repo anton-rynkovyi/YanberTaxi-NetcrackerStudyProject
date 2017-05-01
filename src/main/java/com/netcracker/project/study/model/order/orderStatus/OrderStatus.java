@@ -11,7 +11,9 @@ public class OrderStatus extends Model {
     private String status;
     private Time timeStamp;
 
-    public OrderStatus(){}
+    public OrderStatus(long objectId){
+        this.objectId = objectId;
+    }
 
     public int getOrderId() {
         return orderId;

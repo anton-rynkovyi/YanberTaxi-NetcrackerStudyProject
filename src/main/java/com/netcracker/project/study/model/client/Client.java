@@ -5,7 +5,7 @@ import com.netcracker.project.study.model.Model;
 
 public class Client  extends Model {
 
-    private final int OBJECT_TYPE_ID = 2;
+    public final int OBJECT_TYPE_ID = 2;
 
     private String lastName;
     private String firstName;
@@ -14,7 +14,9 @@ public class Client  extends Model {
     private String phoneNumber;
     private int points;
 
-    public Client(){}
+    public Client(long objectId){
+        this.objectId = objectId;
+    }
 
     public String getLastName() {
         return lastName;
