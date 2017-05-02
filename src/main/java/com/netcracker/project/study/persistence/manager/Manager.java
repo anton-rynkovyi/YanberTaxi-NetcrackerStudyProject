@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface Manager {
 
-    int create(PersistenceEntity entity);
+    PersistenceEntity create(PersistenceEntity entity);
 
     void update(PersistenceEntity entity);
 
