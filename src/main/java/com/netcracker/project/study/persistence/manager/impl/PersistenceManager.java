@@ -70,22 +70,8 @@ public class PersistenceManager implements Manager {
     public PersistenceEntity getOne(int objectId) {
         PersistenceEntity persistenceEntity;
         persistenceEntity = jdbcTemplate.queryForObject("SELECT * FROM OBJECTS WHERE object_id=? ", rowMapper, objectId);
-        Map<Integer, Object> attributes = null;
         List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM Attributes WHERE object_id=? ",objectId);
-        for (Map row : rows) {
-            int k = (Integer)row.get("attr_id");
-            Object value = null;
-            if ((k>=1 && k<=5) || (k>=7 && k<=9) || (k>=11 && k<=17) || (k>=19 && k<=24)){
-                value = (Object)row.get("value");
-            }
-            if (k== 6 || k==10 || k==25) {
-                value = (Object)row.get("date_value");
-            }
-            if (k== 18 || k==31 || k==34) {
-                value = (Object)row.get("list_value_id");
-            }
-            attributes.put(k,value) ;
-        }
+        Map<Integer, Object> attributes = getAttributes(rows);
         persistenceEntity.setAttributes(attributes);
         return persistenceEntity;
     }
@@ -107,22 +93,8 @@ public class PersistenceManager implements Manager {
             PersistenceEntity pe = null;
             pe = persistenceEntityList.get(i);
             long id = pe.getObjectId();
-            Map<Integer, Object> attributes = null;
             List<Map<String, Object>> rowss = jdbcTemplate.queryForList("SELECT * FROM Attributes WHERE object_id=? ",id);
-            for (Map r : rowss) {
-                int k = (Integer)r.get("attr_id");
-                Object value = null;
-                if ((k>=1 && k<=5) || (k>=7 && k<=9) || (k>=11 && k<=17) || (k>=19 && k<=24)){
-                    value = (Object)r.get("value");
-                }
-                if (k== 6 || k==10 || k==25) {
-                    value = (Object)r.get("date_value");
-                }
-                if (k== 18 || k==31 || k==34) {
-                    value = (Object)r.get("list_value_id");
-                }
-                attributes.put(k,value) ;
-            }
+            Map<Integer, Object> attributes = getAttributes(rowss);
             pe.setAttributes(attributes);
             persistenceEntityList.set(i,pe);
         }
@@ -130,6 +102,24 @@ public class PersistenceManager implements Manager {
         return persistenceEntityList;
     }
 
+    private Map<Integer, Object> getAttributes(List<Map<String, Object>> rowss) {
+        Map<Integer, Object> attributes = null;
+        for (Map r : rowss) {
+            int k = (Integer)r.get("attr_id");
+            Object value = null;
+            if ((k>=1 && k<=5) || (k>=7 && k<=9) || (k>=11 && k<=17) || (k>=19 && k<=24)){
+                value = (Object)r.get("value");
+            }
+            if (k== 6 || k==10 || k==25) {
+                value = (Object)r.get("date_value");
+            }
+            if (k== 18 || k==31 || k==34) {
+                value = (Object)r.get("list_value_id");
+            }
+            attributes.put(k,value) ;
+        }
+        return attributes;
+    }
     private PreparedStatementSetter getPreparedStatementSetterObjects(final PersistenceEntity persistenceEntity) {
         return new PreparedStatementSetter() {
             @Override
