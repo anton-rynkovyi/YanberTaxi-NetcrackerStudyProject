@@ -4,12 +4,12 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.car.Car;
-import com.netcracker.project.study.model.driver.driverStatus.DriverStatus;
+import com.netcracker.project.study.model.driver.status.DriverStatus;
 import com.netcracker.project.study.model.order.Order;
-import com.netcracker.project.study.model.order.orderStatus.OrderStatus;
+import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.persistence.converter.Converter;
-import com.netcracker.project.study.persistence.entity.impl.PersistenceEntity;
+import com.netcracker.project.study.persistence.entity.PersistenceEntity;
 import org.springframework.stereotype.Component;
 
 import java.sql.Time;
@@ -101,7 +101,7 @@ public class ConverterFactory implements Converter {
     /**
      * Create model from entity
      * @param entity
-     * @return Model
+     * @return
      */
     @Override
     public Model convertToModel(PersistenceEntity entity) {

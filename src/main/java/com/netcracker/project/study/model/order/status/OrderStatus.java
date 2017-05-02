@@ -1,4 +1,4 @@
-package com.netcracker.project.study.model.order.orderStatus;
+package com.netcracker.project.study.model.order.status;
 
 import com.netcracker.project.study.model.Model;
 

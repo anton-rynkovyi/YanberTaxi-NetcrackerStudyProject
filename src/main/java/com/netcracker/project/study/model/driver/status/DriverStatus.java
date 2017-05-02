@@ -1,4 +1,4 @@
-package com.netcracker.project.study.model.driver.driverStatus;
+package com.netcracker.project.study.model.driver.status;
 
 import com.netcracker.project.study.model.Model;
 
