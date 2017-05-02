@@ -11,7 +11,9 @@ public class PersistenceEntity {
 
     private Map<Integer, Object> attributes;
 
-    public PersistenceEntity(){attributes = new HashMap<>();}
+    public PersistenceEntity(){
+        attributes = new HashMap<>();
+    }
 
     public long getObjectId() {
         return objectId;
@@ -44,4 +46,5 @@ public class PersistenceEntity {
     public void setAttributes(Map<Integer, Object> entity) {
         this.attributes = entity;
     }
+
 }

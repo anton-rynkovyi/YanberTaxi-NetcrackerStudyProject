@@ -10,27 +10,30 @@ import com.netcracker.project.study.model.order.orderStatus.OrderStatus;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.persistence.converter.Converter;
 import com.netcracker.project.study.persistence.entity.impl.PersistenceEntity;
+import org.springframework.stereotype.Component;
 
 import java.sql.Time;
-import java.util.Date;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class ConverterFactory implements Converter {
 
-    private PersistenceEntity entity;
+    public ConverterFactory(){}
 
-    public ConverterFactory(){this(new PersistenceEntity());}
-
-    public ConverterFactory(PersistenceEntity entity){this.entity = entity;}
-
+    /**
+     * Convert some model to PersistenceEntity
+     * @param model
+     * @return PersistenceEntity
+     */
     @Override
     public PersistenceEntity convertToEntity(Model model) {
 
-        PersistenceEntity persistenceEntity = new PersistenceEntity();
+        PersistenceEntity entity = new PersistenceEntity();
+
         Map<Integer,Object>attributes = new HashMap<>();
         entity.setObjectId(model.getObjectId());
-
         if(model instanceof Driver){
             Driver driver = (Driver)model;
             entity.setObjectTypeId((driver.OBJECT_TYPE_ID));
@@ -42,8 +45,7 @@ public class ConverterFactory implements Converter {
             attributes.put(6,(driver.getHireDate()));
             attributes.put(7,(driver.getExperience()));
             attributes.put(8,(driver.getRating()));
-        }
-        if(model instanceof Client){
+        }else if(model instanceof Client){
             Client client = (Client)model;
             entity.setObjectTypeId(client.OBJECT_TYPE_ID);
             attributes.put(11,client.getLastName());
@@ -51,8 +53,7 @@ public class ConverterFactory implements Converter {
             attributes.put(13,client.getMiddleName());
             attributes.put(14,client.getPhoneNumber());
             attributes.put(15,client.getPoints());
-        }
-        if(model instanceof Order){
+        }else if(model instanceof Order){
             Order order = (Order)model;
             entity.setObjectTypeId(order.OBJECT_TYPE_ID);
             attributes.put(16,order.getClientId());
@@ -62,8 +63,7 @@ public class ConverterFactory implements Converter {
             attributes.put(20,order.getDistance());
             attributes.put(21,order.getDriverRating());
             attributes.put(22,order.getDriverMemo());
-        }
-        if(model instanceof Car){
+        }else if(model instanceof Car){
             Car car = (Car)model;
             entity.setObjectTypeId(car.OBJECT_TYPE_ID);
             attributes.put(23,car.getMakeOfCar());
@@ -73,35 +73,40 @@ public class ConverterFactory implements Converter {
             attributes.put(27,car.isChildSeat());
             attributes.put(28,car.getDriverId());
             attributes.put(29,car.getStateNumber());
-        }
-        if(model instanceof OrderStatus){
+        }else if(model instanceof OrderStatus){
             OrderStatus orderStatus = (OrderStatus)model;
             entity.setObjectTypeId(orderStatus.OBJECT_TYPE_ID);
             attributes.put(30,orderStatus.getOrderId());
             attributes.put(31,orderStatus.getStatus());
             attributes.put(32,orderStatus.getTimeStamp());
-        }
-        if(model instanceof DriverStatus){
+        }else if(model instanceof DriverStatus){
             DriverStatus driverStatus = (DriverStatus)model;
             entity.setObjectTypeId(driverStatus.OBJECT_TYPE_ID);
             attributes.put(33,driverStatus.getDriverId());
             attributes.put(34,driverStatus.getStatus());
             attributes.put(35,driverStatus.getTimeStamp());
-        }
-        if(model instanceof Route){
+        }else if(model instanceof Route){
             Route route = (Route)model;
             entity.setObjectTypeId(route.OBJECT_TYPE_ID);
             attributes.put(36,route.getOrderId());
             attributes.put(37,route.getCheckPoint());
+            attributes.put(38,route.getShowOrder());
         }
-        return persistenceEntity;
+        entity.setAttributes(attributes);
+
+        return entity;
     }
 
+
+    /**
+     * Create model from entity
+     * @param entity
+     * @return Model
+     */
     @Override
     public Model convertToModel(PersistenceEntity entity) {
         int objTypeId = entity.getObjectTypeId();
         Map<Integer,Object> attributes = entity.getAttributes();
-
         switch(objTypeId){
             case 1:
                 Driver driver = new Driver(entity.getObjectId());
@@ -160,6 +165,7 @@ public class ConverterFactory implements Converter {
                 Route route = new Route(entity.getObjectId());
                 route.setOrderId((int)attributes.get(36));
                 route.setCheckPoint((String)attributes.get(37));
+                route.setShowOrder((String)attributes.get(38));
                 return route;
             default:
                 return null;

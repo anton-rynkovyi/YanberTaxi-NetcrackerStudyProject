@@ -8,6 +8,7 @@ public class Route extends Model {
 
     private int orderId;
     private String checkPoint;
+    private String showOrder;
 
     public Route(long objectId){
         this.objectId = objectId;
@@ -27,5 +28,13 @@ public class Route extends Model {
 
     public void setCheckPoint(String checkPoint){
         this.checkPoint=checkPoint;
+    }
+
+    public String getShowOrder() {
+        return showOrder;
+    }
+
+    public void setShowOrder(String showOrder) {
+        this.showOrder = showOrder;
     }
 }
