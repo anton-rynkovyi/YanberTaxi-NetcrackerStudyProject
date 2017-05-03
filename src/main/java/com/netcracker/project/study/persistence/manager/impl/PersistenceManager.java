@@ -1,40 +1,49 @@
 package com.netcracker.project.study.persistence.manager.impl;
 
-import java.sql.*;
-import java.util.List;
-
-import javax.sql.DataSource;
-
-import org.springframework.http.converter.ObjectToStringHttpMessageConverter;
+import com.netcracker.project.study.persistence.entity.PersistenceEntity;
+import com.netcracker.project.study.persistence.manager.Manager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
 
-import com.netcracker.project.study.persistence.entity.impl.PersistenceEntity;
-import com.netcracker.project.study.persistence.manager.Manager;
-import java.util.HashMap;
+import javax.sql.DataSource;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
-
+@Component
 public class PersistenceManager implements Manager {
 
+    private static final String CREATE_OBJECTS = "INSERT INTO OBJECTS(parent_id, object_type_id, name, description,object_id) VALUES(?,?,?,?,?)";
+    private static final String CREATE_ATTRIBUTES = "INSERT INTO ATTRIBUTES(attr_id, value, date_value, list_value_id,object_id) VALUES(?,?,?,?,?)";
+    public static final String UPDATE_OBJECTS = "UPDATE OBJECTS SET parent_id=?, object_type_id=?, name=?, description=? WHERE object_id=?";
+    public static final String UPDATE_ATTRIBUTES = "UPDATE ATTRIBUTES SET attr_id=? value=? date_value=? list_value_id=? WHERE object_id=? ";
+    public static final String DELETE_FROM_OBJECTS = "DELETE FROM OBJECTS WHERE object_id=?";
+    public static final String SELECT_FROM_OBJECTS_BY_ID = "SELECT * FROM OBJECTS WHERE object_id=? ";
+    public static final String SELECT_FROM_ATTRIBUTES_BY_ID = "SELECT * FROM Attributes WHERE object_id=? ";
+    public static final String SELECT_FROM_OBJECTS = "SELECT * FROM Objects";
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedTemplate;
 
-    public void setDataSource(DataSource dataSource) {
+    @Autowired
+    public PersistenceManager(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.namedTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
     public PersistenceEntity create(PersistenceEntity persistenceEntity) {
-        String sql = "INSERT INTO OBJECTS(parent_id, object_type_id, name, description,object_id) VALUES(?,?,?,?,?)";
+        String sql = CREATE_OBJECTS;
         jdbcTemplate.update(sql, getPreparedStatementSetterObjects(persistenceEntity));
         for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
             String sqlAttr = "";
-            sqlAttr = "INSERT INTO ATTRIBUTES(attr_id, value, date_value, list_value_id,object_id) VALUES(?,?,?,?,?)";
+            sqlAttr = CREATE_ATTRIBUTES;
             jdbcTemplate.update(sqlAttr, getPreparedStatementSetterAttributes(entry,persistenceEntity));
         }
         return persistenceEntity;
@@ -42,18 +51,18 @@ public class PersistenceManager implements Manager {
 
     @Override
     public void update(PersistenceEntity persistenceEntity) {
-        String sql = "UPDATE OBJECTS SET parent_id=?, object_type_id=?, name=?, description=? WHERE object_id=?";
+        String sql = UPDATE_OBJECTS;
         jdbcTemplate.update(sql, getPreparedStatementSetterObjects(persistenceEntity));
         for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
             String sqlAttr = "";
-            sqlAttr = "UPDATE ATTRIBUTES SET attr_id=? value=? date_value=? list_value_id=? WHERE object_id=? ";
+            sqlAttr = UPDATE_ATTRIBUTES;
             jdbcTemplate.update(sqlAttr, getPreparedStatementSetterAttributes(entry,persistenceEntity));
         }
     }
 
     @Override
     public void delete(PersistenceEntity persistenceEntity) {
-        jdbcTemplate.update("DELETE FROM OBJECTS WHERE object_id=?", persistenceEntity.getObjectId());
+        jdbcTemplate.update(DELETE_FROM_OBJECTS, persistenceEntity.getObjectId());
     }
 
     private RowMapper<PersistenceEntity> rowMapper = new RowMapper<PersistenceEntity>() {
@@ -69,8 +78,8 @@ public class PersistenceManager implements Manager {
     @Override
     public PersistenceEntity getOne(int objectId) {
         PersistenceEntity persistenceEntity;
-        persistenceEntity = jdbcTemplate.queryForObject("SELECT * FROM OBJECTS WHERE object_id=? ", rowMapper, objectId);
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM Attributes WHERE object_id=? ",objectId);
+        persistenceEntity = jdbcTemplate.queryForObject(SELECT_FROM_OBJECTS_BY_ID, rowMapper, objectId);
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID,objectId);
         Map<Integer, Object> attributes = getAttributes(rows);
         persistenceEntity.setAttributes(attributes);
         return persistenceEntity;
@@ -80,7 +89,7 @@ public class PersistenceManager implements Manager {
     public List<PersistenceEntity> getAll(int objectTypeId) {
         List<PersistenceEntity> persistenceEntityList = null;
         PersistenceEntity persistenceEntity = null;
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM Objects");
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_OBJECTS);
         for (Map row : rows) {
             persistenceEntity = new PersistenceEntity();
             persistenceEntity.setObjectId((Long)row.get("object_id"));
@@ -93,7 +102,7 @@ public class PersistenceManager implements Manager {
             PersistenceEntity pe = null;
             pe = persistenceEntityList.get(i);
             long id = pe.getObjectId();
-            List<Map<String, Object>> rowss = jdbcTemplate.queryForList("SELECT * FROM Attributes WHERE object_id=? ",id);
+            List<Map<String, Object>> rowss = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID,id);
             Map<Integer, Object> attributes = getAttributes(rowss);
             pe.setAttributes(attributes);
             persistenceEntityList.set(i,pe);
