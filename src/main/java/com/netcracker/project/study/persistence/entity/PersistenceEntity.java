@@ -6,8 +6,8 @@ import java.util.Map;
 public class PersistenceEntity {
 
     private long objectId;
-    private int objectTypeId;
-    private int parentId;
+    private long objectTypeId;
+    private long parentId;
 
     private Map<Integer, Object> attributes;
 
@@ -23,19 +23,19 @@ public class PersistenceEntity {
         this.objectId = objectId;
     }
 
-    public int getObjectTypeId() {
+    public long getObjectTypeId() {
         return objectTypeId;
     }
 
-    public void setObjectTypeId(int objectTypeId) {
+    public void setObjectTypeId(long objectTypeId) {
         this.objectTypeId = objectTypeId;
     }
 
-    public int getParentId() {
+    public long getParentId() {
         return parentId;
     }
 
-    public void setParentId(int parentId) {
+    public void setParentId(long parentId) {
         this.parentId = parentId;
     }
 

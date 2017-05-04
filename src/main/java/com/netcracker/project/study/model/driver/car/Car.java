@@ -5,7 +5,7 @@ import com.netcracker.project.study.model.Model;
 import java.util.Date;
 
 
-public class Car extends Model {
+public class Car extends Model implements CarAttr {
 
     public final int OBJECT_TYPE_ID = 4;
 

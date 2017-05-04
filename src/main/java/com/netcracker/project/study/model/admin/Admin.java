@@ -2,7 +2,7 @@ package com.netcracker.project.study.model.admin;
 
 import com.netcracker.project.study.model.Model;
 
-public class Admin extends Model {
+public class Admin extends Model implements AdminAttr {
 
     private String phoneNumber;
     private String email;

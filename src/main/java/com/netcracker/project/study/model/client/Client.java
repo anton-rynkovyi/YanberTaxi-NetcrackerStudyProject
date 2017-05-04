@@ -3,9 +3,7 @@ package com.netcracker.project.study.model.client;
 
 import com.netcracker.project.study.model.Model;
 
-public class Client  extends Model {
-
-    public final int OBJECT_TYPE_ID = 2;
+public class Client extends Model implements ClientAttr {
 
     private String lastName;
     private String firstName;

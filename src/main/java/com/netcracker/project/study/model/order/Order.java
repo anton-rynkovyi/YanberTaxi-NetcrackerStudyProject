@@ -2,9 +2,7 @@ package com.netcracker.project.study.model.order;
 
 import com.netcracker.project.study.model.Model;
 
-public class Order extends Model {
-
-    public final int OBJECT_TYPE_ID = 3;
+public class Order extends Model implements OrderAttr {
 
     private int driverId;
     private int clientId;

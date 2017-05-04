@@ -1,13 +1,10 @@
 package com.netcracker.project.study.model.driver;
 
-
 import com.netcracker.project.study.model.Model;
 
 import java.util.Date;
 
-public class Driver extends Model {
-
-    public final int OBJECT_TYPE_ID = 1;
+public class Driver extends Model implements DriverAttr{
 
     private String lastName;
     private String firstName;

@@ -4,9 +4,7 @@ import com.netcracker.project.study.model.Model;
 
 import java.sql.Time;
 
-public class DriverStatus extends Model {
-
-    public final int OBJECT_TYPE_ID = 6;
+public class DriverStatus extends Model implements DriverStatusAttr {
 
     private int driverId;
     private String status;

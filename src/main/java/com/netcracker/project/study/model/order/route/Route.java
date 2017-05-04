@@ -2,9 +2,7 @@ package com.netcracker.project.study.model.order.route;
 
 import com.netcracker.project.study.model.Model;
 
-public class Route extends Model {
-
-    public final int OBJECT_TYPE_ID=7;
+public class Route extends Model implements RouteAttr{
 
     private int orderId;
     private String checkPoint;

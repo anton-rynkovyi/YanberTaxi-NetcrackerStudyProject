@@ -4,8 +4,7 @@ import com.netcracker.project.study.model.Model;
 
 import java.sql.Time;
 
-public class OrderStatus extends Model {
-    public final int OBJECT_TYPE_ID = 5;
+public class OrderStatus extends Model implements OrderStatusAttr {
 
     private int orderId;
     private String status;

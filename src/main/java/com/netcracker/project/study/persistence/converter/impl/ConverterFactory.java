@@ -105,9 +105,9 @@ public class ConverterFactory implements Converter {
      */
     @Override
     public Model convertToModel(PersistenceEntity entity) {
-        int objTypeId = entity.getObjectTypeId();
+        long objTypeId = entity.getObjectTypeId();
         Map<Integer,Object> attributes = entity.getAttributes();
-        switch(objTypeId){
+        switch((int)objTypeId){
             case 1:
                 Driver driver = new Driver(entity.getObjectId());
                 driver.setLastName((String)attributes.get(1));
