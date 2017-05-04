@@ -1,20 +1,35 @@
 package com.netcracker.project.study.model.driver.car;
 
 import com.netcracker.project.study.model.Model;
+import com.netcracker.project.study.model.annotations.Attribute;
+import com.netcracker.project.study.model.annotations.ObjectType;
+import com.netcracker.project.study.model.annotations.Reference;
 
 import java.util.Date;
 
-
+@ObjectType(objectTypeId = 4)
 public class Car extends Model implements CarAttr {
 
-    public final int OBJECT_TYPE_ID = 4;
-
+    @Attribute(attrId = 23)
     private String makeOfCar;
+
+    @Attribute(attrId = 24)
     private String modelType;
+
+    @Attribute(attrId = 25)
     private Date releaseDate;
+
+    @Attribute(attrId = 26)
     private int seatsCount;
+
+    @Attribute(attrId = 27)
+    @Reference(objectTypeId = 1)
     private int driverId;
+
+    @Attribute(attrId = 28)
     private int stateNumber;
+
+    @Attribute(attrId = 29)
     private boolean childSeat;
 
     public Car(long objectId){

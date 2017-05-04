@@ -1,23 +1,42 @@
 package com.netcracker.project.study.model.driver;
 
 import com.netcracker.project.study.model.Model;
+import com.netcracker.project.study.model.annotations.Attribute;
+import com.netcracker.project.study.model.annotations.ObjectType;
 
 import java.util.Date;
 
+@ObjectType(objectTypeId = 1)
 public class Driver extends Model implements DriverAttr{
 
+    @Attribute(attrId = 1)
     private String lastName;
+
+    @Attribute(attrId = 2)
     private String firstName;
+
+    @Attribute(attrId = 3)
     private String middleName;
 
+    @Attribute(attrId = 4)
     private String phoneNumber;
+
+    @Attribute(attrId = 5)
     private int rating;
+
+    @Attribute(attrId = 6)
     private int experience;
 
+    @Attribute(attrId = 7)
     private String email;
+
+    @Attribute(attrId = 8)
     private String status;
 
+    @Attribute(attrId = 9)
     private Date hireDate;
+
+    @Attribute(attrId = 10)
     private Date unbanDate;
 
     public Driver(long objectId){

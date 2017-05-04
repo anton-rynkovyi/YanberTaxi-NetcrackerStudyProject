@@ -1,9 +1,16 @@
 package com.netcracker.project.study.model;
 
+import com.netcracker.project.study.model.annotations.Attribute;
+
 public abstract class Model {
 
+    @Attribute(attrId = -1)
     private String name;
+
+    @Attribute(attrId = -2)
     private String description;
+
+    @Attribute(attrId = -3)
     protected long objectId;
 
     public String getName() {

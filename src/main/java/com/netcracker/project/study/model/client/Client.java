@@ -2,14 +2,25 @@ package com.netcracker.project.study.model.client;
 
 
 import com.netcracker.project.study.model.Model;
+import com.netcracker.project.study.model.annotations.Attribute;
+import com.netcracker.project.study.model.annotations.ObjectType;
 
+@ObjectType(objectTypeId = 2)
 public class Client extends Model implements ClientAttr {
 
+    @Attribute(attrId = 11)
     private String lastName;
+
+    @Attribute(attrId = 12)
     private String firstName;
+
+    @Attribute(attrId = 13)
     private String middleName;
 
+    @Attribute(attrId = 14)
     private String phoneNumber;
+
+    @Attribute(attrId = 15)
     private int points;
 
     public Client(long objectId){

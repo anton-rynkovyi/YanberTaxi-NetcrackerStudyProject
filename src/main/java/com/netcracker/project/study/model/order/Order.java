@@ -1,15 +1,35 @@
 package com.netcracker.project.study.model.order;
 
 import com.netcracker.project.study.model.Model;
+import com.netcracker.project.study.model.annotations.Attribute;
+import com.netcracker.project.study.model.annotations.ObjectType;
+import com.netcracker.project.study.model.annotations.Reference;
 
+@ObjectType(objectTypeId = 3)
 public class Order extends Model implements OrderAttr {
 
+    @Attribute(attrId = 16)
+    @Reference(objectTypeId = 1)
     private int driverId;
+
+    @Attribute(attrId = 17)
+    @Reference(objectTypeId = 2)
     private int clientId;
+
+    @Attribute(attrId = 18)
     private String status;
+
+    @Attribute(attrId = 19)
     private int cost;
+
+    @Attribute(attrId = 20)
     private int distance;
+
+    @Attribute(attrId = 21)
+    @Reference(objectTypeId = 2, attrId = 5)
     private int driverRating;
+
+    @Attribute(attrId = 22)
     private String driverMemo;
 
     public Order(long objectId){
