@@ -1,6 +1,6 @@
 package com.netcracker.project.study.persistence.manager;
 
-import com.netcracker.project.study.persistence.entity.PersistenceEntity;
+import com.netcracker.project.study.persistence.PersistenceEntity;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public interface Manager {
 
     void delete(PersistenceEntity entity);
 
-    PersistenceEntity getOne(int objectId);
+    PersistenceEntity getOne(long objectId);
 
     List<PersistenceEntity> getAll(int objectTypeId);
 

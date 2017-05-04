@@ -2,7 +2,7 @@ package com.netcracker.project.study.persistence.manager.impl;
 
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.persistence.converter.impl.ConverterFactory;
-import com.netcracker.project.study.persistence.entity.PersistenceEntity;
+import com.netcracker.project.study.persistence.PersistenceEntity;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

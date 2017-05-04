@@ -1,7 +1,7 @@
 package com.netcracker.project.study.persistence.converter;
 
 import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.persistence.entity.PersistenceEntity;
+import com.netcracker.project.study.persistence.PersistenceEntity;
 
 
 

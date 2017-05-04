@@ -9,7 +9,7 @@ import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.persistence.converter.Converter;
-import com.netcracker.project.study.persistence.entity.PersistenceEntity;
+import com.netcracker.project.study.persistence.PersistenceEntity;
 import org.springframework.stereotype.Component;
 
 import java.sql.Time;

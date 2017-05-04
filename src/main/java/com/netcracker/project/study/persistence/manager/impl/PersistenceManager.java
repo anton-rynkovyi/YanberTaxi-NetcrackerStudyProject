@@ -1,6 +1,6 @@
 package com.netcracker.project.study.persistence.manager.impl;
 
-import com.netcracker.project.study.persistence.entity.PersistenceEntity;
+import com.netcracker.project.study.persistence.PersistenceEntity;
 import com.netcracker.project.study.persistence.manager.Manager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,22 +14,26 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Component("persistenceManager")
 public class PersistenceManager implements Manager {
 
-    private static final String CREATE_OBJECTS = "INSERT INTO OBJECTS(parent_id, object_type_id, name, description,object_id) VALUES(?,?,?,?,?)";
-    private static final String CREATE_ATTRIBUTES = "INSERT INTO ATTRIBUTES(attr_id, value, date_value, list_value_id,object_id) VALUES(?,?,?,?,?)";
+    public static final String CREATE_OBJECTS = "INSERT INTO OBJECTS(parent_id, object_type_id, name, description,object_id) VALUES(?,?,?,?,?)";
+    public static final String CREATE_ATTRIBUTES = "INSERT INTO ATTRIBUTES(attr_id, value, date_value, list_value_id,object_id) VALUES(?,?,?,?,?)";
     public static final String UPDATE_OBJECTS = "UPDATE OBJECTS SET parent_id=?, object_type_id=?, name=?, description=? WHERE object_id=?";
     public static final String UPDATE_ATTRIBUTES = "UPDATE ATTRIBUTES SET attr_id=? value=? date_value=? list_value_id=? WHERE object_id=? ";
     public static final String DELETE_FROM_OBJECTS = "DELETE FROM OBJECTS WHERE object_id=?";
     public static final String SELECT_FROM_OBJECTS_BY_ID = "SELECT * FROM OBJECTS WHERE object_id=? ";
     public static final String SELECT_FROM_ATTRIBUTES_BY_ID = "SELECT * FROM Attributes WHERE object_id=? ";
     public static final String SELECT_FROM_OBJECTS = "SELECT * FROM Objects";
+
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedTemplate;
+
+    //private InitialContext ctx;
 
     @Autowired
     public PersistenceManager(DataSource dataSource) {
@@ -42,8 +46,7 @@ public class PersistenceManager implements Manager {
         String sql = CREATE_OBJECTS;
         jdbcTemplate.update(sql, getPreparedStatementSetterObjects(persistenceEntity));
         for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
-            String sqlAttr = "";
-            sqlAttr = CREATE_ATTRIBUTES;
+            String sqlAttr = CREATE_ATTRIBUTES;
             jdbcTemplate.update(sqlAttr, getPreparedStatementSetterAttributes(entry,persistenceEntity));
         }
         return persistenceEntity;
@@ -75,8 +78,9 @@ public class PersistenceManager implements Manager {
             return persistenceEntity;
         }
     };
+
     @Override
-    public PersistenceEntity getOne(int objectId) {
+    public PersistenceEntity getOne(long objectId) {
         PersistenceEntity persistenceEntity;
         persistenceEntity = jdbcTemplate.queryForObject(SELECT_FROM_OBJECTS_BY_ID, rowMapper, objectId);
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID,objectId);
@@ -87,9 +91,15 @@ public class PersistenceManager implements Manager {
 
     @Override
     public List<PersistenceEntity> getAll(int objectTypeId) {
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_OBJECTS);
+
+        //check empty
+        if (rows.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         List<PersistenceEntity> persistenceEntityList = null;
         PersistenceEntity persistenceEntity = null;
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_OBJECTS);
         for (Map row : rows) {
             persistenceEntity = new PersistenceEntity();
             persistenceEntity.setObjectId((Long)row.get("object_id"));
@@ -116,14 +126,14 @@ public class PersistenceManager implements Manager {
         for (Map r : rowss) {
             int k = (Integer)r.get("attr_id");
             Object value = null;
-            if ((k>=1 && k<=5) || (k>=7 && k<=9) || (k>=11 && k<=17) || (k>=19 && k<=24)){
-                value = (Object)r.get("value");
+            if ((k >= 1 && k<=5) || (k>=7 && k<=9) || (k>=11 && k<=17) || (k>=19 && k<=24)){
+                value = r.get("value");
             }
             if (k== 6 || k==10 || k==25) {
-                value = (Object)r.get("date_value");
+                value = r.get("date_value");
             }
             if (k== 18 || k==31 || k==34) {
-                value = (Object)r.get("list_value_id");
+                value = r.get("list_value_id");
             }
             attributes.put(k,value) ;
         }
@@ -134,8 +144,8 @@ public class PersistenceManager implements Manager {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
-                ps.setInt(++i, persistenceEntity.getParentId());
-                ps.setInt(++i, persistenceEntity.getObjectTypeId());
+                ps.setLong(++i, persistenceEntity.getParentId());
+                ps.setLong(++i, persistenceEntity.getObjectTypeId());
                 ps.setString(++i,  "Name ".concat(Integer.toString(i)));
                 ps.setString(++i, null);
                 ps.setLong(++i, persistenceEntity.getObjectId());
