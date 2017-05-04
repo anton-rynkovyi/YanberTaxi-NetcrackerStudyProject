@@ -102,6 +102,11 @@
 			<artifactId>spring-test</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>12.1.0.1-atlassian-hosted</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -172,6 +177,19 @@
 			</activation>
 
 			<repositories>
+				<repository>
+					<id>atlassian-public</id>
+					<url>https://maven.atlassian.com/repository/public</url>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+						<checksumPolicy>warn</checksumPolicy>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+						<checksumPolicy>warn</checksumPolicy>
+					</releases>
+				</repository>
 				<repository>
 					<id>vaadin-prereleases</id>
 					<url>http://maven.vaadin.com/vaadin-prereleases</url>
