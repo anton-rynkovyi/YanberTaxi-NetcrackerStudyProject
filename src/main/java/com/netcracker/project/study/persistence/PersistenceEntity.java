@@ -11,6 +11,8 @@ public class PersistenceEntity {
 
     private Map<Integer, Object> attributes;
 
+    private Map<Long, Long> references;
+
     public PersistenceEntity(){
         attributes = new HashMap<>();
     }
@@ -47,4 +49,11 @@ public class PersistenceEntity {
         this.attributes = entity;
     }
 
+    public Map<Long, Long> getReferences() {
+        return references;
+    }
+
+    public void setReferences(Map<Long, Long> references) {
+        this.references = references;
+    }
 }
