@@ -1,5 +1,6 @@
 package com.netcracker.project.study.persistence;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +9,9 @@ public class PersistenceEntity {
     private long objectId;
     private long objectTypeId;
     private long parentId;
+
+    private String name;
+    private String description;
 
     private Map<Integer, Object> attributes;
 
@@ -39,6 +43,22 @@ public class PersistenceEntity {
 
     public void setParentId(long parentId) {
         this.parentId = parentId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Map<Integer, Object> getAttributes() {
