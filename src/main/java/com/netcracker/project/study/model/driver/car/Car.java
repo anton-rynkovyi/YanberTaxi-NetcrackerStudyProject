@@ -4,10 +4,11 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 import com.netcracker.project.study.model.annotations.Reference;
+import com.netcracker.project.study.model.driver.DriverAttr;
 
 import java.util.Date;
 
-@ObjectType(objectTypeId = 4)
+@ObjectType(objectTypeId = CarAttr.OBJECT_TYPE_ID)
 public class Car extends Model {
 
     @Attribute(attrId = CarAttr.MAKE_OF_CAR_ATTR)
@@ -22,8 +23,7 @@ public class Car extends Model {
     @Attribute(attrId = CarAttr.SEATS_COUNT_ATTR)
     private int seatsCount;
 
-    @Attribute(attrId = CarAttr.DRIVER_ID_ATTR)
-    @Reference(objectTypeId = 1)
+    @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
     private int driverId;
 
     @Attribute(attrId = CarAttr.STATE_NUMBER_ATTR)

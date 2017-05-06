@@ -4,16 +4,16 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 import com.netcracker.project.study.model.annotations.Reference;
+import com.netcracker.project.study.model.client.ClientAttr;
+import com.netcracker.project.study.model.driver.DriverAttr;
 
-@ObjectType(objectTypeId = 3)
+@ObjectType(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
 public class Order extends Model{
 
-    @Attribute(attrId = OrderAttr.DRIVER_ID_ATTR)
-    @Reference(objectTypeId = 1)
+    @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
     private int driverId;
 
-    @Attribute(attrId = OrderAttr.CLIENT_ID_ATTR)
-    @Reference(objectTypeId = 2)
+    @Reference(objectTypeId = ClientAttr.OBJECT_TYPE_ID)
     private int clientId;
 
     @Attribute(attrId = OrderAttr.STATUS_ATTR)
@@ -25,8 +25,7 @@ public class Order extends Model{
     @Attribute(attrId = OrderAttr.DISTANCE_ATTR)
     private int distance;
 
-    @Attribute(attrId = OrderAttr.DRIVER_RATING_ATTR)
-    @Reference(objectTypeId = 2, attrId = 5)
+    @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID, attrId = DriverAttr.RATING_ATTR)
     private int driverRating;
 
     @Attribute(attrId = OrderAttr.DRIVER_MEMO_ATTR)

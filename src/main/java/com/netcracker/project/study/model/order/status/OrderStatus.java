@@ -4,14 +4,14 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 import com.netcracker.project.study.model.annotations.Reference;
+import com.netcracker.project.study.model.order.OrderAttr;
 
 import java.sql.Time;
 
-@ObjectType(objectTypeId = 5)
+@ObjectType(objectTypeId = OrderStatusAttr.OBJECT_TYPE_ID)
 public class OrderStatus extends Model{
 
-    @Attribute(attrId = OrderStatusAttr.ORDER_ID_ATTR)
-    @Reference(objectTypeId = 3)
+    @Reference(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
     private int orderId;
 
     @Attribute(attrId = OrderStatusAttr.STATUS_ATTR)

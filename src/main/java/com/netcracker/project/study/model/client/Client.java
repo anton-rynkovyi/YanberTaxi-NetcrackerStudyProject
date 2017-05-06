@@ -5,7 +5,7 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 
-@ObjectType(objectTypeId = 2)
+@ObjectType(objectTypeId = ClientAttr.OBJECT_TYPE_ID)
 public class Client extends Model {
 
     @Attribute(attrId = ClientAttr.LAST_NAME_ATTR)

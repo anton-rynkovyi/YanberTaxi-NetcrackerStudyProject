@@ -4,14 +4,14 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 import com.netcracker.project.study.model.annotations.Reference;
+import com.netcracker.project.study.model.driver.DriverAttr;
 
 import java.sql.Time;
 
-@ObjectType(objectTypeId = 6)
+@ObjectType(objectTypeId = DriverStatusAttr.OBJECT_TYPE_ID)
 public class DriverStatus extends Model{
 
-    @Attribute(attrId = DriverStatusAttr.DRIVER_ID_ATTR)
-    @Reference(objectTypeId = 1)
+    @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
     private int driverId;
 
     @Attribute(attrId = DriverStatusAttr.STATUS_ATTR)
