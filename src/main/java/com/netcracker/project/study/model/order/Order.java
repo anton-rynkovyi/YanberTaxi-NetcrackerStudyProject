@@ -10,11 +10,13 @@ import com.netcracker.project.study.model.driver.DriverAttr;
 @ObjectType(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
 public class Order extends Model{
 
+    @Attribute(attrId = OrderAttr.DRIVER_ID_ATTR)
     @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
-    private int driverId;
+    private long driverId;
 
+    @Attribute(attrId = OrderAttr.CLIENT_ID_ATTR)
     @Reference(objectTypeId = ClientAttr.OBJECT_TYPE_ID)
-    private int clientId;
+    private long clientId;
 
     @Attribute(attrId = OrderAttr.STATUS_ATTR)
     private String status;
@@ -25,17 +27,18 @@ public class Order extends Model{
     @Attribute(attrId = OrderAttr.DISTANCE_ATTR)
     private int distance;
 
-    @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID, attrId = DriverAttr.RATING_ATTR)
+    @Attribute(attrId = OrderAttr.DRIVER_RATING_ATTR)
+    @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
     private int driverRating;
 
     @Attribute(attrId = OrderAttr.DRIVER_MEMO_ATTR)
     private String driverMemo;
 
-    public Order(long objectId){
-        this.objectId = objectId;
+    public Order(){
+
     }
 
-    public int getDriverId() {
+    public long getDriverId() {
         return driverId;
     }
 
@@ -43,7 +46,7 @@ public class Order extends Model{
         this.driverId = driverId;
     }
 
-    public int getClientId() {
+    public long getClientId() {
         return clientId;
     }
 

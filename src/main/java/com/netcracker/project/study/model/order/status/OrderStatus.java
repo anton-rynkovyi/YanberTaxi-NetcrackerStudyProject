@@ -11,6 +11,7 @@ import java.sql.Time;
 @ObjectType(objectTypeId = OrderStatusAttr.OBJECT_TYPE_ID)
 public class OrderStatus extends Model{
 
+    @Attribute(attrId = OrderStatusAttr.ORDER_ID_ATTR)
     @Reference(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
     private int orderId;
 
@@ -20,8 +21,8 @@ public class OrderStatus extends Model{
     @Attribute(attrId = OrderStatusAttr.TIME_STAMP_ATTR)
     private Time timeStamp;
 
-    public OrderStatus(long objectId){
-        this.objectId = objectId;
+    public OrderStatus(){
+
     }
 
     public int getOrderId() {

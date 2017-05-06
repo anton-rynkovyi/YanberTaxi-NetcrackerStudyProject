@@ -22,16 +22,16 @@ public class PersistenceFacade implements Facade {
 
     // ?
     public void create(Model model){
-        PersistenceEntity entity = converter.convertToEntity(model);
-        manager.create(entity);
+        //PersistenceEntity entity = converter.convertToEntity(model);
+       // manager.create(entity);
     }
 
     public void update(Model model) {
-        manager.update(converter.convertToEntity(model));
+       //manager.update(converter.convertToEntity(model));
     }
 
     public void delete(Model model) {
-        manager.delete(converter.convertToEntity(model));
+       // manager.delete(converter.convertToEntity(model));
     }
 }
 

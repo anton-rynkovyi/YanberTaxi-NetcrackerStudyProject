@@ -84,7 +84,7 @@ public class PersistenceManager implements Manager {
         PersistenceEntity persistenceEntity;
         persistenceEntity = jdbcTemplate.queryForObject(SELECT_FROM_OBJECTS_BY_ID, rowMapper, objectId);
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID,objectId);
-        Map<Integer, Object> attributes = getAttributes(rows);
+        Map<Long, Object> attributes = getAttributes(rows);
         persistenceEntity.setAttributes(attributes);
         return persistenceEntity;
     }
@@ -113,7 +113,7 @@ public class PersistenceManager implements Manager {
             pe = persistenceEntityList.get(i);
             long id = pe.getObjectId();
             List<Map<String, Object>> rowss = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID,id);
-            Map<Integer, Object> attributes = getAttributes(rowss);
+            Map<Long, Object> attributes = getAttributes(rowss);
             pe.setAttributes(attributes);
             persistenceEntityList.set(i,pe);
         }
@@ -121,10 +121,10 @@ public class PersistenceManager implements Manager {
         return persistenceEntityList;
     }
 
-    private Map<Integer, Object> getAttributes(List<Map<String, Object>> rowss) {
-        Map<Integer, Object> attributes = null;
+    private Map<Long, Object> getAttributes(List<Map<String, Object>> rowss) {
+        Map<Long, Object> attributes = null;
         for (Map r : rowss) {
-            int k = (Integer)r.get("attr_id");
+            long k = (Long)r.get("attr_id");
             Object value = null;
             if ((k >= 1 && k<=5) || (k>=7 && k<=9) || (k>=11 && k<=17) || (k>=19 && k<=24)){
                 value = r.get("value");

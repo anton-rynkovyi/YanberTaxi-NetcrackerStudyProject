@@ -13,6 +13,9 @@ public abstract class Model {
     @Attribute(attrId = -3)
     protected long objectId;
 
+    @Attribute(attrId = -4)
+    private long parentId;
+
     public String getName() {
         return name;
     }
@@ -33,4 +36,15 @@ public abstract class Model {
         return objectId;
     }
 
+    public void setObjectId(long objectId) {
+        this.objectId = objectId;
+    }
+
+    public long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(long parentId) {
+        this.parentId = parentId;
+    }
 }

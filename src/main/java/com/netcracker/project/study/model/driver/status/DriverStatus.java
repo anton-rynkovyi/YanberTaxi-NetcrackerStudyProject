@@ -11,6 +11,7 @@ import java.sql.Time;
 @ObjectType(objectTypeId = DriverStatusAttr.OBJECT_TYPE_ID)
 public class DriverStatus extends Model{
 
+    @Attribute(attrId = DriverStatusAttr.DRIVER_ID_ATTR)
     @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
     private int driverId;
 
@@ -20,8 +21,8 @@ public class DriverStatus extends Model{
     @Attribute(attrId = DriverStatusAttr.TIME_STAMP_ATTR)
     private Time timeStamp;
 
-    public DriverStatus(long objectId){
-        this.objectId = objectId;
+    public DriverStatus(){
+
     }
 
     public int getDriverId() {

@@ -23,6 +23,7 @@ public class Car extends Model {
     @Attribute(attrId = CarAttr.SEATS_COUNT_ATTR)
     private int seatsCount;
 
+    @Attribute(attrId = CarAttr.DRIVER_ID_ATTR)
     @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
     private int driverId;
 
@@ -32,8 +33,8 @@ public class Car extends Model {
     @Attribute(attrId = CarAttr.CHILD_SEAT)
     private boolean childSeat;
 
-    public Car(long objectId){
-        this.objectId = objectId;
+    public Car(){
+
     }
 
     public String getModelType() {

@@ -9,6 +9,7 @@ import com.netcracker.project.study.model.order.OrderAttr;
 @ObjectType(objectTypeId = RouteAttr.OBJECT_TYPE_ID)
 public class Route extends Model{
 
+    @Attribute(attrId = RouteAttr.ORDER_ID_ATTR)
     @Reference(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
     private int orderId;
 
@@ -19,7 +20,7 @@ public class Route extends Model{
     private String showOrder;
 
     public Route(long objectId){
-        this.objectId = objectId;
+
     }
 
     public int getOrderId(){

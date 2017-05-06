@@ -12,7 +12,7 @@ public class PersistenceEntity {
     private String name;
     private String description;
 
-    private Map<Integer, Object> attributes;
+    private Map<Long, Object> attributes;
 
     private Map<Long, Long> references;
 
@@ -60,11 +60,11 @@ public class PersistenceEntity {
         this.description = description;
     }
 
-    public Map<Integer, Object> getAttributes() {
+    public Map<Long, Object> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Map<Integer, Object> entity) {
+    public void setAttributes(Map<Long, Object> entity) {
         this.attributes = entity;
     }
 
