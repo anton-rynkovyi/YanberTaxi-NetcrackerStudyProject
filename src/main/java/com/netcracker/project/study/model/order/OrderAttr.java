@@ -12,10 +12,10 @@ public interface OrderAttr {
 
     long COST_ATTR = 19;
 
-    long DISTANCE = 20;
+    long DISTANCE_ATTR = 20;
 
     long DRIVER_RATING_ATTR = 21;
 
-    long DRIVER_MEMO = 22;
+    long DRIVER_MEMO_ATTR = 22;
 
 }

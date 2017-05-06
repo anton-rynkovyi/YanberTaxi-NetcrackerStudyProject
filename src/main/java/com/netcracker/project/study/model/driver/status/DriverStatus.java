@@ -8,16 +8,16 @@ import com.netcracker.project.study.model.annotations.Reference;
 import java.sql.Time;
 
 @ObjectType(objectTypeId = 6)
-public class DriverStatus extends Model implements DriverStatusAttr {
+public class DriverStatus extends Model{
 
-    @Attribute(attrId = 33)
+    @Attribute(attrId = DriverStatusAttr.DRIVER_ID_ATTR)
     @Reference(objectTypeId = 1)
     private int driverId;
 
-    @Attribute(attrId = 34)
+    @Attribute(attrId = DriverStatusAttr.STATUS_ATTR)
     private String status;
 
-    @Attribute(attrId = 35)
+    @Attribute(attrId = DriverStatusAttr.TIME_STAMP_ATTR)
     private Time timeStamp;
 
     public DriverStatus(long objectId){

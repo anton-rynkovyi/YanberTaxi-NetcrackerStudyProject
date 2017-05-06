@@ -7,36 +7,36 @@ import com.netcracker.project.study.model.annotations.ObjectType;
 import java.util.Date;
 
 @ObjectType(objectTypeId = 1)
-public class Driver extends Model implements DriverAttr{
+public class Driver extends Model{
 
-    @Attribute(attrId = 1)
+    @Attribute(attrId = DriverAttr.LAST_NAME_ATTR)
     private String lastName;
 
-    @Attribute(attrId = 2)
+    @Attribute(attrId = DriverAttr.FIRST_NAME_ATTR)
     private String firstName;
 
-    @Attribute(attrId = 3)
+    @Attribute(attrId = DriverAttr.MIDDLE_NAME_ATTR)
     private String middleName;
 
-    @Attribute(attrId = 4)
+    @Attribute(attrId = DriverAttr.PHONE_NUMBER_ATTR)
     private String phoneNumber;
 
-    @Attribute(attrId = 5)
+    @Attribute(attrId = DriverAttr.RATING_ATTR)
     private int rating;
 
-    @Attribute(attrId = 6)
+    @Attribute(attrId = DriverAttr.EXPERIENCE_ATTR)
     private int experience;
 
-    @Attribute(attrId = 7)
+    @Attribute(attrId = DriverAttr.EMAIL_ATTR)
     private String email;
 
-    @Attribute(attrId = 8)
+    @Attribute(attrId = DriverAttr.STATUS_ATTR)
     private String status;
 
-    @Attribute(attrId = 9)
+    @Attribute(attrId = DriverAttr.HIRE_DATE_ATTR)
     private Date hireDate;
 
-    @Attribute(attrId = 10)
+    @Attribute(attrId = DriverAttr.UNBAN_DATE_ATTR)
     private Date unbanDate;
 
     public Driver(long objectId){

@@ -8,6 +8,6 @@ public interface DriverStatusAttr {
 
    long STATUS_ATTR = 34;
 
-   long TIME_STAMP = 35;
+   long TIME_STAMP_ATTR = 35;
 
 }

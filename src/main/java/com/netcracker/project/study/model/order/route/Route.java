@@ -6,16 +6,16 @@ import com.netcracker.project.study.model.annotations.ObjectType;
 import com.netcracker.project.study.model.annotations.Reference;
 
 @ObjectType(objectTypeId = 7)
-public class Route extends Model implements RouteAttr{
+public class Route extends Model{
 
-    @Attribute(attrId = 36)
+    @Attribute(attrId = RouteAttr.ORDER_ID_ATTR)
     @Reference(objectTypeId = 3)
     private int orderId;
 
-    @Attribute(attrId = 37)
+    @Attribute(attrId = RouteAttr.CHECK_POINT_ATTR)
     private String checkPoint;
 
-    @Attribute(attrId = 38)
+    @Attribute(attrId = RouteAttr.SHOW_ORDER_ATTR)
     private String showOrder;
 
     public Route(long objectId){

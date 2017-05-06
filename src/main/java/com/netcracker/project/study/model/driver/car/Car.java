@@ -8,28 +8,28 @@ import com.netcracker.project.study.model.annotations.Reference;
 import java.util.Date;
 
 @ObjectType(objectTypeId = 4)
-public class Car extends Model implements CarAttr {
+public class Car extends Model {
 
-    @Attribute(attrId = 23)
+    @Attribute(attrId = CarAttr.MAKE_OF_CAR_ATTR)
     private String makeOfCar;
 
-    @Attribute(attrId = 24)
+    @Attribute(attrId = CarAttr.MODEL_TYPE_ATTR)
     private String modelType;
 
-    @Attribute(attrId = 25)
+    @Attribute(attrId = CarAttr.RELEASE_DATE_ATTR)
     private Date releaseDate;
 
-    @Attribute(attrId = 26)
+    @Attribute(attrId = CarAttr.SEATS_COUNT_ATTR)
     private int seatsCount;
 
-    @Attribute(attrId = 27)
+    @Attribute(attrId = CarAttr.DRIVER_ID_ATTR)
     @Reference(objectTypeId = 1)
     private int driverId;
 
-    @Attribute(attrId = 28)
+    @Attribute(attrId = CarAttr.STATE_NUMBER_ATTR)
     private int stateNumber;
 
-    @Attribute(attrId = 29)
+    @Attribute(attrId = CarAttr.CHILD_SEAT)
     private boolean childSeat;
 
     public Car(long objectId){

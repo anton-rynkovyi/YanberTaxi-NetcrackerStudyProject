@@ -8,16 +8,16 @@ import com.netcracker.project.study.model.annotations.Reference;
 import java.sql.Time;
 
 @ObjectType(objectTypeId = 5)
-public class OrderStatus extends Model implements OrderStatusAttr {
+public class OrderStatus extends Model{
 
-    @Attribute(attrId = 30)
+    @Attribute(attrId = OrderStatusAttr.ORDER_ID_ATTR)
     @Reference(objectTypeId = 3)
     private int orderId;
 
-    @Attribute(attrId = 31)
+    @Attribute(attrId = OrderStatusAttr.STATUS_ATTR)
     private String status;
 
-    @Attribute(attrId = 32)
+    @Attribute(attrId = OrderStatusAttr.TIME_STAMP_ATTR)
     private Time timeStamp;
 
     public OrderStatus(long objectId){

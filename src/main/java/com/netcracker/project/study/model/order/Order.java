@@ -6,30 +6,30 @@ import com.netcracker.project.study.model.annotations.ObjectType;
 import com.netcracker.project.study.model.annotations.Reference;
 
 @ObjectType(objectTypeId = 3)
-public class Order extends Model implements OrderAttr {
+public class Order extends Model{
 
-    @Attribute(attrId = 16)
+    @Attribute(attrId = OrderAttr.DRIVER_ID_ATTR)
     @Reference(objectTypeId = 1)
     private int driverId;
 
-    @Attribute(attrId = 17)
+    @Attribute(attrId = OrderAttr.CLIENT_ID_ATTR)
     @Reference(objectTypeId = 2)
     private int clientId;
 
-    @Attribute(attrId = 18)
+    @Attribute(attrId = OrderAttr.STATUS_ATTR)
     private String status;
 
-    @Attribute(attrId = 19)
+    @Attribute(attrId = OrderAttr.COST_ATTR)
     private int cost;
 
-    @Attribute(attrId = 20)
+    @Attribute(attrId = OrderAttr.DISTANCE_ATTR)
     private int distance;
 
-    @Attribute(attrId = 21)
+    @Attribute(attrId = OrderAttr.DRIVER_RATING_ATTR)
     @Reference(objectTypeId = 2, attrId = 5)
     private int driverRating;
 
-    @Attribute(attrId = 22)
+    @Attribute(attrId = OrderAttr.DRIVER_MEMO_ATTR)
     private String driverMemo;
 
     public Order(long objectId){
