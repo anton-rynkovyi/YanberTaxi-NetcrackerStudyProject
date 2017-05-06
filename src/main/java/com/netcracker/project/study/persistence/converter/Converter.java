@@ -9,5 +9,5 @@ public interface Converter {
 
     PersistenceEntity convertToEntity(Model model);
 
-    Object convertToModel(PersistenceEntity entity);
+    Model convertToModel(PersistenceEntity entity);
 }

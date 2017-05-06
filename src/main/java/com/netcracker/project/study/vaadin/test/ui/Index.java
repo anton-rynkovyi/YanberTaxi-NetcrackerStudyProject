@@ -1,31 +1,15 @@
-package com.netcracker.project.study.vaadin.test;
-
-import javax.servlet.annotation.WebListener;
-import javax.servlet.annotation.WebServlet;
+package com.netcracker.project.study.vaadin.test.ui;
 
 import com.vaadin.ui.*;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.context.ContextLoaderListener;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.spring.annotation.EnableVaadin;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.spring.server.SpringVaadinServlet;
 import com.vaadin.ui.Button.ClickEvent;
 
 @Theme("mytheme")
 @SpringUI//(path = "/main")
-public class MyUI extends UI{
-
-    @WebListener
-    public static class MyContextLoaderListener extends ContextLoaderListener {
-    }
-
-    @Configuration
-    @EnableVaadin
-    public static class MyConfiguration {
-    }
+public class Index extends UI{
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -46,8 +30,7 @@ public class MyUI extends UI{
         button2.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent clickEvent) {
-                NavigatorUI navigatorUI = new NavigatorUI();
-                navigatorUI.navigator.navigateTo("one");
+                Notification.show("Button 2");
             }
         });
 
@@ -56,8 +39,4 @@ public class MyUI extends UI{
         setContent(layout);
     }
 
-
-    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    public static class MyUIServlet extends SpringVaadinServlet {
-    }
 }

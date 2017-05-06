@@ -1,16 +1,13 @@
-package com.netcracker.project.study.vaadin.test;
+package com.netcracker.project.study.vaadin.test.ui;
 
-import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.ExternalResource;
+import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 
+@Theme("mytheme")
 @SpringUI(path = "/one")
-public class OneUI extends UI implements View{
-
+public class OneUI extends UI{
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -29,8 +26,4 @@ public class OneUI extends UI implements View{
         layout.addComponent(button);
     }
 
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-        Notification.show("Welcome to the OneUI");
-    }
 }

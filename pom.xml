@@ -25,13 +25,6 @@
 		<spring.version>4.0.0.RELEASE</spring.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>vaadin-addons</id>
-			<url>http://maven.vaadin.com/vaadin-addons</url>
-		</repository>
-	</repositories>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -177,6 +170,10 @@
 			</activation>
 
 			<repositories>
+				<repository>
+					<id>vaadin-addons</id>
+					<url>https://maven.vaadin.com/vaadin-addons</url>
+				</repository>
 				<repository>
 					<id>atlassian-public</id>
 					<url>https://maven.atlassian.com/repository/public</url>

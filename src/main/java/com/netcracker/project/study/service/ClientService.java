@@ -2,7 +2,7 @@ package com.netcracker.project.study.service;
 
 public interface ClientService {
 
-    void registration();
+    void registrate();
 
     void makeOrder();
 
