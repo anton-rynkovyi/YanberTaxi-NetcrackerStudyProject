@@ -1,4 +1,4 @@
-/*
+
 package com.netcracker.project.study.persistence.manager.impl;
 
 import com.netcracker.project.study.model.driver.Driver;
@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "file:src/main/webapp/WEB-INF/applicationContext.xml"})
+        "classpath:applicationContext.xml"})
 public class PersistenceManagerTest {
     @Autowired
     private PersistenceManager persistenceManager;
@@ -35,9 +35,10 @@ public class PersistenceManagerTest {
 
     @Test
     public void create() throws Exception {
-        Driver driver = new Driver(20);
+        Driver driver = new Driver();
         driver.setEmail("abc.com");
         driver.setFirstName("Misha");
+        driver.setName("Driver Miha");
         PersistenceEntity persistenceEntity = converterFactory.convertToEntity(driver);
         persistenceManager.create(persistenceEntity);
         // todo проверить айди не 0
@@ -64,4 +65,3 @@ public class PersistenceManagerTest {
     }
 
 }
-*/

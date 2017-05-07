@@ -10,10 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -45,10 +42,10 @@ public class PersistenceManager implements Manager {
     public PersistenceEntity create(PersistenceEntity persistenceEntity) {
         String sql = CREATE_OBJECTS;
         jdbcTemplate.update(sql, getPreparedStatementSetterObjects(persistenceEntity));
-        for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
+       /*for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
             String sqlAttr = CREATE_ATTRIBUTES;
             jdbcTemplate.update(sqlAttr, getPreparedStatementSetterAttributes(entry,persistenceEntity));
-        }
+        }*/
         return persistenceEntity;
     }
 
@@ -144,11 +141,23 @@ public class PersistenceManager implements Manager {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
-                ps.setLong(++i, persistenceEntity.getParentId());
+                if (persistenceEntity.getParentId() ==0) {
+                    ps.setNull(++i, Types.NUMERIC);
+                } else {
+                    ps.setLong(++i, persistenceEntity.getParentId());
+                }
                 ps.setLong(++i, persistenceEntity.getObjectTypeId());
-                ps.setString(++i,  "Name ".concat(Integer.toString(i)));
-                ps.setString(++i, null);
-                ps.setLong(++i, persistenceEntity.getObjectId());
+                ps.setString(++i, persistenceEntity.getName());
+                ps.setString(++i, persistenceEntity.getDescription());
+                if (persistenceEntity.getObjectId() ==0) {
+                    ps.setNull(++i, Types.NUMERIC);
+                } else {
+                    ps.setLong(++i, persistenceEntity.getObjectId());
+                }
+
+
+
+
             }
         };
     }
@@ -158,19 +167,19 @@ public class PersistenceManager implements Manager {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
-                int k = (Integer)entry.getKey();
-                ps.setInt(++i,k);
-                if ((k>=1 && k<=5) || (k>=7 && k<=9) || (k>=11 && k<=17) || (k>=19 && k<=24)){
+                int attrId = (Integer)entry.getKey();
+                ps.setInt(++i,attrId);
+                if ((attrId>=1 && attrId<=5) || (attrId>=7 && attrId<=9) || (attrId>=11 && attrId<=17) || (attrId>=19 && attrId<=24)){
                     ps.setString(++i, String.valueOf(entry.getValue()));
                     ps.setDate(++i, null);
-                    ps.setInt(++i, 0);
+                    ps.setNull(++i, Types.NUMERIC);
                 }
-                if (k== 6 || k==10 || k==25) {
+                if (attrId== 6 || attrId==10 || attrId==25) {
                     ps.setString(++i, null);
                     ps.setDate(++i, Date.valueOf(String.valueOf(entry.getValue())));
-                    ps.setInt(++i, 0);
+                    ps.setNull(++i, Types.NUMERIC);
                 }
-                if (k== 18 || k==31 || k==34) {
+                if (attrId== 18 || attrId==31 || attrId==34) {
                     ps.setString(++i, null);
                     ps.setDate(++i, null);
                     ps.setInt(++i, Integer.getInteger(String.valueOf(entry.getValue())));
@@ -180,4 +189,5 @@ public class PersistenceManager implements Manager {
             }
         };
     }
+
 }
