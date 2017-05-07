@@ -18,6 +18,7 @@ public class PersistenceEntity {
 
     public PersistenceEntity(){
         attributes = new HashMap<>();
+        references = new HashMap<>();
     }
 
     public long getObjectId() {

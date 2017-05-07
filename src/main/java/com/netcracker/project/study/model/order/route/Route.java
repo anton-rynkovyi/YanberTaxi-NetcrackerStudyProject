@@ -18,8 +18,10 @@ public class Route extends Model implements RouteAttr{
     @Attribute(attrId = 38)
     private String showOrder;
 
-    public Route(long objectId){
-        this.objectId = objectId;
+    public Route() {}
+
+    public Route(long objectId) {
+        super(objectId);
     }
 
     public int getOrderId(){

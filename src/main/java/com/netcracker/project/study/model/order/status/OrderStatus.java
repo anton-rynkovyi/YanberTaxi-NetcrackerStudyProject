@@ -20,8 +20,10 @@ public class OrderStatus extends Model implements OrderStatusAttr {
     @Attribute(attrId = 32)
     private Time timeStamp;
 
-    public OrderStatus(long objectId){
-        this.objectId = objectId;
+    public OrderStatus() {}
+
+    public OrderStatus(long objectId) {
+        super(objectId);
     }
 
     public int getOrderId() {

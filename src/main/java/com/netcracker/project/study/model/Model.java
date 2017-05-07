@@ -11,7 +11,13 @@ public abstract class Model {
     private String description;
 
     @Attribute(attrId = -3)
-    protected long objectId;
+    private long objectId;
+
+    public Model() {}
+
+    public Model(long objectId) {
+        this.objectId = objectId;
+    }
 
     public String getName() {
         return name;

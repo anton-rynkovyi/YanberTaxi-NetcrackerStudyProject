@@ -32,8 +32,10 @@ public class Order extends Model implements OrderAttr {
     @Attribute(attrId = 22)
     private String driverMemo;
 
-    public Order(long objectId){
-        this.objectId = objectId;
+    public Order() {}
+
+    public Order(long objectId) {
+        super(objectId);
     }
 
     public int getDriverId() {

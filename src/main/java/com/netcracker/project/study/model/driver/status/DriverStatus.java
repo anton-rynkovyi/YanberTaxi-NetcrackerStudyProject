@@ -20,8 +20,10 @@ public class DriverStatus extends Model implements DriverStatusAttr {
     @Attribute(attrId = 35)
     private Time timeStamp;
 
-    public DriverStatus(long objectId){
-        this.objectId = objectId;
+    public DriverStatus() {}
+
+    public DriverStatus(long objectId) {
+        super(objectId);
     }
 
     public int getDriverId() {

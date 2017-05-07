@@ -10,7 +10,6 @@
 
     <!-- Initialization for vaadin- -->
     <bean class="com.netcracker.project.study.vaadin.test.configuration.VaadinConfiguration"/>
-    <bean class="com.netcracker.project.study.vaadin.test.configuration.VaadinUIServlet"/>
 
     <!-- Initialization for data source- -->
     <bean id="dataSource"

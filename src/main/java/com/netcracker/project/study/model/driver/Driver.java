@@ -39,8 +39,10 @@ public class Driver extends Model implements DriverAttr{
     @Attribute(attrId = 10)
     private Date unbanDate;
 
-    public Driver(long objectId){
-        this.objectId=objectId;
+    public Driver() {}
+
+    public Driver(long objectId) {
+        super(objectId);
     }
 
     public String getLastName() {

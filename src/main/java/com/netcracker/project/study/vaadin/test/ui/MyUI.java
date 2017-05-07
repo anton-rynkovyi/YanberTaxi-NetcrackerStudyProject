@@ -8,8 +8,8 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Button.ClickEvent;
 
 @Theme("mytheme")
-@SpringUI//(path = "/main")
-public class Index extends UI{
+@SpringUI(path = "myui")
+public class MyUI extends UI{
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {

@@ -32,8 +32,10 @@ public class Car extends Model implements CarAttr {
     @Attribute(attrId = 29)
     private boolean childSeat;
 
+    public Car() {}
+
     public Car(long objectId){
-        this.objectId = objectId;
+        super(objectId);
     }
 
     public String getModelType() {

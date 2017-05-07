@@ -23,8 +23,10 @@ public class Client extends Model implements ClientAttr {
     @Attribute(attrId = 15)
     private int points;
 
-    public Client(long objectId){
-        this.objectId = objectId;
+    public Client() {}
+
+    public Client(long objectId) {
+        super(objectId);
     }
 
     public String getLastName() {
