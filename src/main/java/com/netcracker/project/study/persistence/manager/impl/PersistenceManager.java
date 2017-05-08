@@ -11,10 +11,8 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.sql.Date;
+import java.util.*;
 
 import static java.sql.Types.*;
 
@@ -213,25 +211,36 @@ public class PersistenceManager implements Manager {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
+                String str = "" ;
                 long attrId = (long) entry.getKey();
                 ps.setLong(++i,attrId);
+
+
+
+                str += " " + attrId;
                 if ((attrId>=1 && attrId<=5) || (attrId>=7 && attrId<=9) || (attrId>=11 && attrId<=17) || (attrId>=19 && attrId<=24)){
                     ps.setString(++i, String.valueOf(entry.getValue()));
                     ps.setNull(++i, DATE);
                     ps.setNull(++i, NUMERIC);
-                    System.out.println("i="+ i + "     -      "+entry.getKey()+" : "+entry.getValue());
+
+                    str += " " + entry.getValue();
                 }else if (attrId== 6 || attrId==10 || attrId==25) {
-                      ps.setString(++i, null);
-                      ps.setDate(++i, Date.valueOf(String.valueOf(entry.getValue())));
-                      ps.setNull(++i, NUMERIC);
-                    System.out.println("i="+ i + "     -      "+entry.getKey()+" : "+entry.getValue());
+                    ps.setString(++i, null);
+                    ps.setDate(++i, Date.valueOf(String.valueOf(entry.getValue())));
+                    ps.setNull(++i, NUMERIC);
+
+                    str += " " + entry.getValue();
                 }else if (attrId== 18 || attrId==31 || attrId==34) {
-                      ps.setString(++i, null);
-                      ps.setNull(++i, DATE);
-                      ps.setInt(++i, Integer.getInteger(String.valueOf(entry.getValue())));
-                    System.out.println("i="+ i + "     -      "+entry.getKey()+" : "+entry.getValue());
+                    ps.setString(++i, null);
+                    ps.setNull(++i, DATE);
+                    ps.setInt(++i, Integer.getInteger(String.valueOf(entry.getValue())));
+
+                    str += " " + entry.getValue();
                 }
                 ps.setLong(++i, persistenceEntity.getObjectId());
+
+                str += " " + persistenceEntity.getObjectId();
+                System.out.println(str);
             }
         };
     }
