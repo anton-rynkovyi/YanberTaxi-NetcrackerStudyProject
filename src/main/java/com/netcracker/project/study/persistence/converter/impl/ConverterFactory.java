@@ -16,8 +16,10 @@ import com.netcracker.project.study.persistence.PersistenceEntity;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,70 +101,71 @@ public class ConverterFactory implements Converter {
 
         return entity;
     }
-    
+
     @Override
     public Model convertToModel(PersistenceEntity entity) {
         long objTypeId = entity.getObjectTypeId();
         Map<Long, Object> attributes = entity.getAttributes();
+
         switch ((int) objTypeId) {
             case 1:
                 Driver driver = new Driver();
-                driver.setLastName((String) attributes.get(1));
-                driver.setFirstName((String) attributes.get(2));
-                driver.setMiddleName((String) attributes.get(3));
-                driver.setPhoneNumber((String) attributes.get(4));
-                driver.setEmail((String) attributes.get(5));
-                driver.setHireDate((Date) attributes.get(6));
-                driver.setExperience((int) attributes.get(7));
-                driver.setRating((int) attributes.get(8));
-                driver.setStatus((String) attributes.get(9));
-                driver.setUnbanDate((Date) attributes.get(10));
+                driver.setLastName((String) attributes.get(1l));
+                driver.setFirstName((String) attributes.get(2l));
+                driver.setMiddleName((String) attributes.get(3l));
+                driver.setPhoneNumber((String) attributes.get(4l));
+                driver.setEmail((String) attributes.get(5l));
+                driver.setHireDate((Timestamp) attributes.get(6l));
+                driver.setExperience(Integer.parseInt(attributes.get(7l)+""));
+                driver.setRating(Integer.parseInt(attributes.get(7l)+""));
+                driver.setStatus((String) attributes.get(9l));
+                driver.setUnbanDate((Date) attributes.get(10l));
                 return driver;
             case 2:
                 Client client = new Client();
-                client.setLastName((String) attributes.get(11));
-                client.setFirstName((String) attributes.get(12));
-                client.setMiddleName((String) attributes.get(13));
-                client.setPhoneNumber((String) attributes.get(14));
-                client.setPoints((int) attributes.get(15));
+                client.setLastName((String) attributes.get(11l));
+                client.setFirstName((String) attributes.get(12l));
+                client.setMiddleName((String) attributes.get(13l));
+                client.setPhoneNumber((String) attributes.get(14l));
+                client.setPoints(Integer.parseInt(attributes.get(15l)+""));
                 return client;
             case 3:
                 Order order = new Order();
-                order.setClientId((int) attributes.get(16));
-                order.setDriverId((int) attributes.get(17));
-                order.setStatus((String) attributes.get(18));
-                order.setCost((int) attributes.get(19));
-                order.setDistance((int) attributes.get(20));
-                order.setDriverRating((int) attributes.get(21));
-                order.setDriverMemo((String) attributes.get(22));
+                order.setClientId(Integer.parseInt(attributes.get(16l)+""));
+                order.setDriverId(Integer.parseInt(attributes.get(16l)+""));
+                order.setStatus((String) attributes.get(18l));
+                order.setCost(Integer.parseInt(attributes.get(16l)+""));
+                order.setDistance(Integer.parseInt(attributes.get(16l)+""));
+                order.setDriverRating(Integer.parseInt(attributes.get(16l)+""));
+                order.setDriverMemo((String) attributes.get(22l));
                 return order;
             case 4:
                 Car car = new Car();
-                car.setMakeOfCar((String) attributes.get(23));
-                car.setModelType((String) attributes.get(24));
-                car.setReleaseDate((Date) attributes.get(25));
-                car.setSeatsCount((int) attributes.get(26));
-                car.setChildSeat((boolean) attributes.get(27));
-                car.setDriverId((int) attributes.get(28));
-                car.setStateNumber((int) attributes.get(29));
+                car.setMakeOfCar((String) attributes.get(23l));
+                car.setModelType((String) attributes.get(24l));
+                car.setReleaseDate((Date) attributes.get(25l));
+                car.setSeatsCount(Integer.parseInt(attributes.get(16l)+""));
+                car.setChildSeat((boolean) attributes.get(27l));
+                car.setDriverId(Integer.parseInt(attributes.get(16l)+""));
+                car.setStateNumber(Integer.parseInt(attributes.get(16l)+""));
                 return car;
             case 5:
                 OrderStatus orderStatus = new OrderStatus();
-                orderStatus.setOrderId((int) attributes.get(30));
-                orderStatus.setStatus((String) attributes.get(31));
-                orderStatus.setTimeStamp((Time) attributes.get(32));
+                orderStatus.setOrderId(Integer.parseInt(attributes.get(16l)+""));
+                orderStatus.setStatus((String) attributes.get(31l));
+                orderStatus.setTimeStamp((Time) attributes.get(32l));
                 return orderStatus;
             case 6:
                 DriverStatus driverStatus = new DriverStatus();
-                driverStatus.setDriverId((int) attributes.get(33));
-                driverStatus.setStatus((String) attributes.get(34));
-                driverStatus.setTimeStamp((Time) attributes.get(35));
+                driverStatus.setDriverId(Integer.parseInt(attributes.get(16l)+""));
+                driverStatus.setStatus((String) attributes.get(34l));
+                driverStatus.setTimeStamp((Time) attributes.get(35l));
                 return driverStatus;
             case 7:
                 Route route = new Route(entity.getObjectId());
-                route.setOrderId((int) attributes.get(36));
-                route.setCheckPoint((String) attributes.get(37));
-                route.setShowOrder((String) attributes.get(38));
+                route.setOrderId(Integer.parseInt(attributes.get(16l)+""));
+                route.setCheckPoint((String) attributes.get(37l));
+                route.setShowOrder((String) attributes.get(38l));
                 return route;
             default:
                 return null;

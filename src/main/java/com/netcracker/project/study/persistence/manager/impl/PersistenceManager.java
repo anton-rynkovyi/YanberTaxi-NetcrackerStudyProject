@@ -2,6 +2,7 @@ package com.netcracker.project.study.persistence.manager.impl;
 
 import com.netcracker.project.study.persistence.PersistenceEntity;
 import com.netcracker.project.study.persistence.manager.Manager;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -25,7 +26,7 @@ public class PersistenceManager implements Manager {
             " VALUES(?,?,?,?,?)";
     public static final String CREATE_ATTRIBUTES = ""+
             "INSERT INTO ATTRIBUTES" +
-            "(attr_id, value, date_value, list_value_id,object_id)" +
+            "(value, date_value, list_value_id, object_id, attr_id)" +
             " VALUES(?,?,?,?,?)";
     public static final String CREATE_OBJREFERENCE = ""+
             "INSERT INTO OBJREFERENCE" +
@@ -41,8 +42,9 @@ public class PersistenceManager implements Manager {
             "WHERE object_id=?";
     public static final String UPDATE_ATTRIBUTES = ""+
             "UPDATE ATTRIBUTES " +
-            "SET attr_id=?, value=?, date_value=?, list_value_id=? " +
-            "WHERE object_id=?";
+            "SET value=?, date_value=?, list_value_id=? " +
+            "WHERE object_id=? " +
+            "AND attr_id=?";
     public static final String DELETE_FROM_ATTRIBUTES = ""+
             "DELETE " +
             "FROM ATTRIBUTES " +
@@ -58,14 +60,15 @@ public class PersistenceManager implements Manager {
     public static final String SELECT_FROM_OBJECTS_BY_ID = ""+
             "SELECT * " +
             "FROM OBJECTS " +
-            "WHERE object_id=? ";
+            "WHERE object_id=?";
     public static final String SELECT_FROM_ATTRIBUTES_BY_ID = ""+
             "SELECT * " +
             "FROM Attributes " +
             "WHERE object_id=? ";
     public static final String SELECT_FROM_OBJECTS = ""+
             "SELECT * " +
-            "FROM Objects";
+            "FROM Objects " +
+            "WHERE object_type_id = ?";
     public static final String GENERATE_MAX_OBJECT_ID = ""+
             "select " +
             "nvl(MAX(object_id),0)+1 as object_id " +
@@ -119,6 +122,8 @@ public class PersistenceManager implements Manager {
             persistenceEntity.setObjectId(rs.getLong("object_id"));
             persistenceEntity.setObjectTypeId(rs.getInt("object_type_id"));
             persistenceEntity.setParentId(rs.getInt("parent_id"));
+            persistenceEntity.setName(rs.getString("name"));
+            persistenceEntity.setDescription(rs.getString("description"));
             return persistenceEntity;
         }
     };
@@ -131,10 +136,12 @@ public class PersistenceManager implements Manager {
             return persistenceEntity;
         }
     };
+
     @Override
     public PersistenceEntity getOne(long objectId) {
         PersistenceEntity persistenceEntity = jdbcTemplate.queryForObject(SELECT_FROM_OBJECTS_BY_ID, rowMapper, objectId);
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID,objectId);
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID, objectId);
+        //System.out.println(rows);
         Map<Long, Object> attributes = getAttributes(rows);
         persistenceEntity.setAttributes(attributes);
         return persistenceEntity;
@@ -142,47 +149,32 @@ public class PersistenceManager implements Manager {
 
     @Override
     public List<PersistenceEntity> getAll(long objectTypeId) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_OBJECTS);
-
-        //check is empty
-        if (rows.isEmpty()) {
-            return Collections.emptyList();
-        }
-
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_OBJECTS, new Object[]{objectTypeId});
+        if (rows.isEmpty()) return Collections.emptyList();
         List<PersistenceEntity> persistenceEntityList = new ArrayList<>();
         for (Map row : rows) {
-            PersistenceEntity persistenceEntity = new PersistenceEntity();
-            persistenceEntity.setObjectId(Long.parseLong(String.valueOf(row.get("object_id"))));
-            persistenceEntity.setObjectTypeId(Long.parseLong(String.valueOf(row.get("object_type_id"))));
-            if(String.valueOf(row.get("parent_id"))=="null") {
-                persistenceEntity.setParentId(0);
-            } else {
-                persistenceEntity.setParentId(Long.parseLong(String.valueOf(row.get("parent_id"))));
-            }
-            List<Map<String, Object>> rowss = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID,persistenceEntity.getObjectId());
-            Map<Long, Object> attributes = getAttributes(rowss);
-            persistenceEntity.setAttributes(attributes);
+            PersistenceEntity persistenceEntity = getOne(Long.parseLong(row.get("object_id")+""));
             persistenceEntityList.add(persistenceEntity);
-
         }
         return persistenceEntityList;
     }
 
+
     private Map<Long, Object> getAttributes(List<Map<String, Object>> rowss) {
-        Map<Long, Object> attributes = null;
+        Map<Long, Object> attributes = new HashMap();
         for (Map row : rowss) {
-            long attrId = (long) row.get("attr_id");
+            long attrId = Long.parseLong(String.valueOf(row.get("attr_id")));
             Object value = null;
-            if ((attrId >= 1 && attrId<=5) || (attrId>=7 && attrId<=9) || (attrId>=11 && attrId<=17) || (attrId>=19 && attrId<=24)){
+
+            if ((attrId >= 1 && attrId <= 5) || (attrId >= 7 && attrId <= 9) || (attrId >= 11 && attrId <= 17) || (attrId >= 19 && attrId <= 24)) {
                 value = row.get("value");
-            }
-            if (attrId== 6 || attrId==10 || attrId==25) {
+            } else if (attrId == 6 || attrId == 10 || attrId == 25) {
                 value = row.get("date_value");
-            }
-            if (attrId== 18 || attrId==31 || attrId==34) {
+            } else if (attrId == 18 || attrId == 31 || attrId == 34) {
                 value = row.get("list_value_id");
             }
-            attributes.put(attrId,value) ;
+            //System.out.println(attrId +" "+ value);
+            attributes.put(attrId, value) ;
         }
         return attributes;
     }
@@ -211,36 +203,24 @@ public class PersistenceManager implements Manager {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
-                String str = "" ;
                 long attrId = (long) entry.getKey();
-                ps.setLong(++i,attrId);
-
-
-
-                str += " " + attrId;
                 if ((attrId>=1 && attrId<=5) || (attrId>=7 && attrId<=9) || (attrId>=11 && attrId<=17) || (attrId>=19 && attrId<=24)){
                     ps.setString(++i, String.valueOf(entry.getValue()));
                     ps.setNull(++i, DATE);
                     ps.setNull(++i, NUMERIC);
 
-                    str += " " + entry.getValue();
                 }else if (attrId== 6 || attrId==10 || attrId==25) {
                     ps.setString(++i, null);
-                    ps.setDate(++i, Date.valueOf(String.valueOf(entry.getValue())));
+                    ps.setDate(++i, entry.getValue() != null ? Date.valueOf(String.valueOf(entry.getValue())) : null);
                     ps.setNull(++i, NUMERIC);
-
-                    str += " " + entry.getValue();
                 }else if (attrId== 18 || attrId==31 || attrId==34) {
                     ps.setString(++i, null);
                     ps.setNull(++i, DATE);
                     ps.setInt(++i, Integer.getInteger(String.valueOf(entry.getValue())));
 
-                    str += " " + entry.getValue();
                 }
                 ps.setLong(++i, persistenceEntity.getObjectId());
-
-                str += " " + persistenceEntity.getObjectId();
-                System.out.println(str);
+                ps.setLong(++i,attrId);
             }
         };
     }
@@ -253,7 +233,6 @@ public class PersistenceManager implements Manager {
                 ps.setLong(++i, (Long) entry.getKey());
                 ps.setLong(++i, Long.parseLong(String.valueOf(entry.getValue())));
                 ps.setLong(++i, persistenceEntity.getObjectId());
-
             }
         };
     }

@@ -14,7 +14,7 @@ public interface Facade{
 
     void delete(long objectId) throws NoSuchFieldException, IllegalAccessException;
 
-    PersistenceEntity getOne(long objectId);
+    Model getOne(long objectId);
 
-    List<PersistenceEntity> getAll(long objectTypeId);
+    List<Model> getAll(long objectTypeId);
 }
