@@ -4,26 +4,25 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 import com.netcracker.project.study.model.annotations.Reference;
+import com.netcracker.project.study.model.driver.DriverAttr;
 
 import java.sql.Time;
 
-@ObjectType(objectTypeId = 6)
-public class DriverStatus extends Model implements DriverStatusAttr {
+@ObjectType(objectTypeId = DriverStatusAttr.OBJECT_TYPE_ID)
+public class DriverStatus extends Model{
 
-    @Attribute(attrId = 33)
-    @Reference(objectTypeId = 1)
+    @Attribute(attrId = DriverStatusAttr.DRIVER_ID_ATTR)
+    @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
     private int driverId;
 
-    @Attribute(attrId = 34)
+    @Attribute(attrId = DriverStatusAttr.STATUS_ATTR)
     private String status;
 
-    @Attribute(attrId = 35)
+    @Attribute(attrId = DriverStatusAttr.TIME_STAMP_ATTR)
     private Time timeStamp;
 
-    public DriverStatus() {}
+    public DriverStatus(){
 
-    public DriverStatus(long objectId) {
-        super(objectId);
     }
 
     public int getDriverId() {

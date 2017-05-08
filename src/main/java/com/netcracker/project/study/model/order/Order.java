@@ -4,41 +4,41 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 import com.netcracker.project.study.model.annotations.Reference;
+import com.netcracker.project.study.model.client.ClientAttr;
+import com.netcracker.project.study.model.driver.DriverAttr;
 
-@ObjectType(objectTypeId = 3)
-public class Order extends Model implements OrderAttr {
+@ObjectType(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
+public class Order extends Model{
 
-    @Attribute(attrId = 16)
-    @Reference(objectTypeId = 1)
-    private int driverId;
+    @Attribute(attrId = OrderAttr.DRIVER_ID_ATTR)
+    @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
+    private long driverId;
 
-    @Attribute(attrId = 17)
-    @Reference(objectTypeId = 2)
-    private int clientId;
+    @Attribute(attrId = OrderAttr.CLIENT_ID_ATTR)
+    @Reference(objectTypeId = ClientAttr.OBJECT_TYPE_ID)
+    private long clientId;
 
-    @Attribute(attrId = 18)
+    @Attribute(attrId = OrderAttr.STATUS_ATTR)
     private String status;
 
-    @Attribute(attrId = 19)
+    @Attribute(attrId = OrderAttr.COST_ATTR)
     private int cost;
 
-    @Attribute(attrId = 20)
+    @Attribute(attrId = OrderAttr.DISTANCE_ATTR)
     private int distance;
 
-    @Attribute(attrId = 21)
-    @Reference(objectTypeId = 2, attrId = 5)
+    @Attribute(attrId = OrderAttr.DRIVER_RATING_ATTR)
+    @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
     private int driverRating;
 
-    @Attribute(attrId = 22)
+    @Attribute(attrId = OrderAttr.DRIVER_MEMO_ATTR)
     private String driverMemo;
 
-    public Order() {}
+    public Order(){
 
-    public Order(long objectId) {
-        super(objectId);
     }
 
-    public int getDriverId() {
+    public long getDriverId() {
         return driverId;
     }
 
@@ -46,7 +46,7 @@ public class Order extends Model implements OrderAttr {
         this.driverId = driverId;
     }
 
-    public int getClientId() {
+    public long getClientId() {
         return clientId;
     }
 

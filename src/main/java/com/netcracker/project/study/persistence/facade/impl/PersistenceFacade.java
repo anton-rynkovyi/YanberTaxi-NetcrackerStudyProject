@@ -9,8 +9,6 @@ import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public class PersistenceFacade implements Facade {
 
@@ -22,30 +20,18 @@ public class PersistenceFacade implements Facade {
 
     public PersistenceFacade(){}
 
-
-    @Override
-    public PersistenceEntity create(Model model) {
-        return manager.create(converter.convertToEntity(model));
+    // ?
+    public void create(Model model){
+        //PersistenceEntity entity = converter.convertToEntity(model);
+       // manager.create(entity);
     }
 
-    @Override
     public void update(Model model) {
-        manager.update(converter.convertToEntity(model));
+       //manager.update(converter.convertToEntity(model));
     }
 
-    @Override
-    public void delete(long objectId) {
-        //manager.delete();
-    }
-
-    @Override
-    public PersistenceEntity getOne(long objectId) {
-        return manager.getOne(objectId);
-    }
-
-    @Override
-    public List<PersistenceEntity> getAll(int objectTypeId) {
-        return getAll(objectTypeId);
+    public void delete(Model model) {
+       // manager.delete(converter.convertToEntity(model));
     }
 }
 

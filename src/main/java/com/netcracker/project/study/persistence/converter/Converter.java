@@ -7,7 +7,7 @@ import com.netcracker.project.study.persistence.PersistenceEntity;
 
 public interface Converter {
 
-    PersistenceEntity convertToEntity(Model model);
+    PersistenceEntity convertToEntity(Model model) throws IllegalAccessException, InstantiationException, NoSuchFieldException;
 
     Model convertToModel(PersistenceEntity entity);
 }

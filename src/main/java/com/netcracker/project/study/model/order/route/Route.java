@@ -4,24 +4,23 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 import com.netcracker.project.study.model.annotations.Reference;
+import com.netcracker.project.study.model.order.OrderAttr;
 
-@ObjectType(objectTypeId = 7)
-public class Route extends Model implements RouteAttr{
+@ObjectType(objectTypeId = RouteAttr.OBJECT_TYPE_ID)
+public class Route extends Model{
 
-    @Attribute(attrId = 36)
-    @Reference(objectTypeId = 3)
+    @Attribute(attrId = RouteAttr.ORDER_ID_ATTR)
+    @Reference(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
     private int orderId;
 
-    @Attribute(attrId = 37)
+    @Attribute(attrId = RouteAttr.CHECK_POINT_ATTR)
     private String checkPoint;
 
-    @Attribute(attrId = 38)
+    @Attribute(attrId = RouteAttr.SHOW_ORDER_ATTR)
     private String showOrder;
 
-    public Route() {}
+    public Route(long objectId){
 
-    public Route(long objectId) {
-        super(objectId);
     }
 
     public int getOrderId(){

@@ -4,26 +4,25 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 import com.netcracker.project.study.model.annotations.Reference;
+import com.netcracker.project.study.model.order.OrderAttr;
 
 import java.sql.Time;
 
-@ObjectType(objectTypeId = 5)
-public class OrderStatus extends Model implements OrderStatusAttr {
+@ObjectType(objectTypeId = OrderStatusAttr.OBJECT_TYPE_ID)
+public class OrderStatus extends Model{
 
-    @Attribute(attrId = 30)
-    @Reference(objectTypeId = 3)
+    @Attribute(attrId = OrderStatusAttr.ORDER_ID_ATTR)
+    @Reference(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
     private int orderId;
 
-    @Attribute(attrId = 31)
+    @Attribute(attrId = OrderStatusAttr.STATUS_ATTR)
     private String status;
 
-    @Attribute(attrId = 32)
+    @Attribute(attrId = OrderStatusAttr.TIME_STAMP_ATTR)
     private Time timeStamp;
 
-    public OrderStatus() {}
+    public OrderStatus(){
 
-    public OrderStatus(long objectId) {
-        super(objectId);
     }
 
     public int getOrderId() {
