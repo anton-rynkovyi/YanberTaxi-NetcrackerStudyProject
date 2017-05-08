@@ -33,10 +33,6 @@ public class ConverterFactory implements Converter {
     @Override
     public PersistenceEntity convertToEntity(Model model) throws IllegalAccessException, NoSuchFieldException {
 
-        Field name;
-        Field description;
-        Field objectId;
-        Field parentId;
         Class modelClass = model.getClass();
         PersistenceEntity entity = new PersistenceEntity();
 
@@ -54,50 +50,31 @@ public class ConverterFactory implements Converter {
         Reference referenceAnnotation;
         Object fieldValue;
         for (Field field : fields) {
-            if (field.isAnnotationPresent(Attribute.class)) {
-                attributeAnnotation = field.getAnnotation(Attribute.class);
-                if (!field.isAccessible()) {
-                    field.setAccessible(true);
-                    fieldValue = field.get(model);
-                    field.setAccessible(false);
-                }else{
-                    fieldValue = field.get(model);
-                }
-                attributes.put(attributeAnnotation.attrId(), fieldValue);
-
+            if (field.isAccessible()) {
+                fieldValue = field.get(model);
+            } else {
+                field.setAccessible(true);
+                fieldValue = field.get(model);
+                field.setAccessible(false);
             }
 
-            if(field.isAnnotationPresent(Reference.class)){
+            if (field.isAnnotationPresent(Attribute.class)) {
                 attributeAnnotation = field.getAnnotation(Attribute.class);
+                attributes.put(attributeAnnotation.attrId(), fieldValue);
+            }
+            if (field.isAnnotationPresent(Reference.class)) {
                 referenceAnnotation = field.getAnnotation(Reference.class);
-                references.put(attributeAnnotation.attrId(),referenceAnnotation.objectTypeId());
+                references.put(referenceAnnotation.attrId(), (long) fieldValue);
             }
         }
 
-        Class superClass = modelClass.getSuperclass();
-
-        name = superClass.getDeclaredField("name");
-        description = superClass.getDeclaredField("description");
-        objectId = superClass.getDeclaredField("objectId");
-        parentId = superClass.getDeclaredField("parentId");
-
-        name.setAccessible(true);
-        description.setAccessible(true);
-        objectId.setAccessible(true);
-        parentId.setAccessible(true);
-
-        entity.setName((String) name.get(model));
-        entity.setObjectId((Long) objectId.get(model));
-        entity.setDescription((String) description.get(model));
-        entity.setParentId((Long)parentId.get(model));
+        entity.setName(model.getName());
+        entity.setObjectId(model.getObjectId());
+        entity.setDescription(model.getDescription());
+        entity.setParentId(model.getParentId());
 
         entity.setAttributes(attributes);
         entity.setReferences(references);
-
-        name.setAccessible(false);
-        description.setAccessible(false);
-        objectId.setAccessible(false);
-        parentId.setAccessible(false);
 
         return entity;
     }
@@ -129,7 +106,7 @@ public class ConverterFactory implements Converter {
 
             if (field.isAnnotationPresent(Reference.class)) {
                 referenceAnnotation = field.getAnnotation(Reference.class);
-                Object fieldValue = references.get(referenceAnnotation.objectTypeId());
+                Object fieldValue = references.get(referenceAnnotation.attrId());
                 setFieldsInModel(fieldValue, field, modelClass, model);
             }
         }

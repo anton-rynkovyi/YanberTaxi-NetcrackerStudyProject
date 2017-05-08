@@ -9,8 +9,7 @@ import com.netcracker.project.study.model.order.OrderAttr;
 @ObjectType(objectTypeId = RouteAttr.OBJECT_TYPE_ID)
 public class Route extends Model{
 
-    @Attribute(attrId = RouteAttr.ORDER_ID_ATTR)
-    @Reference(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
+    @Reference(attrId = RouteAttr.ORDER_ID_ATTR)
     private int orderId;
 
     @Attribute(attrId = RouteAttr.CHECK_POINT_ATTR)

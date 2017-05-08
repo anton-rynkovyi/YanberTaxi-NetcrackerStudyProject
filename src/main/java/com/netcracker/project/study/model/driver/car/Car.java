@@ -23,8 +23,7 @@ public class Car extends Model {
     @Attribute(attrId = CarAttr.SEATS_COUNT_ATTR)
     private int seatsCount;
 
-    @Attribute(attrId = CarAttr.DRIVER_ID_ATTR)
-    @Reference(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
+    @Reference(attrId = CarAttr.DRIVER_ID_ATTR)
     private int driverId;
 
     @Attribute(attrId = CarAttr.STATE_NUMBER_ATTR)
