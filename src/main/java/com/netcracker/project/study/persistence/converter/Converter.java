@@ -9,5 +9,5 @@ public interface Converter {
 
     PersistenceEntity convertToEntity(Model model) throws IllegalAccessException, InstantiationException, NoSuchFieldException;
 
-    Model convertToModel(PersistenceEntity entity);
+    <T extends Model> T convertToModel(PersistenceEntity entity, Class clazz) throws IllegalAccessException, InstantiationException;
 }

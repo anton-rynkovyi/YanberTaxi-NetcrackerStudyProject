@@ -16,10 +16,10 @@ import com.netcracker.project.study.persistence.PersistenceEntity;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
-import java.math.BigInteger;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Time;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,72 +103,52 @@ public class ConverterFactory implements Converter {
     }
 
     @Override
-    public Model convertToModel(PersistenceEntity entity) {
-        long objTypeId = entity.getObjectTypeId();
-        Map<Long, Object> attributes = entity.getAttributes();
+    public <T extends Model> T convertToModel(PersistenceEntity entity, Class clazz) throws IllegalAccessException, InstantiationException {
+        Class modelClass = clazz;
+        if (clazz == Model.class) return null;
+        T model = (T) modelClass.newInstance();
 
-        switch ((int) objTypeId) {
-            case 1:
-                Driver driver = new Driver();
-                driver.setLastName((String) attributes.get(1l));
-                driver.setFirstName((String) attributes.get(2l));
-                driver.setMiddleName((String) attributes.get(3l));
-                driver.setPhoneNumber((String) attributes.get(4l));
-                driver.setEmail((String) attributes.get(5l));
-                driver.setHireDate((Timestamp) attributes.get(6l));
-                driver.setExperience(Integer.parseInt(attributes.get(7l)+""));
-                driver.setRating(Integer.parseInt(attributes.get(7l)+""));
-                driver.setStatus((String) attributes.get(9l));
-                driver.setUnbanDate((Date) attributes.get(10l));
-                return driver;
-            case 2:
-                Client client = new Client();
-                client.setLastName((String) attributes.get(11l));
-                client.setFirstName((String) attributes.get(12l));
-                client.setMiddleName((String) attributes.get(13l));
-                client.setPhoneNumber((String) attributes.get(14l));
-                client.setPoints(Integer.parseInt(attributes.get(15l)+""));
-                return client;
-            case 3:
-                Order order = new Order();
-                order.setClientId(Integer.parseInt(attributes.get(16l)+""));
-                order.setDriverId(Integer.parseInt(attributes.get(16l)+""));
-                order.setStatus((String) attributes.get(18l));
-                order.setCost(Integer.parseInt(attributes.get(16l)+""));
-                order.setDistance(Integer.parseInt(attributes.get(16l)+""));
-                order.setDriverRating(Integer.parseInt(attributes.get(16l)+""));
-                order.setDriverMemo((String) attributes.get(22l));
-                return order;
-            case 4:
-                Car car = new Car();
-                car.setMakeOfCar((String) attributes.get(23l));
-                car.setModelType((String) attributes.get(24l));
-                car.setReleaseDate((Date) attributes.get(25l));
-                car.setSeatsCount(Integer.parseInt(attributes.get(16l)+""));
-                car.setChildSeat((boolean) attributes.get(27l));
-                car.setDriverId(Integer.parseInt(attributes.get(16l)+""));
-                car.setStateNumber(Integer.parseInt(attributes.get(16l)+""));
-                return car;
-            case 5:
-                OrderStatus orderStatus = new OrderStatus();
-                orderStatus.setOrderId(Integer.parseInt(attributes.get(16l)+""));
-                orderStatus.setStatus((String) attributes.get(31l));
-                orderStatus.setTimeStamp((Time) attributes.get(32l));
-                return orderStatus;
-            case 6:
-                DriverStatus driverStatus = new DriverStatus();
-                driverStatus.setDriverId(Integer.parseInt(attributes.get(16l)+""));
-                driverStatus.setStatus((String) attributes.get(34l));
-                driverStatus.setTimeStamp((Time) attributes.get(35l));
-                return driverStatus;
-            case 7:
-                Route route = new Route(entity.getObjectId());
-                route.setOrderId(Integer.parseInt(attributes.get(16l)+""));
-                route.setCheckPoint((String) attributes.get(37l));
-                route.setShowOrder((String) attributes.get(38l));
-                return route;
-            default:
-                return null;
+        model.setName(entity.getName());
+        model.setObjectId(entity.getObjectId());
+        model.setDescription(entity.getDescription());
+        model.setParentId(entity.getParentId());
+
+        Map<Long, Object> attributes = entity.getAttributes();
+        Map <Long,Long> references = entity.getReferences();
+        Field[] fields = modelClass.getDeclaredFields();
+
+        Attribute attributeAnnotation;
+        Reference referenceAnnotation;
+
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Attribute.class)) {
+                attributeAnnotation = field.getAnnotation(Attribute.class);
+                Object fieldValue = attributes.get(attributeAnnotation.attrId());
+                setFieldsInModel(fieldValue, field, modelClass, model);
+            }
+
+            if (field.isAnnotationPresent(Reference.class)) {
+                referenceAnnotation = field.getAnnotation(Reference.class);
+                Object fieldValue = references.get(referenceAnnotation.objectTypeId());
+                setFieldsInModel(fieldValue, field, modelClass, model);
+            }
+        }
+        return model;
+    }
+
+    private void setFieldsInModel(Object fieldValue, Field field, Class modelClass, Model model) {
+        if (fieldValue != null) {
+            String fieldName = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
+            try {
+                Method method = modelClass.getDeclaredMethod("set" + fieldName, field.getType());
+                method.invoke(model, fieldValue);
+            } catch (NoSuchMethodException imp) {
+                imp.printStackTrace();
+            } catch (InvocationTargetException imp) {
+                imp.printStackTrace();
+            } catch (IllegalAccessException imp) {
+                imp.printStackTrace();
+            }
         }
     }
 }
