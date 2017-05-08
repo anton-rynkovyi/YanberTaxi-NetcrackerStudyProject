@@ -91,6 +91,7 @@ select nvl(MAX(object_id),0)+1 into :new.object_id from objects;
 end if;
 end;
 /
+
 /*������ �������� ��� �������� ������ �������*/
 
 INSERT INTO OBJECTS (OBJECT_ID,PARENT_ID,OBJECT_TYPE_ID,NAME,DESCRIPTION) VALUES (11,NULL,1,'Driver Natasha',NULL);
