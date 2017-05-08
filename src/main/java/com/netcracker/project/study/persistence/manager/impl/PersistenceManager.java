@@ -23,7 +23,7 @@ public class PersistenceManager implements Manager {
 
     public static final String CREATE_OBJECTS = ""+
             "INSERT INTO OBJECTS" +
-            "(parent_id, object_type_id, name, description,object_id)" +
+            "(parent_id, object_type_id, name, description, object_id)" +
             " VALUES(?,?,?,?,?)";
     public static final String CREATE_ATTRIBUTES = ""+
             "INSERT INTO ATTRIBUTES" +
@@ -39,12 +39,12 @@ public class PersistenceManager implements Manager {
             "WHERE object_id=?";
     public static final String UPDATE_OBJREFERENCE = ""+
             "UPDATE OBJREFERENCE " +
-            "SET ATTR_ID=? REFERENCE=? OBJECT_ID=? " +
-            "WHERE object_id=? ";
+            "SET ATTR_ID=?, REFERENCE=?, OBJECT_ID=? " +
+            "WHERE object_id=?";
     public static final String UPDATE_ATTRIBUTES = ""+
             "UPDATE ATTRIBUTES " +
-            "SET attr_id=? value=? date_value=? list_value_id=? " +
-            "WHERE object_id=? ";
+            "SET attr_id=?, value=?, date_value=?, list_value_id=? " +
+            "WHERE object_id=?";
     public static final String DELETE_FROM_ATTRIBUTES = ""+
             "DELETE " +
             "FROM ATTRIBUTES " +
@@ -76,7 +76,6 @@ public class PersistenceManager implements Manager {
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedTemplate;
 
-    //private InitialContext ctx;
 
     @Autowired
     public PersistenceManager(DataSource dataSource) {
@@ -86,13 +85,13 @@ public class PersistenceManager implements Manager {
 
     @Override
     public PersistenceEntity create(PersistenceEntity persistenceEntity) {
-        persistenceEntity = jdbcTemplate.queryForObject(GENERATE_MAX_OBJECT_ID, rowMapperObjectId);
+        persistenceEntity.setObjectId(jdbcTemplate.queryForObject(GENERATE_MAX_OBJECT_ID, rowMapperObjectId).getObjectId());
         jdbcTemplate.update(CREATE_OBJECTS, getPreparedStatementSetterObjects(persistenceEntity));
-       for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
-            jdbcTemplate.update(CREATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry,persistenceEntity));
+        for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
+            jdbcTemplate.update(CREATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
         }
         for (Map.Entry entry : persistenceEntity.getReferences().entrySet()) {
-            jdbcTemplate.update(CREATE_OBJREFERENCE, getPreparedStatementSetterRef(entry,persistenceEntity));
+            jdbcTemplate.update(CREATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
         }
         return persistenceEntity;
     }
@@ -101,18 +100,18 @@ public class PersistenceManager implements Manager {
     public void update(PersistenceEntity persistenceEntity) {
         jdbcTemplate.update(UPDATE_OBJECTS, getPreparedStatementSetterObjects(persistenceEntity));
         for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
-            jdbcTemplate.update(UPDATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry,persistenceEntity));
+            jdbcTemplate.update(UPDATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
         }
-        for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
+        /*for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
             jdbcTemplate.update(UPDATE_OBJREFERENCE, getPreparedStatementSetterRef(entry,persistenceEntity));
-        }
+        }*/
     }
 
     @Override
-    public void delete(PersistenceEntity persistenceEntity) {
-        jdbcTemplate.update(DELETE_FROM_OBJECTS, persistenceEntity.getObjectId());
-        jdbcTemplate.update(DELETE_FROM_ATTRIBUTES, persistenceEntity.getObjectId());
-        jdbcTemplate.update(DELETE_FROM_OBJREFERENCE, persistenceEntity.getObjectId());
+    public void delete(long objectId) {
+        jdbcTemplate.update(DELETE_FROM_OBJECTS, objectId);
+        jdbcTemplate.update(DELETE_FROM_ATTRIBUTES, objectId);
+        jdbcTemplate.update(DELETE_FROM_OBJREFERENCE, objectId);
     }
 
     private RowMapper<PersistenceEntity> rowMapper = new RowMapper<PersistenceEntity>() {
@@ -144,15 +143,15 @@ public class PersistenceManager implements Manager {
     }
 
     @Override
-    public List<PersistenceEntity> getAll(int objectTypeId) {
+    public List<PersistenceEntity> getAll(long objectTypeId) {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_OBJECTS);
 
-        //check empty
+        //check is empty
         if (rows.isEmpty()) {
             return Collections.emptyList();
         }
 
-        List<PersistenceEntity> persistenceEntityList = new ArrayList<PersistenceEntity>();
+        List<PersistenceEntity> persistenceEntityList = new ArrayList<>();
         for (Map row : rows) {
             PersistenceEntity persistenceEntity = new PersistenceEntity();
             persistenceEntity.setObjectId(Long.parseLong(String.valueOf(row.get("object_id"))));
@@ -174,7 +173,7 @@ public class PersistenceManager implements Manager {
     private Map<Long, Object> getAttributes(List<Map<String, Object>> rowss) {
         Map<Long, Object> attributes = null;
         for (Map row : rowss) {
-            long attrId = (Long)row.get("attr_id");
+            long attrId = (long) row.get("attr_id");
             Object value = null;
             if ((attrId >= 1 && attrId<=5) || (attrId>=7 && attrId<=9) || (attrId>=11 && attrId<=17) || (attrId>=19 && attrId<=24)){
                 value = row.get("value");
@@ -190,12 +189,13 @@ public class PersistenceManager implements Manager {
         return attributes;
     }
 
+
     private PreparedStatementSetter getPreparedStatementSetterObjects(final PersistenceEntity persistenceEntity) {
         return new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
-                if (persistenceEntity.getParentId() ==0) {
+                if (persistenceEntity.getParentId() == 0) {
                     ps.setNull(++i, NUMERIC);
                 } else {
                     ps.setLong(++i, persistenceEntity.getParentId());
@@ -208,30 +208,30 @@ public class PersistenceManager implements Manager {
         };
     }
 
-    private PreparedStatementSetter getPreparedStatementSetterAttributes(Map.Entry entry,PersistenceEntity persistenceEntity) {
+    private PreparedStatementSetter getPreparedStatementSetterAttributes(Map.Entry entry, PersistenceEntity persistenceEntity) {
         return new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
-                int attrId = (Integer)entry.getKey();
-                ps.setInt(++i,attrId);
+                long attrId = (long) entry.getKey();
+                ps.setLong(++i,attrId);
                 if ((attrId>=1 && attrId<=5) || (attrId>=7 && attrId<=9) || (attrId>=11 && attrId<=17) || (attrId>=19 && attrId<=24)){
                     ps.setString(++i, String.valueOf(entry.getValue()));
                     ps.setNull(++i, DATE);
                     ps.setNull(++i, NUMERIC);
-                }
-                if (attrId== 6 || attrId==10 || attrId==25) {
-                    ps.setString(++i, null);
-                    ps.setDate(++i, Date.valueOf(String.valueOf(entry.getValue())));
-                    ps.setNull(++i, NUMERIC);
-                }
-                if (attrId== 18 || attrId==31 || attrId==34) {
-                    ps.setString(++i, null);
-                    ps.setNull(++i, DATE);
-                    ps.setInt(++i, Integer.getInteger(String.valueOf(entry.getValue())));
+                    System.out.println("i="+ i + "     -      "+entry.getKey()+" : "+entry.getValue());
+                }else if (attrId== 6 || attrId==10 || attrId==25) {
+                      ps.setString(++i, null);
+                      ps.setDate(++i, Date.valueOf(String.valueOf(entry.getValue())));
+                      ps.setNull(++i, NUMERIC);
+                    System.out.println("i="+ i + "     -      "+entry.getKey()+" : "+entry.getValue());
+                }else if (attrId== 18 || attrId==31 || attrId==34) {
+                      ps.setString(++i, null);
+                      ps.setNull(++i, DATE);
+                      ps.setInt(++i, Integer.getInteger(String.valueOf(entry.getValue())));
+                    System.out.println("i="+ i + "     -      "+entry.getKey()+" : "+entry.getValue());
                 }
                 ps.setLong(++i, persistenceEntity.getObjectId());
-
             }
         };
     }
@@ -241,7 +241,7 @@ public class PersistenceManager implements Manager {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
-                ps.setInt(++i,(Integer)entry.getKey());
+                ps.setLong(++i, (Long) entry.getKey());
                 ps.setLong(++i, Long.parseLong(String.valueOf(entry.getValue())));
                 ps.setLong(++i, persistenceEntity.getObjectId());
 

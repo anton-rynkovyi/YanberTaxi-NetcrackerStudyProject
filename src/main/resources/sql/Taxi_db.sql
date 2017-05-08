@@ -82,6 +82,7 @@ INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,18,'free');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,19,'on call');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,20,'perform order');
 
+/*
 create or replace trigger object_id_trg
 before insert on objects
 for each row
@@ -91,6 +92,7 @@ select nvl(MAX(object_id),0)+1 into :new.object_id from objects;
 end if;
 end;
 /
+*/
 
 /*������ �������� ��� �������� ������ �������*/
 
@@ -99,8 +101,8 @@ INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES 
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (2,11,'Stavitskaya',NULL,NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (3,11,'Nick',NULL,NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (4,11,'0631486586',NULL,NULL);
-INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (5,11,'Natasha@gmail.com',NULL);
-INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (6,11,NULL,'01/08/2017',NULL);
+INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (5,11,'Natasha@gmail.com',NULL, NULL);
+INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (6,11,NULL,'26-OCT-2016',NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (7,11,4,NULL,NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (8,11,10,NULL,NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (9,11,NULL,NULL,3);

@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface Facade{
 
-    PersistenceEntity create(Model model);
+    PersistenceEntity create(Model model) throws NoSuchFieldException, IllegalAccessException;
 
-    void update(Model model);
+    void update(Model model) throws NoSuchFieldException, IllegalAccessException;
 
-    void delete(long objectId);
+    void delete(long objectId) throws NoSuchFieldException, IllegalAccessException;
 
     PersistenceEntity getOne(long objectId);
 
-    List<PersistenceEntity> getAll(int objectTypeId);
+    List<PersistenceEntity> getAll(long objectTypeId);
 }

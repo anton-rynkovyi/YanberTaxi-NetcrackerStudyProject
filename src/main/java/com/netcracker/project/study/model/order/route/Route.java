@@ -19,9 +19,12 @@ public class Route extends Model{
     @Attribute(attrId = RouteAttr.SHOW_ORDER_ATTR)
     private String showOrder;
 
-    public Route(long objectId){
+    public Route() {}
 
+    public Route(long objectId){
+        super(objectId);
     }
+
 
     public int getOrderId(){
         return orderId;

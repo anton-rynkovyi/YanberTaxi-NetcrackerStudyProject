@@ -1,6 +1,7 @@
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.persistence.converter.impl.ConverterFactory;
 import com.netcracker.project.study.persistence.PersistenceEntity;
+import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
 import org.junit.After;
 import org.junit.Before;
@@ -39,8 +40,8 @@ public class PersistenceManagerTest {
         driver.setEmail("abc.com");
         driver.setFirstName("Misha");
         driver.setName("Driver Miha");
-        PersistenceEntity persistenceEntity = converterFactory.convertToEntity(driver);
-        persistenceManager.create(persistenceEntity);
+        PersistenceFacade facade = new PersistenceFacade();
+        facade.create(driver);
         // todo проверить айди не 0
     }
 
@@ -60,7 +61,7 @@ public class PersistenceManagerTest {
         Driver driver = new Driver();
         driver.setObjectId(1);
         PersistenceEntity persistenceEntity = converterFactory.convertToEntity(driver);
-        persistenceManager.delete(persistenceEntity);
+        persistenceManager.delete(driver.getObjectId());
     }
 
     @Test

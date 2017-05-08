@@ -34,8 +34,10 @@ public class Order extends Model{
     @Attribute(attrId = OrderAttr.DRIVER_MEMO_ATTR)
     private String driverMemo;
 
-    public Order(){
+    public Order() {}
 
+    public Order(long objectId){
+        super(objectId);
     }
 
     public long getDriverId() {

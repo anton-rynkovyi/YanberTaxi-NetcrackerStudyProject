@@ -21,9 +21,12 @@ public class DriverStatus extends Model{
     @Attribute(attrId = DriverStatusAttr.TIME_STAMP_ATTR)
     private Time timeStamp;
 
-    public DriverStatus(){
+    public DriverStatus() {}
 
+    public DriverStatus(long objectId){
+        super(objectId);
     }
+
 
     public int getDriverId() {
         return driverId;

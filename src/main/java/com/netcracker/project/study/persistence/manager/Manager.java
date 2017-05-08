@@ -10,10 +10,10 @@ public interface Manager {
 
     void update(PersistenceEntity entity);
 
-    void delete(PersistenceEntity entity);
+    void delete(long objectId);
 
     PersistenceEntity getOne(long objectId);
 
-    List<PersistenceEntity> getAll(int objectTypeId);
+    List<PersistenceEntity> getAll(long objectTypeId);
 
 }

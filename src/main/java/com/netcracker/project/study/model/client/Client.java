@@ -23,8 +23,10 @@ public class Client extends Model implements ClientAttr {
     @Attribute(attrId = 15)
     private int points;
 
+    public Client() {}
+
     public Client(long objectId){
-        this.objectId = objectId;
+        super(objectId);
     }
 
     public String getLastName() {
@@ -65,5 +67,16 @@ public class Client extends Model implements ClientAttr {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "lastName='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", points=" + points +
+                '}';
     }
 }

@@ -2,7 +2,7 @@ package com.netcracker.project.study.model.driver.car;
 
 public interface CarAttr {
 
-    long OBJECT_TYPE_ID = 4;
+    int OBJECT_TYPE_ID = 4;
 
     long MAKE_OF_CAR_ATTR = 23;
 

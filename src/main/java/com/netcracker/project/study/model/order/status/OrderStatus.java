@@ -21,9 +21,12 @@ public class OrderStatus extends Model{
     @Attribute(attrId = OrderStatusAttr.TIME_STAMP_ATTR)
     private Time timeStamp;
 
-    public OrderStatus(){
+    public OrderStatus() {}
 
+    public OrderStatus(long objectId){
+        super(objectId);
     }
+
 
     public int getOrderId() {
         return orderId;

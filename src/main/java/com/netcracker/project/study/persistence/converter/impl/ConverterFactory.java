@@ -28,12 +28,6 @@ public class ConverterFactory implements Converter {
     public ConverterFactory() {
     }
 
-    /**
-     * Convert some model to PersistenceEntity
-     *
-     * @param model which is needed to convert
-     * @return PersistenceEntity
-     */
     @Override
     public PersistenceEntity convertToEntity(Model model) throws IllegalAccessException, NoSuchFieldException {
 
@@ -105,14 +99,7 @@ public class ConverterFactory implements Converter {
 
         return entity;
     }
-
-
-    /**
-     * Create model from entity
-     *
-     * @param entity
-     * @return
-     */
+    
     @Override
     public Model convertToModel(PersistenceEntity entity) {
         long objTypeId = entity.getObjectTypeId();

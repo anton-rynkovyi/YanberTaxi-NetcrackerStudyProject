@@ -38,6 +38,7 @@ exception
  when others then null;
 end;
 /
+
 CREATE TABLE OBJECTS (
     OBJECT_ID      NUMBER(20) NOT NULL,
     PARENT_ID      NUMBER(20),
@@ -67,6 +68,7 @@ exception
  when others then null;
 end;
 /
+
 CREATE TABLE ATTRIBUTES
   (
     ATTR_ID    NUMBER(20) NOT NULL,

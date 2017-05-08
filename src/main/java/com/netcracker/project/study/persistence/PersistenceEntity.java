@@ -76,4 +76,18 @@ public class PersistenceEntity {
     public void setReferences(Map<Long, Long> references) {
         this.references = references;
     }
+
+
+    @Override
+    public String toString() {
+        return "PersistenceEntity{" +
+                "objectId=" + objectId +
+                ", objectTypeId=" + objectTypeId +
+                ", parentId=" + parentId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", attributes=" + attributes +
+                ", references=" + references +
+                '}';
+    }
 }

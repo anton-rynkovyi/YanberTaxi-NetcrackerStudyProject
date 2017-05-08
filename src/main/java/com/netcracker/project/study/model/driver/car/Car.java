@@ -33,9 +33,12 @@ public class Car extends Model {
     @Attribute(attrId = CarAttr.CHILD_SEAT)
     private boolean childSeat;
 
-    public Car(){
+    public Car() {}
 
+    public Car(long objectId){
+        super(objectId);
     }
+
 
     public String getModelType() {
         return modelType;
