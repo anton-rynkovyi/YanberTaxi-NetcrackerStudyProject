@@ -2,6 +2,8 @@ package com.netcracker.project.study.persistence.facade.impl;
 
 
 import com.netcracker.project.study.model.Model;
+import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.persistence.converter.impl.ConverterFactory;
 import com.netcracker.project.study.persistence.PersistenceEntity;
 import com.netcracker.project.study.persistence.facade.Facade;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository("persistenceFacade")
 public class PersistenceFacade<T> implements Facade {
@@ -40,22 +43,18 @@ public class PersistenceFacade<T> implements Facade {
     }
 
     @Override
-    public Model getOne(long objectId) {
+    public Driver getOne(long objectId, Class modelClass) throws InstantiationException, IllegalAccessException {
         PersistenceEntity entity = manager.getOne(objectId);
-        Model model = converter.convertToModel(entity);
-        model.setObjectId(entity.getObjectId());
-        model.setName(entity.getName());
-        model.setDescription(entity.getDescription());
-        model.setParentId(entity.getParentId());
+        Driver model = converter.convertToModel(entity, modelClass);
         return model;
     }
 
     @Override
-    public List<Model> getAll(long objectTypeId) {
+    public List<Model> getAll(long objectTypeId) throws InstantiationException, IllegalAccessException {
         List<PersistenceEntity> entities = manager.getAll(objectTypeId);
         List<Model> models = new ArrayList<>();
         for (int i = 0; i < entities.size(); i++) {
-           Model model = converter.convertToModel(entities.get(i));
+           Model model = converter.convertToModel(entities.get(i), Client.class);
            model.setObjectId(entities.get(i).getObjectId());
            model.setName(entities.get(i).getName());
            model.setDescription(entities.get(i).getDescription());

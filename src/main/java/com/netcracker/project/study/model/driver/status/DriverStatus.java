@@ -7,6 +7,7 @@ import com.netcracker.project.study.model.annotations.Reference;
 import com.netcracker.project.study.model.driver.DriverAttr;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 
 @ObjectType(objectTypeId = DriverStatusAttr.OBJECT_TYPE_ID)
 public class DriverStatus extends Model{
@@ -19,7 +20,7 @@ public class DriverStatus extends Model{
     private String status;
 
     @Attribute(attrId = DriverStatusAttr.TIME_STAMP_ATTR)
-    private Time timeStamp;
+    private Timestamp timeStamp;
 
     public DriverStatus() {}
 
@@ -44,11 +45,11 @@ public class DriverStatus extends Model{
         this.status = status;
     }
 
-    public Time getTimeStamp() {
+    public Timestamp getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(Time timeStamp) {
+    public void setTimeStamp(Timestamp timeStamp) {
         this.timeStamp = timeStamp;
     }
 

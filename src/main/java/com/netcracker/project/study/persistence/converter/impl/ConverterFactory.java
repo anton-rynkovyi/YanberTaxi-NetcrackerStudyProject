@@ -85,6 +85,10 @@ public class ConverterFactory implements Converter {
         if (clazz == Model.class) return null;
         T model = (T) modelClass.newInstance();
 
+        for (Map.Entry entry : entity.getAttributes().entrySet()) {
+            System.out.println(entry.getValue() + ":  " + entry.getValue().getClass().getSimpleName());
+        }
+
         model.setName(entity.getName());
         model.setObjectId(entity.getObjectId());
         model.setDescription(entity.getDescription());
@@ -93,7 +97,6 @@ public class ConverterFactory implements Converter {
         Map<Long, Object> attributes = entity.getAttributes();
         Map <Long,Long> references = entity.getReferences();
         Field[] fields = modelClass.getDeclaredFields();
-
         Attribute attributeAnnotation;
         Reference referenceAnnotation;
 
@@ -116,8 +119,10 @@ public class ConverterFactory implements Converter {
     private void setFieldsInModel(Object fieldValue, Field field, Class modelClass, Model model) {
         if (fieldValue != null) {
             String fieldName = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
+
             try {
                 Method method = modelClass.getDeclaredMethod("set" + fieldName, field.getType());
+                System.out.println(method);
                 method.invoke(model, fieldValue);
             } catch (NoSuchMethodException imp) {
                 imp.printStackTrace();

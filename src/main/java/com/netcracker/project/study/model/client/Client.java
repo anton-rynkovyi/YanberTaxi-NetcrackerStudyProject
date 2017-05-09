@@ -29,6 +29,8 @@ public class Client extends Model implements ClientAttr {
         super(objectId);
     }
 
+
+
     public String getLastName() {
         return lastName;
     }

@@ -13,14 +13,17 @@ public abstract class Model {
     @Attribute(attrId = -3)
     private long objectId;
 
+    @Attribute(attrId = -4)
+    private long parentId;
+
+
     public Model() {}
 
     public Model(long objectId) {
         this.objectId = objectId;
     }
 
-    @Attribute(attrId = -4)
-    private long parentId;
+
 
     public String getName() {
         return name;

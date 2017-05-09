@@ -7,6 +7,7 @@ import com.netcracker.project.study.model.annotations.Reference;
 import com.netcracker.project.study.model.order.OrderAttr;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 
 @ObjectType(objectTypeId = OrderStatusAttr.OBJECT_TYPE_ID)
 public class OrderStatus extends Model{
@@ -18,7 +19,7 @@ public class OrderStatus extends Model{
     private String status;
 
     @Attribute(attrId = OrderStatusAttr.TIME_STAMP_ATTR)
-    private Time timeStamp;
+    private Timestamp timeStamp;
 
     public OrderStatus() {}
 
@@ -43,11 +44,11 @@ public class OrderStatus extends Model{
         this.status = status;
     }
 
-    public Time getTimeStamp() {
+    public Timestamp getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(Time timeStamp) {
+    public void setTimeStamp(Timestamp timeStamp) {
         this.timeStamp = timeStamp;
     }
 

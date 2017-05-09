@@ -2,6 +2,7 @@ package com.netcracker.project.study.persistence.facade;
 
 
 import com.netcracker.project.study.model.Model;
+import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.persistence.PersistenceEntity;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface Facade{
 
     void delete(long objectId) throws NoSuchFieldException, IllegalAccessException;
 
-    Model getOne(long objectId);
+    <T extends Model> T getOne(long objectId, Class modelClass) throws InstantiationException, IllegalAccessException;
 
-    List<Model> getAll(long objectTypeId);
+    List<Model> getAll(long objectTypeId) throws InstantiationException, IllegalAccessException;
 }

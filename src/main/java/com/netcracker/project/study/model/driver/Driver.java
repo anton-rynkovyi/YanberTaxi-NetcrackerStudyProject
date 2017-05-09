@@ -4,7 +4,9 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.util.*;
+
 
 @ObjectType(objectTypeId = 1)
 public class Driver extends Model implements DriverAttr{
@@ -34,17 +36,16 @@ public class Driver extends Model implements DriverAttr{
     private String status;
 
     @Attribute(attrId = DriverAttr.HIRE_DATE_ATTR)
-    private Date hireDate;
+    private Timestamp hireDate;
 
     @Attribute(attrId = DriverAttr.UNBAN_DATE_ATTR)
-    private Date unbanDate;
+    private Timestamp unbanDate;
 
     public Driver() {}
 
     public Driver(long objectId){
         super(objectId);
     }
-
 
     public String getLastName() {
         return lastName;
@@ -110,19 +111,19 @@ public class Driver extends Model implements DriverAttr{
         this.status = status;
     }
 
-    public Date getHireDate() {
+    public Timestamp getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(Date hireDate) {
+    public void setHireDate(Timestamp hireDate) {
         this.hireDate = hireDate;
     }
 
-    public Date getUnbanDate() {
+    public Timestamp getUnbanDate() {
         return unbanDate;
     }
 
-    public void setUnbanDate(Date unbanDate) {
+    public void setUnbanDate(Timestamp unbanDate) {
         this.unbanDate = unbanDate;
     }
 
