@@ -156,7 +156,6 @@ public class PersistenceManager implements Manager {
     public PersistenceEntity getOne(long objectId) {
         PersistenceEntity persistenceEntity = jdbcTemplate.queryForObject(SELECT_FROM_OBJECTS_BY_ID, rowMapper, objectId);
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID, objectId);
-        //System.out.println(rows);
         Map<Long, Object> attributes = getAttributes(rows);
         List<Map<String, Object>> rowsRef = jdbcTemplate.queryForList(SELECT_FROM_OBJREFERENCE, objectId);
         Map<Long, Long> references = getReferences(rowsRef);
@@ -187,9 +186,8 @@ public class PersistenceManager implements Manager {
                 value = row.get("value");
                 try {
                     value = Integer.parseInt(value+"");
-                }catch (Exception e) {}
+                } catch (Exception e) {}
             } else if (row.get("date_value") != null) {
-                System.out.println(row.get("date_value"));
                 value = Timestamp.valueOf(row.get("date_value")+"");
             } else if (row.get("list_value_id") != null) {
                 value = row.get("list_value_id")+"";
@@ -238,14 +236,14 @@ public class PersistenceManager implements Manager {
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
                 long attrId = (long) entry.getKey();
+
                 if ((attrId>=1 && attrId<=5) || (attrId>=7 && attrId<=9) || (attrId>=11 && attrId<=17) || (attrId>=19 && attrId<=24)){
                     ps.setString(++i, String.valueOf(entry.getValue()));
                     ps.setNull(++i, DATE);
                     ps.setNull(++i, NUMERIC);
-
                 }else if (attrId== 6 || attrId==10 || attrId==25) {
                     ps.setString(++i, null);
-                    ps.setDate(++i, entry.getValue() != null ? Date.valueOf(String.valueOf(entry.getValue())) : null);
+                    ps.setTimestamp(++i, entry.getValue() != null ? Timestamp.valueOf(String.valueOf(entry.getValue())) : null);
                     ps.setNull(++i, NUMERIC);
                 }else if (attrId== 18 || attrId==31 || attrId==34) {
                     ps.setString(++i, null);

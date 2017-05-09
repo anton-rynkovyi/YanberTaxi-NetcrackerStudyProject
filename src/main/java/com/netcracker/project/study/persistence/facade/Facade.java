@@ -17,5 +17,5 @@ public interface Facade{
 
     <T extends Model> T getOne(long objectId, Class modelClass) throws InstantiationException, IllegalAccessException;
 
-    List<Model> getAll(long objectTypeId) throws InstantiationException, IllegalAccessException;
+    List<? extends Model> getAll(long objectTypeId, Class modelClass) throws InstantiationException, IllegalAccessException;
 }

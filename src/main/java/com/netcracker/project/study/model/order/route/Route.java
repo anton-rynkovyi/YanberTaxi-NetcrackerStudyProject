@@ -24,7 +24,6 @@ public class Route extends Model{
         super(objectId);
     }
 
-
     public int getOrderId(){
         return orderId;
     }
