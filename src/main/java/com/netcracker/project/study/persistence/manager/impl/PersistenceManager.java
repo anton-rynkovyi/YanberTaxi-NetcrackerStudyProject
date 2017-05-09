@@ -213,14 +213,14 @@ public class PersistenceManager implements Manager {
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
                 long attrId = (long) entry.getKey();
+
                 if ((attrId>=1 && attrId<=5) || (attrId>=7 && attrId<=9) || (attrId>=11 && attrId<=17) || (attrId>=19 && attrId<=24)){
                     ps.setString(++i, String.valueOf(entry.getValue()));
                     ps.setNull(++i, DATE);
                     ps.setNull(++i, NUMERIC);
-
                 }else if (attrId== 6 || attrId==10 || attrId==25) {
                     ps.setString(++i, null);
-                    ps.setDate(++i, entry.getValue() != null ? Date.valueOf(String.valueOf(entry.getValue())) : null);
+                    ps.setTimestamp(++i, entry.getValue() != null ? Timestamp.valueOf(String.valueOf(entry.getValue())) : null);
                     ps.setNull(++i, NUMERIC);
                 }else if (attrId== 18 || attrId==31 || attrId==34) {
                     ps.setString(++i, null);

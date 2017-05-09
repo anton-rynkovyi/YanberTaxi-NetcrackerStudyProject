@@ -85,10 +85,6 @@ public class ConverterFactory implements Converter {
         if (clazz == Model.class) return null;
         T model = (T) modelClass.newInstance();
 
-        for (Map.Entry entry : entity.getAttributes().entrySet()) {
-            System.out.println(entry.getValue() + ":  " + entry.getValue().getClass().getSimpleName());
-        }
-
         model.setName(entity.getName());
         model.setObjectId(entity.getObjectId());
         model.setDescription(entity.getDescription());

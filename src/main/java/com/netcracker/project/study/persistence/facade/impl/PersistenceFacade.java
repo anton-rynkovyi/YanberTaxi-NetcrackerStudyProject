@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository("persistenceFacade")
-public class PersistenceFacade<T> implements Facade {
+public class PersistenceFacade implements Facade {
 
     @Autowired
     private PersistenceManager manager;
@@ -43,9 +43,9 @@ public class PersistenceFacade<T> implements Facade {
     }
 
     @Override
-    public Driver getOne(long objectId, Class modelClass) throws InstantiationException, IllegalAccessException {
+    public <T extends Model> T getOne(long objectId, Class modelClass) throws InstantiationException, IllegalAccessException {
         PersistenceEntity entity = manager.getOne(objectId);
-        Driver model = converter.convertToModel(entity, modelClass);
+        T model = converter.convertToModel(entity, modelClass);
         return model;
     }
 
@@ -54,14 +54,15 @@ public class PersistenceFacade<T> implements Facade {
         List<PersistenceEntity> entities = manager.getAll(objectTypeId);
         List<Model> models = new ArrayList<>();
         for (int i = 0; i < entities.size(); i++) {
-           Model model = converter.convertToModel(entities.get(i), Client.class);
-           model.setObjectId(entities.get(i).getObjectId());
-           model.setName(entities.get(i).getName());
-           model.setDescription(entities.get(i).getDescription());
-           models.add(model);
+            Model model = converter.convertToModel(entities.get(i), Client.class);
+            model.setObjectId(entities.get(i).getObjectId());
+            model.setName(entities.get(i).getName());
+            model.setDescription(entities.get(i).getDescription());
+            models.add(model);
         }
         return models;
     }
+
 
 
     public PersistenceManager getManager() {
