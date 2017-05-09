@@ -54,7 +54,7 @@ public class ConverterFactory implements Converter {
             }
             if (field.isAnnotationPresent(Reference.class)) {
                 referenceAnnotation = field.getAnnotation(Reference.class);
-                references.put(referenceAnnotation.attrId(), (long) fieldValue);
+                references.put(referenceAnnotation.attrId(), Long.parseLong(fieldValue.toString()));
             }
         }
 
