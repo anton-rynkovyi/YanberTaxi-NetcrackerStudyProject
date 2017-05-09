@@ -25,19 +25,18 @@ public class Main {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
         PersistenceFacade facade = (PersistenceFacade) ctx.getBean("persistenceFacade");
 
-        /* Client client = new Client();
+       /* Client client = new Client();
         client.setName("Client Anton");
         client.setFirstName("Anton");
         client.setLastName("Rynkovoy");
         client.setDescription("It's client");
+        facade.create(client);*/
 
-        Driver driver = new Driver();
+       /* Driver driver = new Driver();
         driver.setName("Driver Ed");
         driver.setFirstName("Ed");
         driver.setEmail("ed@mail.ru");
         driver.setDescription("It's driver");
-
-        facade.create(client);
         facade.create(driver);*/
 
         /*Client client = new Client(12);
@@ -53,18 +52,16 @@ public class Main {
         facade.update(client);
         facade.update(driver);*/
 
-        Driver driver = (Driver) facade.getOne(11, Driver.class);
-        System.out.println(driver);
-
-        driver.setFirstName("Antonio");
-        driver.setFirstName("Rynkovyy");
-        driver.setName("new Anton Driver");
-
-        facade.update(driver);
-
-        System.out.println(driver);
+        List<Driver> drivers = facade.getAll(Driver.OBJECT_TYPE_ID, Driver.class);
 
 
+        for (int i = 0; i < drivers.size(); i++) {
+            System.out.println(drivers.get(i).getObjectId());
+            System.out.println(drivers.get(i).getDescription());
+            System.out.println(drivers.get(i).getName());
+            System.out.println(drivers.get(i).getFirstName());
+            System.out.println(drivers.get(i).getLastName());
+        }
     }
 }
 

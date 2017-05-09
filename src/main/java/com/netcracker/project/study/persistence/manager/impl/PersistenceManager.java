@@ -146,7 +146,6 @@ public class PersistenceManager implements Manager {
     public PersistenceEntity getOne(long objectId) {
         PersistenceEntity persistenceEntity = jdbcTemplate.queryForObject(SELECT_FROM_OBJECTS_BY_ID, rowMapper, objectId);
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID, objectId);
-        //System.out.println(rows);
         Map<Long, Object> attributes = getAttributes(rows);
         persistenceEntity.setAttributes(attributes);
         return persistenceEntity;
@@ -175,9 +174,8 @@ public class PersistenceManager implements Manager {
                 value = row.get("value");
                 try {
                     value = Integer.parseInt(value+"");
-                }catch (Exception e) {}
+                } catch (Exception e) {}
             } else if (row.get("date_value") != null) {
-                System.out.println(row.get("date_value"));
                 value = Timestamp.valueOf(row.get("date_value")+"");
             } else if (row.get("list_value_id") != null) {
                 value = row.get("list_value_id")+"";

@@ -4,13 +4,6 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 import com.netcracker.project.study.model.annotations.Reference;
-import com.netcracker.project.study.model.client.Client;
-import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.model.driver.car.Car;
-import com.netcracker.project.study.model.driver.status.DriverStatus;
-import com.netcracker.project.study.model.order.Order;
-import com.netcracker.project.study.model.order.status.OrderStatus;
-import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.persistence.converter.Converter;
 import com.netcracker.project.study.persistence.PersistenceEntity;
 import org.springframework.stereotype.Component;
@@ -18,8 +11,6 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Time;
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,8 +18,7 @@ import java.util.Map;
 @Component
 public class ConverterFactory implements Converter {
 
-    public ConverterFactory() {
-    }
+    public ConverterFactory() {}
 
     @Override
     public PersistenceEntity convertToEntity(Model model) throws IllegalAccessException, NoSuchFieldException {
@@ -118,7 +108,6 @@ public class ConverterFactory implements Converter {
 
             try {
                 Method method = modelClass.getDeclaredMethod("set" + fieldName, field.getType());
-                System.out.println(method);
                 method.invoke(model, fieldValue);
             } catch (NoSuchMethodException imp) {
                 imp.printStackTrace();
