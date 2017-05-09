@@ -41,7 +41,7 @@ public class Order extends Model{
         return driverId;
     }
 
-    public void setDriverId(int driverId) {
+    public void setDriverId(long driverId) {
         this.driverId = driverId;
     }
 
@@ -49,7 +49,7 @@ public class Order extends Model{
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(long clientId) {
         this.clientId = clientId;
     }
 

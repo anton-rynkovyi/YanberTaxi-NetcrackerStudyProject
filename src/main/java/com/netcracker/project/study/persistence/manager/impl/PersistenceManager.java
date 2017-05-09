@@ -29,7 +29,7 @@ public class PersistenceManager implements Manager {
             " VALUES(?,?,?,?,?)";
     public static final String CREATE_OBJREFERENCE = ""+
             "INSERT INTO OBJREFERENCE" +
-            "(ATTR_ID, REFERENCE, OBJECT_ID)" +
+            "(REFERENCE, OBJECT_ID, ATTR_ID)" +
             " VALUES(?,?,?)";
     public static final String UPDATE_OBJECTS = ""+
             "UPDATE OBJECTS " +
@@ -37,8 +37,9 @@ public class PersistenceManager implements Manager {
             "WHERE object_id=?";
     public static final String UPDATE_OBJREFERENCE = ""+
             "UPDATE OBJREFERENCE " +
-            "SET ATTR_ID=?, REFERENCE=?, OBJECT_ID=? " +
-            "WHERE object_id=?";
+            "SET  REFERENCE=?" +
+            "WHERE object_id=?" +
+            "AND attr_id =?";
     public static final String UPDATE_ATTRIBUTES = ""+
             "UPDATE ATTRIBUTES " +
             "SET value=?, date_value=?, list_value_id=? " +
@@ -66,6 +67,10 @@ public class PersistenceManager implements Manager {
             "LEFT JOIN  LISTS " +
             "ON attr.List_value_id = LISTS.list_value_id " +
             "where attr.OBJECT_ID = ?";
+    public static final String SELECT_FROM_OBJREFERENCE = ""+
+            "SELECT * " +
+            "FROM OBJREFERENCE " +
+            "WHERE object_id=?";
     public static final String SELECT_FROM_OBJECTS = ""+
             "SELECT * " +
             "FROM Objects " +
@@ -94,7 +99,9 @@ public class PersistenceManager implements Manager {
             jdbcTemplate.update(CREATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
         }
         for (Map.Entry entry : persistenceEntity.getReferences().entrySet()) {
-            jdbcTemplate.update(CREATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
+            if (!(entry.getValue().toString().equals("0")) ) {
+                jdbcTemplate.update(CREATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
+            }
         }
         return persistenceEntity;
     }
@@ -106,9 +113,11 @@ public class PersistenceManager implements Manager {
         for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
             jdbcTemplate.update(UPDATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
         }
-       /* for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
-            jdbcTemplate.update(UPDATE_OBJREFERENCE, getPreparedStatementSetterRef(entry,persistenceEntity));
-        }*/
+        for (Map.Entry entry : persistenceEntity.getReferences().entrySet()) {
+            if (!(entry.getValue().toString().equals("0"))) {
+                jdbcTemplate.update(UPDATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
+            }
+        }
     }
 
 
@@ -117,6 +126,7 @@ public class PersistenceManager implements Manager {
         jdbcTemplate.update(DELETE_FROM_OBJECTS, objectId);
         jdbcTemplate.update(DELETE_FROM_ATTRIBUTES, objectId);
         jdbcTemplate.update(DELETE_FROM_OBJREFERENCE, objectId);
+        jdbcTemplate.update("commit");
     }
 
 
@@ -148,7 +158,9 @@ public class PersistenceManager implements Manager {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID, objectId);
         //System.out.println(rows);
         Map<Long, Object> attributes = getAttributes(rows);
-        persistenceEntity.setAttributes(attributes);
+        List<Map<String, Object>> rowsRef = jdbcTemplate.queryForList(SELECT_FROM_OBJREFERENCE, objectId);
+        Map<Long, Long> references = getReferences(rowsRef);
+        persistenceEntity.setReferences(references);
         return persistenceEntity;
     }
 
@@ -188,6 +200,19 @@ public class PersistenceManager implements Manager {
         return attributes;
     }
 
+    private Map<Long, Long> getReferences(List<Map<String, Object>> rowss) {
+        Map<Long, Long> reference = new HashMap();
+        for (Map row : rowss) {
+            long attrId = Long.parseLong(String.valueOf(row.get("attr_id")));
+            Long value = null;
+            if (row.get("reference") != null) {
+                value = Long.parseLong(row.get("reference")+"");
+            }
+
+            reference.put(attrId, value);
+        }
+        return reference;
+    }
 
     private PreparedStatementSetter getPreparedStatementSetterObjects(final PersistenceEntity persistenceEntity) {
         return new PreparedStatementSetter() {
@@ -225,7 +250,11 @@ public class PersistenceManager implements Manager {
                 }else if (attrId== 18 || attrId==31 || attrId==34) {
                     ps.setString(++i, null);
                     ps.setNull(++i, DATE);
-                    ps.setInt(++i, Integer.getInteger(String.valueOf(entry.getValue())));
+                    if (entry.getValue() == null) {
+                        ps.setNull(++i, NUMERIC);
+                    } else {
+                        ps.setInt(++i, Integer.getInteger(String.valueOf(entry.getValue())));
+                    }
 
                 }
                 ps.setLong(++i, persistenceEntity.getObjectId());
@@ -240,10 +269,10 @@ public class PersistenceManager implements Manager {
             public void setValues(PreparedStatement ps) throws SQLException {
                 System.out.println(entry);
                 int i = 0;
-                ps.setLong(++i, (Long) entry.getKey());
                 ps.setLong(++i, entry.getValue() == null ? 0l : Long.parseLong(String.valueOf(entry.getValue())));
                 ps.setLong(++i, persistenceEntity.getObjectId());
-                ps.setLong(++i, persistenceEntity.getObjectId()); // todo
+                ps.setLong(++i, (Long) entry.getKey());
+                // todo
             }
         };
     }

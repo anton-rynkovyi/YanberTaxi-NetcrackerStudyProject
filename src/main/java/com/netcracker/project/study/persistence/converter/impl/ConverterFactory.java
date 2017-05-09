@@ -64,7 +64,7 @@ public class ConverterFactory implements Converter {
             }
             if (field.isAnnotationPresent(Reference.class)) {
                 referenceAnnotation = field.getAnnotation(Reference.class);
-                references.put(referenceAnnotation.attrId(), (long) fieldValue);
+                references.put(referenceAnnotation.attrId(), Long.parseLong(fieldValue.toString()));
             }
         }
 
@@ -86,7 +86,9 @@ public class ConverterFactory implements Converter {
         T model = (T) modelClass.newInstance();
 
         for (Map.Entry entry : entity.getAttributes().entrySet()) {
-            System.out.println(entry.getValue() + ":  " + entry.getValue().getClass().getSimpleName());
+            if (!(entry.getValue() == null)) {
+                System.out.println(entry.getValue() + ":  " + entry.getValue().getClass().getSimpleName());
+            }
         }
 
         model.setName(entity.getName());
