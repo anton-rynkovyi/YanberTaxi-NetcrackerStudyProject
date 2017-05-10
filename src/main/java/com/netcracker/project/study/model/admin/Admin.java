@@ -9,8 +9,12 @@ public class Admin extends Model implements AdminAttr {
 
     public Admin(){}
 
-    public Admin(long objectId) {
-        super(objectId);
+    public Admin(String name) {
+        super(name);
+    }
+
+    public Admin(String name, String description) {
+        super(name, description);
     }
 
     public String getPhoneNumber() {

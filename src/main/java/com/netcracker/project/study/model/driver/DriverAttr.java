@@ -24,4 +24,7 @@ public interface DriverAttr {
     long STATUS_ATTR = 9;
 
     long UNBAN_DATE_ATTR = 10;
+
+
+
 }

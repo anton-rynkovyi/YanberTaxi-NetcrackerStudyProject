@@ -16,17 +16,20 @@ public class OrderStatus extends Model{
     private int orderId;
 
     @Attribute(attrId = OrderStatusAttr.STATUS_ATTR)
-    private String status;
+    private int status;
 
     @Attribute(attrId = OrderStatusAttr.TIME_STAMP_ATTR)
     private Timestamp timeStamp;
 
     public OrderStatus() {}
 
-    public OrderStatus(long objectId){
-        super(objectId);
+    public OrderStatus(String name) {
+        super(name);
     }
 
+    public OrderStatus(String name, String description) {
+        super(name, description);
+    }
 
     public int getOrderId() {
         return orderId;
@@ -36,11 +39,11 @@ public class OrderStatus extends Model{
         this.orderId = orderId;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

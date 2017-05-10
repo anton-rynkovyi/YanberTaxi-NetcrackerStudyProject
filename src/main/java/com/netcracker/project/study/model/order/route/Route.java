@@ -20,8 +20,12 @@ public class Route extends Model{
 
     public Route() {}
 
-    public Route(long objectId){
-        super(objectId);
+    public Route(String name) {
+        super(name);
+    }
+
+    public Route(String name, String description) {
+        super(name, description);
     }
 
     public int getOrderId(){

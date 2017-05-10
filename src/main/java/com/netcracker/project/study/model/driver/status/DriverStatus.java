@@ -17,17 +17,20 @@ public class DriverStatus extends Model{
     private int driverId;
 
     @Attribute(attrId = DriverStatusAttr.STATUS_ATTR)
-    private String status;
+    private int status;
 
     @Attribute(attrId = DriverStatusAttr.TIME_STAMP_ATTR)
     private Timestamp timeStamp;
 
     public DriverStatus() {}
 
-    public DriverStatus(long objectId){
-        super(objectId);
+    public DriverStatus(String name) {
+        super(name);
     }
 
+    public DriverStatus(String name, String description) {
+        super(name, description);
+    }
 
     public int getDriverId() {
         return driverId;
@@ -37,11 +40,11 @@ public class DriverStatus extends Model{
         this.driverId = driverId;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

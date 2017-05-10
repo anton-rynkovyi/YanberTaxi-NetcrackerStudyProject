@@ -25,11 +25,13 @@ public class Client extends Model implements ClientAttr {
 
     public Client() {}
 
-    public Client(long objectId){
-        super(objectId);
+    public Client(String name) {
+        super(name);
     }
 
-
+    public Client(String name, String description) {
+        super(name, description);
+    }
 
     public String getLastName() {
         return lastName;

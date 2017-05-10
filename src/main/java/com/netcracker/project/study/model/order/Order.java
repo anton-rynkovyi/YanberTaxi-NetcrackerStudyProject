@@ -17,7 +17,7 @@ public class Order extends Model{
     private long clientId;
 
     @Attribute(attrId = OrderAttr.STATUS_ATTR)
-    private String status;
+    private int status;
 
     @Attribute(attrId = OrderAttr.COST_ATTR)
     private int cost;
@@ -26,15 +26,19 @@ public class Order extends Model{
     private int distance;
 
     @Reference(attrId = OrderAttr.DRIVER_RATING_ATTR)
-    private int driverRating;
+    private long driverRating;
 
     @Attribute(attrId = OrderAttr.DRIVER_MEMO_ATTR)
     private String driverMemo;
 
     public Order() {}
 
-    public Order(long objectId){
-        super(objectId);
+    public Order(String name) {
+        super(name);
+    }
+
+    public Order(String name, String description) {
+        super(name, description);
     }
 
     public long getDriverId() {
@@ -53,11 +57,11 @@ public class Order extends Model{
         this.clientId = clientId;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -77,11 +81,11 @@ public class Order extends Model{
         this.distance = distance;
     }
 
-    public int getDriverRating() {
+    public long getDriverRating() {
         return driverRating;
     }
 
-    public void setDriverRating(int driverRating) {
+    public void setDriverRating(long driverRating) {
         this.driverRating = driverRating;
     }
 
@@ -92,5 +96,4 @@ public class Order extends Model{
     public void setDriverMemo(String driverMemo) {
         this.driverMemo = driverMemo;
     }
-
 }

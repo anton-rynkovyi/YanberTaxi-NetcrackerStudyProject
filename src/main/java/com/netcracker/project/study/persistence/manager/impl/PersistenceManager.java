@@ -237,21 +237,21 @@ public class PersistenceManager implements Manager {
                 int i = 0;
                 long attrId = (long) entry.getKey();
 
-                if ((attrId>=1 && attrId<=5) || (attrId>=7 && attrId<=9) || (attrId>=11 && attrId<=17) || (attrId>=19 && attrId<=24)){
+                if ((attrId>=1 && attrId<=5) || (attrId>=7 && attrId<=8) || (attrId>=11 && attrId<=17) || (attrId>=19 && attrId<=24)){
                     ps.setString(++i, String.valueOf(entry.getValue()));
                     ps.setNull(++i, DATE);
                     ps.setNull(++i, NUMERIC);
-                }else if (attrId== 6 || attrId==10 || attrId==25) {
+                }else if (attrId == 6 || attrId == 10 || attrId == 25) {
                     ps.setString(++i, null);
                     ps.setTimestamp(++i, entry.getValue() != null ? Timestamp.valueOf(String.valueOf(entry.getValue())) : null);
                     ps.setNull(++i, NUMERIC);
-                }else if (attrId== 18 || attrId==31 || attrId==34) {
+                }else if (attrId == 9 || attrId == 18 || attrId == 31 || attrId == 34) {
                     ps.setString(++i, null);
                     ps.setNull(++i, DATE);
                     if (entry.getValue() == null) {
                         ps.setNull(++i, NUMERIC);
                     } else {
-                        ps.setInt(++i, Integer.getInteger(String.valueOf(entry.getValue())));
+                        ps.setInt(++i, (Integer) entry.getValue());
                     }
 
                 }
@@ -265,7 +265,6 @@ public class PersistenceManager implements Manager {
         return new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
-                System.out.println(entry);
                 int i = 0;
                 ps.setLong(++i, entry.getValue() == null ? 0l : Long.parseLong(String.valueOf(entry.getValue())));
                 ps.setLong(++i, persistenceEntity.getObjectId());

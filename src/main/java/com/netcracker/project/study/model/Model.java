@@ -19,11 +19,12 @@ public abstract class Model {
 
     public Model() {}
 
-    public Model(long objectId) {
-        this.objectId = objectId;
+    public Model(String name) {this.name = name; }
+
+    public Model(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
-
-
 
     public String getName() {
         return name;

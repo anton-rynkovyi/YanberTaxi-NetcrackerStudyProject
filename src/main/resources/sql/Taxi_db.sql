@@ -6,6 +6,8 @@ INSERT INTO OBJTYPE (OBJECT_TYPE_ID,PARENT_ID,CODE,NAME,DESCRIPTION) VALUES (5,N
 INSERT INTO OBJTYPE (OBJECT_TYPE_ID,PARENT_ID,CODE,NAME,DESCRIPTION) VALUES (6,NULL,NULL,'Drivers_status',NULL);
 INSERT INTO OBJTYPE (OBJECT_TYPE_ID,PARENT_ID,CODE,NAME,DESCRIPTION) VALUES (7,NULL,NULL,'Routes',NULL);
 
+
+
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) VALUES (1,1,NULL,NULL,'Last_name');
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) VALUES (2,1,NULL,NULL,'First_name');
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) VALUES (3,1,NULL,NULL,'Middle_name');
@@ -59,19 +61,19 @@ INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) VALUE
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) VALUES (38,7,NULL,NULL,'Show_order');
 
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,1,'approval');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,2,'off dut');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,2,'off duty');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,3,'free');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,4,'on call');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,5,'perform order');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,5,'performing order');
 
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,6,'new');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,7,'acceptedt');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,7,'accepted');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,8,'performed');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,9,'performing');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,10,'canceled');
 
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,11,'new');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,12,'acceptedt');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,12,'accepted');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,13,'performed');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,14,'performing');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,15,'canceled');

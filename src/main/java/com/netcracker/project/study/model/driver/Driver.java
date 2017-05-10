@@ -33,7 +33,7 @@ public class Driver extends Model implements DriverAttr{
     private String email;
 
     @Attribute(attrId = DriverAttr.STATUS_ATTR)
-    private String status;
+    private int status;
 
     @Attribute(attrId = DriverAttr.HIRE_DATE_ATTR)
     private Timestamp hireDate;
@@ -43,8 +43,12 @@ public class Driver extends Model implements DriverAttr{
 
     public Driver() {}
 
-    public Driver(long objectId){
-        super(objectId);
+    public Driver(String name) {
+        super(name);
+    }
+
+    public Driver(String name, String description) {
+        super(name, description);
     }
 
     public String getLastName() {
@@ -103,11 +107,11 @@ public class Driver extends Model implements DriverAttr{
         this.email = email;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

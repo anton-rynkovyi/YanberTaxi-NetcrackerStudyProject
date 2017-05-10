@@ -34,10 +34,13 @@ public class Car extends Model {
 
     public Car() {}
 
-    public Car(long objectId){
-        super(objectId);
+    public Car(String name) {
+        super(name);
     }
 
+    public Car(String name, String description) {
+        super(name, description);
+    }
 
     public String getModelType() {
         return modelType;
