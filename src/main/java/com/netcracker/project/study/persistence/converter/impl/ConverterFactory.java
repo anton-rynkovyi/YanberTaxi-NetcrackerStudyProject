@@ -7,7 +7,9 @@ import com.netcracker.project.study.model.annotations.Reference;
 import com.netcracker.project.study.persistence.converter.Converter;
 import com.netcracker.project.study.persistence.PersistenceEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -47,7 +49,6 @@ public class ConverterFactory implements Converter {
                 fieldValue = field.get(model);
                 field.setAccessible(false);
             }
-
             if (field.isAnnotationPresent(Attribute.class)) {
                 attributeAnnotation = field.getAnnotation(Attribute.class);
                 attributes.put(attributeAnnotation.attrId(), fieldValue);
@@ -105,7 +106,7 @@ public class ConverterFactory implements Converter {
     private void setFieldsInModel(Object fieldValue, Field field, Class modelClass, Model model) {
         if (fieldValue != null) {
             String fieldName = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
-
+            System.out.println(fieldValue + " :  " + fieldValue.getClass().getSimpleName());
             try {
                 Method method = modelClass.getDeclaredMethod("set" + fieldName, field.getType());
                 method.invoke(model, fieldValue);

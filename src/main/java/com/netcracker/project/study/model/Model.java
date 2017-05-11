@@ -2,18 +2,18 @@ package com.netcracker.project.study.model;
 
 import com.netcracker.project.study.model.annotations.Attribute;
 
-public abstract class Model {
+public abstract class Model implements ObjectFakeAttr{
 
-    @Attribute(attrId = -1)
+    @Attribute(attrId = OBJECT_NAME_ATTR)
     private String name;
 
-    @Attribute(attrId = -2)
+    @Attribute(attrId = OBJECT_DESC_ATTR)
     private String description;
 
-    @Attribute(attrId = -3)
+    @Attribute(attrId = OBJECT_ID_ATTR)
     private long objectId;
 
-    @Attribute(attrId = -4)
+    @Attribute(attrId = PARENT_ID_ATTR)
     private long parentId;
 
 

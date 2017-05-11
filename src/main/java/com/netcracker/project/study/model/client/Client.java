@@ -5,22 +5,22 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
 
-@ObjectType(objectTypeId = 2)
+@ObjectType(objectTypeId = ClientAttr.OBJECT_TYPE_ID)
 public class Client extends Model implements ClientAttr {
 
-    @Attribute(attrId = 11)
+    @Attribute(attrId = ClientAttr.LAST_NAME_ATTR)
     private String lastName;
 
-    @Attribute(attrId = 12)
+    @Attribute(attrId = ClientAttr.FIRST_NAME_ATTR)
     private String firstName;
 
-    @Attribute(attrId = 13)
+    @Attribute(attrId = ClientAttr.MIDDLE_NAME_ATTR)
     private String middleName;
 
-    @Attribute(attrId = 14)
+    @Attribute(attrId = ClientAttr.PHONE_NUMBER_ATTR)
     private String phoneNumber;
 
-    @Attribute(attrId = 15)
+    @Attribute(attrId = ClientAttr.POINTS_ATTR)
     private int points;
 
     public Client() {}

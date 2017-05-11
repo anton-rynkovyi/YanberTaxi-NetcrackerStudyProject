@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 
-@ObjectType(objectTypeId = 1)
+@ObjectType(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
 public class Driver extends Model implements DriverAttr{
 
     @Attribute(attrId = DriverAttr.LAST_NAME_ATTR)

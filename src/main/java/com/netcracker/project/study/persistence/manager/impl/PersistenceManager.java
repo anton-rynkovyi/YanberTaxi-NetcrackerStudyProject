@@ -62,11 +62,11 @@ public class PersistenceManager implements Manager {
             "FROM OBJECTS " +
             "WHERE object_id=?";
     public static final String SELECT_FROM_ATTRIBUTES_BY_ID = ""+
-            "Select attr.value, attr.Date_value,LISTS.value as list_value_id, attr.attr_id " +
-            "from  Attributes attr " +
-            "LEFT JOIN  LISTS " +
+            "SELECT attr.value, attr.date_value, lists.list_value_id as list_value_id, attr.attr_id " +
+            "from  attributes attr " +
+            "LEFT JOIN  lists " +
             "ON attr.List_value_id = LISTS.list_value_id " +
-            "where attr.OBJECT_ID = ?";
+            "WHERE attr.OBJECT_ID = ?";
     public static final String SELECT_FROM_OBJREFERENCE = ""+
             "SELECT * " +
             "FROM OBJREFERENCE " +
@@ -81,13 +81,11 @@ public class PersistenceManager implements Manager {
             "from objects";
 
     private JdbcTemplate jdbcTemplate;
-    private NamedParameterJdbcTemplate namedTemplate;
 
 
     @Autowired
     public PersistenceManager(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.namedTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
 
@@ -159,6 +157,7 @@ public class PersistenceManager implements Manager {
         Map<Long, Object> attributes = getAttributes(rows);
         List<Map<String, Object>> rowsRef = jdbcTemplate.queryForList(SELECT_FROM_OBJREFERENCE, objectId);
         Map<Long, Long> references = getReferences(rowsRef);
+        persistenceEntity.setAttributes(attributes);
         persistenceEntity.setReferences(references);
         return persistenceEntity;
     }
@@ -190,7 +189,7 @@ public class PersistenceManager implements Manager {
             } else if (row.get("date_value") != null) {
                 value = Timestamp.valueOf(row.get("date_value")+"");
             } else if (row.get("list_value_id") != null) {
-                value = row.get("list_value_id")+"";
+                value = Integer.parseInt(row.get("list_value_id")+"");
             }
 
             attributes.put(attrId, value);
