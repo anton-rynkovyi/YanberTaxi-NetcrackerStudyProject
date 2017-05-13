@@ -1,9 +1,9 @@
 package com.netcracker.project.study.model.driver;
 
 import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.model.annotations.Attribute;
-import com.netcracker.project.study.model.annotations.ObjectType;
+import com.netcracker.project.study.model.annotations.*;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -12,34 +12,34 @@ import java.util.*;
 public class Driver extends Model implements DriverAttr{
 
     @Attribute(attrId = DriverAttr.LAST_NAME_ATTR)
-    private String lastName;
+    private @AttrValue String lastName;
 
     @Attribute(attrId = DriverAttr.FIRST_NAME_ATTR)
-    private String firstName;
+    private @AttrValue String firstName;
 
     @Attribute(attrId = DriverAttr.MIDDLE_NAME_ATTR)
-    private String middleName;
+    private @AttrValue String middleName;
 
     @Attribute(attrId = DriverAttr.PHONE_NUMBER_ATTR)
-    private String phoneNumber;
+    private @AttrValue String phoneNumber;
 
     @Attribute(attrId = DriverAttr.RATING_ATTR)
-    private int rating;
+    private @AttrValue BigInteger rating;
 
     @Attribute(attrId = DriverAttr.EXPERIENCE_ATTR)
-    private int experience;
+    private @AttrValue BigInteger experience;
 
     @Attribute(attrId = DriverAttr.EMAIL_ATTR)
-    private String email;
+    private @AttrValue String email;
 
     @Attribute(attrId = DriverAttr.STATUS_ATTR)
-    private int status;
+    private @AttrList BigInteger status;
 
     @Attribute(attrId = DriverAttr.HIRE_DATE_ATTR)
-    private Timestamp hireDate;
+    private @AttrDate Timestamp hireDate;
 
     @Attribute(attrId = DriverAttr.UNBAN_DATE_ATTR)
-    private Timestamp unbanDate;
+    private @AttrDate Timestamp unbanDate;
 
     public Driver() {}
 
@@ -83,19 +83,19 @@ public class Driver extends Model implements DriverAttr{
         this.phoneNumber = phoneNumber;
     }
 
-    public int getRating() {
+    public BigInteger getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(BigInteger rating) {
         this.rating = rating;
     }
 
-    public int getExperience() {
+    public BigInteger getExperience() {
         return experience;
     }
 
-    public void setExperience(int experience) {
+    public void setExperience(BigInteger experience) {
         this.experience = experience;
     }
 
@@ -107,11 +107,11 @@ public class Driver extends Model implements DriverAttr{
         this.email = email;
     }
 
-    public int getStatus() {
+    public BigInteger getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(BigInteger status) {
         this.status = status;
     }
 

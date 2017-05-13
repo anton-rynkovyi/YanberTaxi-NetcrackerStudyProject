@@ -1,35 +1,33 @@
 package com.netcracker.project.study.model.order;
 
 import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.model.annotations.Attribute;
-import com.netcracker.project.study.model.annotations.ObjectType;
-import com.netcracker.project.study.model.annotations.Reference;
-import com.netcracker.project.study.model.client.ClientAttr;
-import com.netcracker.project.study.model.driver.DriverAttr;
+import com.netcracker.project.study.model.annotations.*;
+
+import java.math.BigInteger;
 
 @ObjectType(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
 public class Order extends Model{
 
     @Reference(attrId = OrderAttr.DRIVER_ID_ATTR)
-    private long driverId;
+    private BigInteger driverId;
 
     @Reference(attrId = OrderAttr.CLIENT_ID_ATTR)
-    private long clientId;
+    private BigInteger clientId;
 
     @Attribute(attrId = OrderAttr.STATUS_ATTR)
-    private int status;
+    private @AttrList BigInteger status;
 
     @Attribute(attrId = OrderAttr.COST_ATTR)
-    private int cost;
+    private @AttrValue BigInteger cost;
 
     @Attribute(attrId = OrderAttr.DISTANCE_ATTR)
-    private int distance;
+    private @AttrValue BigInteger distance;
 
     @Reference(attrId = OrderAttr.DRIVER_RATING_ATTR)
-    private long driverRating;
+    private BigInteger driverRating;
 
     @Attribute(attrId = OrderAttr.DRIVER_MEMO_ATTR)
-    private String driverMemo;
+    private @AttrValue String driverMemo;
 
     public Order() {}
 
@@ -41,51 +39,51 @@ public class Order extends Model{
         super(name, description);
     }
 
-    public long getDriverId() {
+    public BigInteger getDriverId() {
         return driverId;
     }
 
-    public void setDriverId(long driverId) {
+    public void setDriverId(BigInteger driverId) {
         this.driverId = driverId;
     }
 
-    public long getClientId() {
+    public BigInteger getClientId() {
         return clientId;
     }
 
-    public void setClientId(long clientId) {
+    public void setClientId(BigInteger clientId) {
         this.clientId = clientId;
     }
 
-    public int getStatus() {
+    public BigInteger getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(BigInteger status) {
         this.status = status;
     }
 
-    public int getCost() {
+    public BigInteger getCost() {
         return cost;
     }
 
-    public void setCost(int cost) {
+    public void setCost(BigInteger cost) {
         this.cost = cost;
     }
 
-    public int getDistance() {
+    public BigInteger getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(BigInteger distance) {
         this.distance = distance;
     }
 
-    public long getDriverRating() {
+    public BigInteger getDriverRating() {
         return driverRating;
     }
 
-    public void setDriverRating(long driverRating) {
+    public void setDriverRating(BigInteger driverRating) {
         this.driverRating = driverRating;
     }
 

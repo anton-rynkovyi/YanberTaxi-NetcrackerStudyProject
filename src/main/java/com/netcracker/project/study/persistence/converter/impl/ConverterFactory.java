@@ -1,9 +1,7 @@
 package com.netcracker.project.study.persistence.converter.impl;
 
 import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.model.annotations.Attribute;
-import com.netcracker.project.study.model.annotations.ObjectType;
-import com.netcracker.project.study.model.annotations.Reference;
+import com.netcracker.project.study.model.annotations.*;
 import com.netcracker.project.study.persistence.converter.Converter;
 import com.netcracker.project.study.persistence.PersistenceEntity;
 import org.springframework.stereotype.Component;
@@ -13,6 +11,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,17 +29,19 @@ public class ConverterFactory implements Converter {
 
         if (modelClass.isAnnotationPresent(ObjectType.class)) {
             ObjectType objectType = (ObjectType) modelClass.getAnnotation(ObjectType.class);
-            entity.setObjectTypeId(objectType.objectTypeId());
+            entity.setObjectTypeId(BigInteger.valueOf(objectType.objectTypeId())); //convert to BigInt
         }
 
-        Map<Long, Object> attributes = new HashMap<>();
-        Map <Long,Long> references = new HashMap<>();
+        Map<BigInteger, Object> attributes = new HashMap<>();
+        Map <BigInteger, BigInteger> references = new HashMap<>();
 
         Field[] fields = modelClass.getDeclaredFields();
 
         Attribute attributeAnnotation;
         Reference referenceAnnotation;
+
         Object fieldValue;
+
         for (Field field : fields) {
             if (field.isAccessible()) {
                 fieldValue = field.get(model);
@@ -49,13 +50,24 @@ public class ConverterFactory implements Converter {
                 fieldValue = field.get(model);
                 field.setAccessible(false);
             }
+
             if (field.isAnnotationPresent(Attribute.class)) {
                 attributeAnnotation = field.getAnnotation(Attribute.class);
-                attributes.put(attributeAnnotation.attrId(), fieldValue);
+                if(field.isAnnotationPresent(AttrValue.class)){
+                    attributes.put(BigInteger.valueOf(attributeAnnotation.attrId()), fieldValue.toString());
+                }else  if(field.isAnnotationPresent(AttrDate.class)){
+                    attributes.put(BigInteger.valueOf(attributeAnnotation.attrId()),
+                            Long.parseLong(String.valueOf(fieldValue)));
+                }else  if(field.isAnnotationPresent(AttrList.class)){
+                    attributes.put(BigInteger.valueOf(attributeAnnotation.attrId()),
+                            BigInteger.valueOf(Long.parseLong(String.valueOf(fieldValue))));
+                }
             }
+
             if (field.isAnnotationPresent(Reference.class)) {
                 referenceAnnotation = field.getAnnotation(Reference.class);
-                references.put(referenceAnnotation.attrId(), Long.parseLong(fieldValue.toString()));
+                references.put(BigInteger.valueOf(referenceAnnotation.attrId()),
+                        BigInteger.valueOf(Long.parseLong(fieldValue.toString())));
             }
         }
 
@@ -81,8 +93,8 @@ public class ConverterFactory implements Converter {
         model.setDescription(entity.getDescription());
         model.setParentId(entity.getParentId());
 
-        Map<Long, Object> attributes = entity.getAttributes();
-        Map <Long,Long> references = entity.getReferences();
+        Map<BigInteger, Object> attributes = entity.getAttributes();
+        Map <BigInteger, BigInteger> references = entity.getReferences();
         Field[] fields = modelClass.getDeclaredFields();
         Attribute attributeAnnotation;
         Reference referenceAnnotation;

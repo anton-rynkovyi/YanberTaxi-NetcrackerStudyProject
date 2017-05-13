@@ -1,11 +1,10 @@
 package com.netcracker.project.study.model.order.status;
 
 import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.model.annotations.Attribute;
-import com.netcracker.project.study.model.annotations.ObjectType;
-import com.netcracker.project.study.model.annotations.Reference;
+import com.netcracker.project.study.model.annotations.*;
 import com.netcracker.project.study.model.order.OrderAttr;
 
+import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
 
@@ -13,13 +12,13 @@ import java.sql.Timestamp;
 public class OrderStatus extends Model{
 
     @Reference(attrId = OrderStatusAttr.ORDER_ID_ATTR)
-    private int orderId;
+    private BigInteger orderId;
 
     @Attribute(attrId = OrderStatusAttr.STATUS_ATTR)
-    private int status;
+    private @AttrList BigInteger status;
 
     @Attribute(attrId = OrderStatusAttr.TIME_STAMP_ATTR)
-    private Timestamp timeStamp;
+    private @AttrDate Timestamp timeStamp;
 
     public OrderStatus() {}
 
@@ -31,19 +30,19 @@ public class OrderStatus extends Model{
         super(name, description);
     }
 
-    public int getOrderId() {
+    public BigInteger getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(BigInteger orderId) {
         this.orderId = orderId;
     }
 
-    public int getStatus() {
+    public BigInteger getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(BigInteger status) {
         this.status = status;
     }
 

@@ -2,6 +2,8 @@ package com.netcracker.project.study.model;
 
 import com.netcracker.project.study.model.annotations.Attribute;
 
+import java.math.BigInteger;
+
 public abstract class Model implements ObjectFakeAttr{
 
     @Attribute(attrId = OBJECT_NAME_ATTR)
@@ -11,10 +13,10 @@ public abstract class Model implements ObjectFakeAttr{
     private String description;
 
     @Attribute(attrId = OBJECT_ID_ATTR)
-    private long objectId;
+    private BigInteger objectId;
 
     @Attribute(attrId = PARENT_ID_ATTR)
-    private long parentId;
+    private BigInteger parentId;
 
 
     public Model() {}
@@ -42,19 +44,19 @@ public abstract class Model implements ObjectFakeAttr{
         this.description = description;
     }
 
-    public long getObjectId() {
+    public BigInteger getObjectId() {
         return objectId;
     }
 
-    public void setObjectId(long objectId) {
+    public void setObjectId(BigInteger objectId) {
         this.objectId = objectId;
     }
 
-    public long getParentId() {
+    public BigInteger getParentId() {
         return parentId;
     }
 
-    public void setParentId(long parentId) {
+    public void setParentId(BigInteger parentId) {
         this.parentId = parentId;
     }
 }

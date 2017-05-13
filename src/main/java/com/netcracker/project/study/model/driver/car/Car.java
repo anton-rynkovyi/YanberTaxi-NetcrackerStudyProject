@@ -1,36 +1,35 @@
 package com.netcracker.project.study.model.driver.car;
 
 import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.model.annotations.Attribute;
-import com.netcracker.project.study.model.annotations.ObjectType;
-import com.netcracker.project.study.model.annotations.Reference;
+import com.netcracker.project.study.model.annotations.*;
 import com.netcracker.project.study.model.driver.DriverAttr;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 @ObjectType(objectTypeId = CarAttr.OBJECT_TYPE_ID)
 public class Car extends Model {
 
     @Attribute(attrId = CarAttr.MAKE_OF_CAR_ATTR)
-    private String makeOfCar;
+    private @AttrValue String makeOfCar;
 
     @Attribute(attrId = CarAttr.MODEL_TYPE_ATTR)
-    private String modelType;
+    private @AttrValue String modelType;
 
     @Attribute(attrId = CarAttr.RELEASE_DATE_ATTR)
-    private Date releaseDate;
+    private @AttrDate Date releaseDate;
 
     @Attribute(attrId = CarAttr.SEATS_COUNT_ATTR)
-    private int seatsCount;
+    private @AttrValue BigInteger seatsCount;
 
     @Reference(attrId = CarAttr.DRIVER_ID_ATTR)
-    private int driverId;
+    private BigInteger driverId;
 
     @Attribute(attrId = CarAttr.STATE_NUMBER_ATTR)
-    private int stateNumber;
+    private @AttrValue BigInteger stateNumber;
 
     @Attribute(attrId = CarAttr.CHILD_SEAT)
-    private boolean childSeat;
+    private @AttrValue boolean childSeat;
 
     public Car() {}
 
@@ -66,27 +65,27 @@ public class Car extends Model {
         this.releaseDate = releaseDate;
     }
 
-    public int getSeatsCount() {
+    public BigInteger getSeatsCount() {
         return seatsCount;
     }
 
-    public void setSeatsCount(int seatsCount) {
+    public void setSeatsCount(BigInteger seatsCount) {
         this.seatsCount = seatsCount;
     }
 
-    public int getDriverId() {
+    public BigInteger getDriverId() {
         return driverId;
     }
 
-    public void setDriverId(int driverId) {
+    public void setDriverId(BigInteger driverId) {
         this.driverId = driverId;
     }
 
-    public int getStateNumber() {
+    public BigInteger getStateNumber() {
         return stateNumber;
     }
 
-    public void setStateNumber(int stateNumber) {
+    public void setStateNumber(BigInteger stateNumber) {
         this.stateNumber = stateNumber;
     }
 

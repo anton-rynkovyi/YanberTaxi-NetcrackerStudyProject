@@ -2,26 +2,29 @@ package com.netcracker.project.study.model.client;
 
 
 import com.netcracker.project.study.model.Model;
+import com.netcracker.project.study.model.annotations.AttrValue;
 import com.netcracker.project.study.model.annotations.Attribute;
 import com.netcracker.project.study.model.annotations.ObjectType;
+
+import java.math.BigInteger;
 
 @ObjectType(objectTypeId = ClientAttr.OBJECT_TYPE_ID)
 public class Client extends Model implements ClientAttr {
 
     @Attribute(attrId = ClientAttr.LAST_NAME_ATTR)
-    private String lastName;
+    private @AttrValue String lastName;
 
     @Attribute(attrId = ClientAttr.FIRST_NAME_ATTR)
-    private String firstName;
+    private @AttrValue String firstName;
 
     @Attribute(attrId = ClientAttr.MIDDLE_NAME_ATTR)
-    private String middleName;
+    private @AttrValue String middleName;
 
     @Attribute(attrId = ClientAttr.PHONE_NUMBER_ATTR)
-    private String phoneNumber;
+    private @AttrValue String phoneNumber;
 
     @Attribute(attrId = ClientAttr.POINTS_ATTR)
-    private int points;
+    private @AttrValue BigInteger points;
 
     public Client() {}
 
@@ -65,11 +68,11 @@ public class Client extends Model implements ClientAttr {
         this.phoneNumber = phone;
     }
 
-    public int getPoints() {
+    public BigInteger getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public void setPoints(BigInteger points) {
         this.points = points;
     }
 

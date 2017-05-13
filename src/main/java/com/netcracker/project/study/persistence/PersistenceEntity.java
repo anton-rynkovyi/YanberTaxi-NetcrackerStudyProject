@@ -1,47 +1,48 @@
 package com.netcracker.project.study.persistence;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PersistenceEntity {
 
-    private long objectId;
-    private long objectTypeId;
-    private long parentId;
+    private BigInteger objectId;
+    private BigInteger objectTypeId;
+    private BigInteger parentId;
 
     private String name;
     private String description;
 
-    private Map<Long, Object> attributes;
+    private Map<BigInteger, Object> attributes;
 
-    private Map<Long, Long> references;
+    private Map<BigInteger, BigInteger> references;
 
     public PersistenceEntity(){
         attributes = new HashMap<>();
         references = new HashMap<>();
     }
 
-    public long getObjectId() {
+    public BigInteger getObjectId() {
         return objectId;
     }
 
-    public void setObjectId(long objectId) {
+    public void setObjectId(BigInteger objectId) {
         this.objectId = objectId;
     }
 
-    public long getObjectTypeId() {
+    public BigInteger getObjectTypeId() {
         return objectTypeId;
     }
 
-    public void setObjectTypeId(long objectTypeId) {
+    public void setObjectTypeId(BigInteger objectTypeId) {
         this.objectTypeId = objectTypeId;
     }
 
-    public long getParentId() {
+    public BigInteger getParentId() {
         return parentId;
     }
 
-    public void setParentId(long parentId) {
+    public void setParentId(BigInteger parentId) {
         this.parentId = parentId;
     }
 
@@ -61,19 +62,19 @@ public class PersistenceEntity {
         this.description = description;
     }
 
-    public Map<Long, Object> getAttributes() {
+    public Map<BigInteger, Object> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Map<Long, Object> entity) {
+    public void setAttributes(Map<BigInteger, Object> entity) {
         this.attributes = entity;
     }
 
-    public Map<Long, Long> getReferences() {
+    public Map<BigInteger, BigInteger> getReferences() {
         return references;
     }
 
-    public void setReferences(Map<Long, Long> references) {
+    public void setReferences(Map<BigInteger, BigInteger> references) {
         this.references = references;
     }
 
