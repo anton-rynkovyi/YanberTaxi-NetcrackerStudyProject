@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,10 @@ public class ConverterFactory implements Converter {
     private Map<BigInteger, Object> attributes;
     private Map<BigInteger, BigInteger> references;
 
+    private final long EMPTY_LONG = -1;
+    private final String EMPTY_STRING = "-1";
+    private final BigInteger EMPTY_BIG_INTEGER = BigInteger.valueOf(-1);
+
     public ConverterFactory() {
         attributes = new HashMap<>();
         references = new HashMap<>();
@@ -30,40 +35,41 @@ public class ConverterFactory implements Converter {
 
     /**
      * Puts field with Attribute annotation in attributes map
+     *
      * @param attrId - attribute id of corresponding field
-     * @param model - a model which current field belongs to
-     * @param field - field to put
+     * @param model  - a model which current field belongs to
+     * @param field  - field to put
      */
     private void putAttribute(BigInteger attrId, Model model, Field field) {
         Object fieldValue;
         fieldValue = getValue(model, field);
-
-        if (fieldValue != null) {
-            if (field.isAnnotationPresent(AttrValue.class)) {
-                attributes.put(attrId, fieldValue.toString());
-            } else if (field.isAnnotationPresent(AttrDate.class)) {
-                attributes.put(attrId, Long.parseLong(String.valueOf(fieldValue)));
-            } else if (field.isAnnotationPresent(AttrList.class)) {
-                attributes.put(attrId, fieldValue);
-            }
+        if (field.isAnnotationPresent(AttrValue.class)) {
+            attributes.put(attrId, fieldValue != null ? fieldValue.toString() : EMPTY_STRING);
+        } else if (field.isAnnotationPresent(AttrDate.class)) {
+            attributes.put(attrId, fieldValue != null ? Timestamp.valueOf(fieldValue.toString()) : EMPTY_LONG);
+        } else if (field.isAnnotationPresent(AttrList.class)) {
+            attributes.put(attrId, fieldValue != null ? fieldValue : EMPTY_BIG_INTEGER);
         }
-
     }
 
     /**
      * Puts field with Reference annotation in reference map
+     *
      * @param attrId - attribute id of corresponding field
-     * @param model - model which current field belongs to
-     * @param field - field to put
+     * @param model  - model which current field belongs to
+     * @param field  - field to put
      */
-    private void putReference(BigInteger attrId, Model model, Field field){
+    private void putReference(BigInteger attrId, Model model, Field field) {
         Object fieldValue;
         fieldValue = getValue(model, field);
-        references.put(attrId, (BigInteger) fieldValue);
+        if (fieldValue != null) {
+            references.put(attrId, (BigInteger) fieldValue);
+        }
     }
 
     /**
      * Gets value of field
+     *
      * @param model - a model which current field belongs to
      * @param field - a field which it gets value of
      * @return value of corresponding field with Object type
@@ -86,12 +92,11 @@ public class ConverterFactory implements Converter {
     }
 
     /**
-     *
      * @param field - a field which must be set with a value
      * @param model - a model which current field belongs to
      * @param value - value of corresponding field with Object type
      */
-    private void setValue(Field field, Model model,Object value){
+    private void setValue(Field field, Model model, Object value) {
         try {
             PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), model.getClass());
             Method setMethod = propertyDescriptor.getWriteMethod();
@@ -119,9 +124,8 @@ public class ConverterFactory implements Converter {
             ObjectType objectType = (ObjectType) modelClass.getAnnotation(ObjectType.class);
             BigInteger objectTypeId = BigInteger.valueOf(objectType.objectTypeId());
             entity.setObjectTypeId(objectTypeId);
-        }
-        else{
-            throw new NoSuchAnnotationException("Model doesn't have "+ObjectType.class.getSimpleName()+" annotation");
+        } else {
+            throw new NoSuchAnnotationException("Model doesn't have " + ObjectType.class.getSimpleName() + " annotation");
         }
 
         Field[] fields = modelClass.getDeclaredFields();
@@ -139,7 +143,7 @@ public class ConverterFactory implements Converter {
             if (field.isAnnotationPresent(Reference.class)) {
                 referenceAnnotation = field.getAnnotation(Reference.class);
                 attrId = BigInteger.valueOf(referenceAnnotation.attrId());
-                putReference(attrId,model,field);
+                putReference(attrId, model, field);
             }
         }
 
@@ -172,14 +176,14 @@ public class ConverterFactory implements Converter {
         for (Field field : fields) {
             if (field.isAnnotationPresent(Attribute.class)) {
                 Attribute attributeAnnotation = field.getAnnotation(Attribute.class);
-                Object fieldValue = attrMap .get(BigInteger.valueOf(attributeAnnotation.attrId()));
-                setValue(field, model,fieldValue);
+                Object fieldValue = attrMap.get(BigInteger.valueOf(attributeAnnotation.attrId()));
+                setValue(field, model, fieldValue);
             }
 
             if (field.isAnnotationPresent(Reference.class)) {
                 Reference referenceAnnotation = field.getAnnotation(Reference.class);
                 Object fieldValue = refMap.get(BigInteger.valueOf(referenceAnnotation.attrId()));
-                setValue(field, model,fieldValue);
+                setValue(field, model, fieldValue);
             }
         }
         return model;
