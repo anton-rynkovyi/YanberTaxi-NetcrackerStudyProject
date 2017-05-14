@@ -24,7 +24,7 @@ public class ConverterFactory implements Converter {
     private Map<BigInteger, Object> attributes;
     private Map<BigInteger, BigInteger> references;
 
-    private final long EMPTY_LONG = -1;
+    private final Timestamp EMPTY_LONG = new Timestamp(-1);
     private final String EMPTY_STRING = "-1";
     private final BigInteger EMPTY_BIG_INTEGER = BigInteger.valueOf(-1);
 
