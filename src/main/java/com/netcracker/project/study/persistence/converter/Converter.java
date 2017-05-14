@@ -3,6 +3,8 @@ package com.netcracker.project.study.persistence.converter;
 import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.persistence.PersistenceEntity;
 
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 
 
 public interface Converter {
