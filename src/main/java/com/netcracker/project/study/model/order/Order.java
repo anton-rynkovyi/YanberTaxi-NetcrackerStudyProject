@@ -6,7 +6,7 @@ import com.netcracker.project.study.model.annotations.*;
 import java.math.BigInteger;
 
 @ObjectType(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
-public class Order extends Model{
+public class Order extends Model implements OrderAttr{
 
     @Reference(attrId = OrderAttr.DRIVER_ID_ATTR)
     private BigInteger driverId;
@@ -93,5 +93,19 @@ public class Order extends Model{
 
     public void setDriverMemo(String driverMemo) {
         this.driverMemo = driverMemo;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "driverId=" + driverId +
+                ", clientId=" + clientId +
+                ", status=" + status +
+                ", cost=" + cost +
+                ", distance=" + distance +
+                ", driverRating=" + driverRating +
+                ", driverMemo='" + driverMemo + '\'' +
+                '}';
     }
 }

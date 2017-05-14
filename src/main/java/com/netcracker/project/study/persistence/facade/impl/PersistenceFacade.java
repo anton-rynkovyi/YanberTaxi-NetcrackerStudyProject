@@ -48,7 +48,7 @@ public class PersistenceFacade implements Facade {
     }
 
     @Override
-    public List getAll(long objectTypeId, Class modelClass) throws InstantiationException, IllegalAccessException {
+    public List getAll(BigInteger objectTypeId, Class modelClass) throws InstantiationException, IllegalAccessException {
         List<PersistenceEntity> entities = manager.getAll(objectTypeId);
         List<Model> models = new ArrayList<>();
         for (int i = 0; i < entities.size(); i++) {

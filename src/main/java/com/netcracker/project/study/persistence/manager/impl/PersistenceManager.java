@@ -167,7 +167,7 @@ public class PersistenceManager implements Manager {
     }
 
     @Override
-    public List<PersistenceEntity> getAll(long objectTypeId) {
+    public List<PersistenceEntity> getAll(BigInteger objectTypeId) {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_OBJECTS, new Object[]{objectTypeId});
         if (rows.isEmpty()) return Collections.emptyList();
         List<PersistenceEntity> persistenceEntityList = new ArrayList<>();

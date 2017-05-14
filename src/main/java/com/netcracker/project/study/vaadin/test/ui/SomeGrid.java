@@ -9,6 +9,8 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigInteger;
+
 @Theme("valo")
 @SpringUI(path = "")
 public class SomeGrid extends UI {
@@ -62,7 +64,7 @@ public class SomeGrid extends UI {
     public Grid<Client> getGridClients() throws IllegalAccessException, InstantiationException {
         Grid<Client> grid = new Grid<>();
         grid.setSizeFull();
-        grid.setItems(facade.getAll(Client.OBJECT_TYPE_ID, Client.class));
+        grid.setItems(facade.getAll(BigInteger.valueOf(Client.OBJECT_TYPE_ID), Client.class));
         grid.addColumn(Client::getObjectId).setCaption("id");
         grid.addColumn(Client::getLastName).setCaption("Last name");
         grid.addColumn(Client::getFirstName).setCaption("First name");
@@ -76,7 +78,7 @@ public class SomeGrid extends UI {
     public Grid<Driver> getGridDrivers() throws IllegalAccessException, InstantiationException {
         Grid<Driver> grid = new Grid<>();
         grid.setSizeFull();
-        grid.setItems(facade.getAll(Driver.OBJECT_TYPE_ID, Driver.class));
+        grid.setItems(facade.getAll(BigInteger.valueOf(Driver.OBJECT_TYPE_ID), Driver.class));
         grid.addColumn(Driver::getObjectId).setCaption("id");
         grid.addColumn(Driver::getLastName).setCaption("Last name");
         grid.addColumn(Driver::getFirstName).setCaption("First name");

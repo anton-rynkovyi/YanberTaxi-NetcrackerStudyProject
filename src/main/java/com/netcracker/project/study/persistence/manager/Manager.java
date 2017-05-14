@@ -15,6 +15,6 @@ public interface Manager {
 
     PersistenceEntity getOne(BigInteger objectId);
 
-    List<PersistenceEntity> getAll(long objectTypeId);
+    List<PersistenceEntity> getAll(BigInteger objectTypeId);
 
 }

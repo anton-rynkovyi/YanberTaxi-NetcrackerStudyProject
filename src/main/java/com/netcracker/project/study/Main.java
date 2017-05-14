@@ -5,7 +5,9 @@ import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverAttr;
 import com.netcracker.project.study.model.driver.status.DriverStatus;
 import com.netcracker.project.study.model.order.Order;
+import com.netcracker.project.study.model.order.OrderAttr;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.vaadin.event.dd.acceptcriteria.Or;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
@@ -44,7 +46,20 @@ public class Main {
        order.setClientId(client.getObjectId());
        facade.create(order);*/
 
-       Driver driver = facade.getOne(BigInteger.valueOf(11), Driver.class);
-       System.out.println(driver);
+
+       /*Order order = new Order("MyOrder", "It's my order");
+       order.setDriverMemo("Driver MEMO");
+       order.setCost(BigInteger.valueOf(50));
+       order.setDriverId(BigInteger.valueOf(11));
+       order.setStatus(BigInteger.valueOf(3));
+       System.out.println("PE: " + facade.create(order));
+
+       Order order1 = facade.getOne(order.getObjectId(), Order.class);
+       System.out.println(order1);*/
+
+       List<Order> orderList = facade.getAll(BigInteger.valueOf(Order.OBJECT_TYPE_ID), Order.class);
+        for (int i = 0; i < orderList.size(); i++) {
+            System.out.println(orderList.get(i).getObjectId() + ": " + orderList.get(i));
+        }
     }
 }
