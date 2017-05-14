@@ -23,7 +23,7 @@ public class Order extends Model implements OrderAttr{
     @Attribute(attrId = OrderAttr.DISTANCE_ATTR)
     private @AttrValue BigInteger distance;
 
-    @Reference(attrId = OrderAttr.DRIVER_RATING_ATTR)
+    @Attribute(attrId = OrderAttr.DRIVER_RATING_ATTR)
     private BigInteger driverRating;
 
     @Attribute(attrId = OrderAttr.DRIVER_MEMO_ATTR)

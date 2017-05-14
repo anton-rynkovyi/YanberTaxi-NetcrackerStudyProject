@@ -2,17 +2,16 @@ package com.netcracker.project.study.persistence.manager.impl;
 
 import com.netcracker.project.study.persistence.PersistenceEntity;
 import com.netcracker.project.study.persistence.manager.Manager;
+import com.netcracker.project.study.persistence.manager.queries.Crud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.math.BigInteger;
 import java.sql.*;
-import java.sql.Date;
 import java.util.*;
 
 import static java.sql.Types.*;
@@ -20,66 +19,6 @@ import static java.sql.Types.*;
 @Component("persistenceManager")
 public class PersistenceManager implements Manager {
 
-    public static final String CREATE_OBJECTS = ""+
-            "INSERT INTO OBJECTS" +
-            "(parent_id, object_type_id, name, description, object_id)" +
-            " VALUES(?,?,?,?,?)";
-    public static final String CREATE_ATTRIBUTES = ""+
-            "INSERT INTO ATTRIBUTES" +
-            "(value, date_value, list_value_id, object_id, attr_id)" +
-            " VALUES(?,?,?,?,?)";
-    public static final String CREATE_OBJREFERENCE = ""+
-            "INSERT INTO OBJREFERENCE" +
-            "(REFERENCE, OBJECT_ID, ATTR_ID)" +
-            " VALUES(?,?,?)";
-    public static final String UPDATE_OBJECTS = ""+
-            "UPDATE OBJECTS " +
-            "SET parent_id=?, object_type_id=?, name=?, description=? " +
-            "WHERE object_id=?";
-    public static final String UPDATE_OBJREFERENCE = ""+
-            "UPDATE OBJREFERENCE " +
-            "SET  REFERENCE=?" +
-            "WHERE object_id=?" +
-            "AND attr_id =?";
-    public static final String UPDATE_ATTRIBUTES = ""+
-            "UPDATE ATTRIBUTES " +
-            "SET value=?, date_value=?, list_value_id=? " +
-            "WHERE object_id=? " +
-            "AND attr_id=?";
-    public static final String DELETE_FROM_ATTRIBUTES = ""+
-            "DELETE " +
-            "FROM ATTRIBUTES " +
-            "WHERE object_id=?";
-    public static final String DELETE_FROM_OBJREFERENCE = ""+
-            "DELETE " +
-            "FROM OBJREFERENCE " +
-            "WHERE object_id=?";
-    public static final String DELETE_FROM_OBJECTS = ""+
-            "DELETE " +
-            "FROM OBJECTS " +
-            "WHERE object_id=?";
-    public static final String SELECT_FROM_OBJECTS_BY_ID = ""+
-            "SELECT * " +
-            "FROM OBJECTS " +
-            "WHERE object_id=?";
-    public static final String SELECT_FROM_ATTRIBUTES_BY_ID = ""+
-            "SELECT attr.value, attr.date_value, lists.list_value_id as list_value_id, attr.attr_id " +
-            "from  attributes attr " +
-            "LEFT JOIN  lists " +
-            "ON attr.List_value_id = LISTS.list_value_id " +
-            "WHERE attr.OBJECT_ID = ?";
-    public static final String SELECT_FROM_OBJREFERENCE = ""+
-            "SELECT * " +
-            "FROM OBJREFERENCE " +
-            "WHERE object_id=?";
-    public static final String SELECT_FROM_OBJECTS = ""+
-            "SELECT * " +
-            "FROM Objects " +
-            "WHERE object_type_id = ?";
-    public static final String GENERATE_MAX_OBJECT_ID = ""+
-            "select " +
-            "nvl(MAX(object_id),0)+1 as object_id " +
-            "from objects";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -92,14 +31,14 @@ public class PersistenceManager implements Manager {
 
     @Override
     public PersistenceEntity create(PersistenceEntity persistenceEntity) {
-        persistenceEntity.setObjectId(jdbcTemplate.queryForObject(GENERATE_MAX_OBJECT_ID, rowMapperObjectId).getObjectId());
-        jdbcTemplate.update(CREATE_OBJECTS, getPreparedStatementSetterObjects(persistenceEntity));
+        persistenceEntity.setObjectId(jdbcTemplate.queryForObject(Crud.GENERATE_MAX_OBJECT_ID, rowMapperObjectId).getObjectId());
+        jdbcTemplate.update(Crud.CREATE_OBJECTS, getPreparedStatementSetterObjects(persistenceEntity));
         for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
-            jdbcTemplate.update(CREATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
+            jdbcTemplate.update(Crud.CREATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
         }
         for (Map.Entry entry : persistenceEntity.getReferences().entrySet()) {
             if (!(entry.getValue().toString().equals("-1"))) {
-                jdbcTemplate.update(CREATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
+                jdbcTemplate.update(Crud.CREATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
             }
         }
         return persistenceEntity;
@@ -108,13 +47,13 @@ public class PersistenceManager implements Manager {
 
     @Override
     public void update(PersistenceEntity persistenceEntity) {
-        jdbcTemplate.update(UPDATE_OBJECTS, getPreparedStatementSetterObjects(persistenceEntity));
+        jdbcTemplate.update(Crud.UPDATE_OBJECTS, getPreparedStatementSetterObjects(persistenceEntity));
         for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
-            jdbcTemplate.update(UPDATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
+            jdbcTemplate.update(Crud.UPDATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
         }
         for (Map.Entry entry : persistenceEntity.getReferences().entrySet()) {
             if (!(entry.getValue().toString().equals("-1"))) {
-                jdbcTemplate.update(UPDATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
+                jdbcTemplate.update(Crud.UPDATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
             }
         }
     }
@@ -122,9 +61,9 @@ public class PersistenceManager implements Manager {
 
     @Override
     public void delete(BigInteger objectId) {
-        jdbcTemplate.update(DELETE_FROM_OBJECTS, objectId);
-        jdbcTemplate.update(DELETE_FROM_ATTRIBUTES, objectId);
-        jdbcTemplate.update(DELETE_FROM_OBJREFERENCE, objectId);
+        jdbcTemplate.update(Crud.DELETE_FROM_OBJECTS, objectId);
+        jdbcTemplate.update(Crud.DELETE_FROM_ATTRIBUTES, objectId);
+        jdbcTemplate.update(Crud.DELETE_FROM_OBJREFERENCE, objectId);
         jdbcTemplate.update("commit");
     }
 
@@ -154,21 +93,19 @@ public class PersistenceManager implements Manager {
 
     @Override
     public PersistenceEntity getOne(BigInteger objectId) {
-        PersistenceEntity persistenceEntity = jdbcTemplate.queryForObject(SELECT_FROM_OBJECTS_BY_ID, rowMapper, objectId);
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID, objectId);
+        PersistenceEntity persistenceEntity = jdbcTemplate.queryForObject(Crud.SELECT_FROM_OBJECTS_BY_ID, rowMapper, objectId);
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(Crud.SELECT_FROM_ATTRIBUTES_BY_ID, objectId);
         Map<BigInteger, Object> attributes = getAttributes(rows);
-        //System.out.println(attributes); //todo SOUT
-        List<Map<String, Object>> rowsRef = jdbcTemplate.queryForList(SELECT_FROM_OBJREFERENCE, objectId);
+        List<Map<String, Object>> rowsRef = jdbcTemplate.queryForList(Crud.SELECT_FROM_OBJREFERENCE, objectId);
         Map<BigInteger, BigInteger> references = getReferences(rowsRef);
         persistenceEntity.setAttributes(attributes);
         persistenceEntity.setReferences(references);
-        //System.out.println("ATTR: " + persistenceEntity); //todo SOUT
         return persistenceEntity;
     }
 
     @Override
     public List<PersistenceEntity> getAll(BigInteger objectTypeId) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_OBJECTS, new Object[]{objectTypeId});
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(Crud.SELECT_FROM_OBJECTS, new Object[]{objectTypeId});
         if (rows.isEmpty()) return Collections.emptyList();
         List<PersistenceEntity> persistenceEntityList = new ArrayList<>();
         for (Map row : rows) {
@@ -239,7 +176,6 @@ public class PersistenceManager implements Manager {
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
                 BigInteger attrId = new BigInteger(String.valueOf(entry.getKey()));
-                //System.out.println(entry.getValue() + " : " + entry.getValue().getClass().getSimpleName()); //todo SOUT
 
                 if (entry.getValue().getClass().getSimpleName().equals("String")) {
                     if (entry.getValue().equals("-1")) {
@@ -287,7 +223,6 @@ public class PersistenceManager implements Manager {
                 }
                 ps.setString(++i, String.valueOf(persistenceEntity.getObjectId()));
                 ps.setString(++i, String.valueOf(entry.getKey()));
-                //todo
             }
         };
     }

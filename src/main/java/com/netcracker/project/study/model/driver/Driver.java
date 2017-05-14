@@ -12,15 +12,15 @@ import java.util.*;
 public class Driver extends Model implements DriverAttr{
 
 
-   /* public static BigInteger APPROVAL = BigInteger.valueOf(1);
+    public static final BigInteger APPROVAL = BigInteger.valueOf(1);
 
-    public static BigInteger OFF_DUTY = BigInteger.valueOf(2);
+    public static final BigInteger OFF_DUTY = BigInteger.valueOf(2);
 
-    public static BigInteger FREE = BigInteger.valueOf(3);
+    public static final BigInteger FREE = BigInteger.valueOf(3);
 
-    public static BigInteger ON_CALL = BigInteger.valueOf(4);
+    public static final BigInteger ON_CALL = BigInteger.valueOf(4);
 
-    public static BigInteger PERFORMING_ORDER = BigInteger.valueOf(5);*/
+    public static final BigInteger PERFORMING_ORDER = BigInteger.valueOf(5);
 
 
     @Attribute(attrId = DriverAttr.LAST_NAME_ATTR)

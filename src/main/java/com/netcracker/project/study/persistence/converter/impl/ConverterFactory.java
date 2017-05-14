@@ -43,6 +43,7 @@ public class ConverterFactory implements Converter {
     private void putAttribute(BigInteger attrId, Model model, Field field) {
         Object fieldValue;
         fieldValue = getValue(model, field);
+        System.out.println(fieldValue);
         if (field.isAnnotationPresent(AttrValue.class)) {
             attributes.put(attrId, fieldValue != null ? fieldValue.toString() : EMPTY_STRING);
         } else if (field.isAnnotationPresent(AttrDate.class)) {

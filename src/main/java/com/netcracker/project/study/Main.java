@@ -23,29 +23,36 @@ public class Main {
         PersistenceFacade facade = (PersistenceFacade) ctx.getBean(PersistenceFacade.class);
 
 
-         /*Client client = new Client("NEW CLIENT", "It's client!");
-         client.setLastName("Rynkovoy");
-         client.setFirstName("Anton");
-         client.setMiddleName("Andreevich");
-         client.setPoints(BigInteger.valueOf(50));
-         facade.create(client);*/
+        /*Client client = new Client("NEW CLIENT", "It's client!");
+        client.setLastName("Rynkovoy");
+        client.setFirstName("Anton");
+        client.setMiddleName("Andreevich");
+        client.setPoints(BigInteger.valueOf(50));
+        facade.create(client);
 
 
-       /* Driver driver = new Driver("Driver", "It's driver");
+        Driver driver = new Driver("ANTON", "It's driver");
         driver.setFirstName("Anton");
         driver.setLastName("Rynkovoy");
-        driver.setMiddleName("Andreevich");
         driver.setHireDate(new Timestamp(System.currentTimeMillis()));
         driver.setStatus(new BigInteger("2"));
-        facade.create(driver);*/
+        driver.setRating(BigInteger.valueOf(3));
+        facade.create(driver);
 
+        driver.setName("Update driver");
+        driver.setStatus(BigInteger.valueOf(5));
+        driver.setRating(null);
+        driver.setFirstName("AAAAAAAAAA");
 
-       /*Order order = new Order("NEW ORDER");
+        facade.update(driver);*/
+
+       Order order = new Order("NEW ORDER");
        order.setCost(BigInteger.valueOf(1000));
-       order.setStatus(BigInteger.valueOf(3));
-       order.setClientId(client.getObjectId());
-       facade.create(order);*/
-
+       order.setStatus(Driver.FREE);
+       order.setDriverId(BigInteger.valueOf(11));
+       order.setDriverRating(BigInteger.valueOf(2));
+       order.setDriverMemo("MEMO");
+       facade.create(order);
 
        /*Order order = new Order("MyOrder", "It's my order");
        order.setDriverMemo("Driver MEMO");
@@ -57,9 +64,10 @@ public class Main {
        Order order1 = facade.getOne(order.getObjectId(), Order.class);
        System.out.println(order1);*/
 
-       List<Order> orderList = facade.getAll(BigInteger.valueOf(Order.OBJECT_TYPE_ID), Order.class);
+
+       /* List<Order> orderList = facade.getAll(BigInteger.valueOf(Order.OBJECT_TYPE_ID), Order.class);
         for (int i = 0; i < orderList.size(); i++) {
             System.out.println(orderList.get(i).getObjectId() + ": " + orderList.get(i));
-        }
+        }*/
     }
 }
