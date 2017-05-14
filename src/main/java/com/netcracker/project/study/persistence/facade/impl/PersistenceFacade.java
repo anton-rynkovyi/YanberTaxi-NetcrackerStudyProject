@@ -9,6 +9,7 @@ import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +36,12 @@ public class PersistenceFacade implements Facade {
     }
 
     @Override
-    public void delete(long objectId) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(BigInteger objectId) throws NoSuchFieldException, IllegalAccessException {
         manager.delete(objectId);
     }
 
     @Override
-    public <T extends Model> T getOne(long objectId, Class modelClass) throws InstantiationException, IllegalAccessException {
+    public <T extends Model> T getOne(BigInteger objectId, Class modelClass) throws InstantiationException, IllegalAccessException {
         PersistenceEntity entity = manager.getOne(objectId);
         T model = converter.convertToModel(entity, modelClass);
         return model;

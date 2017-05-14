@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -19,33 +20,31 @@ public class Main {
                 new FileSystemXmlApplicationContext("src/main/webapp/WEB-INF/applicationContext.xml");
         PersistenceFacade facade = (PersistenceFacade) ctx.getBean(PersistenceFacade.class);
 
-/*
-        Client client = new Client("NEW CLIENT");
-        client.setFirstName("Anton");
-        facade.create(client);
-        System.out.println(client);
-        Client client1 = facade.getOne(client.getObjectId(), Client.class);
-        System.out.println(client1);*/
 
-        Driver driver = new Driver("NEW DRIVER");
+         /*Client client = new Client("NEW CLIENT", "It's client!");
+         client.setLastName("Rynkovoy");
+         client.setFirstName("Anton");
+         client.setMiddleName("Andreevich");
+         client.setPoints(BigInteger.valueOf(50));
+         facade.create(client);*/
+
+
+       /* Driver driver = new Driver("Driver", "It's driver");
         driver.setFirstName("Anton");
+        driver.setLastName("Rynkovoy");
+        driver.setMiddleName("Andreevich");
         driver.setHireDate(new Timestamp(System.currentTimeMillis()));
-        driver.setStatus(2);
-        driver.setHireDate(new Timestamp(System.currentTimeMillis()));
-        driver.setRating(3);
-
-        facade.create(driver);
-        System.out.println(driver);
-
-        Driver driver1 = facade.getOne(driver.getObjectId(), Driver.class);
-        System.out.println(driver1);
+        driver.setStatus(new BigInteger("2"));
+        facade.create(driver);*/
 
 
-       /*List<Driver> drivers = facade.getAll(Driver.OBJECT_TYPE_ID, Driver.class);
+       /*Order order = new Order("NEW ORDER");
+       order.setCost(BigInteger.valueOf(1000));
+       order.setStatus(BigInteger.valueOf(3));
+       order.setClientId(client.getObjectId());
+       facade.create(order);*/
 
-        for (int i = 0; i < drivers.size(); i++) {
-            System.out.println(drivers.get(i));
-        }*/
-
+       Driver driver = facade.getOne(BigInteger.valueOf(11), Driver.class);
+       System.out.println(driver);
     }
 }

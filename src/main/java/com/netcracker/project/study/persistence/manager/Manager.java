@@ -2,6 +2,7 @@ package com.netcracker.project.study.persistence.manager;
 
 import com.netcracker.project.study.persistence.PersistenceEntity;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public interface Manager {
@@ -10,9 +11,9 @@ public interface Manager {
 
     void update(PersistenceEntity entity);
 
-    void delete(long objectId);
+    void delete(BigInteger objectId);
 
-    PersistenceEntity getOne(long objectId);
+    PersistenceEntity getOne(BigInteger objectId);
 
     List<PersistenceEntity> getAll(long objectTypeId);
 

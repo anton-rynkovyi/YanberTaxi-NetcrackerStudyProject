@@ -11,6 +11,18 @@ import java.util.*;
 @ObjectType(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
 public class Driver extends Model implements DriverAttr{
 
+
+   /* public static BigInteger APPROVAL = BigInteger.valueOf(1);
+
+    public static BigInteger OFF_DUTY = BigInteger.valueOf(2);
+
+    public static BigInteger FREE = BigInteger.valueOf(3);
+
+    public static BigInteger ON_CALL = BigInteger.valueOf(4);
+
+    public static BigInteger PERFORMING_ORDER = BigInteger.valueOf(5);*/
+
+
     @Attribute(attrId = DriverAttr.LAST_NAME_ATTR)
     private @AttrValue String lastName;
 

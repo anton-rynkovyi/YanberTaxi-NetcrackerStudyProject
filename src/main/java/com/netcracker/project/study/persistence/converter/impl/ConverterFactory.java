@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,20 +55,26 @@ public class ConverterFactory implements Converter {
             if (field.isAnnotationPresent(Attribute.class)) {
                 attributeAnnotation = field.getAnnotation(Attribute.class);
                 if(field.isAnnotationPresent(AttrValue.class)){
-                    attributes.put(BigInteger.valueOf(attributeAnnotation.attrId()), fieldValue.toString());
+                    attributes.put(BigInteger.valueOf(attributeAnnotation.attrId()),
+                            fieldValue != null ? String.valueOf(fieldValue) : "-1");
+
                 }else  if(field.isAnnotationPresent(AttrDate.class)){
                     attributes.put(BigInteger.valueOf(attributeAnnotation.attrId()),
-                            Long.parseLong(String.valueOf(fieldValue)));
+                            fieldValue != null ?
+                                    Timestamp.valueOf(String.valueOf(fieldValue)) : new Timestamp(-1));
+
                 }else  if(field.isAnnotationPresent(AttrList.class)){
                     attributes.put(BigInteger.valueOf(attributeAnnotation.attrId()),
-                            BigInteger.valueOf(Long.parseLong(String.valueOf(fieldValue))));
+                            fieldValue != null ?
+                                    BigInteger.valueOf(Long.parseLong(String.valueOf(fieldValue))) : BigInteger.valueOf(-1));
                 }
             }
 
             if (field.isAnnotationPresent(Reference.class)) {
                 referenceAnnotation = field.getAnnotation(Reference.class);
                 references.put(BigInteger.valueOf(referenceAnnotation.attrId()),
-                        BigInteger.valueOf(Long.parseLong(fieldValue.toString())));
+                        fieldValue != null ?
+                                BigInteger.valueOf(Long.parseLong(String.valueOf(fieldValue))) : BigInteger.valueOf(-1));
             }
         }
 

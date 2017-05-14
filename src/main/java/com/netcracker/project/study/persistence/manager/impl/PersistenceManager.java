@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.math.BigInteger;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
@@ -97,7 +98,7 @@ public class PersistenceManager implements Manager {
             jdbcTemplate.update(CREATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
         }
         for (Map.Entry entry : persistenceEntity.getReferences().entrySet()) {
-            if (!(entry.getValue().toString().equals("0")) ) {
+            if (!(entry.getValue().toString().equals("-1"))) {
                 jdbcTemplate.update(CREATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
             }
         }
@@ -112,7 +113,7 @@ public class PersistenceManager implements Manager {
             jdbcTemplate.update(UPDATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
         }
         for (Map.Entry entry : persistenceEntity.getReferences().entrySet()) {
-            if (!(entry.getValue().toString().equals("0"))) {
+            if (!(entry.getValue().toString().equals("-1"))) {
                 jdbcTemplate.update(UPDATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
             }
         }
@@ -120,7 +121,7 @@ public class PersistenceManager implements Manager {
 
 
     @Override
-    public void delete(long objectId) {
+    public void delete(BigInteger objectId) {
         jdbcTemplate.update(DELETE_FROM_OBJECTS, objectId);
         jdbcTemplate.update(DELETE_FROM_ATTRIBUTES, objectId);
         jdbcTemplate.update(DELETE_FROM_OBJREFERENCE, objectId);
@@ -132,9 +133,10 @@ public class PersistenceManager implements Manager {
         @Override
         public PersistenceEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
             PersistenceEntity persistenceEntity = new PersistenceEntity();
-            persistenceEntity.setObjectId(rs.getLong("object_id"));
-            persistenceEntity.setObjectTypeId(rs.getInt("object_type_id"));
-            persistenceEntity.setParentId(rs.getInt("parent_id"));
+            persistenceEntity.setObjectId(rs.getBigDecimal("object_id").toBigInteger());
+            persistenceEntity.setObjectTypeId(rs.getBigDecimal("object_type_id").toBigInteger());
+            persistenceEntity.setParentId(rs.getBigDecimal("parent_id") != null ?
+                    rs.getBigDecimal("parent_id").toBigInteger() : null);
             persistenceEntity.setName(rs.getString("name"));
             persistenceEntity.setDescription(rs.getString("description"));
             return persistenceEntity;
@@ -145,20 +147,22 @@ public class PersistenceManager implements Manager {
         @Override
         public PersistenceEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
             PersistenceEntity persistenceEntity = new PersistenceEntity();
-            persistenceEntity.setObjectId(rs.getLong("object_id"));
+            persistenceEntity.setObjectId(rs.getBigDecimal("object_id").toBigInteger());
             return persistenceEntity;
         }
     };
 
     @Override
-    public PersistenceEntity getOne(long objectId) {
+    public PersistenceEntity getOne(BigInteger objectId) {
         PersistenceEntity persistenceEntity = jdbcTemplate.queryForObject(SELECT_FROM_OBJECTS_BY_ID, rowMapper, objectId);
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_FROM_ATTRIBUTES_BY_ID, objectId);
-        Map<Long, Object> attributes = getAttributes(rows);
+        Map<BigInteger, Object> attributes = getAttributes(rows);
+        //System.out.println(attributes); //todo SOUT
         List<Map<String, Object>> rowsRef = jdbcTemplate.queryForList(SELECT_FROM_OBJREFERENCE, objectId);
-        Map<Long, Long> references = getReferences(rowsRef);
+        Map<BigInteger, BigInteger> references = getReferences(rowsRef);
         persistenceEntity.setAttributes(attributes);
         persistenceEntity.setReferences(references);
+        //System.out.println("ATTR: " + persistenceEntity); //todo SOUT
         return persistenceEntity;
     }
 
@@ -168,28 +172,28 @@ public class PersistenceManager implements Manager {
         if (rows.isEmpty()) return Collections.emptyList();
         List<PersistenceEntity> persistenceEntityList = new ArrayList<>();
         for (Map row : rows) {
-            PersistenceEntity persistenceEntity = getOne(Long.parseLong(row.get("object_id")+""));
+            PersistenceEntity persistenceEntity = getOne(BigInteger.valueOf(Long.parseLong(row.get("object_id")+"")));
             persistenceEntityList.add(persistenceEntity);
         }
         return persistenceEntityList;
     }
 
 
-    private Map<Long, Object> getAttributes(List<Map<String, Object>> rowss) {
-        Map<Long, Object> attributes = new HashMap();
+    private Map<BigInteger, Object> getAttributes(List<Map<String, Object>> rowss) {
+        Map<BigInteger, Object> attributes = new HashMap();
         for (Map row : rowss) {
-            long attrId = Long.parseLong(String.valueOf(row.get("attr_id")));
+            BigInteger attrId = new BigInteger(String.valueOf(row.get("attr_id")));
             Object value = null;
 
             if (row.get("value") != null) {
                 value = row.get("value");
                 try {
-                    value = Integer.parseInt(value+"");
+                    value = new BigInteger(value+"");
                 } catch (Exception e) {}
             } else if (row.get("date_value") != null) {
                 value = Timestamp.valueOf(row.get("date_value")+"");
             } else if (row.get("list_value_id") != null) {
-                value = Integer.parseInt(row.get("list_value_id")+"");
+                value = new BigInteger((row.get("list_value_id")+""));
             }
 
             attributes.put(attrId, value);
@@ -197,13 +201,13 @@ public class PersistenceManager implements Manager {
         return attributes;
     }
 
-    private Map<Long, Long> getReferences(List<Map<String, Object>> rowss) {
-        Map<Long, Long> reference = new HashMap();
+    private Map<BigInteger, BigInteger> getReferences(List<Map<String, Object>> rowss) {
+        Map<BigInteger, BigInteger> reference = new HashMap();
         for (Map row : rowss) {
-            long attrId = Long.parseLong(String.valueOf(row.get("attr_id")));
-            Long value = null;
+            BigInteger attrId = new BigInteger(String.valueOf(row.get("attr_id")));
+            BigInteger value = null;
             if (row.get("reference") != null) {
-                value = Long.parseLong(row.get("reference")+"");
+                value = new BigInteger(row.get("reference")+"");
             }
 
             reference.put(attrId, value);
@@ -216,15 +220,15 @@ public class PersistenceManager implements Manager {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
-                if (persistenceEntity.getParentId() == 0) {
+                if (persistenceEntity.getParentId() == null) {
                     ps.setNull(++i, NUMERIC);
                 } else {
-                    ps.setLong(++i, persistenceEntity.getParentId());
+                    ps.setString(++i, persistenceEntity.getParentId().toString());
                 }
-                ps.setLong(++i, persistenceEntity.getObjectTypeId());
+                ps.setString(++i, persistenceEntity.getObjectTypeId().toString());
                 ps.setString(++i, persistenceEntity.getName());
                 ps.setString(++i, persistenceEntity.getDescription());
-                ps.setLong(++i, persistenceEntity.getObjectId());
+                ps.setString(++i, persistenceEntity.getObjectId().toString());
             }
         };
     }
@@ -234,28 +238,39 @@ public class PersistenceManager implements Manager {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
-                long attrId = (long) entry.getKey();
+                BigInteger attrId = new BigInteger(String.valueOf(entry.getKey()));
+                //System.out.println(entry.getValue() + " : " + entry.getValue().getClass().getSimpleName()); //todo SOUT
 
-                if ((attrId>=1 && attrId<=5) || (attrId>=7 && attrId<=8) || (attrId>=11 && attrId<=17) || (attrId>=19 && attrId<=24)){
-                    ps.setString(++i, String.valueOf(entry.getValue()));
+                if (entry.getValue().getClass().getSimpleName().equals("String")) {
+                    if (entry.getValue().equals("-1")) {
+                        ps.setNull(++i, NULL);
+                    } else {
+                        ps.setString(++i, String.valueOf(entry.getValue()));
+                    }
                     ps.setNull(++i, DATE);
                     ps.setNull(++i, NUMERIC);
-                }else if (attrId == 6 || attrId == 10 || attrId == 25) {
+
+                } else  if (entry.getValue().getClass().getSimpleName().equals("Timestamp")) {
                     ps.setString(++i, null);
-                    ps.setTimestamp(++i, entry.getValue() != null ? Timestamp.valueOf(String.valueOf(entry.getValue())) : null);
+                    if (Timestamp.valueOf(String.valueOf(entry.getValue())).compareTo(new Timestamp(-1)) == 0) {
+                        ps.setNull(++i, NULL);
+                    } else {
+                        ps.setTimestamp(++i, Timestamp.valueOf(String.valueOf(entry.getValue())));
+                    }
                     ps.setNull(++i, NUMERIC);
-                }else if (attrId == 9 || attrId == 18 || attrId == 31 || attrId == 34) {
+
+                } else if (entry.getValue().getClass().getSimpleName().equals("BigInteger")) {
                     ps.setString(++i, null);
                     ps.setNull(++i, DATE);
-                    if (entry.getValue() == null) {
+                    if (BigInteger.valueOf(Long.parseLong(String.valueOf(entry.getValue()))).compareTo(BigInteger.valueOf(-1)) == 0) {
                         ps.setNull(++i, NUMERIC);
                     } else {
-                        ps.setInt(++i, (Integer) entry.getValue());
+                        ps.setString(++i, String.valueOf(entry.getValue()));
                     }
-
                 }
-                ps.setLong(++i, persistenceEntity.getObjectId());
-                ps.setLong(++i,attrId);
+
+                ps.setString(++i, persistenceEntity.getObjectId().toString());
+                ps.setString(++i, attrId.toString());
             }
         };
     }
@@ -265,10 +280,14 @@ public class PersistenceManager implements Manager {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
-                ps.setLong(++i, entry.getValue() == null ? 0l : Long.parseLong(String.valueOf(entry.getValue())));
-                ps.setLong(++i, persistenceEntity.getObjectId());
-                ps.setLong(++i, (Long) entry.getKey());
-                // todo
+                if (entry.getValue() == null) {
+                    ps.setNull(++i, NULL);
+                } else {
+                    ps.setString(++i, String.valueOf(entry.getValue()));
+                }
+                ps.setString(++i, String.valueOf(persistenceEntity.getObjectId()));
+                ps.setString(++i, String.valueOf(entry.getKey()));
+                //todo
             }
         };
     }

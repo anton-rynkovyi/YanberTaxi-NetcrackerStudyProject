@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 @ObjectType(objectTypeId = DriverStatusAttr.OBJECT_TYPE_ID)
 public class DriverStatus extends Model{
 
-
     @Reference(attrId = DriverStatusAttr.DRIVER_ID_ATTR)
     private BigInteger driverId;
 
