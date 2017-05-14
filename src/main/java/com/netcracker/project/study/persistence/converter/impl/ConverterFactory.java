@@ -7,6 +7,7 @@ import com.netcracker.project.study.persistence.PersistenceEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -94,21 +95,19 @@ public class ConverterFactory implements Converter {
         model.setParentId(entity.getParentId());
 
         Map<BigInteger, Object> attributes = entity.getAttributes();
-        Map <BigInteger, BigInteger> references = entity.getReferences();
+        Map<BigInteger, BigInteger> references = entity.getReferences();
         Field[] fields = modelClass.getDeclaredFields();
-        Attribute attributeAnnotation;
-        Reference referenceAnnotation;
 
         for (Field field : fields) {
             if (field.isAnnotationPresent(Attribute.class)) {
-                attributeAnnotation = field.getAnnotation(Attribute.class);
-                Object fieldValue = attributes.get(attributeAnnotation.attrId());
+                Attribute attributeAnnotation = field.getAnnotation(Attribute.class);
+                Object fieldValue = attributes.get(BigInteger.valueOf(attributeAnnotation.attrId()));
                 setFieldsInModel(fieldValue, field, modelClass, model);
             }
 
             if (field.isAnnotationPresent(Reference.class)) {
-                referenceAnnotation = field.getAnnotation(Reference.class);
-                Object fieldValue = references.get(referenceAnnotation.attrId());
+                Reference referenceAnnotation = field.getAnnotation(Reference.class);
+                Object fieldValue = references.get(BigInteger.valueOf(referenceAnnotation.attrId()));
                 setFieldsInModel(fieldValue, field, modelClass, model);
             }
         }
@@ -116,19 +115,14 @@ public class ConverterFactory implements Converter {
     }
 
     private void setFieldsInModel(Object fieldValue, Field field, Class modelClass, Model model) {
-        if (fieldValue != null) {
-            String fieldName = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
-            System.out.println(fieldValue + " :  " + fieldValue.getClass().getSimpleName());
-            try {
-                Method method = modelClass.getDeclaredMethod("set" + fieldName, field.getType());
-                method.invoke(model, fieldValue);
-            } catch (NoSuchMethodException imp) {
-                imp.printStackTrace();
-            } catch (InvocationTargetException imp) {
-                imp.printStackTrace();
-            } catch (IllegalAccessException imp) {
-                imp.printStackTrace();
+            if (fieldValue != null) {
+                try {
+                    PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), modelClass);
+                    Method method = propertyDescriptor.getWriteMethod();
+                    method.invoke(model, fieldValue);
+                } catch (InvocationTargetException | IllegalAccessException | IntrospectionException imp) {
+                    throw new RuntimeException(imp);
+                }
             }
-        }
     }
 }
