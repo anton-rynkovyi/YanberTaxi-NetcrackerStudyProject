@@ -4,8 +4,8 @@ public class Crud {
 
     public static final String CREATE_OBJECTS = ""+
             "INSERT INTO OBJECTS" +
-            "(parent_id, object_type_id, name, description, object_id)" +
-            " VALUES(?,?,?,?,?)";
+            "(parent_id, object_type_id, name, description)" +
+            " VALUES(?,?,?,?)";
     public static final String CREATE_ATTRIBUTES = ""+
             "INSERT INTO ATTRIBUTES" +
             "(value, date_value, list_value_id, object_id, attr_id)" +

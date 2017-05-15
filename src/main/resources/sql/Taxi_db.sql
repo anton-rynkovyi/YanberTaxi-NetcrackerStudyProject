@@ -84,17 +84,16 @@ INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,18,'free');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,19,'on call');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,20,'perform order');
 
-/*
+create sequence ob_id;
 create or replace trigger object_id_trg
 before insert on objects
 for each row
 begin
 if :new.object_id is null then
-select nvl(MAX(object_id),0)+1 into :new.object_id from objects;
+select ob_id.nextval into :new.object_id from dual;
 end if;
 end;
 /
-*/
 
 /*������ �������� ��� �������� ������ �������*/
 

@@ -5,11 +5,15 @@ import com.netcracker.project.study.persistence.manager.Manager;
 import com.netcracker.project.study.persistence.manager.queries.Crud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
 import java.util.*;
@@ -31,8 +35,24 @@ public class PersistenceManager implements Manager {
 
     @Override
     public PersistenceEntity create(PersistenceEntity persistenceEntity) {
-        persistenceEntity.setObjectId(jdbcTemplate.queryForObject(Crud.GENERATE_MAX_OBJECT_ID, rowMapperObjectId).getObjectId());
-        jdbcTemplate.update(Crud.CREATE_OBJECTS, getPreparedStatementSetterObjects(persistenceEntity));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement ps =
+                        connection.prepareStatement(Crud.CREATE_OBJECTS,new String[] {"object_id"});
+                int i = 0;
+                if (persistenceEntity.getParentId() == null) {
+                    ps.setNull(++i, NUMERIC);
+                } else {
+                    ps.setString(++i, persistenceEntity.getParentId().toString());
+                }
+                ps.setString(++i, persistenceEntity.getObjectTypeId().toString());
+                ps.setString(++i, persistenceEntity.getName());
+                ps.setString(++i, persistenceEntity.getDescription());
+                return ps;
+            }
+        },keyHolder);
+        persistenceEntity.setObjectId(BigInteger.valueOf(keyHolder.getKey().longValue()));
         for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
             jdbcTemplate.update(Crud.CREATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
         }
@@ -165,7 +185,7 @@ public class PersistenceManager implements Manager {
                 ps.setString(++i, persistenceEntity.getObjectTypeId().toString());
                 ps.setString(++i, persistenceEntity.getName());
                 ps.setString(++i, persistenceEntity.getDescription());
-                ps.setString(++i, persistenceEntity.getObjectId().toString());
+              //  ps.setString(++i, persistenceEntity.getObjectId().toString());
             }
         };
     }

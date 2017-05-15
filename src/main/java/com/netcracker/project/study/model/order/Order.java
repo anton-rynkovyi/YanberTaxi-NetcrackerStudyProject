@@ -8,6 +8,16 @@ import java.math.BigInteger;
 @ObjectType(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
 public class Order extends Model implements OrderAttr{
 
+    public static final BigInteger NEW = BigInteger.valueOf(6);
+
+    public static final BigInteger ACCEPTED = BigInteger.valueOf(7);
+
+    public static final BigInteger PERFORMED = BigInteger.valueOf(8);
+
+    public static final BigInteger PERFORMING = BigInteger.valueOf(9);
+
+    public static final BigInteger CANCELED = BigInteger.valueOf(10);
+
     @Reference(attrId = OrderAttr.DRIVER_ID_ATTR)
     private BigInteger driverId;
 

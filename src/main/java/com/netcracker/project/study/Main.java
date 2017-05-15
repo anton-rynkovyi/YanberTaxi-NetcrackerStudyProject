@@ -28,25 +28,25 @@ public class Main {
         client.setFirstName("Anton");
         client.setMiddleName("Andreevich");
         client.setPoints(BigInteger.valueOf(50));
-        facade.create(client);
+        facade.create(client);*/
 
 
-        Driver driver = new Driver("ANTON", "It's driver");
-        driver.setFirstName("Anton");
-        driver.setLastName("Rynkovoy");
+        Driver driver = new Driver("Goga", "It's driver");
+        driver.setFirstName("Grisha");
+        driver.setLastName("Leps");
         driver.setHireDate(new Timestamp(System.currentTimeMillis()));
         driver.setStatus(new BigInteger("2"));
         driver.setRating(BigInteger.valueOf(3));
         facade.create(driver);
 
-        driver.setName("Update driver");
+       /* driver.setName("Update driver");
         driver.setStatus(BigInteger.valueOf(5));
         driver.setRating(null);
         driver.setFirstName("AAAAAAAAAA");
 
         facade.update(driver);*/
 
-       Order order = new Order("NEW ORDER");
+       /*Order order = new Order("NEW ORDER");
        order.setCost(BigInteger.valueOf(1000));
        order.setStatus(Driver.FREE);
        order.setDriverId(BigInteger.valueOf(11));
