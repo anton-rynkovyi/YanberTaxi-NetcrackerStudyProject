@@ -54,11 +54,11 @@ public class PersistenceManager implements Manager {
         },keyHolder);
         persistenceEntity.setObjectId(BigInteger.valueOf(keyHolder.getKey().longValue()));
         for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
-            jdbcTemplate.update(Crud.CREATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
+            jdbcTemplate.update(Crud.CREATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity,true));
         }
         for (Map.Entry entry : persistenceEntity.getReferences().entrySet()) {
             if (!(entry.getValue().toString().equals("-1"))) {
-                jdbcTemplate.update(Crud.CREATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
+                jdbcTemplate.update(Crud.CREATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity,true));
             }
         }
         return persistenceEntity;
@@ -69,11 +69,11 @@ public class PersistenceManager implements Manager {
     public void update(PersistenceEntity persistenceEntity) {
         jdbcTemplate.update(Crud.UPDATE_OBJECTS, getPreparedStatementSetterObjects(persistenceEntity));
         for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
-            jdbcTemplate.update(Crud.UPDATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity));
+            jdbcTemplate.update(Crud.UPDATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity,false));
         }
         for (Map.Entry entry : persistenceEntity.getReferences().entrySet()) {
             if (!(entry.getValue().toString().equals("-1"))) {
-                jdbcTemplate.update(Crud.UPDATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity));
+                jdbcTemplate.update(Crud.UPDATE_OBJREFERENCE, getPreparedStatementSetterRef(entry, persistenceEntity,false));
             }
         }
     }
@@ -177,6 +177,7 @@ public class PersistenceManager implements Manager {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
+                ps.setString(++i, persistenceEntity.getObjectId().toString());
                 if (persistenceEntity.getParentId() == null) {
                     ps.setNull(++i, NUMERIC);
                 } else {
@@ -185,18 +186,38 @@ public class PersistenceManager implements Manager {
                 ps.setString(++i, persistenceEntity.getObjectTypeId().toString());
                 ps.setString(++i, persistenceEntity.getName());
                 ps.setString(++i, persistenceEntity.getDescription());
-              //  ps.setString(++i, persistenceEntity.getObjectId().toString());
+                ps.setString(++i, persistenceEntity.getObjectId().toString());
+                if (persistenceEntity.getParentId() == null) {
+                    ps.setNull(++i, NUMERIC);
+                } else {
+                    ps.setString(++i, persistenceEntity.getParentId().toString());
+                }
+                ps.setString(++i, persistenceEntity.getObjectTypeId().toString());
+                ps.setString(++i, persistenceEntity.getName());
+                ps.setString(++i, persistenceEntity.getDescription());
             }
         };
     }
 
-    private PreparedStatementSetter getPreparedStatementSetterAttributes(Map.Entry entry, PersistenceEntity persistenceEntity) {
+    private PreparedStatementSetter getPreparedStatementSetterAttributes(Map.Entry entry, PersistenceEntity persistenceEntity,boolean create) {
         return new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
-                int i = 0;
                 BigInteger attrId = new BigInteger(String.valueOf(entry.getKey()));
-
+                if (create) {
+                    prepareValue(ps,entry,0);
+                    ps.setString(4, persistenceEntity.getObjectId().toString());
+                    ps.setString(5, attrId.toString());
+                } else{
+                    ps.setString(1, persistenceEntity.getObjectId().toString());
+                    ps.setString(2, attrId.toString());
+                    prepareValue(ps,entry,2);
+                    ps.setString(6, persistenceEntity.getObjectId().toString());
+                    ps.setString(7, attrId.toString());
+                    prepareValue(ps,entry,7);
+                }
+            };
+            private void prepareValue(PreparedStatement ps,Map.Entry entry,int i) throws SQLException {
                 if (entry.getValue().getClass().getSimpleName().equals("String")) {
                     if (entry.getValue().equals("-1")) {
                         ps.setNull(++i, NULL);
@@ -224,25 +245,40 @@ public class PersistenceManager implements Manager {
                         ps.setString(++i, String.valueOf(entry.getValue()));
                     }
                 }
-
-                ps.setString(++i, persistenceEntity.getObjectId().toString());
-                ps.setString(++i, attrId.toString());
-            }
+            };
         };
     }
 
-    private PreparedStatementSetter getPreparedStatementSetterRef(Map.Entry entry, PersistenceEntity persistenceEntity) {
+    private PreparedStatementSetter getPreparedStatementSetterRef(Map.Entry entry, PersistenceEntity persistenceEntity,boolean create) {
         return new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 int i = 0;
-                if (entry.getValue() == null) {
-                    ps.setNull(++i, NULL);
+                if (create) {
+                    if (entry.getValue() == null) {
+                        ps.setNull(++i, NULL);
+                    } else {
+                        ps.setString(++i, String.valueOf(entry.getValue()));
+                    }
+                    ps.setString(++i, String.valueOf(persistenceEntity.getObjectId()));
+                    ps.setString(++i, String.valueOf(entry.getKey()));
                 } else {
-                    ps.setString(++i, String.valueOf(entry.getValue()));
+                    ps.setString(++i, String.valueOf(persistenceEntity.getObjectId()));
+                    ps.setString(++i, String.valueOf(entry.getKey()));
+                    if (entry.getValue() == null) {
+                        ps.setNull(++i, NULL);
+                    } else {
+                        ps.setString(++i, String.valueOf(entry.getValue()));
+                    }
+                    ps.setString(++i, String.valueOf(persistenceEntity.getObjectId()));
+                    ps.setString(++i, String.valueOf(entry.getKey()));
+                    if (entry.getValue() == null) {
+                        ps.setNull(++i, NULL);
+                    } else {
+                        ps.setString(++i, String.valueOf(entry.getValue()));
+                    }
                 }
-                ps.setString(++i, String.valueOf(persistenceEntity.getObjectId()));
-                ps.setString(++i, String.valueOf(entry.getKey()));
+
             }
         };
     }

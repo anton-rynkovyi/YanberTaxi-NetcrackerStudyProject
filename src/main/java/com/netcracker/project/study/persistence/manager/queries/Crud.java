@@ -12,22 +12,32 @@ public class Crud {
             " VALUES(?,?,?,?,?)";
     public static final String CREATE_OBJREFERENCE = ""+
             "INSERT INTO OBJREFERENCE" +
-            "(REFERENCE, OBJECT_ID, ATTR_ID)" +
+            "(reference, object_id, attr_id)" +
             " VALUES(?,?,?)";
     public static final String UPDATE_OBJECTS = ""+
-            "UPDATE OBJECTS " +
-            "SET parent_id=?, object_type_id=?, name=?, description=? " +
-            "WHERE object_id=?";
+            "MERGE INTO OBJECTS " +
+            "USING DUAL ON (object_id=?) "+
+            "WHEN NOT MATCHED THEN " +
+            "INSERT (parent_id,object_type_id,name,description,object_id) " +
+            "VALUES (?,?,?,?,?) " +
+            "WHEN MATCHED THEN " +
+            "UPDATE SET parent_id=?, object_type_id=?, name=?, description=? ";
     public static final String UPDATE_OBJREFERENCE = ""+
-            "UPDATE OBJREFERENCE " +
-            "SET  REFERENCE=?" +
-            "WHERE object_id=?" +
-            "AND attr_id =?";
+            "MERGE INTO OBJREFERENCE " +
+            "USING DUAL ON (object_id=? AND attr_id =?) "+
+            "WHEN NOT MATCHED THEN " +
+            "INSERT (reference, object_id, attr_id) " +
+            "VALUES(?,?,?)"+
+            "WHEN MATCHED THEN " +
+            "UPDATE SET reference=?";
     public static final String UPDATE_ATTRIBUTES = ""+
-            "UPDATE ATTRIBUTES " +
-            "SET value=?, date_value=?, list_value_id=? " +
-            "WHERE object_id=? " +
-            "AND attr_id=?";
+            "MERGE INTO ATTRIBUTES " +
+            "USING DUAL ON (object_id=? AND attr_id =?) "+
+            "WHEN NOT MATCHED THEN " +
+            "INSERT (value, date_value, list_value_id, object_id, attr_id)" +
+            "VALUES(?,?,?,?,?)"+
+            "WHEN MATCHED THEN " +
+            "UPDATE SET  value=?, date_value=?, list_value_id=? ";
     public static final String DELETE_FROM_ATTRIBUTES = ""+
             "DELETE " +
             "FROM ATTRIBUTES " +

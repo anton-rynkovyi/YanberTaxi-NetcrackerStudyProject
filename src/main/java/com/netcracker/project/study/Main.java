@@ -31,7 +31,7 @@ public class Main {
         facade.create(client);*/
 
 
-        Driver driver = new Driver("Goga", "It's driver");
+        /*Driver driver = new Driver("Angelica", "It's driver");
         driver.setFirstName("Grisha");
         driver.setLastName("Leps");
         driver.setHireDate(new Timestamp(System.currentTimeMillis()));
@@ -39,21 +39,22 @@ public class Main {
         driver.setRating(BigInteger.valueOf(3));
         facade.create(driver);
 
-       /* driver.setName("Update driver");
+       driver.setName("Update driver");
         driver.setStatus(BigInteger.valueOf(5));
         driver.setRating(null);
         driver.setFirstName("AAAAAAAAAA");
 
         facade.update(driver);*/
 
-       /*Order order = new Order("NEW ORDER");
+       Order order = new Order("NEW ORDER");
        order.setCost(BigInteger.valueOf(1000));
        order.setStatus(Driver.FREE);
        order.setDriverId(BigInteger.valueOf(11));
        order.setDriverRating(BigInteger.valueOf(2));
        order.setDriverMemo("MEMO");
        facade.create(order);
-
+        order.setDriverId(BigInteger.valueOf(6));
+       facade.update(order);
        /*Order order = new Order("MyOrder", "It's my order");
        order.setDriverMemo("Driver MEMO");
        order.setCost(BigInteger.valueOf(50));
@@ -61,7 +62,7 @@ public class Main {
        order.setStatus(BigInteger.valueOf(3));
        System.out.println("PE: " + facade.create(order));
 
-       Order order1 = facade.getOne(order.getObjectId(), Order.class);
+      /* Order order1 = facade.getOne(order.getObjectId(), Order.class);
        System.out.println(order1);*/
 
 
