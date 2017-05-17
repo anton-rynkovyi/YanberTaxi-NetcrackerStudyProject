@@ -35,14 +35,11 @@
     </bean>
 
 
-
-
     <bean id = "persistenceManager"
           class = "com.netcracker.project.study.persistence.manager.impl.PersistenceManager">
         <constructor-arg ref="dataSource"/>
     </bean>
 
-    <!--FACADE-->
-    <!--<bean class="com.netcracker.project.study.persistence.facade.impl.PersistenceFacade"></bean>-->
+    <!--<bean name="facade" class="com.netcracker.project.study.persistence.facade.impl.PersistenceFacade"></bean>-->
 
 </beans>

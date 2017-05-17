@@ -23,12 +23,14 @@ public class Main {
         PersistenceFacade facade = (PersistenceFacade) ctx.getBean(PersistenceFacade.class);
 
 
-        /*Client client = new Client("NEW CLIENT", "It's client!");
-        client.setLastName("Rynkovoy");
-        client.setFirstName("Anton");
-        client.setMiddleName("Andreevich");
-        client.setPoints(BigInteger.valueOf(50));
-        facade.create(client);*/
+        for (int i = 0; i < 1000; i++) {
+            Client client = new Client("NEW CLIENTssssssssssss", "It's client!");
+            client.setLastName("Rynkovoy");
+            client.setFirstName("Anton");
+            client.setMiddleName("Andreevich");
+            client.setPoints(BigInteger.valueOf(50));
+            facade.create(client);
+        }
 
 
         /*Driver driver = new Driver("Angelica", "It's driver");
@@ -46,15 +48,16 @@ public class Main {
 
         facade.update(driver);*/
 
-       Order order = new Order("NEW ORDER");
+      /* Order order = new Order("NEW ORDER");
        order.setCost(BigInteger.valueOf(1000));
        order.setStatus(Driver.FREE);
        order.setDriverId(BigInteger.valueOf(11));
        order.setDriverRating(BigInteger.valueOf(2));
        order.setDriverMemo("MEMO");
-       facade.create(order);
-        order.setDriverId(BigInteger.valueOf(6));
-       facade.update(order);
+       //facade.create(order);
+       order.setName("SFFSFSFSFSFFSS");
+       order.setDriverId(BigInteger.valueOf(6));
+       facade.update(order);*/
        /*Order order = new Order("MyOrder", "It's my order");
        order.setDriverMemo("Driver MEMO");
        order.setCost(BigInteger.valueOf(50));

@@ -4,9 +4,11 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.*;
 import com.netcracker.project.study.model.driver.DriverAttr;
 
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 @ObjectType(objectTypeId = DriverStatusAttr.OBJECT_TYPE_ID)
 public class DriverStatus extends Model{
