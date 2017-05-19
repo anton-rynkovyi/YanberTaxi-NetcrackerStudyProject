@@ -1,10 +1,14 @@
 package com.netcracker.project.study.vaadin.test.ui;
 import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.vaadin.test.components.HeaderMenu;
+import com.netcracker.project.study.vaadin.test.view.AdminView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 
@@ -13,22 +17,12 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.ui.renderers.ButtonRenderer;
-import com.vaadin.ui.renderers.ClickableRenderer;
-import com.vaadin.ui.renderers.DateRenderer;
-import com.vaadin.ui.renderers.Renderer;
+import com.vaadin.ui.renderers.*;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.vaadin.gridutil.cell.CellFilterComponent;
-import org.vaadin.gridutil.cell.GridCellFilter;
-import org.vaadin.gridutil.renderer.BooleanRenderer;
-import org.vaadin.gridutil.renderer.EditButtonValueRenderer;
-import org.vaadin.gridutil.renderer.*;
-import org.vaadin.gridutil.renderer.EditDeleteButtonValueRenderer.EditDeleteButtonClickListener;
 
 
 @Theme("valo")
-@SpringUI(path = "")
+@SpringUI(path = "s")
 public class MainPage extends UI {
 
     @Autowired
@@ -37,16 +31,29 @@ public class MainPage extends UI {
     @Autowired
     PersistenceFacade facade;
 
+    @Autowired
+    DriversCreatePopUp driversCreatePopUp;
+
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+        VerticalLayout layoutContent = genLayoutContent();
+        VerticalLayout viewLayout = new VerticalLayout();
+        setContent(layoutContent);
+        layoutContent.addComponents(headerMenu, viewLayout);
+
+        Navigator navigator = new Navigator(this, viewLayout);
+        navigator.addView("admin", AdminView.class);
+    }
+
+
+
+    private VerticalLayout genLayoutContent(){
         VerticalLayout layoutContent = new VerticalLayout();
         layoutContent.setSizeFull();
-        layoutContent.setMargin(true);
-        layoutContent.setSpacing(true);
-
-
-        layoutContent.addComponent(headerMenu);
-
-        setContent(layoutContent);
+        layoutContent.setMargin(false);
+        layoutContent.setSpacing(false);
+        return layoutContent;
     }
+
 }
