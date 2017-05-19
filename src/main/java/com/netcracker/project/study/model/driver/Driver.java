@@ -4,7 +4,6 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.*;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.*;
 
 
@@ -48,10 +47,10 @@ public class Driver extends Model implements DriverAttr{
     private @AttrList BigInteger status;
 
     @Attribute(attrId = DriverAttr.HIRE_DATE_ATTR)
-    private @AttrDate Timestamp hireDate;
+    private @AttrDate Date hireDate;
 
     @Attribute(attrId = DriverAttr.UNBAN_DATE_ATTR)
-    private @AttrDate Timestamp unbanDate;
+    private @AttrDate Date unbanDate;
 
     public Driver() {}
 
@@ -127,19 +126,19 @@ public class Driver extends Model implements DriverAttr{
         this.status = status;
     }
 
-    public Timestamp getHireDate() {
+    public Date getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(Timestamp hireDate) {
+    public void setHireDate(Date hireDate) {
         this.hireDate = hireDate;
     }
 
-    public Timestamp getUnbanDate() {
+    public Date getUnbanDate() {
         return unbanDate;
     }
 
-    public void setUnbanDate(Timestamp unbanDate) {
+    public void setUnbanDate(Date unbanDate) {
         this.unbanDate = unbanDate;
     }
 

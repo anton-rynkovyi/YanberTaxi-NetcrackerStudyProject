@@ -8,8 +8,7 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.sql.Date;
 
 @SpringComponent
 public class DriversCreatePopUp extends CustomComponent {
@@ -70,7 +69,7 @@ public class DriversCreatePopUp extends CustomComponent {
                 driver.setMiddleName(middleName.getValue());
                 driver.setPhoneNumber(phoneNumber.getValue());
                 driver.setEmail(email.getValue());
-                driver.setHireDate(new Timestamp(new Date().getTime()));
+                driver.setHireDate(new Date(System.currentTimeMillis()));
                 driver.setExperience(BigInteger.valueOf(Long.parseLong(experience.getValue())));
                 driver.setStatus(Driver.OFF_DUTY);
 

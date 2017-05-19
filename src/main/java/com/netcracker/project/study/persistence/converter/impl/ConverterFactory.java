@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +24,7 @@ public class ConverterFactory implements Converter {
     private Map<BigInteger, Object> attributes;
     private Map<BigInteger, BigInteger> references;
 
-    private final Timestamp EMPTY_LONG = new Timestamp(-1);
+    private final Date EMPTY_LONG = new Date(-1);
     private final String EMPTY_STRING = "-1";
     private final BigInteger EMPTY_BIG_INTEGER = BigInteger.valueOf(-1);
 
@@ -41,12 +41,12 @@ public class ConverterFactory implements Converter {
      * @param field  - field to put
      */
     private void putAttribute(BigInteger attrId, Model model, Field field) {
-        Object fieldValue;
-        fieldValue = getValue(model, field);
+        Object fieldValue = getValue(model, field);
+        System.out.println(fieldValue);
         if (field.isAnnotationPresent(AttrValue.class)) {
             attributes.put(attrId, fieldValue != null ? fieldValue.toString() : EMPTY_STRING);
         } else if (field.isAnnotationPresent(AttrDate.class)) {
-            attributes.put(attrId, fieldValue != null ? Timestamp.valueOf(fieldValue.toString()) : EMPTY_LONG);
+            attributes.put(attrId, fieldValue != null ? Date.valueOf(fieldValue.toString()) : EMPTY_LONG);
         } else if (field.isAnnotationPresent(AttrList.class)) {
             attributes.put(attrId, fieldValue != null ? fieldValue : EMPTY_BIG_INTEGER);
         }
@@ -114,7 +114,7 @@ public class ConverterFactory implements Converter {
     }
 
     @Override
-    public PersistenceEntity convertToEntity(Model model) throws IllegalAccessException, NoSuchFieldException {
+    public PersistenceEntity convertToEntity(Model model) {
         Class modelClass = model.getClass();
         PersistenceEntity entity = new PersistenceEntity();
         attributes = new HashMap<>();
@@ -154,15 +154,22 @@ public class ConverterFactory implements Converter {
 
         entity.setAttributes(attributes);
         entity.setReferences(references);
-
+        System.out.println("Entity in converter: " + entity);
         return entity;
     }
 
     @Override
-    public <T extends Model> T convertToModel(PersistenceEntity entity, Class clazz) throws IllegalAccessException, InstantiationException {
+    public <T extends Model> T convertToModel(PersistenceEntity entity, Class clazz) {
         Class modelClass = clazz;
         if (clazz == Model.class) return null;
-        T model = (T) modelClass.newInstance();
+        T model = null;
+        try {
+            model = (T) modelClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
         model.setName(entity.getName());
         model.setObjectId(entity.getObjectId());

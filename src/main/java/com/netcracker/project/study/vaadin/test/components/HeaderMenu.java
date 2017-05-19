@@ -1,12 +1,15 @@
 package com.netcracker.project.study.vaadin.test.components;
 
+import com.netcracker.project.study.vaadin.test.ui.DriversCreatePopUp;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 @SpringComponent
 public class HeaderMenu extends CustomComponent {
+
 
 
     public static final String DRIVERS_TAB = "Drivers";
@@ -19,6 +22,9 @@ public class HeaderMenu extends CustomComponent {
     private VerticalLayout gridLayout;
 
     private MenuBar menuBar;
+
+    @Autowired
+    private DriversCreatePopUp driversCreatePopUp;
 
     @Autowired
     private ModelGrid modelGrid;
@@ -35,10 +41,10 @@ public class HeaderMenu extends CustomComponent {
         menuBar.setAutoOpen(true);
         menuBar.setStyleName(ValoTheme.MENUBAR_SMALL);
         menuBar.setStyleName(ValoTheme.MENUBAR_BORDERLESS);
-        layout.setSpacing(true);
-        layout.setMargin(true);
-        gridLayout.setSpacing(true);
-        gridLayout.setMargin(true);
+        layout.setSpacing(false);
+        layout.setMargin(false);
+        gridLayout.setSpacing(false);
+        gridLayout.setMargin(false);
         layout.addComponents(menuBar, gridLayout);
         setCompositionRoot(layout);
     }
@@ -57,7 +63,10 @@ public class HeaderMenu extends CustomComponent {
             switch (menuItem.getText()) {
                 case HeaderMenu.DRIVERS_TAB:
                     gridLayout.removeAllComponents();
-                    gridLayout.addComponent(modelGrid.getDriversGrid());
+                    PopupView popupView = new PopupView(null, driversCreatePopUp);
+                    Button button = new Button("Add driver", click ->
+                            popupView.setPopupVisible(true));
+                    gridLayout.addComponents(modelGrid.getDriversGrid(), button, popupView);
                     Notification.show(HeaderMenu.DRIVERS_TAB);
                     break;
                 case HeaderMenu.CLIENTS_TAB:
@@ -73,5 +82,4 @@ public class HeaderMenu extends CustomComponent {
             }
         }
     };
-
 }

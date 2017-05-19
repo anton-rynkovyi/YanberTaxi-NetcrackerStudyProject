@@ -10,13 +10,13 @@ import java.util.List;
 
 public interface Facade{
 
-    PersistenceEntity create(Model model) throws NoSuchFieldException, IllegalAccessException;
+    PersistenceEntity create(Model model);
 
-    void update(Model model) throws NoSuchFieldException, IllegalAccessException;
+    void update(Model model);
 
-    void delete(BigInteger objectId) throws NoSuchFieldException, IllegalAccessException;
+    void delete(BigInteger objectId);
 
-    <T extends Model> T getOne(BigInteger objectId, Class modelClass) throws InstantiationException, IllegalAccessException;
+    <T extends Model> T getOne(BigInteger objectId, Class modelClass);
 
-    List<? extends Model> getAll(BigInteger objectTypeId, Class modelClass) throws InstantiationException, IllegalAccessException;
+    List<? extends Model> getAll(BigInteger objectTypeId, Class modelClass);
 }

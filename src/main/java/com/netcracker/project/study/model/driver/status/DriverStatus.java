@@ -2,13 +2,9 @@ package com.netcracker.project.study.model.driver.status;
 
 import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.*;
-import com.netcracker.project.study.model.driver.DriverAttr;
 
-import java.io.InputStream;
 import java.math.BigInteger;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.Date;
 
 @ObjectType(objectTypeId = DriverStatusAttr.OBJECT_TYPE_ID)
 public class DriverStatus extends Model{
@@ -32,7 +28,7 @@ public class DriverStatus extends Model{
     private @AttrList BigInteger status;
 
     @Attribute(attrId = DriverStatusAttr.TIME_STAMP_ATTR)
-    private @AttrDate Timestamp timeStamp;
+    private @AttrDate Date timeStamp;
 
     public DriverStatus() {}
 
@@ -60,11 +56,11 @@ public class DriverStatus extends Model{
         this.status = status;
     }
 
-    public Timestamp getTimeStamp() {
+    public Date getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(Timestamp timeStamp) {
+    public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
     }
 

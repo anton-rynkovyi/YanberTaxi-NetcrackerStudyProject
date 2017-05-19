@@ -26,13 +26,7 @@ public class PersistenceFacade implements Facade {
     @Override
     public PersistenceEntity create(Model model) {
         PersistenceEntity entity = null;
-        try {
-            entity = manager.create(converter.convertToEntity(model));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+        entity = manager.create(converter.convertToEntity(model));
         model.setObjectId(entity.getObjectId());
         return entity;
     }
@@ -42,13 +36,7 @@ public class PersistenceFacade implements Facade {
         if (model.getObjectId() == null) {
             create(model);
         }
-        try {
-            manager.update(converter.convertToEntity(model));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+        manager.update(converter.convertToEntity(model));
     }
 
     @Override
@@ -60,13 +48,7 @@ public class PersistenceFacade implements Facade {
     public <T extends Model> T getOne(BigInteger objectId, Class modelClass) {
         PersistenceEntity entity = manager.getOne(objectId);
         T model = null;
-        try {
-            model = converter.convertToModel(entity, modelClass);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
+        model = converter.convertToModel(entity, modelClass);
         return model;
     }
 
@@ -76,13 +58,7 @@ public class PersistenceFacade implements Facade {
         List<Model> models = new ArrayList<>();
         for (int i = 0; i < entities.size(); i++) {
             Model model = null;
-            try {
-                model = converter.convertToModel(entities.get(i), modelClass);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            }
+            model = converter.convertToModel(entities.get(i), modelClass);
             models.add(model);
         }
         return models;
