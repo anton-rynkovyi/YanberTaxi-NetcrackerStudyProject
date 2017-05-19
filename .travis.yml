@@ -3,3 +3,6 @@ script: mvn test -B
 
 jdk:
   - oraclejdk8
+  
+  notifications:
+    slack: netcracker-group:l7SVR8WEaqBQetm1Ov1hdquy
