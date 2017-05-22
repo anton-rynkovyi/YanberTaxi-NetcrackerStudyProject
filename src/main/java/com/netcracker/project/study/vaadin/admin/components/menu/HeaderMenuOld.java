@@ -1,16 +1,15 @@
-package com.netcracker.project.study.vaadin.test.components;
+package com.netcracker.project.study.vaadin.admin.components.menu;
 
-import com.netcracker.project.study.vaadin.test.ui.DriversCreatePopUp;
+import com.netcracker.project.study.vaadin.admin.components.grids.ModelGrid;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriversCreatePopUp;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 
 @SpringComponent
-public class HeaderMenu extends CustomComponent {
-
-
+@Deprecated
+public class HeaderMenuOld extends CustomComponent {
 
     public static final String DRIVERS_TAB = "Drivers";
     public static final String CLIENTS_TAB = "Clients";
@@ -24,12 +23,12 @@ public class HeaderMenu extends CustomComponent {
     private MenuBar menuBar;
 
     @Autowired
-    private DriversCreatePopUp driversCreatePopUp;
-
-    @Autowired
     private ModelGrid modelGrid;
 
-    public HeaderMenu() {
+    @Autowired
+    private DriversCreatePopUp driversCreatePopUp;
+    
+    public HeaderMenuOld() {
         layout = new VerticalLayout();
         gridLayout = new VerticalLayout();
         menuBar = new MenuBar();
@@ -61,23 +60,24 @@ public class HeaderMenu extends CustomComponent {
         @Override
         public void menuSelected(MenuBar.MenuItem menuItem) {
             switch (menuItem.getText()) {
-                case HeaderMenu.DRIVERS_TAB:
+                case HeaderMenuOld.DRIVERS_TAB:
                     gridLayout.removeAllComponents();
                     PopupView popupView = new PopupView(null, driversCreatePopUp);
+                    /*gridLayout.setComponentAlignment( popupView, Alignment.MIDDLE_CENTER);*/
                     Button button = new Button("Add driver", click ->
                             popupView.setPopupVisible(true));
                     gridLayout.addComponents(modelGrid.getDriversGrid(), button, popupView);
-                    Notification.show(HeaderMenu.DRIVERS_TAB);
+                    Notification.show(HeaderMenuOld.DRIVERS_TAB);
                     break;
-                case HeaderMenu.CLIENTS_TAB:
+                case HeaderMenuOld.CLIENTS_TAB:
                     gridLayout.removeAllComponents();
                     gridLayout.addComponent(modelGrid.getClientsGrid());
-                    Notification.show(HeaderMenu.CLIENTS_TAB);
+                    Notification.show(HeaderMenuOld.CLIENTS_TAB);
                     break;
-                case HeaderMenu.ORDERS_TAB:
+                case HeaderMenuOld.ORDERS_TAB:
                     gridLayout.removeAllComponents();
                     gridLayout.addComponent(modelGrid.getOrdersGrid());
-                    Notification.show(HeaderMenu.ORDERS_TAB);
+                    Notification.show(HeaderMenuOld.ORDERS_TAB);
                     break;
             }
         }

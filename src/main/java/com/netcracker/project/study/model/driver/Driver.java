@@ -2,6 +2,7 @@ package com.netcracker.project.study.model.driver;
 
 import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.*;
+import com.netcracker.project.study.model.driver.status.DriverStatusValues;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -9,17 +10,6 @@ import java.util.*;
 
 @ObjectType(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
 public class Driver extends Model implements DriverAttr{
-
-
-    public static final BigInteger APPROVAL = BigInteger.valueOf(1);
-
-    public static final BigInteger OFF_DUTY = BigInteger.valueOf(2);
-
-    public static final BigInteger FREE = BigInteger.valueOf(3);
-
-    public static final BigInteger ON_CALL = BigInteger.valueOf(4);
-
-    public static final BigInteger PERFORMING_ORDER = BigInteger.valueOf(5);
 
 
     @Attribute(attrId = DriverAttr.LAST_NAME_ATTR)
@@ -156,5 +146,18 @@ public class Driver extends Model implements DriverAttr{
                 ", hireDate=" + hireDate +
                 ", unbanDate=" + unbanDate +
                 '}';
+    }
+
+    public String getStringStatus(Driver driver) {
+        String status = null;
+        switch (driver.getStatus().intValue()){
+            case 1: status = DriverStatusValues.APPROVAL_STR; break;
+            case 2: status = DriverStatusValues.OFF_DUTY_STR; break;
+            case 3: status = DriverStatusValues.FREE_STR; break;
+            case 4: status = DriverStatusValues.ON_CALL_STR; break;
+            case 5: status = DriverStatusValues.PERFORMING_ORDER_STR; break;
+            default: return null;
+        }
+        return status;
     }
 }

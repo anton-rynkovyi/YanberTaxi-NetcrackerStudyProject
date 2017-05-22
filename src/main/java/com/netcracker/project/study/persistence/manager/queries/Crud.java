@@ -68,9 +68,4 @@ public class Crud {
             "SELECT * " +
             "FROM Objects " +
             "WHERE object_type_id = ?";
-    public static final String GENERATE_MAX_OBJECT_ID = ""+
-            "SELECT " +
-            "NVL(MAX(object_id),0)+1 AS object_id " +
-            "FROM objects";
-
 }

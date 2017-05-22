@@ -7,19 +7,7 @@ import java.math.BigInteger;
 import java.util.Date;
 
 @ObjectType(objectTypeId = DriverStatusAttr.OBJECT_TYPE_ID)
-public class DriverStatus extends Model{
-
-
-    public static final BigInteger APPROVAL = BigInteger.valueOf(16);
-
-    public static final BigInteger OFF_DUTY = BigInteger.valueOf(17);
-
-    public static final BigInteger FREE = BigInteger.valueOf(18);
-
-    public static final BigInteger ON_CALL = BigInteger.valueOf(19);
-
-    public static final BigInteger PERFORMING_ORDER = BigInteger.valueOf(20);
-
+public class DriverStatus extends Model implements DriverStatusAttr{
 
     @Reference(attrId = DriverStatusAttr.DRIVER_ID_ATTR)
     private BigInteger driverId;

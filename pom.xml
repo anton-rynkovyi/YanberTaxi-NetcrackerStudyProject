@@ -26,6 +26,7 @@
 		<javax.servlet.api>3.1.0</javax.servlet.api>
 		<tomcat.jdbc.version>7.0.35</tomcat.jdbc.version>
 		<log4j.version>1.2.17</log4j.version>
+		<vaadin.spring.version>2.0.0</vaadin.spring.version>
 	</properties>
 
 	<repositories>
@@ -65,10 +66,21 @@
 			<artifactId>messagebox</artifactId>
 			<version>${messagebox.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>grid-renderers-collection-addon</artifactId>
+			<version>0.97</version>
+		</dependency>
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>vaadin-grid-util</artifactId>
+			<version>1.1.0</version>
+		</dependency>
 		<!--VAADIN SETTINGS-->
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-spring</artifactId>
+			<version>${vaadin.spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>

@@ -1,10 +1,10 @@
-package com.netcracker.project.study.vaadin.test.components;
+package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
-import com.netcracker.project.study.vaadin.test.ui.DriversCreatePopUp;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriversCreatePopUp;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ButtonRenderer;
@@ -16,8 +16,8 @@ import java.math.BigInteger;
 import java.util.List;
 
 @SpringComponent
+@Deprecated
 public class ModelGrid {
-
 
     @Autowired
     PersistenceFacade facade;
@@ -25,8 +25,6 @@ public class ModelGrid {
 
     public Grid<Client> getClientsGrid(){
         Grid<Client> grid = new Grid<>();
-
-        VerticalLayout verticalLayout = new VerticalLayout();
 
         List<Client> clientList = facade.getAll(BigInteger.valueOf(Client.OBJECT_TYPE_ID), Client.class);
         grid.setItems(clientList);

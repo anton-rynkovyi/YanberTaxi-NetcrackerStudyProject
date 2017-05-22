@@ -1,6 +1,7 @@
 package com.netcracker.project.study.model;
 
 import com.netcracker.project.study.model.annotations.Attribute;
+import com.netcracker.project.study.model.driver.Driver;
 
 import java.math.BigInteger;
 
@@ -59,4 +60,5 @@ public abstract class Model implements ObjectFakeAttr{
     public void setParentId(BigInteger parentId) {
         this.parentId = parentId;
     }
+
 }

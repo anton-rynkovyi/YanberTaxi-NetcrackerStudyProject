@@ -25,7 +25,7 @@ public class PersistenceFacade implements Facade {
 
     @Override
     public PersistenceEntity create(Model model) {
-        PersistenceEntity entity = null;
+        PersistenceEntity entity;
         entity = manager.create(converter.convertToEntity(model));
         model.setObjectId(entity.getObjectId());
         return entity;

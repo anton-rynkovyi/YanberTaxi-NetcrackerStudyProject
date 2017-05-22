@@ -1,4 +1,4 @@
-package com.netcracker.project.study.vaadin.test.configuration;
+package com.netcracker.project.study.vaadin.configurations;
 
 import org.springframework.web.context.ContextLoaderListener;
 
