@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
 import java.sql.Date;
@@ -49,11 +50,9 @@ public class PersistenceManager implements Manager {
                 ps.setString(++i, persistenceEntity.getObjectTypeId().toString());
                 ps.setString(++i, persistenceEntity.getName());
                 ps.setString(++i, persistenceEntity.getDescription());
-                System.out.println(keyHolder);
                 return ps;
             }
         }, keyHolder);
-        System.out.println(BigInteger.valueOf(keyHolder.getKey().longValue())+" : objID");
         persistenceEntity.setObjectId(BigInteger.valueOf(keyHolder.getKey().longValue()));
         for (Map.Entry entry : persistenceEntity.getAttributes().entrySet()) {
             jdbcTemplate.update(Crud.CREATE_ATTRIBUTES, getPreparedStatementSetterAttributes(entry, persistenceEntity,true));
@@ -145,14 +144,11 @@ public class PersistenceManager implements Manager {
             Object value = null;
 
             if (row.get("value") != null) {
-                value = row.get("value");
-                try {
-                    value = new BigInteger(value+"");
-                } catch (Exception e) {}
+               value = String.valueOf(row.get("value"));
             } else if (row.get("date_value") != null) {
-                value = new Date(Timestamp.valueOf((row.get("date_value")+"")).getTime());
+                value = String.valueOf(row.get("date_value"));
             } else if (row.get("list_value_id") != null) {
-                value = new BigInteger((row.get("list_value_id")+""));
+                value = String.valueOf(row.get("list_value_id"));
             }
             attributes.put(attrId, value);
         }
@@ -230,10 +226,10 @@ public class PersistenceManager implements Manager {
 
                 } else  if (entry.getValue().getClass().getSimpleName().equals("Date")) {
                     ps.setString(++i, null);
-                    if (Date.valueOf(String.valueOf(entry.getValue())).compareTo(new Date(-1)) == 0) {
+                    if (((Date) entry.getValue()).getTime() == new Date(-1).getTime()) {
                         ps.setNull(++i, NULL);
                     } else {
-                        ps.setDate(++i, Date.valueOf(String.valueOf(entry.getValue())));
+                        ps.setTimestamp(++i, new Timestamp(((Date) entry.getValue()).getTime()));
                     }
                     ps.setNull(++i, NUMERIC);
 

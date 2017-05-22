@@ -3,6 +3,7 @@ package com.netcracker.project.study.model.order;
 import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.*;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @ObjectType(objectTypeId = OrderAttr.OBJECT_TYPE_ID)
@@ -28,7 +29,7 @@ public class Order extends Model implements OrderAttr{
     private @AttrList BigInteger status;
 
     @Attribute(attrId = OrderAttr.COST_ATTR)
-    private @AttrValue BigInteger cost;
+    private @AttrValue BigDecimal cost;
 
     @Attribute(attrId = OrderAttr.DISTANCE_ATTR)
     private @AttrValue BigInteger distance;
@@ -73,11 +74,11 @@ public class Order extends Model implements OrderAttr{
         this.status = status;
     }
 
-    public BigInteger getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
-    public void setCost(BigInteger cost) {
+    public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
 

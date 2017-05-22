@@ -12,8 +12,10 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,11 +44,10 @@ public class ConverterFactory implements Converter {
      */
     private void putAttribute(BigInteger attrId, Model model, Field field) {
         Object fieldValue = getValue(model, field);
-        System.out.println(fieldValue);
         if (field.isAnnotationPresent(AttrValue.class)) {
             attributes.put(attrId, fieldValue != null ? fieldValue.toString() : EMPTY_STRING);
         } else if (field.isAnnotationPresent(AttrDate.class)) {
-            attributes.put(attrId, fieldValue != null ? Date.valueOf(fieldValue.toString()) : EMPTY_LONG);
+            attributes.put(attrId, fieldValue != null ? ((Date) fieldValue) : EMPTY_LONG);
         } else if (field.isAnnotationPresent(AttrList.class)) {
             attributes.put(attrId, fieldValue != null ? fieldValue : EMPTY_BIG_INTEGER);
         }
@@ -97,6 +98,22 @@ public class ConverterFactory implements Converter {
      * @param value - value of corresponding field with Object type
      */
     private void setValue(Field field, Model model, Object value) {
+
+        if (field.isAnnotationPresent(AttrValue.class)) {
+            String fieldType = field.getType().getSimpleName();
+            if (fieldType.equals("BigInteger")) {
+                value = value != null ? BigInteger.valueOf(Long.parseLong(String.valueOf(value))) : null;
+            } else if (fieldType.equals("BigDecimal")) {
+                value = value != null ? BigDecimal.valueOf(Double.parseDouble(String.valueOf(value))) : null;
+            }
+        } else if (field.isAnnotationPresent(AttrDate.class)) {
+            java.util.Date date = value != null ?
+                    new Date(Timestamp.valueOf(String.valueOf(value)).getTime()) : null;
+            value = value != null ? date : null;
+        } else if (field.isAnnotationPresent(AttrList.class)) {
+            value = value != null ? BigInteger.valueOf(Long.parseLong(String.valueOf(value))) : null;
+        }
+
         try {
             PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), model.getClass());
             Method setMethod = propertyDescriptor.getWriteMethod();
@@ -110,7 +127,6 @@ public class ConverterFactory implements Converter {
         } catch (InvocationTargetException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
@@ -154,7 +170,6 @@ public class ConverterFactory implements Converter {
 
         entity.setAttributes(attributes);
         entity.setReferences(references);
-        System.out.println("Entity in converter: " + entity);
         return entity;
     }
 
