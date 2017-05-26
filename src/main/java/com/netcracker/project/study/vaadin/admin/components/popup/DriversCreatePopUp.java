@@ -1,26 +1,31 @@
 package com.netcracker.project.study.vaadin.admin.components.popup;
 
 import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.model.driver.status.DriverStatusValues;
-import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
+import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequestsGrid;
+import com.netcracker.project.study.vaadin.admin.page.AdminPage;
+import com.netcracker.project.study.vaadin.admin.views.DriversView;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.addons.Toastr;
+import org.vaadin.addons.builder.ToastBuilder;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 
 @SpringComponent
 public class DriversCreatePopUp extends VerticalLayout {
 
-    @Autowired
-    private PersistenceFacade facade;
+    @Autowired AdminService adminService;
 
-    @Autowired
-    private DriversGrid driversGrid;
+    @Autowired DriversGrid driversGrid;
+
+    @Autowired DriversRequestsGrid driversRequestsGrid;
 
     @PostConstruct
     public void init() {
@@ -28,12 +33,11 @@ public class DriversCreatePopUp extends VerticalLayout {
         layout.setWidth("600");
         layout.setSpacing(true);
         layout.setMargin(true);
-        openWindowWithTextFields(layout);
+        setTextFields(layout);
         addComponent(layout);
     }
 
-    public void openWindowWithTextFields(VerticalLayout layout) {
-
+    public void setTextFields(VerticalLayout layout) {
 
         FormLayout form = new FormLayout();
 
@@ -63,14 +67,25 @@ public class DriversCreatePopUp extends VerticalLayout {
         experience.setIcon(FontAwesome.LONG_ARROW_UP);
         form.addComponent(experience);
 
-        layout.addComponent(form);
+        TextField status = new TextField("status");
+        experience.setIcon(FontAwesome.LONG_ARROW_UP);
+        form.addComponent(status);
 
+
+        layout.addComponent(form);
 
 
         Button btnAddToDB = new Button("Add", FontAwesome.PLUS);
         btnAddToDB.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
+
+                if (lastName.isEmpty() || firstName.isEmpty() || middleName.isEmpty() || phoneNumber.isEmpty()
+                        || email.isEmpty() || experience.isEmpty()) {
+                    Toastr failToast = new Toastr();
+                    failToast.toast(ToastBuilder.error("All fields must be filled").build());
+                }
+
                 Driver driver = new Driver();
                 driver.setName(lastName.getValue() +" " + firstName.getValue());
                 driver.setLastName(lastName.getValue());
@@ -80,13 +95,19 @@ public class DriversCreatePopUp extends VerticalLayout {
                 driver.setEmail(email.getValue());
                 driver.setHireDate(new Date(System.currentTimeMillis()));
                 driver.setExperience(BigInteger.valueOf(Long.parseLong(experience.getValue())));
-                driver.setStatus(DriverStatusValues.OFF_DUTY);
+                driver.setRating(new BigDecimal(4));
+                driver.setStatus(new BigInteger(status.getValue()));
 
-                facade.create(driver);
+                Toastr successToast = new Toastr();
+                successToast.toast(ToastBuilder.success("The driver has been successfully approved").build());
 
-                driversGrid.getMyDriversList().add(driver);
-                driversGrid.getDriversGrid().setItems(driversGrid.getMyDriversList());
-                driversGrid.getDriversCreateSubWindow().close();
+                adminService.createModel(driver);
+
+                driversGrid.getApprovedDriversList().add(driver);
+                driversGrid.getDriversGrid().setItems(driversGrid.getApprovedDriversList());
+
+                driversGrid.refreshGrid();
+                driversRequestsGrid.refreshGrid();
 
                 lastName.setValue("");
                 firstName.setValue("");
@@ -94,6 +115,11 @@ public class DriversCreatePopUp extends VerticalLayout {
                 phoneNumber.setValue("");
                 email.setValue("");
                 experience.setValue("");
+                status.setValue("");
+
+                driversGrid.getDriversCreateSubWindow().close();
+
+                //AdminPage.navigator.navigateTo(DriversView.VIEW_NAME);
             }
         });
 

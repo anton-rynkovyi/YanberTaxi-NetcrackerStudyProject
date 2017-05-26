@@ -26,7 +26,8 @@ public class AdminPage extends UI {
     private SpringViewProvider provider;
 
     private Panel viewDisplay;
-    private static Navigator navigator;
+
+    public static Navigator navigator;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {

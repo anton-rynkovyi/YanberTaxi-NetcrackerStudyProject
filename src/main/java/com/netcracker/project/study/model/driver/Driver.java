@@ -4,6 +4,7 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.*;
 import com.netcracker.project.study.model.driver.status.DriverStatusValues;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -25,7 +26,7 @@ public class Driver extends Model implements DriverAttr{
     private @AttrValue String phoneNumber;
 
     @Attribute(attrId = DriverAttr.RATING_ATTR)
-    private @AttrValue BigInteger rating;
+    private @AttrValue BigDecimal rating;
 
     @Attribute(attrId = DriverAttr.EXPERIENCE_ATTR)
     private @AttrValue BigInteger experience;
@@ -84,11 +85,11 @@ public class Driver extends Model implements DriverAttr{
         this.phoneNumber = phoneNumber;
     }
 
-    public BigInteger getRating() {
+    public BigDecimal getRating() {
         return rating;
     }
 
-    public void setRating(BigInteger rating) {
+    public void setRating(BigDecimal rating) {
         this.rating = rating;
     }
 

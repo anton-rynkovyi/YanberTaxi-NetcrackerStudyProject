@@ -3,8 +3,8 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.status.DriverStatusValues;
-import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
-import com.netcracker.project.study.vaadin.admin.components.popup.DriverInfoPopUp;
+import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriverRequestInfoPopUp;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 
@@ -26,11 +26,9 @@ public class DriversRequestsGrid  extends CustomComponent{
 
     private Window window;
 
-    @Autowired
-    private DriversGrid driversGrid;
+    @Autowired AdminService adminService;
 
-    @Autowired
-    private DriverInfoPopUp driverInfoPopUp;
+    @Autowired DriverRequestInfoPopUp driverInfoPopUp;
 
     @PostConstruct
     public void init() {
@@ -43,48 +41,48 @@ public class DriversRequestsGrid  extends CustomComponent{
 
     private void initWindow() {
         window = new Window("Driver information");
+        window.setWidthUndefined();
+        window.setHeightUndefined();
         window.center();
+        window.setModal(true);
         window.setContent(driverInfoPopUp);
     }
 
     private HorizontalLayout getFilledComponentLayout() {
         HorizontalLayout componentLayout = new HorizontalLayout();
-        componentLayout.setMargin(false);
-        componentLayout.setSpacing(false);
         componentLayout.setSizeFull();
 
         VerticalLayout btnControlLayout = getControlButtonsLayout();
-
         componentLayout.addComponent(driversRequestsGrid);
         componentLayout.addComponent(btnControlLayout);
-        componentLayout.setComponentAlignment(btnControlLayout, Alignment.TOP_RIGHT);
+
+        componentLayout.setExpandRatio(driversRequestsGrid, 0.84f);
+        componentLayout.setExpandRatio(btnControlLayout, 0.16f);
 
         return componentLayout;
     }
 
     private VerticalLayout getControlButtonsLayout() {
         VerticalLayout controlButtonsLayout = new VerticalLayout();
+        controlButtonsLayout.setMargin(true);
+        controlButtonsLayout.setSpacing(true);
+
         Button btnViewDriver = new Button("View driver", FontAwesome.EYE);
         controlButtonsLayout.addComponent(btnViewDriver);
         btnViewDriver.addClickListener(clickEvent -> {
-            UI.getCurrent().addWindow(window);
+            if(!driversRequestsGrid.asSingleSelect().isEmpty() ) {
+                Driver driver = driversRequestsGrid.asSingleSelect().getValue();
+                driverInfoPopUp.init(driver);
+                UI.getCurrent().addWindow(window);
+            }
         });
-
 
         return controlButtonsLayout;
     }
 
     private Grid<Driver> generateDriversGrid() {
-        Grid<Driver> driversRequestsGrid = new Grid<>();
-        driversRequestsList = new ArrayList<>();
-
-        for (int i = 0; i < driversGrid.getDriversList().size(); i++) {
-            Driver driver = driversGrid.getDriversList().get(i);
-            if(driver.getStatus() != null && driver.getStatus().compareTo(DriverStatusValues.APPROVAL) == 0) {
-                driversRequestsList.add(driver);
-            }
-        }
-
+        driversRequestsGrid = new Grid<>();
+        refreshGrid();
         driversRequestsGrid.setItems(driversRequestsList);
         driversRequestsGrid.addColumn(Driver::getLastName).setCaption("Last name");
         driversRequestsGrid.addColumn(Driver::getFirstName).setCaption("First name");
@@ -101,8 +99,30 @@ public class DriversRequestsGrid  extends CustomComponent{
         driversRequestsGrid.setSizeFull();
     }
 
-    public List<Driver> driversRequestsList() {
+    public Window getDriversRequestSubWindow(){
+        return window;
+    }
+
+    public void refreshGrid() {
+        driversRequestsList = new ArrayList<>();
+        List<Driver> driverList = adminService.allModelsAsList(Driver.class);
+        for (int i = 0; i < driverList.size(); i++) {
+            Driver driver = driverList.get(i);
+            if(driver.getStatus() != null && driver.getStatus().compareTo(DriverStatusValues.APPROVAL) == 0) {
+                driversRequestsList.add(driver);
+            }
+        }
+        driversRequestsGrid.setItems(driversRequestsList);
+    }
+
+
+    public List<Driver> getDriversRequestsList() {
         return driversRequestsList;
     }
 
+    public void setDriversRequestsList(List<Driver> driversRequestsList) {
+        this.driversRequestsList = driversRequestsList;
+    }
+
+    public Grid<Driver> getDriversRequestsGrid() {return driversRequestsGrid;}
 }

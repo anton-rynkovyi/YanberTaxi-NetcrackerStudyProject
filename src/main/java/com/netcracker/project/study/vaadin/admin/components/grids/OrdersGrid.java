@@ -1,31 +1,25 @@
 package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.order.Order;
-import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
-import com.vaadin.server.FontAwesome;
+import com.netcracker.project.study.services.AdminService;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
-import com.vaadin.ui.renderers.ButtonRenderer;
-import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.math.BigInteger;
 import java.util.*;
 
 @SpringComponent
 public class OrdersGrid extends CustomComponent {
 
     @Autowired
-    private PersistenceFacade facade;
+    AdminService adminService;
 
     private Grid<Order> ordersGrid;
 
     private VerticalLayout componentLayout;
 
     private List<Order> ordersList;
-
-    private Window window;
 
     @PostConstruct
     public void init() {
@@ -48,7 +42,7 @@ public class OrdersGrid extends CustomComponent {
     private Grid<Order> generateOrdersGrid() {
 
         Grid<Order> ordersGrid = new Grid<>();
-        ordersList = facade.getAll(BigInteger.valueOf(Order.OBJECT_TYPE_ID), Order.class);
+        ordersList = adminService.allModelsAsList(Order.class);
         ordersGrid.setItems(ordersList);
 
         ordersGrid.addColumn(Order::getObjectId).setCaption("№");

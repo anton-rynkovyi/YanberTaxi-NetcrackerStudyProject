@@ -3,6 +3,7 @@ package com.netcracker.project.study.vaadin.admin.components.menu;
 
 import com.netcracker.project.study.vaadin.admin.page.AdminPage;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.*;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -18,8 +19,7 @@ public class HeaderMenu extends CustomComponent {
     public HeaderMenu() {
         menuBar = getMenuBar();
         horizontalLayout = getLayout();
-        Label label = new Label("YanberTaxi");
-        label.setStyleName(ValoTheme.LABEL_H3);
+        Label label = new Label("<h3>YanberTaxi</h3>", ContentMode.HTML);
         horizontalLayout.addComponents(menuBar, label);
         setMenuButtons(menuBar);
     }

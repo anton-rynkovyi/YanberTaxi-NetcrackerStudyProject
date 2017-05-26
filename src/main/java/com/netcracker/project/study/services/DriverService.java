@@ -1,4 +1,4 @@
-package com.netcracker.project.study.service;
+package com.netcracker.project.study.services;
 
 public interface DriverService {
 

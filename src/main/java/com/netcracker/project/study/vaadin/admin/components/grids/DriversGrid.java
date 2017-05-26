@@ -2,27 +2,26 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 
 
 import com.netcracker.project.study.model.driver.Driver;
+
 import com.netcracker.project.study.model.driver.status.DriverStatusValues;
-import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriversCreatePopUp;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.teemu.ratingstars.RatingStars;
 
 import javax.annotation.PostConstruct;
-import java.math.BigInteger;
 import java.util.*;
 
 @SpringComponent
 public class DriversGrid extends CustomComponent{
 
-    @Autowired
-    private DriversCreatePopUp driversCreatePopUp;
+    @Autowired DriversCreatePopUp driversCreatePopUp;
 
-    @Autowired
-    private PersistenceFacade facade;
+    @Autowired AdminService adminService;
 
     private Grid<Driver> driversGrid;
 
@@ -58,19 +57,8 @@ public class DriversGrid extends CustomComponent{
 
     private Grid<Driver> generateDriversGrid() {
 
-        Grid<Driver> driversGrid = new Grid<>();
-        driversList = facade.getAll(BigInteger.valueOf(Driver.OBJECT_TYPE_ID), Driver.class);
-
-        myDrivers = new ArrayList<>();
-
-        for (int i = 0; i < driversList.size(); i++) {
-            if(driversList.get(i).getStatus() != DriverStatusValues.APPROVAL){
-                myDrivers.add(driversList.get(i));
-            }
-        }
-
-        driversGrid.setItems(myDrivers);
-
+        driversGrid = new Grid<>();
+        refreshGrid();
         driversGrid.addColumn(Driver::getObjectId).setCaption("№");
         driversGrid.addColumn(Driver::getLastName).setCaption("Last name");
         driversGrid.addColumn(Driver::getFirstName).setCaption("First name");
@@ -81,7 +69,6 @@ public class DriversGrid extends CustomComponent{
         driversGrid.addColumn(Driver::getRating).setCaption("Rating");
         driversGrid.addColumn(Driver::getHireDate).setCaption("Hire date");
         driversGrid.addColumn(Driver::getExperience).setCaption("Exp");
-
         return driversGrid;
     }
 
@@ -89,19 +76,10 @@ public class DriversGrid extends CustomComponent{
         driversGrid.setSizeFull();
     }
 
-    public Grid<Driver> getDriversGrid() {
-        return driversGrid;
-    }
-
-    public List<Driver> getDriversList() {
-        return driversList;
-    }
-
-    public List<Driver> getMyDriversList() {return myDrivers;}
-
     private void initWindow() {
         window = new Window("Add new driver");
         window.center();
+        window.setModal(true);
         window.setContent(driversCreatePopUp);
     }
 
@@ -134,7 +112,7 @@ public class DriversGrid extends CustomComponent{
                     .withCaption("Delete")
                     .withMessage("Are you want to delete " + firstName + " " + lastName + "?")
                     .withYesButton(() -> {
-                        facade.delete(driver.getObjectId());
+                        adminService.deleteModel(driver);
                         myDrivers.remove(driver);
                         driversGrid.setItems(myDrivers);
                     })
@@ -157,5 +135,31 @@ public class DriversGrid extends CustomComponent{
         btnDriverInfo.addClickListener(event ->{});
 
         return controlButtonsLayout;
+    }
+
+    public void refreshGrid(){
+        driversList = adminService.allModelsAsList(Driver.class);
+        myDrivers = new ArrayList<>();
+        for (int i = 0; i < driversList.size(); i++) {
+            if(driversList.get(i).getStatus() != DriverStatusValues.APPROVAL){
+                myDrivers.add(driversList.get(i));
+            }
+        }
+        driversGrid.setItems(myDrivers);
+    }
+
+
+    public Grid<Driver> getDriversGrid() {
+        return driversGrid;
+    }
+
+    public List<Driver> getApprovedDriversList() {return myDrivers;}
+
+    public List<Driver> getDriversList() {
+        return driversList;
+    }
+
+    public void setDriversList(List<Driver> driversList) {
+        this.driversList = driversList;
     }
 }

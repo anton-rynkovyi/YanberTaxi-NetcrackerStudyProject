@@ -33,17 +33,16 @@ public class Main {
        /* Driver driver = facade.getOne(BigInteger.valueOf(11), Driver.class);
         System.out.println(driver);*/
 
-/*
         final Logger logger = LoggerFactory.getLogger(Main.class);
         logger.warn("MAIN");
         Driver driver = new Driver("ESSS", "It's driver");
-        driver.setFirstName("SSSSSSSSSSSSSSSS");
-        driver.setLastName("Leps");
+        driver.setFirstName("Anton");
+        driver.setLastName("Rynkovoy");
         driver.setHireDate(new Date(System.currentTimeMillis()));
         driver.setStatus(new BigInteger("1"));
-        driver.setRating(BigInteger.valueOf(3));
+        driver.setRating(BigDecimal.valueOf(3));
         facade.create(driver);
-        System.out.println(driver);*/
+        System.out.println(driver);
 
         /*Driver driver = facade.getOne(BigInteger.valueOf(16), Driver.class);
         System.out.println("HD: " + driver.getHireDate());
@@ -77,11 +76,11 @@ public class Main {
        order.setDriverId(BigInteger.valueOf(6));
        facade.update(order);*/
 
-       Order order = new Order("MyOrder", "It's my order");
+       /*Order order = new Order("MyOrder", "It's my order");
        order.setDriverMemo("Driver MEMO");
        order.setCost(BigDecimal.valueOf(50.45));
        order.setStatus(BigInteger.valueOf(3));
-       System.out.println("PE: " + facade.create(order));
+       System.out.println("PE: " + facade.create(order));*/
 
       /* Order order1 = facade.getOne(BigInteger.valueOf(6), Order.class);
        System.out.println(order1);*/

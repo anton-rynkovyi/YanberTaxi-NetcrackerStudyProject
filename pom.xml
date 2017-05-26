@@ -16,7 +16,6 @@
 	<properties>
 		<vaadin.version>8.0.6</vaadin.version>
 		<vaadin.plugin.version>8.0.6</vaadin.plugin.version>
-		<jetty.plugin.version>9.3.9.v20160517</jetty.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -67,6 +66,11 @@
 			<version>${messagebox.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>vaadin-toastr</artifactId>
+			<version>1.0.7</version>
+		</dependency>
+		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>grid-renderers-collection-addon</artifactId>
 			<version>0.97</version>
@@ -75,6 +79,21 @@
 			<groupId>org.vaadin.addons</groupId>
 			<artifactId>vaadin-grid-util</artifactId>
 			<version>1.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.appreciated</groupId>
+			<artifactId>material</artifactId>
+			<version>0.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-icons</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>de.knoobie.vaadin.addons.bootstrap</groupId>
+			<artifactId>bootstrap-formgroup</artifactId>
+			<version>0.1</version>
 		</dependency>
 		<!--VAADIN SETTINGS-->
 		<dependency>

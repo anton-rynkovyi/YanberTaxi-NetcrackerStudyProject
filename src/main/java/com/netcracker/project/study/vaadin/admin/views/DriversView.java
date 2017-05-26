@@ -16,23 +16,19 @@ public class DriversView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "drivers";
 
-    @Autowired private DriversGrid driversGrid;
+    @Autowired DriversGrid driversGrid;
 
-    @Autowired private DriversRequestsGrid driversRequestsGrid;
+    @Autowired DriversRequestsGrid driversRequestsGrid;
+
+    TabSheet tabSheet;
 
     @PostConstruct
     void init() {
-        TabSheet tabSheet = getTabSheet();
+        tabSheet = new TabSheet();
+        setTabs();
         addComponent(tabSheet);
     }
 
-    private TabSheet getTabSheet() {
-        TabSheet tabSheet = new TabSheet();
-        tabSheet.addTab(getAllDriversTab(), "All drivers");
-        tabSheet.addTab(getDriversRequestsTab(),
-                "Drivers Requests(" + driversRequestsGrid.driversRequestsList().size() + ")");
-        return tabSheet;
-    }
 
     private VerticalLayout getAllDriversTab() {
         VerticalLayout controlLayout = new VerticalLayout();
@@ -48,8 +44,11 @@ public class DriversView extends VerticalLayout implements View {
         return controlLayout;
     }
 
-
-
+    public void setTabs() {
+        tabSheet.addTab(getAllDriversTab(), "All drivers");
+        tabSheet.addTab(getDriversRequestsTab(),
+                "Drivers Requests(" + driversRequestsGrid.getDriversRequestsList().size() + ")");
+    }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {

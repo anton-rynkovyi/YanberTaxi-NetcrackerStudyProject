@@ -1,32 +1,25 @@
 package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.client.Client;
-import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.popup.ClientsCreatePopUp;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
-import com.vaadin.ui.renderers.ButtonRenderer;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.math.BigInteger;
 import java.util.*;
 
 @SpringComponent
 public class ClientsGrid extends CustomComponent {
 
-    @Autowired
-    private ClientsCreatePopUp clientsCreatePopUp;
+    @Autowired ClientsCreatePopUp clientsCreatePopUp;
 
-    @Autowired
-    private PersistenceFacade facade;
+    @Autowired AdminService adminService;
 
     private Grid<Client> clientsGrid;
-
-    private VerticalLayout componentLayout;
 
     private List<Client> clientsList;
 
@@ -35,7 +28,7 @@ public class ClientsGrid extends CustomComponent {
     @PostConstruct
     public void init() {
         clientsGrid = generateClientsGrid();
-        componentLayout = getFilledComponentLayout();
+        VerticalLayout componentLayout = getFilledComponentLayout();
         initWindow();
         setGridSettings(clientsGrid);
         setCompositionRoot(componentLayout);
@@ -57,7 +50,7 @@ public class ClientsGrid extends CustomComponent {
     private Grid<Client> generateClientsGrid() {
 
         Grid<Client> clientsGrid = new Grid<>();
-        clientsList = facade.getAll(BigInteger.valueOf(Client.OBJECT_TYPE_ID), Client.class);
+        clientsList = adminService.allModelsAsList(Client.class);
         clientsGrid.setItems(clientsList);
 
         clientsGrid.addColumn(Client::getObjectId).setCaption("№");
@@ -115,7 +108,7 @@ public class ClientsGrid extends CustomComponent {
                     .withCaption("Delete")
                     .withMessage("Are you want to delete " + firstName + " " + lastName + "?")
                     .withYesButton(() -> {
-                        facade.delete(client.getObjectId());
+                        adminService.deleteModel(client);
                         clientsList.remove(client);
                         clientsGrid.setItems(clientsList);
                     })

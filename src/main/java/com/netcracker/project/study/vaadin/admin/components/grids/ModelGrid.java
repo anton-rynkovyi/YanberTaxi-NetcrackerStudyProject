@@ -4,6 +4,8 @@ import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.impl.AdminServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriversCreatePopUp;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -20,13 +22,12 @@ import java.util.List;
 public class ModelGrid {
 
     @Autowired
-    PersistenceFacade facade;
-
+    AdminService adminService;
 
     public Grid<Client> getClientsGrid(){
         Grid<Client> grid = new Grid<>();
 
-        List<Client> clientList = facade.getAll(BigInteger.valueOf(Client.OBJECT_TYPE_ID), Client.class);
+        List<Client> clientList = adminService.allModelsAsList(Client.class);
         grid.setItems(clientList);
 
         grid.setSizeFull();
@@ -46,7 +47,7 @@ public class ModelGrid {
                                 .withCaption("Delete")
                                 .withMessage("Are you sure?")
                                 .withYesButton(() -> {
-                                    facade.delete(((Client) rendererClickEvent.getItem()).getObjectId());
+                                    adminService.deleteModel(((Client) rendererClickEvent.getItem()));
                                     clientList.remove(rendererClickEvent.getItem());
                                     grid.setItems(clientList);
                                 })
@@ -70,7 +71,7 @@ public class ModelGrid {
     public Grid<Driver> getDriversGrid() {
         Grid<Driver> grid = new Grid<>();
         grid.setSizeFull();
-        List<Driver> driverList = facade.getAll(BigInteger.valueOf(Driver.OBJECT_TYPE_ID), Driver.class);
+        List<Driver> driverList = adminService.allModelsAsList(Driver.class);
         grid.setItems(driverList);
         grid.addColumn(Driver::getObjectId).setCaption("id").setWidth(50);
         grid.addColumn(Driver::getLastName).setCaption("Last name");
@@ -93,7 +94,7 @@ public class ModelGrid {
                                 .withCaption("Delete")
                                 .withMessage("Are you sure?")
                                 .withYesButton(() -> {
-                                    facade.delete(((Driver) rendererClickEvent.getItem()).getObjectId());
+                                    adminService.deleteModel(((Driver) rendererClickEvent.getItem()));
                                     driverList.remove(rendererClickEvent.getItem());
                                     grid.setItems(driverList);
                                 })
@@ -119,7 +120,7 @@ public class ModelGrid {
     public Grid<Order> getOrdersGrid() {
         Grid<Order> grid = new Grid<>();
         grid.setSizeFull();
-        List<Order> orderList = facade.getAll(BigInteger.valueOf(Order.OBJECT_TYPE_ID), Order.class);
+        List<Order> orderList = adminService.allModelsAsList(Order.class);
         grid.setItems(orderList);
         grid.addColumn(Order::getObjectId).setCaption("№");
         grid.addColumn(Order::getClientId).setCaption("Client");
@@ -139,7 +140,7 @@ public class ModelGrid {
                                 .withCaption("Delete")
                                 .withMessage("Are you sure?")
                                 .withYesButton(() -> {
-                                    facade.delete(((Order) rendererClickEvent.getItem()).getObjectId());
+                                    adminService.deleteModel(((Order) rendererClickEvent.getItem()));
                                     orderList.remove(rendererClickEvent.getItem());
                                     grid.setItems(orderList);
                                 })

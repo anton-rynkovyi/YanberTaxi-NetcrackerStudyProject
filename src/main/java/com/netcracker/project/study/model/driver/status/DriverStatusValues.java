@@ -24,4 +24,5 @@ public interface DriverStatusValues {
     String ON_CALL_STR = "on call";
 
     String PERFORMING_ORDER_STR = "performing order";
+
 }

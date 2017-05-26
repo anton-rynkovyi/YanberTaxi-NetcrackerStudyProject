@@ -3,6 +3,7 @@ package com.netcracker.project.study.vaadin.admin.components.popup;
 
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.grids.ClientsGrid;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -18,11 +19,9 @@ import java.math.BigInteger;
 @SpringComponent
 public class ClientsCreatePopUp extends VerticalLayout {
 
-    @Autowired
-    private PersistenceFacade facade;
+    @Autowired AdminService adminService;
 
-    @Autowired
-    private ClientsGrid clientsGrid;
+    @Autowired ClientsGrid clientsGrid;
 
     @PostConstruct
     public void init() {
@@ -30,12 +29,11 @@ public class ClientsCreatePopUp extends VerticalLayout {
         layout.setWidth("600");
         layout.setSpacing(true);
         layout.setMargin(true);
-        openWindowWithTextFields(layout);
-
+        setTextFields(layout);
         addComponent(layout);
     }
 
-    private void openWindowWithTextFields(VerticalLayout layout) {
+    private void setTextFields(VerticalLayout layout) {
 
         FormLayout form = new FormLayout();
 
@@ -77,7 +75,7 @@ public class ClientsCreatePopUp extends VerticalLayout {
                 client.setPhoneNumber(phoneNumber.getValue());
                 client.setPoints(new BigInteger(points.getValue()));
 
-                facade.create(client);
+                adminService.createModel(client);
 
                 clientsGrid.getClientsList().add(client);
                 clientsGrid.getClientsGrid().setItems(clientsGrid.getClientsList());
