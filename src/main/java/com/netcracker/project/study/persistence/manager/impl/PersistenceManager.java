@@ -136,6 +136,18 @@ public class PersistenceManager implements Manager {
         return persistenceEntityList;
     }
 
+    @Override
+    public List<PersistenceEntity> getSome(String sqlQuery) {
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(Crud.SELECT_SOME_FROM_OBJECTS_BY_ID.concat("( ").concat(sqlQuery).concat(" )"));
+        if (rows.isEmpty()) return Collections.emptyList();
+        List<PersistenceEntity> persistenceEntityList = new ArrayList<>();
+        for (Map row : rows) {
+            PersistenceEntity persistenceEntity = getOne(BigInteger.valueOf(Long.parseLong(row.get("object_id")+"")));
+            persistenceEntityList.add(persistenceEntity);
+        }
+        return persistenceEntityList;
+    }
+
 
     private Map<BigInteger, Object> getAttributes(List<Map<String, Object>> rowss) {
         Map<BigInteger, Object> attributes = new HashMap();

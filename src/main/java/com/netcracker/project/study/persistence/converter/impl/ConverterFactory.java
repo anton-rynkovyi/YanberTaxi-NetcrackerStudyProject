@@ -111,7 +111,7 @@ public class ConverterFactory implements Converter {
                     new Date(Timestamp.valueOf(String.valueOf(value)).getTime()) : null;
             value = value != null ? date : null;
         } else if (field.isAnnotationPresent(AttrList.class)) {
-            value = value != null ? BigInteger.valueOf(Long.parseLong(String.valueOf(value))) : null;
+            value = value!= null&&!value.equals("null") ? BigInteger.valueOf(Long.parseLong(String.valueOf(value))) : null;
         }
 
         try {

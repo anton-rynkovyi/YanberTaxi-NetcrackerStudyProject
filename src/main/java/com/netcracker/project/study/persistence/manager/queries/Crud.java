@@ -68,4 +68,8 @@ public class Crud {
             "SELECT * " +
             "FROM Objects " +
             "WHERE object_type_id = ?";
+    public static final String SELECT_SOME_FROM_OBJECTS_BY_ID = ""+
+            "SELECT * " +
+            "FROM Objects " +
+            "WHERE object_id in ";
 }

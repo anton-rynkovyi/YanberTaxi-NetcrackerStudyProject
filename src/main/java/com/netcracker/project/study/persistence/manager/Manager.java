@@ -17,4 +17,6 @@ public interface Manager {
 
     List<PersistenceEntity> getAll(BigInteger objectTypeId);
 
+    List<PersistenceEntity> getSome(String sqlQuery);
+
 }

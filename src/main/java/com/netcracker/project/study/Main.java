@@ -1,12 +1,17 @@
 package com.netcracker.project.study;
 
+import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.order.Order;
+import com.netcracker.project.study.persistence.PersistenceEntity;
+import com.netcracker.project.study.persistence.converter.impl.ConverterFactory;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
@@ -14,8 +19,11 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, InstantiationException {
         ApplicationContext ctx =
                 new FileSystemXmlApplicationContext("src/main/webapp/WEB-INF/applicationContext.xml");
@@ -33,7 +41,7 @@ public class Main {
        /* Driver driver = facade.getOne(BigInteger.valueOf(11), Driver.class);
         System.out.println(driver);*/
 
-        final Logger logger = LoggerFactory.getLogger(Main.class);
+       /* final Logger logger = LoggerFactory.getLogger(Main.class);
         logger.warn("MAIN");
         Driver driver = new Driver("ESSS", "It's driver");
         driver.setFirstName("Anton");
@@ -86,10 +94,16 @@ public class Main {
        System.out.println(order1);*/
 
         //facade.delete(BigInteger.valueOf(11));
-
-      /*  List<Driver> orderList = facade.getAll(BigInteger.valueOf(Driver.OBJECT_TYPE_ID), Driver.class);
+        String sqlQuery = "select OBJECT_ID from objects where objects.name = 'Driver Miha'";
+      List<Driver> orderList = facade.getSome(sqlQuery, Driver.class);
         for (int i = 0; i < orderList.size(); i++) {
             System.out.println(orderList.get(i).getObjectId() + ": " + orderList.get(i));
-        }*/
+        }
+
+
+
+
     }
+
+
 }

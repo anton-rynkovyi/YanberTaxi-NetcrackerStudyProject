@@ -19,4 +19,6 @@ public interface Facade{
     <T extends Model> T getOne(BigInteger objectId, Class modelClass);
 
     List<? extends Model> getAll(BigInteger objectTypeId, Class modelClass);
+
+    List<? extends Model> getSome(String sqlQuery, Class modelClass);
 }
