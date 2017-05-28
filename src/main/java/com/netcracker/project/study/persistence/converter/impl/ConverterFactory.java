@@ -100,11 +100,13 @@ public class ConverterFactory implements Converter {
     private void setValue(Field field, Model model, Object value) {
 
         if (field.isAnnotationPresent(AttrValue.class)) {
-            String fieldType = field.getType().getSimpleName();
-            if (fieldType.equals("BigInteger")) {
+            Class fieldType = field.getType();
+            if (BigInteger.class.isAssignableFrom(fieldType)) {
                 value = value != null ? BigInteger.valueOf(Long.parseLong(String.valueOf(value))) : null;
-            } else if (fieldType.equals("BigDecimal")) {
+            } else if (BigDecimal.class.isAssignableFrom(fieldType)) {
                 value = value != null ? BigDecimal.valueOf(Double.parseDouble(String.valueOf(value))) : null;
+            } else if (boolean.class.isAssignableFrom(fieldType)) {
+                value = value != null ? Boolean.valueOf(String.valueOf(value)) : Boolean.valueOf(false);
             }
         } else if (field.isAnnotationPresent(AttrDate.class)) {
             java.util.Date date = value != null ?
@@ -176,7 +178,7 @@ public class ConverterFactory implements Converter {
     @Override
     public <T extends Model> T convertToModel(PersistenceEntity entity, Class clazz) {
         Class modelClass = clazz;
-        if (clazz == Model.class) return null;
+        if (clazz == Model.class) throw new IllegalArgumentException("You can't create object with Model type");
         T model = null;
         try {
             model = (T) modelClass.newInstance();
