@@ -3,11 +3,17 @@ package com.netcracker.project.study;
 import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverAttr;
+import com.netcracker.project.study.model.driver.car.Car;
+import com.netcracker.project.study.model.driver.car.CarAttr;
+import com.netcracker.project.study.model.driver.status.DriverStatusValues;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.persistence.PersistenceEntity;
 import com.netcracker.project.study.persistence.converter.impl.ConverterFactory;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
+import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.impl.AdminServiceImpl;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
@@ -28,6 +34,7 @@ public class Main {
         ApplicationContext ctx =
                 new FileSystemXmlApplicationContext("src/main/webapp/WEB-INF/applicationContext.xml");
         PersistenceFacade facade = (PersistenceFacade) ctx.getBean(PersistenceFacade.class);
+        AdminService adminService = ctx.getBean(AdminServiceImpl.class);
 
         /*for (int i = 0; i < 1000; i++) {
             Client client = new Client("NEW CLIENTssssssssssss", "It's client!");
@@ -94,16 +101,49 @@ public class Main {
        System.out.println(order1);*/
 
         //facade.delete(BigInteger.valueOf(11));
-        String sqlQuery = "select OBJECT_ID from objects where objects.name = 'Driver Miha'";
-      List<Driver> orderList = facade.getSome(sqlQuery, Driver.class);
+        /*String sqlQuery = "select obj.OBJECT_ID from objects obj, Attributes attr " +
+                "where obj.object_id = attr.object_id " +
+                "and obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
+                "and attr.list_value_id = " + DriverStatusValues.APPROVAL.intValue();*/
+
+
+
+
+     /* List<Driver> orderList = adminService.getDriversWithoutApproval();
         for (int i = 0; i < orderList.size(); i++) {
             System.out.println(orderList.get(i).getObjectId() + ": " + orderList.get(i));
-        }
+        }*/
 
 
+        Driver driver = new Driver();
+        driver.setName("Anton Driver");
+        driver.setFirstName("Anton");
+        driver.setLastName("Rynkovoy");
+        driver.setEmail("anton.rynkovoy@gmail.com");
+        driver.setMiddleName("Andreevich");
+        driver.setExperience(BigInteger.valueOf(5));
+        driver.setPhoneNumber("(068)067-68-53");
+        driver.setStatus(BigInteger.valueOf(1));
+        adminService.createModel(driver);
 
+        Car car = new Car();
+        car.setName("new CAR");
+        car.setChildSeat(true);
+        car.setStateNumber("BH4373EC");
+        car.setModelType("6");
+        car.setMakeOfCar("Mazda");
+        car.setDriverId(driver.getObjectId());
+        car.setChildSeat(false);
+        car.setReleaseDate(Date.valueOf("2004-01-01"));
+        adminService.createModel(car);
 
+      /*  Driver driver = facade.getOne(BigInteger.valueOf(111), Driver.class);
+        System.out.println(driver.getLastName());*/
+
+        List<Car> carList = adminService.getCarByDriver(driver);
+        System.out.println(carList.size());
+
+    /*    System.out.println(carList.get(0).getDriverId());
+        System.out.println(carList.get(0).getMakeOfCar());*/
     }
-
-
 }

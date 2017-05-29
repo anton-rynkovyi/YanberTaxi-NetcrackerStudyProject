@@ -12,10 +12,9 @@ public interface CarAttr {
 
     long SEATS_COUNT_ATTR = 26;
 
-    long DRIVER_ID_ATTR = 27;
+    long CHILD_SEAT = 27;
 
-    long STATE_NUMBER_ATTR = 28;
+    long DRIVER_ID_ATTR = 28;
 
-    long CHILD_SEAT = 29;
-
+    long STATE_NUMBER_ATTR = 29;
 }

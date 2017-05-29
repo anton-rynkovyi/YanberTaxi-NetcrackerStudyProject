@@ -2,7 +2,6 @@ package com.netcracker.project.study.model.driver.car;
 
 import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.*;
-import com.netcracker.project.study.model.driver.DriverAttr;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -26,7 +25,7 @@ public class Car extends Model {
     private BigInteger driverId;
 
     @Attribute(attrId = CarAttr.STATE_NUMBER_ATTR)
-    private @AttrValue BigInteger stateNumber;
+    private @AttrValue String stateNumber;
 
     @Attribute(attrId = CarAttr.CHILD_SEAT)
     private @AttrValue boolean childSeat;
@@ -81,11 +80,11 @@ public class Car extends Model {
         this.driverId = driverId;
     }
 
-    public BigInteger getStateNumber() {
+    public String getStateNumber() {
         return stateNumber;
     }
 
-    public void setStateNumber(BigInteger stateNumber) {
+    public void setStateNumber(String stateNumber) {
         this.stateNumber = stateNumber;
     }
 
@@ -97,4 +96,17 @@ public class Car extends Model {
         this.childSeat = childSeat;
     }
 
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "makeOfCar='" + makeOfCar + '\'' +
+                ", modelType='" + modelType + '\'' +
+                ", releaseDate=" + releaseDate +
+                ", seatsCount=" + seatsCount +
+                ", driverId=" + driverId +
+                ", stateNumber='" + stateNumber + '\'' +
+                ", childSeat=" + childSeat +
+                '}';
+    }
 }

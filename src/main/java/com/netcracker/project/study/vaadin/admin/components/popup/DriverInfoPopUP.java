@@ -2,40 +2,34 @@ package com.netcracker.project.study.vaadin.admin.components.popup;
 
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.car.Car;
-import com.netcracker.project.study.model.driver.status.DriverStatus;
-import com.netcracker.project.study.model.driver.status.DriverStatusValues;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
-import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequestsGrid;
-import com.vaadin.server.Page;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
-import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.addons.Toastr;
-import org.vaadin.addons.builder.ToastBuilder;
+
+import java.util.List;
 
 @SpringComponent
-public class DriverRequestInfoPopUp extends VerticalLayout{
+public class DriverInfoPopUP extends VerticalLayout {
 
     Driver driver;
 
-    @Autowired
-    DriversRequestsGrid driversRequestsGrid;
+    @Autowired DriversGrid driversGrid;
 
-    @Autowired
-    DriversGrid driversGrid;
+    @Autowired AdminService adminService;
 
-    @Autowired
-    AdminService adminService;
+    @Autowired BanDaysPopUp banDaysPopUp;
+
+    private Window banDaysWindow;
 
     private List<Car> driverCarList;
 
     public void init(Driver driver) {
         this.driver = driver;
         this.driverCarList = adminService.getCarByDriver(driver);
-        System.out.println(driverCarList);
+        initBanDaysWindow();
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
         rootLayout.setWidthUndefined();
@@ -43,6 +37,13 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
         rootLayout.setMargin(true);
         setTextFields(rootLayout);
         addComponent(rootLayout);
+    }
+
+    private void initBanDaysWindow() {
+        banDaysWindow = new Window("Ban");
+        banDaysWindow.center();
+        banDaysWindow.setModal(true);
+        banDaysWindow.setContent(banDaysPopUp);
     }
 
     private void setTextFields(VerticalLayout rootLayout) {
@@ -54,7 +55,7 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         VerticalLayout driverForm = new VerticalLayout();
-        Label name = new Label( "<h2><b>" + driver.getFirstName() + " " + driver.getLastName()+ "</b></h2><hr>",
+        Label name = new Label("<h2><b>" + driver.getFirstName() + " " + driver.getLastName() + "</b></h2><hr>",
                 ContentMode.HTML);
         Label midName = new Label("Middle name: <i>" + driver.getMiddleName() + "</i>", ContentMode.HTML);
         Label phone = new Label("Phone: <i>" + driver.getPhoneNumber() + "</i>", ContentMode.HTML);
@@ -91,35 +92,23 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
 
     private HorizontalLayout setControlButtonsLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setWidthUndefined();
+        horizontalLayout.setWidth(100, Unit.PERCENTAGE);
         horizontalLayout.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
 
-        Button btnDecline = new Button("Decline");
-        btnDecline.addClickListener(clickEvent -> {
-            List<Car> carList = adminService.getCarByDriver(driver);
-            for (int i = 0; i < carList.size(); i++) {
-                adminService.deleteModel(carList.get(i));
-            }
-            adminService.deleteModel(driver);
+        Button btnFire = new Button("Fire");
+        btnFire.addClickListener(clickEvent -> {
 
-            driversRequestsGrid.refreshGrid();
-            driversRequestsGrid.getDriversRequestSubWindow().close();
         });
-        horizontalLayout.addComponent(btnDecline);
+        horizontalLayout.addComponent(btnFire);
 
-        Button btnApprove = new Button("Approve");
-        btnApprove.addClickListener(clickEvent -> {
-            driver.setStatus(DriverStatusValues.OFF_DUTY);
-            adminService.updateModel(driver);
-            driversGrid.refreshGrid();
-            driversRequestsGrid.refreshGrid();
-
-            driversRequestsGrid.getDriversRequestSubWindow().close();
+        Button btnBan = new Button("Ban");
+        btnBan.addClickListener(clickEvent -> {
+            UI.getCurrent().addWindow(banDaysWindow);
         });
 
-        horizontalLayout.addComponent(btnApprove);
-        horizontalLayout.setExpandRatio(btnDecline, 0.9f);
-        horizontalLayout.setExpandRatio(btnApprove, 0.1f);
+        horizontalLayout.addComponent(btnBan);
+        horizontalLayout.setExpandRatio(btnFire, 0.9f);
+        horizontalLayout.setExpandRatio(btnBan, 0.1f);
 
         return horizontalLayout;
     }

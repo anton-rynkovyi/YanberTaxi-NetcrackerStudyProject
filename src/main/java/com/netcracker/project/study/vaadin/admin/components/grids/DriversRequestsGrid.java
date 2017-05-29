@@ -2,7 +2,6 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 
 
 import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.model.driver.status.DriverStatusValues;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverRequestInfoPopUp;
 import com.vaadin.server.FontAwesome;
@@ -12,7 +11,6 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringComponent
@@ -104,14 +102,7 @@ public class DriversRequestsGrid  extends CustomComponent{
     }
 
     public void refreshGrid() {
-        driversRequestsList = new ArrayList<>();
-        List<Driver> driverList = adminService.allModelsAsList(Driver.class);
-        for (int i = 0; i < driverList.size(); i++) {
-            Driver driver = driverList.get(i);
-            if(driver.getStatus() != null && driver.getStatus().compareTo(DriverStatusValues.APPROVAL) == 0) {
-                driversRequestsList.add(driver);
-            }
-        }
+        driversRequestsList = adminService.getDriversWithApproval();
         driversRequestsGrid.setItems(driversRequestsList);
     }
 

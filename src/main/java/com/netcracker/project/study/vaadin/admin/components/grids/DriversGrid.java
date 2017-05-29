@@ -3,15 +3,16 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.driver.Driver;
 
-import com.netcracker.project.study.model.driver.status.DriverStatusValues;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.vaadin.admin.components.popup.BanDaysPopUp;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriverInfoPopUP;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriverRequestInfoPopUp;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriversCreatePopUp;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.teemu.ratingstars.RatingStars;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -19,9 +20,11 @@ import java.util.*;
 @SpringComponent
 public class DriversGrid extends CustomComponent{
 
+    @Autowired AdminService adminService;
+
     @Autowired DriversCreatePopUp driversCreatePopUp;
 
-    @Autowired AdminService adminService;
+    @Autowired DriverInfoPopUP driverInfoPopUp;
 
     private Grid<Driver> driversGrid;
 
@@ -29,15 +32,18 @@ public class DriversGrid extends CustomComponent{
 
     private List<Driver> driversList;
 
-    private List<Driver> myDrivers;
+    private Window createDriverWindow;
 
-    private Window window;
+    private Window driverInfoWindow;
+
+
 
     @PostConstruct
     public void init() {
         driversGrid = generateDriversGrid();
         componentLayout = getFilledComponentLayout();
-        initWindow();
+        initCreateDriverWindow();
+        initDriverInfoWindow();
         setGridSettings(driversGrid);
         setCompositionRoot(componentLayout);
     }
@@ -76,15 +82,22 @@ public class DriversGrid extends CustomComponent{
         driversGrid.setSizeFull();
     }
 
-    private void initWindow() {
-        window = new Window("Add new driver");
-        window.center();
-        window.setModal(true);
-        window.setContent(driversCreatePopUp);
+    private void initCreateDriverWindow() {
+        createDriverWindow = new Window("Add new driver");
+        createDriverWindow.center();
+        createDriverWindow.setModal(true);
+        createDriverWindow.setContent(driversCreatePopUp);
+    }
+
+    private void initDriverInfoWindow() {
+        driverInfoWindow = new Window("Driver information");
+        driverInfoWindow.center();
+        driverInfoWindow.setModal(true);
+        driverInfoWindow.setContent(driverInfoPopUp);
     }
 
     public Window getDriversCreateSubWindow() {
-        return window;
+        return createDriverWindow;
     }
 
     private HorizontalLayout getControlButtonsLayout() {
@@ -96,7 +109,7 @@ public class DriversGrid extends CustomComponent{
         controlButtonsLayout.addComponent(btnAddDriver);
         controlButtonsLayout.setComponentAlignment(btnAddDriver, Alignment.BOTTOM_LEFT);
         btnAddDriver.addClickListener(event -> {
-            UI.getCurrent().addWindow(window);
+            UI.getCurrent().addWindow(createDriverWindow);
         });
 
 
@@ -113,8 +126,8 @@ public class DriversGrid extends CustomComponent{
                     .withMessage("Are you want to delete " + firstName + " " + lastName + "?")
                     .withYesButton(() -> {
                         adminService.deleteModel(driver);
-                        myDrivers.remove(driver);
-                        driversGrid.setItems(myDrivers);
+                        driversList.remove(driver);
+                        driversGrid.setItems(driversList);
                     })
                     .withNoButton(() -> {})
                     .open();
@@ -132,20 +145,20 @@ public class DriversGrid extends CustomComponent{
         Button btnDriverInfo = new Button("Driver info", FontAwesome.INFO);
         controlButtonsLayout.addComponent(btnDriverInfo);
         controlButtonsLayout.setComponentAlignment(btnDriverInfo, Alignment.BOTTOM_RIGHT);
-        btnDriverInfo.addClickListener(event ->{});
+        btnDriverInfo.addClickListener(event ->{
+            if(!driversGrid.asSingleSelect().isEmpty() ) {
+                Driver driver = driversGrid.asSingleSelect().getValue();
+                driverInfoPopUp.init(driver);
+                UI.getCurrent().addWindow(driverInfoWindow);
+            }
+        });
 
         return controlButtonsLayout;
     }
 
     public void refreshGrid(){
-        driversList = adminService.allModelsAsList(Driver.class);
-        myDrivers = new ArrayList<>();
-        for (int i = 0; i < driversList.size(); i++) {
-            if(driversList.get(i).getStatus() != DriverStatusValues.APPROVAL){
-                myDrivers.add(driversList.get(i));
-            }
-        }
-        driversGrid.setItems(myDrivers);
+        driversList = adminService.getDriversWithoutApproval();
+        driversGrid.setItems(driversList);
     }
 
 
@@ -153,9 +166,7 @@ public class DriversGrid extends CustomComponent{
         return driversGrid;
     }
 
-    public List<Driver> getApprovedDriversList() {return myDrivers;}
-
-    public List<Driver> getDriversList() {
+    public List<Driver> getApprovedDriversList() {
         return driversList;
     }
 
