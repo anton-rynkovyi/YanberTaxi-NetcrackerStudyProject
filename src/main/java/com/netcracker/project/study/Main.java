@@ -13,7 +13,9 @@ import com.netcracker.project.study.persistence.converter.impl.ConverterFactory;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.services.impl.AdminServiceImpl;
+import com.netcracker.project.study.services.impl.OrderServiceImpl;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
@@ -115,7 +117,7 @@ public class Main {
         }*/
 
 
-        Driver driver = new Driver();
+      /*  Driver driver = new Driver();
         driver.setName("Anton Driver");
         driver.setFirstName("Anton");
         driver.setLastName("Rynkovoy");
@@ -140,10 +142,15 @@ public class Main {
       /*  Driver driver = facade.getOne(BigInteger.valueOf(111), Driver.class);
         System.out.println(driver.getLastName());*/
 
-        List<Car> carList = adminService.getCarByDriver(driver);
+       /* List<Car> carList = adminService.getCarByDriver(driver);
         System.out.println(carList.size());
 
     /*    System.out.println(carList.get(0).getDriverId());
         System.out.println(carList.get(0).getMakeOfCar());*/
+       OrderService orderService = ctx.getBean(OrderServiceImpl.class);
+       Order order = facade.getOne(BigInteger.valueOf(50),Order.class);
+       BigDecimal bd = new BigDecimal("15.5");
+       orderService.calcPrice(bd,order);
+       orderService.changeStatus(Order.ACCEPTED,order);
     }
 }
