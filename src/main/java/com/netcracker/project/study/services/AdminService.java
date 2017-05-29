@@ -5,6 +5,7 @@ import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.car.Car;
 
 import java.math.BigInteger;
+import java.sql.Date;
 import java.util.List;
 
 public interface AdminService {
@@ -13,9 +14,7 @@ public interface AdminService {
 
     void showTracking();
 
-    void showDriverInfo(Driver driver);
-
-    void giveBan(Driver driver);
+    void giveBan(Driver driver, int days);
 
     <T extends Model> List<T> allModelsAsList(Class modelClass);
 
@@ -27,7 +26,11 @@ public interface AdminService {
 
     List<Driver> getDriversWithApproval();
 
-    List<Driver> getDriversWithoutApproval();
+    List<Driver> getActiveDrivers();
 
     List<Car> getCarByDriver(Driver driver);
+
+    List<Driver> getBannedDrivers();
+
+    void unbanDriver(Driver driver);
 }

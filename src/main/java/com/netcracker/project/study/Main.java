@@ -109,13 +109,13 @@ public class Main {
 
 
 
-     /* List<Driver> orderList = adminService.getDriversWithoutApproval();
+     /* List<Driver> orderList = adminService.getActiveDrivers();
         for (int i = 0; i < orderList.size(); i++) {
             System.out.println(orderList.get(i).getObjectId() + ": " + orderList.get(i));
         }*/
 
 
-        Driver driver = new Driver();
+        /*Driver driver = new Driver();
         driver.setName("Anton Driver");
         driver.setFirstName("Anton");
         driver.setLastName("Rynkovoy");
@@ -135,15 +135,26 @@ public class Main {
         car.setDriverId(driver.getObjectId());
         car.setChildSeat(false);
         car.setReleaseDate(Date.valueOf("2004-01-01"));
-        adminService.createModel(car);
+        adminService.createModel(car);*/
 
       /*  Driver driver = facade.getOne(BigInteger.valueOf(111), Driver.class);
         System.out.println(driver.getLastName());*/
 
-        List<Car> carList = adminService.getCarByDriver(driver);
-        System.out.println(carList.size());
+      /*  List<Car> carList = adminService.getCarByDriver(driver);
+        System.out.println(carList.size());*/
 
     /*    System.out.println(carList.get(0).getDriverId());
         System.out.println(carList.get(0).getMakeOfCar());*/
+
+
+       /* Driver driver = facade.getOne(BigInteger.valueOf(115), Driver.class);
+        driver.setUnbanDate(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24) * 3));
+        facade.update(driver);*/
+
+
+      /*List<Driver> list = adminService.getBannedDrivers();
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(list.get(i).getLastName());
+        }*/
     }
 }

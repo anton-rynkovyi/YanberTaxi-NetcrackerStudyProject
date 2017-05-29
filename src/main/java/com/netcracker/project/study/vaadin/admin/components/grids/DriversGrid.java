@@ -4,9 +4,7 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 import com.netcracker.project.study.model.driver.Driver;
 
 import com.netcracker.project.study.services.AdminService;
-import com.netcracker.project.study.vaadin.admin.components.popup.BanDaysPopUp;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverInfoPopUP;
-import com.netcracker.project.study.vaadin.admin.components.popup.DriverRequestInfoPopUp;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriversCreatePopUp;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -157,7 +155,7 @@ public class DriversGrid extends CustomComponent{
     }
 
     public void refreshGrid(){
-        driversList = adminService.getDriversWithoutApproval();
+        driversList = adminService.getActiveDrivers();
         driversGrid.setItems(driversList);
     }
 

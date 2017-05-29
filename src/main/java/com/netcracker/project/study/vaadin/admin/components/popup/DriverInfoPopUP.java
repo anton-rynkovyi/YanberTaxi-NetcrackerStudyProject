@@ -14,7 +14,7 @@ import java.util.List;
 @SpringComponent
 public class DriverInfoPopUP extends VerticalLayout {
 
-    Driver driver;
+    private Driver driver;
 
     @Autowired DriversGrid driversGrid;
 
@@ -119,5 +119,21 @@ public class DriverInfoPopUP extends VerticalLayout {
 
     public void setDriverCarList(List<Car> driverCarList) {
         this.driverCarList = driverCarList;
+    }
+
+    public Window getBanDaysWindow() {
+        return banDaysWindow;
+    }
+
+    public void setBanDaysWindow(Window banDaysWindow) {
+        this.banDaysWindow = banDaysWindow;
+    }
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
     }
 }

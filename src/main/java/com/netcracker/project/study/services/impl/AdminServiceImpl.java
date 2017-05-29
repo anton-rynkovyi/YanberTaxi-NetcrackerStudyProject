@@ -14,11 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.sql.Date;
+import java.util.*;
 
 @Service
 public class AdminServiceImpl implements AdminService{
+
+    public final long ONE_DAY_MILLS = 1000 * 60 * 60 * 24;
+
 
     @Autowired
     PersistenceFacade persistenceFacade;
@@ -34,18 +38,15 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public void showDriverInfo(Driver driver) {
-
+    public void giveBan(Driver driver, int days) {
+        Date date = new Date(System.currentTimeMillis() + ONE_DAY_MILLS * days);
+        driver.setUnbanDate(date);
+        persistenceFacade.update(driver);
     }
 
-    @Override
-    public void giveBan(Driver driver) {
-
-    }
 
     @Override
     public <T extends Model> List<T> allModelsAsList(Class modelClass) {
-
         if (modelClass.getSimpleName().equals("Client")) {
             return persistenceFacade.getAll(BigInteger.valueOf(ClientAttr.OBJECT_TYPE_ID), modelClass);
         } else if (modelClass.getSimpleName().equals("Driver")) {
@@ -79,23 +80,24 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public List<Driver> getDriversWithApproval() {
         String query = "" +
-                "select obj.OBJECT_ID " +
-                "from objects obj, Attributes attr " +
-                "where obj.object_id = attr.object_id " +
-                "and obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
-                "and attr.list_value_id = " + DriverStatusValues.APPROVAL;
+                "SELECT obj.object_id " +
+                "FROM objects obj " +
+                "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
+                "AND obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
+                "AND attr.list_value_id = " + DriverStatusValues.APPROVAL;
         List<Driver> driverList = persistenceFacade.getSome(query, Driver.class);
         return driverList;
     }
 
     @Override
-    public List<Driver> getDriversWithoutApproval() {
+    public List<Driver> getActiveDrivers() {
         String query = "" +
-                "select obj.OBJECT_ID " +
-                "from Objects obj, Attributes attr " +
-                "where obj.object_id = attr.object_id " +
-                "and obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
-                "and attr.list_value_id <> " + DriverStatusValues.APPROVAL;
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
+                "WHERE obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
+                "AND attr.list_value_id <> " + DriverStatusValues.APPROVAL;
+
         List<Driver> driverList = persistenceFacade.getSome(query, Driver.class);
         return driverList;
     }
@@ -103,13 +105,34 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public List<Car> getCarByDriver(Driver driver) {
         String query = "" +
-                "select obj.object_id " +
-                "from objects obj,objreference ref " +
-                "where ref.reference = " + driver.getObjectId() + " " +
-                "and ref.attr_id = " + CarAttr.DRIVER_ID_ATTR + " " +
-                "and ref.object_id = obj.object_id";
+                "SELECT obj.object_id " +
+                "FROM objects obj " +
+                "INNER JOIN objreference ref ON ref.object_id = obj.object_id " +
+                "WHERE ref.reference = " + driver.getObjectId() + " " +
+                "AND ref.attr_id = " + CarAttr.DRIVER_ID_ATTR;
 
         List<Car> carList = persistenceFacade.getSome(query, Car.class);
         return carList;
     }
+
+    @Override
+    public List<Driver> getBannedDrivers() {
+        String query = "" +
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
+                "WHERE obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
+                "AND attr.attr_id = " + DriverAttr.UNBAN_DATE_ATTR + " " +
+                "AND attr.date_value IS NOT NULL";
+        List<Driver> driverBanList = persistenceFacade.getSome(query, Driver.class);
+        return driverBanList;
+    }
+
+    @Override
+    public void unbanDriver(Driver driver) {
+        driver.setUnbanDate(null);
+        persistenceFacade.update(driver);
+    }
+
+
 }
