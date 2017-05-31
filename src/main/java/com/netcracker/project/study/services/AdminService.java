@@ -33,4 +33,7 @@ public interface AdminService {
     List<Driver> getBannedDrivers();
 
     void unbanDriver(Driver driver);
+
+    void setBanTimer(Driver driver);
+
 }

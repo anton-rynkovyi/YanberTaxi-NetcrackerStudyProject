@@ -10,6 +10,8 @@ import com.netcracker.project.study.model.driver.status.DriverStatusValues;
 import com.netcracker.project.study.model.order.OrderAttr;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
+import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,12 @@ public class AdminServiceImpl implements AdminService{
     @Autowired
     PersistenceFacade persistenceFacade;
 
+    @Autowired
+    DriversGrid driversGrid;
+
+    @Autowired
+    DriversBanGrid driversBanGrid;
+
     @Override
     public boolean isVerificate(Driver driver) {
         return false;
@@ -39,9 +47,37 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public void giveBan(Driver driver, int days) {
-        Date date = new Date(System.currentTimeMillis() + ONE_DAY_MILLS * days);
+        Date date = new Date(System.currentTimeMillis() + 1000*60 * days);
         driver.setUnbanDate(date);
         persistenceFacade.update(driver);
+        setBanTimer(driver);
+    }
+
+    @Override
+    public void setBanTimer(Driver driver) {
+        Timer timer = new Timer();
+
+        class BanTimer extends TimerTask {
+
+            @Override
+            public void run() {
+                long def = driver.getUnbanDate().getTime() - System.currentTimeMillis();
+                Driver d = persistenceFacade.getOne(driver.getObjectId(), Driver.class);
+                if (def < 0 || d.getUnbanDate() == null) {
+                    driver.setUnbanDate(null);
+                    persistenceFacade.update(driver);
+                    System.out.println("FINISH");
+                    driversGrid.refreshGrid();
+                    driversBanGrid.refreshGrid();
+                    timer.cancel();
+                    timer.purge();
+                    return;
+                }else {
+                    System.out.println(driver.getObjectId()+": " + def / 1000);
+                }
+            }
+        }
+        timer.schedule(new BanTimer(), 0, 1000);
     }
 
 
@@ -95,8 +131,12 @@ public class AdminServiceImpl implements AdminService{
                 "SELECT obj.object_id " +
                 "FROM Objects obj " +
                 "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
+                "INNER JOIN Attributes attr1 ON obj.object_id = attr1.object_id " +
                 "WHERE obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
-                "AND attr.list_value_id <> " + DriverStatusValues.APPROVAL;
+                "AND attr.attr_id = " + DriverAttr.STATUS_ATTR + " " +
+                "AND attr.list_value_id <> " + DriverStatusValues.APPROVAL + " " +
+                "AND attr1.attr_id = " + DriverAttr.UNBAN_DATE_ATTR + " " +
+                "AND attr1.date_value IS NULL";
 
         List<Driver> driverList = persistenceFacade.getSome(query, Driver.class);
         return driverList;
@@ -133,6 +173,7 @@ public class AdminServiceImpl implements AdminService{
         driver.setUnbanDate(null);
         persistenceFacade.update(driver);
     }
+
 
 
 }

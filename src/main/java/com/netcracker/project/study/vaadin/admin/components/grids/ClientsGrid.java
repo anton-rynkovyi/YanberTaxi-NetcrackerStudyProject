@@ -2,7 +2,7 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.services.AdminService;
-import com.netcracker.project.study.vaadin.admin.components.popup.ClientsCreatePopUp;
+import com.netcracker.project.study.vaadin.admin.components.popup.ClientCreatePopUp;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -15,7 +15,8 @@ import java.util.*;
 @SpringComponent
 public class ClientsGrid extends CustomComponent {
 
-    @Autowired ClientsCreatePopUp clientsCreatePopUp;
+    @Autowired
+    ClientCreatePopUp clientCreatePopUp;
 
     @Autowired AdminService adminService;
 
@@ -78,7 +79,7 @@ public class ClientsGrid extends CustomComponent {
     private void initWindow() {
         window = new Window("Add new client");
         window.center();
-        window.setContent(clientsCreatePopUp);
+        window.setContent(clientCreatePopUp);
     }
 
     public Window getClientsCreateSubWindow() {

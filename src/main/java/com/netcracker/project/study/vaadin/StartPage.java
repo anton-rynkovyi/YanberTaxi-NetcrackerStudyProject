@@ -1,12 +1,15 @@
 package com.netcracker.project.study.vaadin;
 
 
+import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.menu.HeaderMenuOld;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Theme("valo")
@@ -16,10 +19,18 @@ public class StartPage extends UI {
     /*@Autowired
     private HeaderMenuOld headerMenu;*/
 
+    @Autowired
+    AdminService adminService;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         VerticalLayout layoutContent = genLayoutContent();
         setContent(layoutContent);
+
+        List<Driver> driverList = adminService.getBannedDrivers();
+        for (int i = 0; i < driverList.size(); i++) {
+            adminService.setBanTimer(driverList.get(i));
+        }
 
         //layoutContent.addComponent(headerMenu);
         Window window = new Window("  Enter menu", getStartWindow());

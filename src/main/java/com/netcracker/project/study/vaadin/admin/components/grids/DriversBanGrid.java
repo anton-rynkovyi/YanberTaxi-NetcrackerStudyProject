@@ -2,11 +2,16 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriverBanInfoPopUp;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriverInfoPopUP;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.*;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.PostConstruct;
@@ -22,26 +27,67 @@ public class DriversBanGrid extends CustomComponent{
     AdminService adminService;
 
     @Autowired
-    DriversGrid driversGrid;
-/*
-    @Autowired
-    DriversBanGrid driversBanGrid;*/
+    DriverBanInfoPopUp driverBanInfoPopUp;
+
+    private HorizontalLayout rootLayout;
+
+    private Window driverBanInfoWindow;
 
     @PostConstruct
     private void init() {
+        initDriverBanInfoWindow();
         driverBanGrid = generateDriversGrid();
-        setCompositionRoot(driverBanGrid);
+        rootLayout = generateRootlayout();
+        setCompositionRoot(rootLayout);
     }
 
+    private void initDriverBanInfoWindow() {
+        driverBanInfoWindow = new Window("Driver information");
+        driverBanInfoWindow.center();
+        driverBanInfoWindow.setModal(true);
+        driverBanInfoWindow.setContent(driverBanInfoPopUp);
+    }
+
+    private HorizontalLayout generateRootlayout() {
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.setSizeFull();
+        horizontalLayout.addComponent(driverBanGrid);
+        horizontalLayout.setExpandRatio(driverBanGrid, 0.80f);
+        VerticalLayout buttonsLayout = generateButtonsLayout();
+        horizontalLayout.addComponent(buttonsLayout);
+        horizontalLayout.setExpandRatio(buttonsLayout, 0.20f);
+        return horizontalLayout;
+    }
 
     private Grid<Driver> generateDriversGrid() {
+        SimpleDateFormat dt = new SimpleDateFormat("dd:hh:mm");
         driverBanGrid = new Grid<>();
+        driverBanGrid.setSizeFull();
         refreshGrid();
         driverBanGrid.addColumn(Driver::getObjectId).setCaption("№");
-        driverBanGrid.addColumn(Driver::getUnbanDate).setCaption("Unban date");
+        driverBanGrid.addColumn(driver -> new Timestamp(driver.getUnbanDate().getTime())).setCaption("Unban date");
+        driverBanGrid.addColumn(driver ->
+                dt.format(new Date(driver.getUnbanDate().getTime() - System.currentTimeMillis())))
+                .setCaption("Remain");
         driverBanGrid.addColumn(Driver::getLastName).setCaption("Last name");
         driverBanGrid.addColumn(Driver::getFirstName).setCaption("First name");
         return driverBanGrid;
+    }
+
+    private VerticalLayout generateButtonsLayout(){
+        VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.setWidthUndefined();
+        Button btnDriverInfo = new Button("Driver info", FontAwesome.INFO);
+        verticalLayout.addComponent(btnDriverInfo);
+        verticalLayout.setComponentAlignment(btnDriverInfo, Alignment.BOTTOM_RIGHT);
+        btnDriverInfo.addClickListener(event -> {
+            if (!driverBanGrid.asSingleSelect().isEmpty()) {
+                Driver driver = driverBanGrid.asSingleSelect().getValue();
+                driverBanInfoPopUp.init(driver);
+                UI.getCurrent().addWindow(driverBanInfoWindow);
+            }
+        });
+        return verticalLayout;
     }
 
     public void refreshGrid(){
@@ -49,5 +95,11 @@ public class DriversBanGrid extends CustomComponent{
         driverBanGrid.setItems(driverBanList);
     }
 
+    public List<Driver> getDriverBanList(){
+        return driverBanList;
+    }
 
+    public Window getDriverBanInfoWindow() {
+        return driverBanInfoWindow;
+    }
 }

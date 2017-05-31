@@ -19,7 +19,7 @@ import java.math.BigInteger;
 import java.sql.Date;
 
 @SpringComponent
-public class DriversCreatePopUp extends VerticalLayout {
+public class DriverCreatePopUp extends VerticalLayout {
 
     @Autowired AdminService adminService;
 

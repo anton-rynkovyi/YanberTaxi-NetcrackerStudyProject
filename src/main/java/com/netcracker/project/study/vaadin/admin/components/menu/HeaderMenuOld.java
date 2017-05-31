@@ -1,7 +1,7 @@
 package com.netcracker.project.study.vaadin.admin.components.menu;
 
 import com.netcracker.project.study.vaadin.admin.components.grids.ModelGrid;
-import com.netcracker.project.study.vaadin.admin.components.popup.DriversCreatePopUp;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriverCreatePopUp;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -26,7 +26,7 @@ public class HeaderMenuOld extends CustomComponent {
     private ModelGrid modelGrid;
 
     @Autowired
-    private DriversCreatePopUp driversCreatePopUp;
+    private DriverCreatePopUp driverCreatePopUp;
     
     public HeaderMenuOld() {
         layout = new VerticalLayout();
@@ -62,7 +62,7 @@ public class HeaderMenuOld extends CustomComponent {
             switch (menuItem.getText()) {
                 case HeaderMenuOld.DRIVERS_TAB:
                     gridLayout.removeAllComponents();
-                    PopupView popupView = new PopupView(null, driversCreatePopUp);
+                    PopupView popupView = new PopupView(null, driverCreatePopUp);
                     /*gridLayout.setComponentAlignment( popupView, Alignment.MIDDLE_CENTER);*/
                     Button button = new Button("Add driver", click ->
                             popupView.setPopupVisible(true));

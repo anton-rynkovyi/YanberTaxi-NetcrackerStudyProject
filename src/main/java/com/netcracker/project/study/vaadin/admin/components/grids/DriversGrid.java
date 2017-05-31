@@ -5,7 +5,8 @@ import com.netcracker.project.study.model.driver.Driver;
 
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverInfoPopUP;
-import com.netcracker.project.study.vaadin.admin.components.popup.DriversCreatePopUp;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriverCreatePopUp;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriverUpdatePopUp;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -20,9 +21,11 @@ public class DriversGrid extends CustomComponent{
 
     @Autowired AdminService adminService;
 
-    @Autowired DriversCreatePopUp driversCreatePopUp;
+    @Autowired DriverCreatePopUp driverCreatePopUp;
 
     @Autowired DriverInfoPopUP driverInfoPopUp;
+
+    @Autowired DriverUpdatePopUp driverUpdatePopUp;
 
     private Grid<Driver> driversGrid;
 
@@ -34,6 +37,8 @@ public class DriversGrid extends CustomComponent{
 
     private Window driverInfoWindow;
 
+    private Window updateDriverWindow;
+
 
 
     @PostConstruct
@@ -42,6 +47,7 @@ public class DriversGrid extends CustomComponent{
         componentLayout = getFilledComponentLayout();
         initCreateDriverWindow();
         initDriverInfoWindow();
+        initUpdateInfoWindow();
         setGridSettings(driversGrid);
         setCompositionRoot(componentLayout);
     }
@@ -84,7 +90,7 @@ public class DriversGrid extends CustomComponent{
         createDriverWindow = new Window("Add new driver");
         createDriverWindow.center();
         createDriverWindow.setModal(true);
-        createDriverWindow.setContent(driversCreatePopUp);
+        createDriverWindow.setContent(driverCreatePopUp);
     }
 
     private void initDriverInfoWindow() {
@@ -92,6 +98,13 @@ public class DriversGrid extends CustomComponent{
         driverInfoWindow.center();
         driverInfoWindow.setModal(true);
         driverInfoWindow.setContent(driverInfoPopUp);
+    }
+
+    private void initUpdateInfoWindow() {
+        updateDriverWindow = new Window("Update driver");
+        updateDriverWindow.center();
+        updateDriverWindow.setModal(true);
+        updateDriverWindow.setContent(driverUpdatePopUp);
     }
 
     public Window getDriversCreateSubWindow() {
@@ -124,8 +137,11 @@ public class DriversGrid extends CustomComponent{
                     .withMessage("Are you want to delete " + firstName + " " + lastName + "?")
                     .withYesButton(() -> {
                         adminService.deleteModel(driver);
+/*
                         driversList.remove(driver);
                         driversGrid.setItems(driversList);
+*/
+                    refreshGrid();
                     })
                     .withNoButton(() -> {})
                     .open();
@@ -135,7 +151,13 @@ public class DriversGrid extends CustomComponent{
         Button btnUpdateDriver = new Button("Update driver", FontAwesome.UPLOAD);
         controlButtonsLayout.addComponent(btnUpdateDriver);
         controlButtonsLayout.setComponentAlignment(btnUpdateDriver, Alignment.BOTTOM_LEFT);
-        btnDeleteDriver.addClickListener(event -> {
+        btnUpdateDriver.addClickListener(event -> {
+            if(!driversGrid.asSingleSelect().isEmpty() ) {
+                Driver driver = driversGrid.asSingleSelect().getValue();
+                driverUpdatePopUp.init(driver);
+                UI.getCurrent().addWindow(updateDriverWindow);
+                updateDriverWindow.center();
+            }
           //todo realization for update button
         });
 

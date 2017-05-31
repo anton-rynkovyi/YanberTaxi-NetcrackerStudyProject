@@ -1,6 +1,7 @@
 package com.netcracker.project.study.vaadin.admin.views;
 
 
+import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequestsGrid;
 import com.vaadin.navigator.View;
@@ -19,6 +20,8 @@ public class DriversView extends VerticalLayout implements View {
     @Autowired DriversGrid driversGrid;
 
     @Autowired DriversRequestsGrid driversRequestsGrid;
+
+    @Autowired DriversBanGrid driversBanGrid;
 
     TabSheet tabSheet;
 
@@ -44,10 +47,17 @@ public class DriversView extends VerticalLayout implements View {
         return controlLayout;
     }
 
+    private VerticalLayout getDriversBanTab() {
+        VerticalLayout controlLayout = new VerticalLayout();
+        controlLayout.addComponent(driversBanGrid);
+        return controlLayout;
+    }
+
     public void setTabs() {
         tabSheet.addTab(getAllDriversTab(), "All drivers");
         tabSheet.addTab(getDriversRequestsTab(),
                 "Drivers Requests(" + driversRequestsGrid.getDriversRequestsList().size() + ")");
+        tabSheet.addTab(getDriversBanTab(), "Ban list");
     }
 
     @Override

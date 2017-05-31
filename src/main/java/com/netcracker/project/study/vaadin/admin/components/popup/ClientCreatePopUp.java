@@ -17,7 +17,7 @@ import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 @SpringComponent
-public class ClientsCreatePopUp extends VerticalLayout {
+public class ClientCreatePopUp extends VerticalLayout {
 
     @Autowired AdminService adminService;
 

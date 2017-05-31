@@ -1,6 +1,9 @@
 package com.netcracker.project.study.vaadin.admin.components.popup;
 
+import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
+import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,13 @@ public class BanDaysPopUp extends VerticalLayout {
     @Autowired
     AdminService adminService;
 
-    private List<String> banDayList = Arrays.asList("3 days", "5 days", "7 days");
+    @Autowired
+    DriversGrid driversGrid;
+
+    @Autowired
+    DriversBanGrid driversBanGrid;
+
+    private List<String> banDayList = Arrays.asList("1 min", "3 min", "5 min", "7 min");
 
     @PostConstruct
     private void init() {
@@ -50,8 +59,12 @@ public class BanDaysPopUp extends VerticalLayout {
         btnOk.addClickListener(clickEvent -> {
             String radioValue[] = String.valueOf(radioButtonGroup.getValue()).split(" ");
             int days = Integer.parseInt(radioValue[0]);
-            adminService.giveBan(driverInfoPopUP.getDriver(), days);
-
+            Driver driver = driverInfoPopUP.getDriver();
+            adminService.giveBan(driver, days);
+            driversGrid.getApprovedDriversList().remove(driver);
+            driversGrid.refreshGrid();
+            driversBanGrid.getDriverBanList().add(driver);
+            driversBanGrid.refreshGrid();
             driverInfoPopUP.getBanDaysWindow().close();
         });
 

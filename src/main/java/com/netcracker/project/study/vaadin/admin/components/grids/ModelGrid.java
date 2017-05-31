@@ -3,10 +3,8 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.order.Order;
-import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
-import com.netcracker.project.study.services.impl.AdminServiceImpl;
-import com.netcracker.project.study.vaadin.admin.components.popup.DriversCreatePopUp;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriverCreatePopUp;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ButtonRenderer;
@@ -14,7 +12,6 @@ import com.vaadin.ui.renderers.ClickableRenderer;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @SpringComponent
@@ -107,8 +104,8 @@ public class ModelGrid {
                 .setRenderer(new ButtonRenderer(new ClickableRenderer.RendererClickListener() {
                     @Override
                     public void click(ClickableRenderer.RendererClickEvent rendererClickEvent) {
-                        DriversCreatePopUp driversCreatePopUp = new DriversCreatePopUp();
-                        PopupView popupView = new PopupView(null, driversCreatePopUp);
+                        DriverCreatePopUp driverCreatePopUp = new DriverCreatePopUp();
+                        PopupView popupView = new PopupView(null, driverCreatePopUp);
                         popupView.setPopupVisible(true);
 
                     }
