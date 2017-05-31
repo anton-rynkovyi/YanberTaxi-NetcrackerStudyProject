@@ -1,7 +1,7 @@
 package com.netcracker.project.study.vaadin.driver.components.views;
 
-import com.netcracker.project.study.vaadin.admin.components.grids.OrdersGrid;
-import com.netcracker.project.study.vaadin.driver.components.grids.OrderGridForDrivers;
+import com.netcracker.project.study.vaadin.driver.components.grids.AllOrders;
+import com.netcracker.project.study.vaadin.driver.components.grids.NewOrdersGrid;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -17,11 +17,10 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     public static final String VIEW_NAME = "ordersForDriverPage";
 
     @Autowired
-    private OrdersGrid ordersGrid;
+    private AllOrders orderGridForDrivers;
 
     @Autowired
-    private OrderGridForDrivers orderGridForDrivers;
-
+    private NewOrdersGrid newOrders;
 
     @PostConstruct
     void init() {
@@ -31,15 +30,22 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     private TabSheet getTabSheet() {
         TabSheet tabSheet = new TabSheet();
-        tabSheet.addTab(getControlTab(), "Control");
+        tabSheet.addTab(getAllOrdersControlTab(), "All orders");
+        tabSheet.addTab(getNewOrdersControlTab(),"New orders");
 
         return tabSheet;
     }
 
-    private VerticalLayout getControlTab() {
+    private VerticalLayout getAllOrdersControlTab() {
         VerticalLayout controlLayout = new VerticalLayout();
-        //controlLayout.addComponent(ordersGrid);
         controlLayout.addComponent(orderGridForDrivers);
+
+        return controlLayout;
+    }
+
+    private VerticalLayout getNewOrdersControlTab(){
+        VerticalLayout controlLayout = new VerticalLayout();
+        controlLayout.addComponent(newOrders);
 
         return controlLayout;
     }

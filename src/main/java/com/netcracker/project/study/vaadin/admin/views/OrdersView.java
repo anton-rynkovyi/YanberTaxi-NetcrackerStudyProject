@@ -1,7 +1,7 @@
 package com.netcracker.project.study.vaadin.admin.views;
 
 import com.netcracker.project.study.vaadin.admin.components.grids.OrdersGrid;
-import com.netcracker.project.study.vaadin.driver.components.grids.OrderGridForDrivers;
+import com.netcracker.project.study.vaadin.driver.components.grids.AllOrders;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -20,7 +20,7 @@ public class OrdersView extends VerticalLayout implements View {
     private OrdersGrid ordersGrid;
 
     @Autowired
-    private OrderGridForDrivers orderGridForDrivers;
+    private AllOrders orderGridForDrivers;
 
 
     @PostConstruct
