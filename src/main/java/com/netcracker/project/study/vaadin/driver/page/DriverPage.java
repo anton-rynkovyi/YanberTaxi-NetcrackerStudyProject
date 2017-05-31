@@ -1,21 +1,49 @@
 package com.netcracker.project.study.vaadin.driver.page;
 
+import com.netcracker.project.study.vaadin.admin.views.OrdersView;
+import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.vaadin.annotations.Theme;
+import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
+import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Theme("valo")
 @SpringUI(path = "/driver")
 public class DriverPage extends UI{
 
+    @Autowired
+    private SpringViewProvider provider;
+
+    private Panel viewDisplay;
+
+    static private Navigator navigator;
+
+    private VerticalLayout verticalLayout;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        VerticalLayout formLayout = new VerticalLayout();
-        formLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        formLayout.addComponent(new Label("It's page for DRIVERS."));
-        formLayout.addComponent(new Label("In development :("));
-        formLayout.addComponent(new Label("Try again later..."));
-        setContent(formLayout);
+        setupLayout();
+        setupViewDisplay();
+
+        verticalLayout.setExpandRatio(viewDisplay, 1.0f);
+
+        navigator = new Navigator(this, viewDisplay);
+        navigator.addProvider(provider);
+        navigator.navigateTo(OrdersViewForDrivers.VIEW_NAME);
+    }
+
+    private void setupLayout(){
+        this.verticalLayout = new VerticalLayout();
+        verticalLayout.setSizeFull();
+        setContent(verticalLayout);
+    }
+
+    private void setupViewDisplay() {
+        viewDisplay = new Panel();
+        viewDisplay.setSizeFull();
+        verticalLayout.addComponent(viewDisplay);
     }
 }

@@ -52,7 +52,7 @@ public class AdminPage extends UI {
     private VerticalLayout getVerticalLayout() {
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setSizeFull();
-        verticalLayout.setStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
+        //verticalLayout.setStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         return verticalLayout;
     }
 

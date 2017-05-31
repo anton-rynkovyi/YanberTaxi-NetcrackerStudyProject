@@ -1,4 +1,4 @@
-package com.netcracker.project.study.vaadin.admin.views;
+package com.netcracker.project.study.vaadin.driver.components.views;
 
 import com.netcracker.project.study.vaadin.admin.components.grids.OrdersGrid;
 import com.netcracker.project.study.vaadin.driver.components.grids.OrderGridForDrivers;
@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 
-@SpringView(name = OrdersView.VIEW_NAME)
-public class OrdersView extends VerticalLayout implements View {
+@SpringView(name = OrdersViewForDrivers.VIEW_NAME)
+public class OrdersViewForDrivers extends VerticalLayout implements View {
 
-    public static final String VIEW_NAME = "orders";
+    public static final String VIEW_NAME = "ordersForDriverPage";
 
     @Autowired
     private OrdersGrid ordersGrid;
@@ -38,7 +38,9 @@ public class OrdersView extends VerticalLayout implements View {
 
     private VerticalLayout getControlTab() {
         VerticalLayout controlLayout = new VerticalLayout();
-        controlLayout.addComponent(ordersGrid);
+        //controlLayout.addComponent(ordersGrid);
+        controlLayout.addComponent(orderGridForDrivers);
+
         return controlLayout;
     }
 

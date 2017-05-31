@@ -2,6 +2,8 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.vaadin.driver.components.popup.OrderInfoPopUp;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,7 @@ import java.util.*;
 @SpringComponent
 public class OrdersGrid extends CustomComponent {
 
-    @Autowired
-    AdminService adminService;
+    @Autowired AdminService adminService;
 
     private Grid<Order> ordersGrid;
 
@@ -21,12 +22,25 @@ public class OrdersGrid extends CustomComponent {
 
     private List<Order> ordersList;
 
+    private Window orderInfoWindow;
+
+    @Autowired OrderInfoPopUp orderInfoPopUp;
+
     @PostConstruct
     public void init() {
         ordersGrid = generateOrdersGrid();
+        initOrderInfoWindow();
         componentLayout = getFilledComponentLayout();
+        componentLayout.addComponent(getButtons());
         setGridSettings(ordersGrid);
         setCompositionRoot(componentLayout);
+    }
+
+    private void initOrderInfoWindow() {
+        orderInfoWindow = new Window("Information about the order");
+        orderInfoWindow.center();
+        orderInfoWindow.setModal(true);
+        orderInfoWindow.setContent(orderInfoPopUp);
     }
 
     private VerticalLayout getFilledComponentLayout() {
@@ -57,6 +71,23 @@ public class OrdersGrid extends CustomComponent {
         return ordersGrid;
     }
 
+    private HorizontalLayout getButtons(){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        componentLayout.setMargin(false);
+        componentLayout.setSpacing(false);
+        Button viewOrderButton = new Button("View order", FontAwesome.INFO);
+        viewOrderButton.addClickListener(event->{
+            if(!ordersGrid.asSingleSelect().isEmpty()){
+              //  Order order = ordersGrid.asSingleSelect().getValue();
+               // orderInfoPopUp.init(order);
+              //  UI.getCurrent().addWindow(orderInfoWindow);
+            }
+        });
+        horizontalLayout.addComponent(viewOrderButton);
+        horizontalLayout.setComponentAlignment(viewOrderButton,Alignment.BOTTOM_LEFT);
+        return horizontalLayout;
+    }
+
     private void setGridSettings(Grid<Order> ordersGrid) {
         ordersGrid.setSizeFull();
     }
@@ -70,3 +101,4 @@ public class OrdersGrid extends CustomComponent {
     }
 
 }
+
