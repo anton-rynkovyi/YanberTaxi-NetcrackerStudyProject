@@ -9,6 +9,7 @@ import com.netcracker.project.study.model.driver.car.CarAttr;
 import com.netcracker.project.study.model.driver.status.DriverStatusValues;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.persistence.PersistenceEntity;
+import com.netcracker.project.study.persistence.converter.Converter;
 import com.netcracker.project.study.persistence.converter.impl.ConverterFactory;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
@@ -27,6 +28,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class Main {
 
@@ -123,8 +125,8 @@ public class Main {
         driver.setMiddleName("Andreevich");
         driver.setExperience(BigInteger.valueOf(5));
         driver.setPhoneNumber("(068)067-68-53");
-        driver.setStatus(BigInteger.valueOf(1));
-        adminService.createModel(driver);
+        driver.setStatus(BigInteger.valueOf(3));
+        //adminService.createModel(driver);
 
         Car car = new Car();
         car.setName("new CAR");
@@ -135,13 +137,35 @@ public class Main {
         car.setDriverId(driver.getObjectId());
         car.setChildSeat(false);
         car.setReleaseDate(Date.valueOf("2004-01-01"));
-        adminService.createModel(car);
+       // adminService.createModel(car);
+
+        Order order = new Order();
+        order.setClientId(BigInteger.valueOf(6));
+        order.setDriverId(BigInteger.valueOf(4));
+        order.setCost(BigDecimal.valueOf(100));
+        order.setDistance(BigInteger.valueOf(29));
+        order.setStatus(BigInteger.valueOf(6));
+        facade.create(order);
+
+        Client client = new Client();
+        client.setName("Client Blazko");
+        client.setFirstName("Alexandr");
+        client.setLastName("Blazko");
+        client.setPhoneNumber("093-40-35-932");
+
+        List<Order>orders = adminService.allModelsAsList(Order.class);
+        ListIterator<Order> listIterator = orders.listIterator();
+        while(listIterator.hasNext()){
+            System.out.println(listIterator.next());
+        }
+
+       // facade.create(client);
 
       /*  Driver driver = facade.getOne(BigInteger.valueOf(111), Driver.class);
         System.out.println(driver.getLastName());*/
 
-        List<Car> carList = adminService.getCarByDriver(driver);
-        System.out.println(carList.size());
+        //List<Car> carList = adminService.getCarByDriver(driver);
+        //System.out.println(carList.size());
 
     /*    System.out.println(carList.get(0).getDriverId());
         System.out.println(carList.get(0).getMakeOfCar());*/
