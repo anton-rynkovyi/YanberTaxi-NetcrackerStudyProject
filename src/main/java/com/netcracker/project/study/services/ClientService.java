@@ -1,13 +1,18 @@
 package com.netcracker.project.study.services;
 
+import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.order.Order;
+
+import java.math.BigInteger;
+
 public interface ClientService {
 
-    void registrate();
+    void registrate(Client client);
 
-    void makeOrder();
+    void makeOrder(Client client, String address);
 
-    void cancelOrder();
+    void cancelOrder(Order order);
 
-    void sendComment();
+    void sendDriverRating(Order order, BigInteger driverRating);
 
 }
