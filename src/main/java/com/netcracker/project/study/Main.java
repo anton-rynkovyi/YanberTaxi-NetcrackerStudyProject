@@ -120,7 +120,7 @@ public class Main {
         }*/
 
 
-        /*Driver driver = new Driver();
+       /* Driver driver = new Driver();
         driver.setName("Driver Vadim");
         driver.setFirstName("Vadim");
         driver.setLastName("Martsun");
@@ -141,36 +141,74 @@ public class Main {
         car.setReleaseDate(Date.valueOf("2006-01-01"));
         adminService.createModel(car);*/
 
-        Order order = new Order();
-        order.setClientId(BigInteger.valueOf(6));
-        order.setDriverId(BigInteger.valueOf(21));
+
+        /*Client client = new Client();
+        client.setName("Client Blazko");
+        client.setFirstName("Alexandr");
+        client.setLastName("Blazko");
+        client.setPhoneNumber("093-40-35-932");
+        facade.create(client);*/
+
+        /*Order order = new Order();
+        order.setClientId(BigInteger.valueOf(4));
+        order.setDriverId(BigInteger.valueOf(1));
         order.setCost(BigDecimal.valueOf(67));
         order.setDistance(BigInteger.valueOf(27));
         order.setStatus(BigInteger.valueOf(6));
         facade.create(order);
 
         Order order1 = new Order();
-        order.setClientId(BigInteger.valueOf(6));
-        order.setDriverId(BigInteger.valueOf(21));
+        order.setClientId(BigInteger.valueOf(4));
+        order.setDriverId(BigInteger.valueOf(1));
         order.setCost(BigDecimal.valueOf(123));
         order.setDistance(BigInteger.valueOf(77));
         order.setStatus(BigInteger.valueOf(6));
         facade.create(order1);
 
         Order order2 = new Order();
-        order.setClientId(BigInteger.valueOf(6));
-        order.setDriverId(BigInteger.valueOf(21));
+        order.setClientId(BigInteger.valueOf(4));
+        order.setDriverId(BigInteger.valueOf(1));
         order.setCost(BigDecimal.valueOf(30));
         order.setDistance(BigInteger.valueOf(12));
         order.setStatus(BigInteger.valueOf(6));
+        facade.create(order2);*/
+
+
+        Order order = new Order();
+        order.setName("Order_21");
+        order.setClientId(BigInteger.valueOf(4));
+        order.setDriverId(BigInteger.valueOf(1));
+        order.setCost(BigDecimal.valueOf(303));
+        order.setDistance(BigInteger.valueOf(133));
+        order.setStatus(BigInteger.valueOf(6));
+        facade.create(order);
+
+        Order order1 = new Order();
+        order.setName("Order_31");
+        order.setClientId(BigInteger.valueOf(4));
+        order.setDriverId(BigInteger.valueOf(1));
+        order.setCost(BigDecimal.valueOf(205));
+        order.setDistance(BigInteger.valueOf(142));
+        order.setStatus(BigInteger.valueOf(6));
+        facade.create(order1);
+        Order order2 = new Order();
+        order.setName("Order_41");
+        order.setClientId(BigInteger.valueOf(4));
+        order.setDriverId(BigInteger.valueOf(1));
+        order.setCost(BigDecimal.valueOf(190));
+        order.setDistance(BigInteger.valueOf(123));
+        order.setStatus(BigInteger.valueOf(6));
         facade.create(order2);
 
+       /*Order order = facade.getOne(BigInteger.valueOf(10),Order.class);
+        System.out.println(order.getName());
+        System.out.println(order.getClientId());
+        System.out.println(order.getDriverId());
+        System.out.println(order.getCost());*/
 
-        Client client = new Client();
-        client.setName("Client Blazko");
-        client.setFirstName("Alexandr");
-        client.setLastName("Blazko");
-        client.setPhoneNumber("093-40-35-932");
+        //driverService.acceptOrder(BigInteger.valueOf(10),BigInteger.valueOf(1));
+
+
 
         List<Order>orders = adminService.allModelsAsList(Order.class);
         ListIterator<Order> listIterator = orders.listIterator();

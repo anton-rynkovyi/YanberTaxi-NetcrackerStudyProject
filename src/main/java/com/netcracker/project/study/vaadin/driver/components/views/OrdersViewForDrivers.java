@@ -17,7 +17,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     public static final String VIEW_NAME = "ordersForDriverPage";
 
     @Autowired
-    private AllOrders orderGridForDrivers;
+    private AllOrders allOrders;
 
     @Autowired
     private NewOrdersGrid newOrders;
@@ -30,15 +30,15 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     private TabSheet getTabSheet() {
         TabSheet tabSheet = new TabSheet();
-        tabSheet.addTab(getAllOrdersControlTab(), "All orders");
-        tabSheet.addTab(getNewOrdersControlTab(),"New orders");
+        tabSheet.addTab(getAllOrdersControlTab(), "All orders ( " + allOrders.getOrdersList().size() + " )");
+        tabSheet.addTab(getNewOrdersControlTab(),"New orders ( " + newOrders.getOrdersList().size() + " )");
 
         return tabSheet;
     }
 
     private VerticalLayout getAllOrdersControlTab() {
         VerticalLayout controlLayout = new VerticalLayout();
-        controlLayout.addComponent(orderGridForDrivers);
+        controlLayout.addComponent(allOrders);
 
         return controlLayout;
     }

@@ -59,8 +59,8 @@ public class OrderServiceImpl implements OrderService{
         OrderInfo temp;
         for(Order order:orders){
             if(order != null){
-
                 temp = new OrderInfo();
+                temp.setObjectId(order.getObjectId());
                 temp.setDriverName((order.getDriverId() == null)?OrderConstants.DRIVER_EMPTY:getDriverInfo(order.getDriverId()));
                 temp.setClientName((order.getClientId() == null)?OrderConstants.CLIENT_EMPTY:getClientInfo(order.getClientId()));
                 temp.setCost(getValue(order.getCost(),OrderConstants.NULL_COST) + " " + OrderConstants.CURRENCY);

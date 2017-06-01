@@ -57,6 +57,7 @@ public class NewOrdersGrid extends CustomComponent {
             if(!ordersGrid.asSingleSelect().isEmpty()){
                 OrderInfo order = ordersGrid.asSingleSelect().getValue();
                 driverService.acceptOrder(order.getObjectId(), BigInteger.valueOf(1));
+                refreshGrid();
             }
         });
 
@@ -65,6 +66,11 @@ public class NewOrdersGrid extends CustomComponent {
         horizontalLayout.setComponentAlignment(takeOrderButton,Alignment.BOTTOM_LEFT);
         componentLayout.addComponent(takeOrderButton);
         return horizontalLayout;
+    }
+
+    private void refreshGrid(){
+        List<Order> orders =  orderService.getOrders(Order.NEW);
+        ordersGrid.setItems(orderService.getOrdersInfo(orders));
     }
 
     private Grid<OrderInfo> generateOrdersGrid() {
