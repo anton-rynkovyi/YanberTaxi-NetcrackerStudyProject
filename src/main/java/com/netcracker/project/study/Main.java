@@ -14,7 +14,9 @@ import com.netcracker.project.study.persistence.converter.impl.ConverterFactory;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.impl.AdminServiceImpl;
+import com.netcracker.project.study.services.impl.DriverServiceImpl;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
@@ -37,6 +39,7 @@ public class Main {
                 new FileSystemXmlApplicationContext("src/main/webapp/WEB-INF/applicationContext.xml");
         PersistenceFacade facade = (PersistenceFacade) ctx.getBean(PersistenceFacade.class);
         AdminService adminService = ctx.getBean(AdminServiceImpl.class);
+        DriverService driverService = ctx.getBean(DriverServiceImpl.class);
 
         /*for (int i = 0; i < 1000; i++) {
             Client client = new Client("NEW CLIENTssssssssssss", "It's client!");
@@ -117,35 +120,51 @@ public class Main {
         }*/
 
 
-        Driver driver = new Driver();
-        driver.setName("Anton Driver");
-        driver.setFirstName("Anton");
-        driver.setLastName("Rynkovoy");
-        driver.setEmail("anton.rynkovoy@gmail.com");
-        driver.setMiddleName("Andreevich");
+        /*Driver driver = new Driver();
+        driver.setName("Driver Vadim");
+        driver.setFirstName("Vadim");
+        driver.setLastName("Martsun");
+        driver.setEmail("vadimmartsun@gmail.com");
+        driver.setMiddleName("Vladimirovich");
         driver.setExperience(BigInteger.valueOf(5));
         driver.setPhoneNumber("(068)067-68-53");
         driver.setStatus(BigInteger.valueOf(3));
-        //adminService.createModel(driver);
+        adminService.createModel(driver);
 
         Car car = new Car();
-        car.setName("new CAR");
+        car.setName("Vadim Car");
         car.setChildSeat(true);
-        car.setStateNumber("BH4373EC");
-        car.setModelType("6");
-        car.setMakeOfCar("Mazda");
+        car.setStateNumber("BH80567");
+        car.setModelType("Amulet");
+        car.setMakeOfCar("Chery");
         car.setDriverId(driver.getObjectId());
-        car.setChildSeat(false);
-        car.setReleaseDate(Date.valueOf("2004-01-01"));
-       // adminService.createModel(car);
+        car.setReleaseDate(Date.valueOf("2006-01-01"));
+        adminService.createModel(car);*/
 
         Order order = new Order();
         order.setClientId(BigInteger.valueOf(6));
-        order.setDriverId(BigInteger.valueOf(4));
-        order.setCost(BigDecimal.valueOf(100));
-        order.setDistance(BigInteger.valueOf(29));
+        order.setDriverId(BigInteger.valueOf(21));
+        order.setCost(BigDecimal.valueOf(67));
+        order.setDistance(BigInteger.valueOf(27));
         order.setStatus(BigInteger.valueOf(6));
         facade.create(order);
+
+        Order order1 = new Order();
+        order.setClientId(BigInteger.valueOf(6));
+        order.setDriverId(BigInteger.valueOf(21));
+        order.setCost(BigDecimal.valueOf(123));
+        order.setDistance(BigInteger.valueOf(77));
+        order.setStatus(BigInteger.valueOf(6));
+        facade.create(order1);
+
+        Order order2 = new Order();
+        order.setClientId(BigInteger.valueOf(6));
+        order.setDriverId(BigInteger.valueOf(21));
+        order.setCost(BigDecimal.valueOf(30));
+        order.setDistance(BigInteger.valueOf(12));
+        order.setStatus(BigInteger.valueOf(6));
+        facade.create(order2);
+
 
         Client client = new Client();
         client.setName("Client Blazko");
@@ -158,6 +177,11 @@ public class Main {
         while(listIterator.hasNext()){
             System.out.println(listIterator.next());
         }
+
+
+       // Order order = facade.getOne(BigInteger.valueOf(23),Order.class);
+       // System.out.print(order.getDistance());
+       // driverService.acceptOrder(order,BigInteger.valueOf(1));
 
        // facade.create(client);
 

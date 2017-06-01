@@ -59,11 +59,12 @@ public class OrderServiceImpl implements OrderService{
         OrderInfo temp;
         for(Order order:orders){
             if(order != null){
+
                 temp = new OrderInfo();
                 temp.setDriverName((order.getDriverId() == null)?OrderConstants.DRIVER_EMPTY:getDriverInfo(order.getDriverId()));
                 temp.setClientName((order.getClientId() == null)?OrderConstants.CLIENT_EMPTY:getClientInfo(order.getClientId()));
                 temp.setCost(getValue(order.getCost(),OrderConstants.NULL_COST) + " " + OrderConstants.CURRENCY);
-                temp.setDistance(getValue(order.getCost(),OrderConstants.NULL_DISTANCE) + " " + OrderConstants.DISTANCE);
+                temp.setDistance(getValue(order.getDistance(),OrderConstants.NULL_DISTANCE) + " " + OrderConstants.DISTANCE);
                 BigInteger status = order.getStatus();
                 temp.setStatus((status == null)?OrderConstants.NULL_STATUS:getStatusValue(order.getStatus()));
 
