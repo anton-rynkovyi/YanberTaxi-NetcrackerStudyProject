@@ -4,6 +4,8 @@ import com.netcracker.project.study.model.order.Order;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 
 import java.util.List;
@@ -19,4 +21,6 @@ public interface OrderService {
     List<OrderInfo>getOrdersInfo(List<Order>orders);
 
     List<Order> getOrders(BigInteger statusId);
+
+    List<Route> getRoutes(BigInteger orderId);
 }

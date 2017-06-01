@@ -3,6 +3,8 @@ package com.netcracker.project.study.services.impl;
 
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderAttr;
+import com.netcracker.project.study.model.order.route.Route;
+import com.netcracker.project.study.model.order.route.RouteAttr;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.OrderConstants;
 import com.netcracker.project.study.services.OrderService;
@@ -85,6 +87,17 @@ public class OrderServiceImpl implements OrderService{
                         " and attr.list_value_id=" + statusId;
         List<Order> orderList = facade.getSome(query, Order.class);
         return orderList;
+    }
+
+    @Override
+    public List<Route> getRoutes(BigInteger orderId) {
+       String query = "SELECT object_id " +
+                      "FROM objreference " +
+                      "where attr_id = " + RouteAttr.ORDER_ID_ATTR +
+                      " and reference = " + orderId;
+
+        List<Route> routeList = facade.getSome(query, Route.class);
+        return routeList;
     }
 
     private String getValue(Object value,String defaultValue){
