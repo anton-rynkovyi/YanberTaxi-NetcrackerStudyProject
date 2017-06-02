@@ -3,7 +3,9 @@ package com.netcracker.project.study.vaadin.driver.components.grids;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
+import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
+import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -22,6 +24,8 @@ public class NewOrdersGrid extends CustomComponent {
 
     @Autowired
     DriverService driverService;
+
+    OrdersViewForDrivers view;
 
     private Grid<OrderInfo> ordersGrid;
 
@@ -58,6 +62,7 @@ public class NewOrdersGrid extends CustomComponent {
                 OrderInfo order = ordersGrid.asSingleSelect().getValue();
                 driverService.acceptOrder(order.getObjectId(), BigInteger.valueOf(1));
                 refreshGrid();
+                view.Refresh();
             }
         });
 
@@ -69,8 +74,8 @@ public class NewOrdersGrid extends CustomComponent {
     }
 
     private void refreshGrid(){
-        List<Order> orders =  orderService.getOrders(Order.NEW);
-        ordersGrid.setItems(orderService.getOrdersInfo(orders));
+        ordersList =  orderService.getOrders(Order.NEW);
+        ordersGrid.setItems(orderService.getOrdersInfo(ordersList));
     }
 
     private Grid<OrderInfo> generateOrdersGrid() {
@@ -81,6 +86,7 @@ public class NewOrdersGrid extends CustomComponent {
 
         ordersGrid.setItems(ordersInfo);
 
+        ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("#");
         ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");
         ordersGrid.addColumn(OrderInfo::getDriverName).setCaption("Driver");
         ordersGrid.addColumn(OrderInfo::getStatus).setCaption("Status");
@@ -88,6 +94,10 @@ public class NewOrdersGrid extends CustomComponent {
         ordersGrid.addColumn(OrderInfo::getDistance).setCaption("Distance");
 
         return ordersGrid;
+    }
+
+    public void setView(OrdersViewForDrivers view){
+        this.view = view;
     }
 
     private void setGridSettings(Grid<OrderInfo> ordersGrid) {

@@ -58,19 +58,20 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public List<OrderInfo> getOrdersInfo(List<Order> orders) {
         List<OrderInfo>orderInfos = new ArrayList<>();
-        OrderInfo temp;
+        int counter = 1;
         for(Order order:orders){
             if(order != null){
-                temp = new OrderInfo();
-                temp.setObjectId(order.getObjectId());
-                temp.setDriverName((order.getDriverId() == null)?OrderConstants.DRIVER_EMPTY:getDriverInfo(order.getDriverId()));
-                temp.setClientName((order.getClientId() == null)?OrderConstants.CLIENT_EMPTY:getClientInfo(order.getClientId()));
-                temp.setCost(getValue(order.getCost(),OrderConstants.NULL_COST) + " " + OrderConstants.CURRENCY);
-                temp.setDistance(getValue(order.getDistance(),OrderConstants.NULL_DISTANCE) + " " + OrderConstants.DISTANCE);
+                OrderInfo orderInfo = new OrderInfo();
+                orderInfo.setQueueN(counter++);
+                orderInfo.setObjectId(order.getObjectId());
+                orderInfo.setDriverName((order.getDriverId() == null)?OrderConstants.DRIVER_EMPTY:getDriverInfo(order.getDriverId()));
+                orderInfo.setClientName((order.getClientId() == null)?OrderConstants.CLIENT_EMPTY:getClientInfo(order.getClientId()));
+                orderInfo.setCost(getValue(order.getCost(),OrderConstants.NULL_COST) + " " + OrderConstants.CURRENCY);
+                orderInfo.setDistance(getValue(order.getDistance(),OrderConstants.NULL_DISTANCE) + " " + OrderConstants.DISTANCE);
                 BigInteger status = order.getStatus();
-                temp.setStatus((status == null)?OrderConstants.NULL_STATUS:getStatusValue(order.getStatus()));
+                orderInfo.setStatus((status == null)?OrderConstants.NULL_STATUS:getStatusValue(order.getStatus()));
 
-                orderInfos.add(temp);
+                orderInfos.add(orderInfo);
             }
         }
 

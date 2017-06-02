@@ -9,11 +9,20 @@ public class OrderInfo {
 
     private BigInteger objectId;
 
+    private int queueN;
     private String driverName;
     private String clientName;
     private String status;
     private String cost;
     private String distance;
+
+    public void setQueueN(int queueN) {
+        this.queueN = queueN;
+    }
+
+    public int getQueueN() {
+        return queueN;
+    }
 
     public BigInteger getObjectId() {
         return objectId;

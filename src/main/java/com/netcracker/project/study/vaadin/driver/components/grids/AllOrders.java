@@ -59,6 +59,11 @@ public class AllOrders extends CustomComponent {
         return componentLayout;
     }
 
+    public void refreshGrid(){
+        ordersList = adminService.allModelsAsList(Order.class);
+        ordersGrid.setItems(orderService.getOrdersInfo(ordersList));
+    }
+
     private Grid<OrderInfo> generateOrdersGrid() {
 
         Grid<OrderInfo> ordersGrid = new Grid<>();
@@ -68,6 +73,7 @@ public class AllOrders extends CustomComponent {
 
         ordersGrid.setItems(ordersInfo);
 
+        ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("#");
         ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");
         ordersGrid.addColumn(OrderInfo::getDriverName).setCaption("Driver");
         ordersGrid.addColumn(OrderInfo::getStatus).setCaption("Status");
@@ -76,7 +82,6 @@ public class AllOrders extends CustomComponent {
 
         return ordersGrid;
     }
-
     private HorizontalLayout getButtons(){
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         componentLayout.setMargin(false);

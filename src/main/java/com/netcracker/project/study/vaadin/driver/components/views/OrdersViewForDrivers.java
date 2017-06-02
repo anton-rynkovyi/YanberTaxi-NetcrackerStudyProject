@@ -16,24 +16,41 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "ordersForDriverPage";
 
+
     @Autowired
     private AllOrders allOrders;
 
     @Autowired
     private NewOrdersGrid newOrders;
 
+
+    TabSheet tabSheet;
+
     @PostConstruct
     void init() {
-        TabSheet tabSheet = getTabSheet();
+        tabSheet = getTabSheet();
         addComponent(tabSheet);
     }
 
     private TabSheet getTabSheet() {
         TabSheet tabSheet = new TabSheet();
-        tabSheet.addTab(getAllOrdersControlTab(), "All orders ( " + allOrders.getOrdersList().size() + " )");
-        tabSheet.addTab(getNewOrdersControlTab(),"New orders ( " + newOrders.getOrdersList().size() + " )");
+        tabSheet.addTab(getAllOrdersControlTab(), "All orders (" + getAllOrdersCount() + ")");
+        tabSheet.addTab(getNewOrdersControlTab(),"New orders (" + getNewOrdersCount() + ")");
 
         return tabSheet;
+    }
+
+    public void Refresh(){
+        tabSheet.getTab(1).setCaption("New orders (" + getNewOrdersCount() + ")");
+        allOrders.refreshGrid();
+    }
+
+    private int getAllOrdersCount(){
+        return allOrders.getOrdersList().size();
+    }
+
+    private int getNewOrdersCount(){
+        return newOrders.getOrdersList().size();
     }
 
     private VerticalLayout getAllOrdersControlTab() {
@@ -45,6 +62,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     private VerticalLayout getNewOrdersControlTab(){
         VerticalLayout controlLayout = new VerticalLayout();
+        newOrders.setView(this);
         controlLayout.addComponent(newOrders);
 
         return controlLayout;
