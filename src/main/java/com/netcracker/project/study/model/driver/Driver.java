@@ -2,7 +2,6 @@ package com.netcracker.project.study.model.driver;
 
 import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.*;
-import com.netcracker.project.study.model.driver.status.DriverStatusValues;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

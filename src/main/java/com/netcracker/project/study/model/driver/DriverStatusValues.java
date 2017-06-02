@@ -1,4 +1,4 @@
-package com.netcracker.project.study.model.driver.status;
+package com.netcracker.project.study.model.driver;
 
 import java.math.BigInteger;
 

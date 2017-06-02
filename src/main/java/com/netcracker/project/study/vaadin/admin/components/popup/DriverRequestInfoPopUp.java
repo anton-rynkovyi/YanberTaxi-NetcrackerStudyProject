@@ -2,19 +2,15 @@ package com.netcracker.project.study.vaadin.admin.components.popup;
 
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.car.Car;
-import com.netcracker.project.study.model.driver.status.DriverStatus;
-import com.netcracker.project.study.model.driver.status.DriverStatusValues;
+import com.netcracker.project.study.model.driver.DriverStatusValues;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequestsGrid;
-import com.vaadin.server.Page;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.addons.Toastr;
-import org.vaadin.addons.builder.ToastBuilder;
 
 @SpringComponent
 public class DriverRequestInfoPopUp extends VerticalLayout{

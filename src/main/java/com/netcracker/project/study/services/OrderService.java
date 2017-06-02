@@ -1,5 +1,6 @@
 package com.netcracker.project.study.services;
 
+import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.order.Order;
 
 import java.math.BigDecimal;
@@ -23,4 +24,6 @@ public interface OrderService {
     List<Order> getOrders(BigInteger statusId);
 
     List<Route> getRoutes(BigInteger orderId);
+
+    List<Order> allModelsAsList();
 }

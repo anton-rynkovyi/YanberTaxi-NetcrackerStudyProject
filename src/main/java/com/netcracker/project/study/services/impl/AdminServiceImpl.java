@@ -6,7 +6,7 @@ import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverAttr;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.driver.car.CarAttr;
-import com.netcracker.project.study.model.driver.status.DriverStatusValues;
+import com.netcracker.project.study.model.driver.DriverStatusValues;
 import com.netcracker.project.study.model.order.OrderAttr;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
@@ -24,7 +23,6 @@ import java.util.*;
 public class AdminServiceImpl implements AdminService{
 
     public final long ONE_DAY_MILLS = 1000 * 60 * 60 * 24;
-
 
     @Autowired
     PersistenceFacade persistenceFacade;
@@ -34,6 +32,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Autowired
     DriversBanGrid driversBanGrid;
+
 
     @Override
     public boolean isVerificate(Driver driver) {
@@ -49,6 +48,7 @@ public class AdminServiceImpl implements AdminService{
     public void giveBan(Driver driver, int days) {
         Date date = new Date(System.currentTimeMillis() + 1000*60 * days);
         driver.setUnbanDate(date);
+        driver.setStatus(DriverStatusValues.OFF_DUTY);
         persistenceFacade.update(driver);
         setBanTimer(driver);
     }
@@ -78,6 +78,14 @@ public class AdminServiceImpl implements AdminService{
             }
         }
         timer.schedule(new BanTimer(), 0, 1000);
+    }
+
+    @Override
+    public List<Driver> getDriversOnCalls() {
+        String query = "" +
+                "";
+        List<Driver> driverList = null;
+        return driverList;
     }
 
 
@@ -168,12 +176,12 @@ public class AdminServiceImpl implements AdminService{
         return driverBanList;
     }
 
+
     @Override
     public void unbanDriver(Driver driver) {
         driver.setUnbanDate(null);
         persistenceFacade.update(driver);
     }
-
 
 
 }

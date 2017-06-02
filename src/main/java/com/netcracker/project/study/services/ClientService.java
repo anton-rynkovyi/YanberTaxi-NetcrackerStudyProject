@@ -1,9 +1,11 @@
 package com.netcracker.project.study.services;
 
+import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.order.Order;
 
 import java.math.BigInteger;
+import java.util.List;
 
 public interface ClientService {
 
@@ -15,4 +17,5 @@ public interface ClientService {
 
     void sendDriverRating(Order order, BigInteger driverRating);
 
+    <T extends Model> List<T> allModelsAsList();
 }

@@ -1,6 +1,8 @@
 package com.netcracker.project.study.services.impl;
 
+import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.client.ClientAttr;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
@@ -65,6 +67,12 @@ public class ClientServiceImpl implements ClientService {
         order.setDriverRating(driverRating);
         persistenceFacade.update(order);
         calcDriverRating(persistenceFacade.getOne(order.getDriverId(),Driver.class));
+    }
+
+    @Override
+    public <T extends Model> List<T> allModelsAsList() {
+        List<T> clients = persistenceFacade.getAll(BigInteger.valueOf(ClientAttr.OBJECT_TYPE_ID), Client.class);
+        return clients;
     }
 
     private void calcDriverRating(Driver driver) {

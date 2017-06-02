@@ -158,7 +158,6 @@ public class DriversGrid extends CustomComponent{
                 UI.getCurrent().addWindow(updateDriverWindow);
                 updateDriverWindow.center();
             }
-          //todo realization for update button
         });
 
 

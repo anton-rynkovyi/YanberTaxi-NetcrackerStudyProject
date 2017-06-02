@@ -52,10 +52,10 @@ public class DriversBanGrid extends CustomComponent{
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setSizeFull();
         horizontalLayout.addComponent(driverBanGrid);
-        horizontalLayout.setExpandRatio(driverBanGrid, 0.80f);
+        horizontalLayout.setExpandRatio(driverBanGrid, 0.84f);
         VerticalLayout buttonsLayout = generateButtonsLayout();
         horizontalLayout.addComponent(buttonsLayout);
-        horizontalLayout.setExpandRatio(buttonsLayout, 0.20f);
+        horizontalLayout.setExpandRatio(buttonsLayout, 0.16f);
         return horizontalLayout;
     }
 

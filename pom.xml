@@ -61,6 +61,17 @@
 	<dependencies>
 		<!--VAADIN ADD-ONS-->
 		<dependency>
+			<groupId>com.vaadin.tapio</groupId>
+			<artifactId>googlemaps</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin.addon</groupId>
+			<artifactId>vaadin-charts</artifactId>
+			<version>3.0.0-alpha2</version>
+		</dependency>
+
+		<dependency>
 			<groupId>de.steinwedel.vaadin.addon</groupId>
 			<artifactId>messagebox</artifactId>
 			<version>${messagebox.version}</version>
@@ -71,16 +82,6 @@
 			<version>1.0.7</version>
 		</dependency>
 		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>grid-renderers-collection-addon</artifactId>
-			<version>0.97</version>
-		</dependency>
-		<dependency>
-			<groupId>org.vaadin.addons</groupId>
-			<artifactId>vaadin-grid-util</artifactId>
-			<version>1.1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>com.github.appreciated</groupId>
 			<artifactId>material</artifactId>
 			<version>0.6.1</version>
@@ -89,11 +90,6 @@
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-icons</artifactId>
 			<version>2.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>de.knoobie.vaadin.addons.bootstrap</groupId>
-			<artifactId>bootstrap-formgroup</artifactId>
-			<version>0.1</version>
 		</dependency>
 		<!--VAADIN SETTINGS-->
 		<dependency>
@@ -174,6 +170,19 @@
 
 	<build>
 		<plugins>
+			<!--<plugin>
+				<groupId>in.virit.vwscdn</groupId>
+				<artifactId>vwscdn-maven-plugin</artifactId>
+				<version>1.3.4</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>

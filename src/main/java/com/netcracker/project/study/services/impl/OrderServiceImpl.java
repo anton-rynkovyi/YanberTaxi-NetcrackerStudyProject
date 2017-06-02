@@ -23,20 +23,20 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService{
     @Autowired
-    PersistenceFacade facade;
+    PersistenceFacade persistenceFacade;
 
     public static final BigDecimal COST_PER_KILOMETER = new BigDecimal("5");
 
     @Override
     public void calcPrice(BigDecimal distance, Order order) {
         order.setCost(distance.multiply(COST_PER_KILOMETER));
-        facade.update(order);
+        persistenceFacade.update(order);
     }
 
     @Override
     public void changeStatus(BigInteger status, Order order) {
         order.setStatus(status);
-        facade.update(order);
+        persistenceFacade.update(order);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class OrderServiceImpl implements OrderService{
                         "where attr.object_id=obj.object_id and " +
                         "obj.object_type_id=" + OrderAttr.OBJECT_TYPE_ID +
                         " and attr.list_value_id=" + statusId;
-        List<Order> orderList = facade.getSome(query, Order.class);
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }
 
@@ -97,7 +97,7 @@ public class OrderServiceImpl implements OrderService{
                       "where attr_id = " + RouteAttr.ORDER_ID_ATTR +
                       " and reference = " + orderId;
 
-        List<Route> routeList = facade.getSome(query, Route.class);
+        List<Route> routeList = persistenceFacade.getSome(query, Route.class);
         return routeList;
     }
 
@@ -109,12 +109,19 @@ public class OrderServiceImpl implements OrderService{
     }
 
     private String getDriverInfo(BigInteger driverId) {
-        Driver driver = facade.getOne(driverId,Driver.class);
+        Driver driver = persistenceFacade.getOne(driverId,Driver.class);
         return driver.getLastName() + " " + driver.getFirstName();
     }
 
     private String getClientInfo(BigInteger clientId){
-        Client client = facade.getOne(clientId,Client.class);
+        Client client = persistenceFacade.getOne(clientId,Client.class);
         return client.getLastName() + " " + client.getFirstName();
+    }
+
+
+    @Override
+    public List<Order> allModelsAsList() {
+        List<Order> orders = persistenceFacade.getAll(BigInteger.valueOf(OrderAttr.OBJECT_TYPE_ID), Order.class);
+        return orders;
     }
 }

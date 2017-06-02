@@ -212,7 +212,7 @@ public class DriverUpdatePopUp extends VerticalLayout {
                     stateNumber[i].setValue("");
                     releaseDate[i].setValue("");
                     seatsCount[i].setValue("");
-                    childSeat[i].setValue("");
+                    //childSeat[i].setValue("");
                 }
 
                 /*Toastr successToast = new Toastr();

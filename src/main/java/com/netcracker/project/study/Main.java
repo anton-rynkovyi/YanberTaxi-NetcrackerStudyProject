@@ -1,36 +1,16 @@
 package com.netcracker.project.study;
 
-import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.model.driver.DriverAttr;
-import com.netcracker.project.study.model.driver.car.Car;
-import com.netcracker.project.study.model.driver.car.CarAttr;
-import com.netcracker.project.study.model.driver.status.DriverStatusValues;
-import com.netcracker.project.study.model.order.Order;
-import com.netcracker.project.study.persistence.PersistenceEntity;
-import com.netcracker.project.study.persistence.converter.Converter;
-import com.netcracker.project.study.persistence.converter.impl.ConverterFactory;
+import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
-import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.impl.AdminServiceImpl;
 import com.netcracker.project.study.services.impl.DriverServiceImpl;
-import com.vaadin.event.dd.acceptcriteria.Or;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
 
 public class Main {
 
@@ -173,6 +153,7 @@ public class Main {
         order.setStatus(BigInteger.valueOf(6));
         facade.create(order2);*/
 
+/*
 
         Order order = new Order();
         order.setName("Order_21");
@@ -199,6 +180,7 @@ public class Main {
         order.setDistance(BigInteger.valueOf(123));
         order.setStatus(BigInteger.valueOf(6));
         facade.create(order2);
+*/
 
        /*Order order = facade.getOne(BigInteger.valueOf(10),Order.class);
         System.out.println(order.getName());
@@ -210,11 +192,11 @@ public class Main {
 
 
 
-        List<Order>orders = adminService.allModelsAsList(Order.class);
+        /*List<Order>orders = adminService.allModelsAsList(Order.class);
         ListIterator<Order> listIterator = orders.listIterator();
         while(listIterator.hasNext()){
             System.out.println(listIterator.next());
-        }
+        }*/
 
 
        // Order order = facade.getOne(BigInteger.valueOf(23),Order.class);
@@ -231,5 +213,8 @@ public class Main {
 
     /*    System.out.println(carList.get(0).getDriverId());
         System.out.println(carList.get(0).getMakeOfCar());*/
+
+        Driver driver = facade.getOne(BigInteger.valueOf(115), Driver.class);
+        System.out.println(DriverStatusEnum.getStatusValue(driver.getStatus()));
     }
 }

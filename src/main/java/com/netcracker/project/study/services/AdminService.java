@@ -36,4 +36,5 @@ public interface AdminService {
 
     void setBanTimer(Driver driver);
 
+    List<Driver> getDriversOnCalls();
 }
