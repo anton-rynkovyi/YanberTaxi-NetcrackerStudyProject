@@ -142,7 +142,7 @@ public class Driver extends Model implements DriverAttr{
                 ", rating=" + rating +
                 ", experience=" + experience +
                 ", email='" + email + '\'' +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 ", hireDate=" + hireDate +
                 ", unbanDate=" + unbanDate +
                 '}';

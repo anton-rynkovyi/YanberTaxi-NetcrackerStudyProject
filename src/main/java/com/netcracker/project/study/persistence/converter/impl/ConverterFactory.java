@@ -5,6 +5,8 @@ import com.netcracker.project.study.model.annotations.*;
 import com.netcracker.project.study.model.annotations.Exception.NoSuchAnnotationException;
 import com.netcracker.project.study.persistence.converter.Converter;
 import com.netcracker.project.study.persistence.PersistenceEntity;
+import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.beans.IntrospectionException;
@@ -23,17 +25,12 @@ import java.util.Map;
 @Component
 public class ConverterFactory implements Converter {
 
-    private Map<BigInteger, Object> attributes;
-    private Map<BigInteger, BigInteger> references;
+    @Autowired
+    PersistenceFacade persistenceFacade;
 
     private final Date EMPTY_LONG = new Date(-1);
     private final String EMPTY_STRING = "-1";
     private final BigInteger EMPTY_BIG_INTEGER = BigInteger.valueOf(-1);
-
-    public ConverterFactory() {
-        attributes = new HashMap<>();
-        references = new HashMap<>();
-    }
 
     /**
      * Puts field with Attribute annotation in attributes map
@@ -42,7 +39,7 @@ public class ConverterFactory implements Converter {
      * @param model  - a model which current field belongs to
      * @param field  - field to put
      */
-    private void putAttribute(BigInteger attrId, Model model, Field field) {
+    private void putAttribute(Map<BigInteger, Object> attributes, BigInteger attrId, Model model, Field field) {
         Object fieldValue = getValue(model, field);
         if (field.isAnnotationPresent(AttrValue.class)) {
             attributes.put(attrId, fieldValue != null ? fieldValue.toString() : EMPTY_STRING);
@@ -60,11 +57,13 @@ public class ConverterFactory implements Converter {
      * @param model  - model which current field belongs to
      * @param field  - field to put
      */
-    private void putReference(BigInteger attrId, Model model, Field field) {
+    private void putReference(Map<BigInteger, BigInteger> references, BigInteger attrId, Model model, Field field) {
         Object fieldValue;
         fieldValue = getValue(model, field);
         if (fieldValue != null) {
-            references.put(attrId, (BigInteger) fieldValue);
+            if (!(Model.class.isAssignableFrom(field.getType()))) {
+                references.put(attrId, (BigInteger) fieldValue);
+            }
         }
     }
 
@@ -99,8 +98,8 @@ public class ConverterFactory implements Converter {
      */
     private void setValue(Field field, Model model, Object value) {
 
+        Class fieldType = field.getType();
         if (field.isAnnotationPresent(AttrValue.class)) {
-            Class fieldType = field.getType();
             if (BigInteger.class.isAssignableFrom(fieldType)) {
                 value = value != null ? BigInteger.valueOf(Long.parseLong(String.valueOf(value))) : null;
             } else if (BigDecimal.class.isAssignableFrom(fieldType)) {
@@ -113,7 +112,9 @@ public class ConverterFactory implements Converter {
                     new Date(Timestamp.valueOf(String.valueOf(value)).getTime()) : null;
             value = value != null ? date : null;
         } else if (field.isAnnotationPresent(AttrList.class)) {
-            value = value!= null&&!value.equals("null") ? BigInteger.valueOf(Long.parseLong(String.valueOf(value))) : null;
+            value = value != null&&!value.equals("null") ? BigInteger.valueOf(Long.parseLong(String.valueOf(value))) : null;
+        } else if (Model.class.isAssignableFrom(fieldType)) {
+            value = value != null ? persistenceFacade.getOne(BigInteger.valueOf(Long.parseLong(String.valueOf(value))), fieldType) : null;
         }
 
         try {
@@ -135,8 +136,8 @@ public class ConverterFactory implements Converter {
     public PersistenceEntity convertToEntity(Model model) {
         Class modelClass = model.getClass();
         PersistenceEntity entity = new PersistenceEntity();
-        attributes = new HashMap<>();
-        references = new HashMap<>();
+        Map<BigInteger, Object> attributes = new HashMap<>();
+        Map<BigInteger, BigInteger> references = new HashMap<>();
 
         if (modelClass.isAnnotationPresent(ObjectType.class)) {
             ObjectType objectType = (ObjectType) modelClass.getAnnotation(ObjectType.class);
@@ -147,21 +148,19 @@ public class ConverterFactory implements Converter {
         }
 
         Field[] fields = modelClass.getDeclaredFields();
-        Attribute attributeAnnotation;
-        Reference referenceAnnotation;
         BigInteger attrId;
 
         for (Field field : fields) {
             if (field.isAnnotationPresent(Attribute.class)) {
-                attributeAnnotation = field.getAnnotation(Attribute.class);
+                Attribute attributeAnnotation = field.getAnnotation(Attribute.class);
                 attrId = BigInteger.valueOf(attributeAnnotation.attrId());
-                putAttribute(attrId, model, field);
+                putAttribute(attributes, attrId, model, field);
             }
 
             if (field.isAnnotationPresent(Reference.class)) {
-                referenceAnnotation = field.getAnnotation(Reference.class);
+                Reference referenceAnnotation = field.getAnnotation(Reference.class);
                 attrId = BigInteger.valueOf(referenceAnnotation.attrId());
-                putReference(attrId, model, field);
+                putReference(references, attrId, model, field);
             }
         }
 

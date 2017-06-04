@@ -2,6 +2,8 @@ package com.netcracker.project.study.model.order;
 
 import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.annotations.*;
+import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.driver.Driver;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,8 +24,14 @@ public class Order extends Model implements OrderAttr{
     @Reference(attrId = OrderAttr.DRIVER_ID_ATTR)
     private BigInteger driverId;
 
+    @Reference(attrId = OrderAttr.DRIVER_ID_ATTR)
+    private Driver driverOnOrder;
+
     @Reference(attrId = OrderAttr.CLIENT_ID_ATTR)
     private BigInteger clientId;
+
+    @Reference(attrId = OrderAttr.CLIENT_ID_ATTR)
+    private Client clientOnOrder;
 
     @Attribute(attrId = OrderAttr.STATUS_ATTR)
     private @AttrList BigInteger status;
@@ -105,6 +113,14 @@ public class Order extends Model implements OrderAttr{
     public void setDriverMemo(String driverMemo) {
         this.driverMemo = driverMemo;
     }
+
+    public Driver getDriverOnOrder() {return driverOnOrder;}
+
+    public void setDriverOnOrder(Driver driverOnOrder) { this.driverOnOrder = driverOnOrder;}
+
+    public Client getClientOnOrder() {return clientOnOrder;}
+
+    public void setClientOnOrder (Client clientOnOrder) { this.clientOnOrder = clientOnOrder;}
 
 
     @Override
