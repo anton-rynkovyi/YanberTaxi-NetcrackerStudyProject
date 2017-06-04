@@ -4,6 +4,7 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.order.Order;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface ClientService {
 
     void registrate(Client client);
 
-    void makeOrder(Client client, String address);
+    void makeOrder(BigInteger clientId, BigDecimal distance, String[] addresses);
 
     void cancelOrder(Order order);
 

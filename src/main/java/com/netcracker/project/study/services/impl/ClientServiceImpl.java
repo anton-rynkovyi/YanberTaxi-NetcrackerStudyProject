@@ -5,6 +5,7 @@ import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.client.ClientAttr;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.order.Order;
+import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.ClientService;
@@ -12,11 +13,14 @@ import com.netcracker.project.study.services.OrderService;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
+@Service
 public class ClientServiceImpl implements ClientService {
 
     @Autowired
@@ -30,13 +34,33 @@ public class ClientServiceImpl implements ClientService {
         persistenceFacade.create(client);
     }
 
+    @Transactional
     @Override
-    public void makeOrder(Client client, String address) {
+    public void makeOrder(BigInteger clientId, BigDecimal distance, String[] addresses) {
         Order order = new Order();
-        order.setClientId(client.getObjectId());
+        order.setClientId(clientId);
+
+        orderService.calcPrice(distance, order);
+
         order.setStatus(Order.NEW);
-        order.setName(address);
+        order.setDistance(BigInteger.valueOf(distance.longValue()));
+        order.setName(addresses[0] + " - " + addresses[4]);
+
         persistenceFacade.create(order);
+
+        int count = 1;
+        for (int i = 0; i < addresses.length; i++) {
+            if (addresses[i] != null) {
+                Route route = new Route(addresses[i]);
+                route.setOrderId(order.getObjectId());
+                route.setCheckPoint(addresses[i]);
+                route.setShowOrder(String.valueOf(count));
+
+                persistenceFacade.create(route);
+
+                count++;
+            }
+        }
     }
 
     @Override

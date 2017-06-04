@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public void calcPrice(BigDecimal distance, Order order) {
         order.setCost(distance.multiply(COST_PER_KILOMETER));
-        persistenceFacade.update(order);
+        //persistenceFacade.update(order);
     }
 
     @Override

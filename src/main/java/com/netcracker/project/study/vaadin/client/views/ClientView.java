@@ -1,6 +1,7 @@
 package com.netcracker.project.study.vaadin.client.views;
 
 import com.netcracker.project.study.vaadin.client.components.ClientOrdersGrid;
+import com.netcracker.project.study.vaadin.client.components.OrderMaker;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -16,6 +17,9 @@ public class ClientView extends VerticalLayout implements View {
     public static final String VIEW_NAME = "client";
 
     @Autowired
+    private OrderMaker orderMaker;
+
+    @Autowired
     private ClientOrdersGrid clientOrdersGrid;
 
     @PostConstruct
@@ -26,12 +30,20 @@ public class ClientView extends VerticalLayout implements View {
 
     private TabSheet getTabSheet() {
         TabSheet tabSheet = new TabSheet();
-        tabSheet.addTab(getControlTab(), "Orders");
+        tabSheet.addTab(getOrderMakerTab(), "Make an order");
+        tabSheet.addTab(getOrdersControlTab(), "Orders");
 
         return tabSheet;
     }
 
-    private VerticalLayout getControlTab() {
+    private VerticalLayout getOrderMakerTab() {
+        VerticalLayout controlLayout = new VerticalLayout();
+        controlLayout.addComponent(orderMaker);
+
+        return controlLayout;
+    }
+
+    private VerticalLayout getOrdersControlTab() {
         VerticalLayout controlLayout = new VerticalLayout();
         controlLayout.addComponent(clientOrdersGrid);
 
