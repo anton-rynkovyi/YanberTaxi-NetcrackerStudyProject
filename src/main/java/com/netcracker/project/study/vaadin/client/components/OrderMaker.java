@@ -179,7 +179,7 @@ public class OrderMaker extends CustomComponent {
 
                     BigDecimal dist = BigDecimal.valueOf(Double.parseDouble(distanceS));
                     cost.setValue(String.valueOf(dist.multiply(BigDecimal.valueOf(5))));
-                    clientService.makeOrder(BigInteger.valueOf(182), dist, textFieldsStrings);
+                    clientService.makeOrder(BigInteger.valueOf(154), dist, textFieldsStrings);
 
                 } catch (NumberFormatException ex) {
                     notifications.setVisible(true);

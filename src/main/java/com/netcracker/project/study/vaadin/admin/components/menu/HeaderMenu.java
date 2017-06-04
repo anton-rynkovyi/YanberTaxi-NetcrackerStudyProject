@@ -17,9 +17,10 @@ public class HeaderMenu extends CustomComponent {
     private HorizontalLayout horizontalLayout;
 
     public HeaderMenu() {
-        menuBar = getMenuBar();
         horizontalLayout = getLayout();
-        Label label = new Label("<h3>YanberTaxi</h3>", ContentMode.HTML);
+        horizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
+        menuBar = getMenuBar();
+        Label label = new Label("<h2>YanberTaxi</h2>", ContentMode.HTML);
         horizontalLayout.addComponents(menuBar, label);
         setMenuButtons(menuBar);
     }

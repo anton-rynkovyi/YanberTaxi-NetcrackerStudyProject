@@ -1,8 +1,10 @@
 package com.netcracker.project.study.services;
 
 import com.netcracker.project.study.model.Model;
+import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.car.Car;
+import com.netcracker.project.study.model.order.Order;
 
 import java.math.BigInteger;
 import java.sql.Date;
@@ -24,8 +26,6 @@ public interface AdminService {
 
     void updateModel(Model model);
 
-    List<Driver> getDriversWithApproval();
-
     List<Driver> getActiveDrivers();
 
     List<Car> getCarByDriver(Driver driver);
@@ -34,7 +34,15 @@ public interface AdminService {
 
     void unbanDriver(Driver driver);
 
-    void setBanTimer(Driver driver);
+    //void setBanTimer(Driver driver);
 
-    List<Driver> getDriversOnCalls();
+    void setBanTask();
+
+    List<Driver> getDriversByStatusId(BigInteger statusId);
+
+    List<Order> getOrdersByDriverId(BigInteger driverId);
+
+    List<Order> getOrdersByClientId(BigInteger clientId);
+
+    <T extends Model> T getModelById(BigInteger modelId, Class modelClass);
 }

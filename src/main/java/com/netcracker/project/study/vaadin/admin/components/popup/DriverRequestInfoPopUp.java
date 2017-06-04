@@ -1,11 +1,13 @@
 package com.netcracker.project.study.vaadin.admin.components.popup;
 
 import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverStatusEnum;
+import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.car.Car;
-import com.netcracker.project.study.model.driver.DriverStatusValues;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequestsGrid;
+import com.netcracker.project.study.services.tools.EmailMassageSender;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -26,7 +28,13 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
     @Autowired
     AdminService adminService;
 
+    RichTextArea richTextArea;
+
     private List<Car> driverCarList;
+
+    @Autowired
+    EmailMassageSender emailMassageSender;
+
 
     public void init(Driver driver) {
         this.driver = driver;
@@ -34,36 +42,43 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
         System.out.println(driverCarList);
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
-        rootLayout.setWidthUndefined();
-        rootLayout.setSpacing(true);
-        rootLayout.setMargin(true);
+
         setTextFields(rootLayout);
         addComponent(rootLayout);
     }
 
     private void setTextFields(VerticalLayout rootLayout) {
+        rootLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
         rootLayout.addComponent(setDriverAndCarInfoLayout());
+        rootLayout.addComponent(setRichTextAreaLayout());
         rootLayout.addComponent(setControlButtonsLayout());
+        rootLayout.setSizeFull();
+        rootLayout.setSpacing(false);
+        rootLayout.setMargin(false);
     }
 
     private HorizontalLayout setDriverAndCarInfoLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.setWidth(100, Unit.PERCENTAGE);
 
         VerticalLayout driverForm = new VerticalLayout();
+        driverForm.setWidth(100, Unit.PERCENTAGE);
         Label name = new Label( "<h2><b>" + driver.getFirstName() + " " + driver.getLastName()+ "</b></h2><hr>",
                 ContentMode.HTML);
         Label midName = new Label("Middle name: <i>" + driver.getMiddleName() + "</i>", ContentMode.HTML);
         Label phone = new Label("Phone: <i>" + driver.getPhoneNumber() + "</i>", ContentMode.HTML);
         Label email = new Label("Email: <i>" + driver.getEmail() + "</i>", ContentMode.HTML);
         Label exp = new Label("Experience: <i>" + driver.getExperience() + " years </i>", ContentMode.HTML);
-        Label status = new Label("Status: <i>" + driver.getStringStatus(driver) + "</i>", ContentMode.HTML);
+        Label status = new Label("Status: <i>" + DriverStatusEnum.getStatusValue(driver.getStatus()) + "</i>", ContentMode.HTML);
         driverForm.addComponents(name, midName, phone, email, exp, status);
 
         Panel driverPanel = new Panel("Personal information", driverForm);
+        driverPanel.setWidth(100, Unit.PERCENTAGE);
         driverPanel.setWidth(400, Unit.PIXELS);
 
 
         VerticalLayout carForm = new VerticalLayout();
+        carForm.setWidth(100, Unit.PERCENTAGE);
         List<Car> carList = adminService.getCarByDriver(driver);
         for (int i = 0; i < carList.size(); i++) {
             Car car = carList.get(i);
@@ -77,22 +92,41 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
             carForm.addComponents(carName, model, stateNumber, releaseDate, seatsCount, childSeat);
         }
         Panel carPanel = new Panel("Vehicle", carForm);
+        carPanel.setWidth(100, Unit.PERCENTAGE);
         carPanel.setWidth(400, Unit.PIXELS);
 
         horizontalLayout.addComponent(driverPanel);
+        horizontalLayout.setExpandRatio(driverPanel, 0.5f);
         horizontalLayout.addComponent(carPanel);
+        horizontalLayout.setExpandRatio(carPanel, 0.5f);
 
+        return horizontalLayout;
+    }
+
+    private HorizontalLayout setRichTextAreaLayout(){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.setWidth(100, Unit.PERCENTAGE);
+
+        richTextArea = new RichTextArea();
+        richTextArea.setSizeFull();
+        horizontalLayout.addComponent(richTextArea);
         return horizontalLayout;
     }
 
     private HorizontalLayout setControlButtonsLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setWidthUndefined();
+        horizontalLayout.setWidth(100, Unit.PERCENTAGE);
         horizontalLayout.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
 
         Button btnDecline = new Button("Decline");
         btnDecline.addClickListener(clickEvent -> {
+            if (richTextArea.getValue().isEmpty()) {
+                Notification.show("Write the massage");
+                return;
+            }
+            emailMassageSender.sendMassage(driver.getEmail(), richTextArea.getValue());
             List<Car> carList = adminService.getCarByDriver(driver);
+
             for (int i = 0; i < carList.size(); i++) {
                 adminService.deleteModel(carList.get(i));
             }
@@ -100,12 +134,18 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
 
             driversRequestsGrid.refreshGrid();
             driversRequestsGrid.getDriversRequestSubWindow().close();
+            driver.getEmail();
         });
         horizontalLayout.addComponent(btnDecline);
 
         Button btnApprove = new Button("Approve");
         btnApprove.addClickListener(clickEvent -> {
-            driver.setStatus(DriverStatusValues.OFF_DUTY);
+            if (richTextArea.getValue().isEmpty()) {
+                Notification.show("Write the massage");
+                return;
+            }
+            emailMassageSender.sendMassage(driver.getEmail(), richTextArea.getValue());
+            driver.setStatus(DriverStatusList.OFF_DUTY);
             adminService.updateModel(driver);
             driversGrid.refreshGrid();
             driversRequestsGrid.refreshGrid();
@@ -114,8 +154,8 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
         });
 
         horizontalLayout.addComponent(btnApprove);
-        horizontalLayout.setExpandRatio(btnDecline, 0.9f);
-        horizontalLayout.setExpandRatio(btnApprove, 0.1f);
+        horizontalLayout.setExpandRatio(btnDecline, 0.88f);
+        horizontalLayout.setExpandRatio(btnApprove, 0.12f);
 
         return horizontalLayout;
     }

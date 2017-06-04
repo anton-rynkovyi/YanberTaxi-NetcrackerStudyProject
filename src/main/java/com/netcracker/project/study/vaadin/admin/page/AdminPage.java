@@ -5,6 +5,7 @@ import com.netcracker.project.study.vaadin.admin.views.ClientsView;
 import com.netcracker.project.study.vaadin.admin.views.DriversView;
 import com.netcracker.project.study.vaadin.admin.views.OrdersView;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Theme("valo")
 @SpringUI(path = "/admin")
+@Title("YanberTaxi-Administration")
 @SpringComponent
 public class AdminPage extends UI {
 
@@ -32,7 +34,7 @@ public class AdminPage extends UI {
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         VerticalLayout rootLayout = getVerticalLayout();
-        rootLayout.setMargin(true);
+        rootLayout.setMargin(false);
         rootLayout.setSpacing(false);
         setContent(rootLayout);
 
@@ -52,7 +54,6 @@ public class AdminPage extends UI {
     private VerticalLayout getVerticalLayout() {
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setSizeFull();
-        //verticalLayout.setStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         return verticalLayout;
     }
 

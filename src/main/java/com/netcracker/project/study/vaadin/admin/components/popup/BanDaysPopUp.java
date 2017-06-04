@@ -61,7 +61,7 @@ public class BanDaysPopUp extends VerticalLayout {
             int days = Integer.parseInt(radioValue[0]);
             Driver driver = driverInfoPopUP.getDriver();
             adminService.giveBan(driver, days);
-            driversGrid.getApprovedDriversList().remove(driver);
+            //driversGrid.getApprovedDriversList().remove(driver);
             driversGrid.refreshGrid();
             driversBanGrid.getDriverBanList().add(driver);
             driversBanGrid.refreshGrid();

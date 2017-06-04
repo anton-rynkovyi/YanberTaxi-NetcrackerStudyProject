@@ -2,8 +2,11 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 
 
 import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverStatusEnum;
+import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverRequestInfoPopUp;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 
@@ -39,6 +42,7 @@ public class DriversRequestsGrid  extends CustomComponent{
 
     private void initWindow() {
         window = new Window("Driver information");
+        window.setIcon(VaadinIcons.INFO_CIRCLE);
         window.setWidthUndefined();
         window.setHeightUndefined();
         window.center();
@@ -88,7 +92,7 @@ public class DriversRequestsGrid  extends CustomComponent{
         driversRequestsGrid.addColumn(Driver::getEmail).setCaption("Email");
         driversRequestsGrid.addColumn(Driver::getPhoneNumber).setCaption("Phone number");
         driversRequestsGrid.addColumn(driver -> driver.getExperience() + " years").setCaption("Experience");
-        driversRequestsGrid.addColumn(driver -> driver.getStringStatus(driver)).setCaption("Status");
+        driversRequestsGrid.addColumn(driver -> DriverStatusEnum.getStatusValue(driver.getStatus())).setCaption("Status");
 
         return driversRequestsGrid;
     }
@@ -102,7 +106,7 @@ public class DriversRequestsGrid  extends CustomComponent{
     }
 
     public void refreshGrid() {
-        driversRequestsList = adminService.getDriversWithApproval();
+        driversRequestsList = adminService.getDriversByStatusId(DriverStatusList.APPROVAL);
         driversRequestsGrid.setItems(driversRequestsList);
     }
 

@@ -10,8 +10,6 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.addons.Toastr;
-import org.vaadin.addons.builder.ToastBuilder;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -80,11 +78,6 @@ public class DriverCreatePopUp extends VerticalLayout {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
 
-                if (lastName.isEmpty() || firstName.isEmpty() || middleName.isEmpty() || phoneNumber.isEmpty()
-                        || email.isEmpty() || experience.isEmpty()) {
-                    Toastr failToast = new Toastr();
-                    failToast.toast(ToastBuilder.error("All fields must be filled").build());
-                }
 
                 Driver driver = new Driver();
                 driver.setName(lastName.getValue() +" " + firstName.getValue());
@@ -98,13 +91,11 @@ public class DriverCreatePopUp extends VerticalLayout {
                 driver.setRating(new BigDecimal(4));
                 driver.setStatus(new BigInteger(status.getValue()));
 
-                Toastr successToast = new Toastr();
-                successToast.toast(ToastBuilder.success("The driver has been successfully approved").build());
 
                 adminService.createModel(driver);
-
+/*
                 driversGrid.getApprovedDriversList().add(driver);
-                driversGrid.getDriversGrid().setItems(driversGrid.getApprovedDriversList());
+                driversGrid.getDriversGrid().setItems(driversGrid.getApprovedDriversList());*/
 
                 driversGrid.refreshGrid();
                 driversRequestsGrid.refreshGrid();

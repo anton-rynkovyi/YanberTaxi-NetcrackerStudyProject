@@ -26,6 +26,7 @@
 		<tomcat.jdbc.version>7.0.35</tomcat.jdbc.version>
 		<log4j.version>1.2.17</log4j.version>
 		<vaadin.spring.version>2.0.0</vaadin.spring.version>
+		<quartz.scheduling.version>2.2.1</quartz.scheduling.version>
 	</properties>
 
 	<repositories>
@@ -71,20 +72,11 @@
 			<version>3.0.0-alpha2</version>
 		</dependency>
 
+
 		<dependency>
 			<groupId>de.steinwedel.vaadin.addon</groupId>
 			<artifactId>messagebox</artifactId>
 			<version>${messagebox.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.vaadin.addons</groupId>
-			<artifactId>vaadin-toastr</artifactId>
-			<version>1.0.7</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.appreciated</groupId>
-			<artifactId>material</artifactId>
-			<version>0.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -166,7 +158,32 @@
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
+        <!--MAIL-->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
+		<!-- Quartz framework -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!-- Spring + Quartz need transaction -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.scheduling.version}</version>
+		</dependency>
+
 	</dependencies>
+
 
 	<build>
 		<plugins>

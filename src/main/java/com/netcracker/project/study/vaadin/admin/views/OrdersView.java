@@ -31,7 +31,7 @@ public class OrdersView extends VerticalLayout implements View {
 
     private TabSheet getTabSheet() {
         TabSheet tabSheet = new TabSheet();
-        tabSheet.addTab(getControlTab(), "Control");
+        tabSheet.addTab(getControlTab(), "All orders");
 
         return tabSheet;
     }

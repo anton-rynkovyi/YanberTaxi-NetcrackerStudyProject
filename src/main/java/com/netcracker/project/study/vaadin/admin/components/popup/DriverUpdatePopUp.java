@@ -159,12 +159,6 @@ public class DriverUpdatePopUp extends VerticalLayout {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
 
-                /*if (lastName.isEmpty() || firstName.isEmpty() || middleName.isEmpty() || phoneNumber.isEmpty()
-                        || email.isEmpty() || experience.isEmpty()) {
-                    Toastr failToast = new Toastr();
-                    failToast.toast(ToastBuilder.error("All fields must be filled").build());
-                }*/
-
                 driver.setName(lastName.getValue() +" " + firstName.getValue());
                 driver.setLastName(!lastName.getValue().equals("") ? lastName.getValue() : null);
                 driver.setFirstName(!firstName.getValue().equals("") ? firstName.getValue() : null);
@@ -189,7 +183,6 @@ public class DriverUpdatePopUp extends VerticalLayout {
                 email.setValue("");
                 experience.setValue("");
                 status.setValue("");
-
 
                 for (int i = 0; i < carList.size(); i++) {
                     Car car = carList.get(i);
@@ -220,7 +213,7 @@ public class DriverUpdatePopUp extends VerticalLayout {
                 //driversGrid.getApprovedDriversList().add(driver);
 
 
-                driversGrid.getDriversCreateSubWindow().close();
+                driversGrid.getUpdateDriverWindow().close();
 
                 //AdminPage.navigator.navigateTo(DriversView.VIEW_NAME);
             }

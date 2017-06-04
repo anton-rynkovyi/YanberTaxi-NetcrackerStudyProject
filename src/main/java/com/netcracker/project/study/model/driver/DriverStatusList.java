@@ -2,7 +2,7 @@ package com.netcracker.project.study.model.driver;
 
 import java.math.BigInteger;
 
-public interface DriverStatusValues {
+public interface DriverStatusList {
 
     BigInteger APPROVAL = BigInteger.valueOf(1);
 
@@ -13,16 +13,5 @@ public interface DriverStatusValues {
     BigInteger ON_CALL = BigInteger.valueOf(4);
 
     BigInteger PERFORMING_ORDER = BigInteger.valueOf(5);
-
-
-    String APPROVAL_STR = "approval";
-
-    String OFF_DUTY_STR = "off duty";
-
-    String FREE_STR = "free";
-
-    String ON_CALL_STR = "on call";
-
-    String PERFORMING_ORDER_STR = "performing order";
 
 }

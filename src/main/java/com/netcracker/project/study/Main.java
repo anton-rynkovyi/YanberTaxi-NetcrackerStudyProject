@@ -1,7 +1,11 @@
 package com.netcracker.project.study;
 
+import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
+import com.netcracker.project.study.model.driver.DriverStatusList;
+import com.netcracker.project.study.model.order.Order;
+import com.netcracker.project.study.model.order.OrderStatusList;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
@@ -9,6 +13,9 @@ import com.netcracker.project.study.services.impl.AdminServiceImpl;
 import com.netcracker.project.study.services.impl.DriverServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 import java.math.BigInteger;
 
@@ -89,7 +96,7 @@ public class Main {
         /*String sqlQuery = "select obj.OBJECT_ID from objects obj, Attributes attr " +
                 "where obj.object_id = attr.object_id " +
                 "and obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
-                "and attr.list_value_id = " + DriverStatusValues.APPROVAL.intValue();*/
+                "and attr.list_value_id = " + DriverStatusList.APPROVAL.intValue();*/
 
 
 
@@ -122,12 +129,49 @@ public class Main {
         adminService.createModel(car);*/
 
 
-        /*Client client = new Client();
+       /* Client client = new Client();
         client.setName("Client Blazko");
         client.setFirstName("Alexandr");
         client.setLastName("Blazko");
         client.setPhoneNumber("093-40-35-932");
-        facade.create(client);*/
+        facade.create(client);
+
+        Client client1 = new Client();
+        client.setName("Client Anton");
+        client.setFirstName("Anton");
+        client.setLastName("Rynkovoy");
+        client.setPhoneNumber("63-611-67-90");
+        facade.create(client1);
+
+        Order order = new Order();
+        order.setName(client.getLastName() + " order");
+        order.setClientId(client.getObjectId());
+        order.setDriverId(BigInteger.valueOf(115));
+        order.setCost(BigDecimal.valueOf(30.50));
+        order.setDistance(BigInteger.valueOf(5000));
+        order.setStatus(OrderStatusList.PERFORMED);
+        order.setDriverMemo("1 - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
+        facade.create(order);
+
+        Order order1 = new Order();
+        order1.setName(client1.getLastName() + " order");
+        order1.setClientId(client1.getObjectId());
+        order1.setDriverId(BigInteger.valueOf(115));
+        order1.setCost(BigDecimal.valueOf(30.50));
+        order1.setDistance(BigInteger.valueOf(5000));
+        order1.setStatus(OrderStatusList.PERFORMED);
+        order1.setDriverMemo("2 - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
+        facade.create(order1);*/
+
+        Order order = new Order();
+        order.setName(" order");
+        order.setClientId(BigInteger.valueOf(154));
+        order.setDriverId(BigInteger.valueOf(149));
+        order.setCost(BigDecimal.valueOf(105.90));
+        order.setDistance(BigInteger.valueOf(4783));
+        order.setStatus(OrderStatusList.PERFORMED);
+        order.setDriverMemo("NEW - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
+        facade.create(order);
 
         /*Order order = new Order();
         order.setClientId(BigInteger.valueOf(4));
@@ -151,20 +195,10 @@ public class Main {
         order.setCost(BigDecimal.valueOf(30));
         order.setDistance(BigInteger.valueOf(12));
         order.setStatus(BigInteger.valueOf(6));
-        facade.create(order2);*/
+        facade.create(order2);*
 
-/*
 
-        Order order = new Order();
-        order.setName("Order_21");
-        order.setClientId(BigInteger.valueOf(4));
-        order.setDriverId(BigInteger.valueOf(1));
-        order.setCost(BigDecimal.valueOf(303));
-        order.setDistance(BigInteger.valueOf(133));
-        order.setStatus(BigInteger.valueOf(6));
-        facade.create(order);
-
-        Order order1 = new Order();
+       /* Order order1 = new Order();
         order.setName("Order_31");
         order.setClientId(BigInteger.valueOf(4));
         order.setDriverId(BigInteger.valueOf(1));
@@ -179,8 +213,7 @@ public class Main {
         order.setCost(BigDecimal.valueOf(190));
         order.setDistance(BigInteger.valueOf(123));
         order.setStatus(BigInteger.valueOf(6));
-        facade.create(order2);
-*/
+        facade.create(order2);*/
 
        /*Order order = facade.getOne(BigInteger.valueOf(10),Order.class);
         System.out.println(order.getName());
@@ -213,8 +246,10 @@ public class Main {
 
     /*    System.out.println(carList.get(0).getDriverId());
         System.out.println(carList.get(0).getMakeOfCar());*/
-
-        Driver driver = facade.getOne(BigInteger.valueOf(115), Driver.class);
-        System.out.println(DriverStatusEnum.getStatusValue(driver.getStatus()));
+/*
+        List<Driver> driverList = adminService.getDriversByStatusId(DriverStatusList.FREE);
+        for (int i = 0; i < driverList.size(); i++) {
+            System.out.println(driverList.get(i));
+        }*/
     }
 }

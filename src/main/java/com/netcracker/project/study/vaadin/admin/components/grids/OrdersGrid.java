@@ -2,7 +2,7 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.services.AdminService;
-import com.netcracker.project.study.vaadin.driver.components.popup.OrderInfoPopUp;
+import com.netcracker.project.study.vaadin.admin.components.popup.AdminOrderInfoPopUp;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -24,7 +24,8 @@ public class OrdersGrid extends CustomComponent {
 
     private Window orderInfoWindow;
 
-    @Autowired OrderInfoPopUp orderInfoPopUp;
+    @Autowired
+    AdminOrderInfoPopUp orderInfoPopUp;
 
     @PostConstruct
     public void init() {
@@ -66,7 +67,7 @@ public class OrdersGrid extends CustomComponent {
         ordersGrid.addColumn(Order::getCost).setCaption("Cost");
         ordersGrid.addColumn(Order::getDistance).setCaption("Distance");
         ordersGrid.addColumn(Order::getDriverRating).setCaption("Driver rating");
-        ordersGrid.addColumn(Order::getDriverMemo).setCaption("Driver comment");
+        //ordersGrid.addColumn(Order::getDriverMemo).setCaption("Driver comment");
 
         return ordersGrid;
     }
@@ -78,9 +79,9 @@ public class OrdersGrid extends CustomComponent {
         Button viewOrderButton = new Button("View order", FontAwesome.INFO);
         viewOrderButton.addClickListener(event->{
             if(!ordersGrid.asSingleSelect().isEmpty()){
-              //  Order order = ordersGrid.asSingleSelect().getValue();
-               // orderInfoPopUp.init(order);
-              //  UI.getCurrent().addWindow(orderInfoWindow);
+                Order order = ordersGrid.asSingleSelect().getValue();
+                orderInfoPopUp.init(order);
+                UI.getCurrent().addWindow(orderInfoWindow);
             }
         });
         horizontalLayout.addComponent(viewOrderButton);

@@ -101,13 +101,13 @@ public class ClientServiceImpl implements ClientService {
 
     private void calcDriverRating(Driver driver) {
         String sqlQuery = "SELECT obj.object_id "+
-                            "FROM Objects obj  "+
-                            "inner join OBJREFERENCE obj_r "+
-                            "on obj.object_id=obj_r.OBJECT_ID "+
-                            "WHERE "+
-                            "obj.object_type_id = 3 "+
-                            "and obj_r.REFERENCE= "+driver.getObjectId().toString()+" "+
-                            "and obj_r.attr_id=17 ";
+                "FROM Objects obj  "+
+                "inner join OBJREFERENCE obj_r "+
+                "on obj.object_id=obj_r.OBJECT_ID "+
+                "WHERE "+
+                "obj.object_type_id = 3 "+
+                "and obj_r.REFERENCE= "+driver.getObjectId().toString()+" "+
+                "and obj_r.attr_id=17 ";
         List<Order> orders = persistenceFacade.getSome(sqlQuery,Order.class);
         BigInteger rating = BigInteger.valueOf(0);
         BigInteger quantity = BigInteger.valueOf(0);

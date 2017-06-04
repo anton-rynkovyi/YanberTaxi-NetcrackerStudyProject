@@ -147,17 +147,4 @@ public class Driver extends Model implements DriverAttr{
                 ", unbanDate=" + unbanDate +
                 '}';
     }
-
-    public String getStringStatus(Driver driver) {
-        String status = null;
-        switch (driver.getStatus().intValue()){
-            case 1: status = DriverStatusValues.APPROVAL_STR; break;
-            case 2: status = DriverStatusValues.OFF_DUTY_STR; break;
-            case 3: status = DriverStatusValues.FREE_STR; break;
-            case 4: status = DriverStatusValues.ON_CALL_STR; break;
-            case 5: status = DriverStatusValues.PERFORMING_ORDER_STR; break;
-            default: return null;
-        }
-        return status;
-    }
 }

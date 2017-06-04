@@ -4,9 +4,10 @@ import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.client.ClientAttr;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverAttr;
+import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.driver.car.CarAttr;
-import com.netcracker.project.study.model.driver.DriverStatusValues;
+import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderAttr;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
@@ -33,7 +34,6 @@ public class AdminServiceImpl implements AdminService{
     @Autowired
     DriversBanGrid driversBanGrid;
 
-
     @Override
     public boolean isVerificate(Driver driver) {
         return false;
@@ -48,16 +48,35 @@ public class AdminServiceImpl implements AdminService{
     public void giveBan(Driver driver, int days) {
         Date date = new Date(System.currentTimeMillis() + 1000*60 * days);
         driver.setUnbanDate(date);
-        driver.setStatus(DriverStatusValues.OFF_DUTY);
+        driver.setStatus(DriverStatusList.OFF_DUTY);
         persistenceFacade.update(driver);
-        setBanTimer(driver);
     }
 
-    @Override
-    public void setBanTimer(Driver driver) {
-        Timer timer = new Timer();
 
-        class BanTimer extends TimerTask {
+    @Override
+    public void setBanTask() {
+        List<Driver> driverList = getBannedDrivers();
+        for (int i = 0; i < driverList.size(); i++) {
+            Driver driver = driverList.get(i);
+           long dif =driver.getUnbanDate().getTime() - System.currentTimeMillis();
+           if (dif < 0 || driver.getUnbanDate() == null) {
+               driver.setUnbanDate(null);
+               persistenceFacade.update(driver);
+               System.out.println("FINISH");
+               driversGrid.refreshGrid();
+               driversBanGrid.refreshGrid();
+           } else {
+               System.out.println(driver.getObjectId()+": " + dif / 1000);
+           }
+        }
+    }
+
+   /* @Override
+    public void setBanTimer(Driver driver) {
+
+        //Timer timer = new Timer();
+
+        *//*class BanTimer extends TimerTask {
 
             @Override
             public void run() {
@@ -76,16 +95,57 @@ public class AdminServiceImpl implements AdminService{
                     System.out.println(driver.getObjectId()+": " + def / 1000);
                 }
             }
-        }
-        timer.schedule(new BanTimer(), 0, 1000);
+        }*//*
+       // timer.schedule(new BanTimer(), 0, 1000);
+    }*/
+
+
+    @Override
+    public List<Driver> getDriversByStatusId(BigInteger statusId) {
+        String query = "" +
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
+                "INNER JOIN Attributes attr1 ON obj.object_id = attr1.object_id " +
+                "WHERE obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
+                "AND attr.attr_id = " + DriverAttr.STATUS_ATTR + " " +
+                "AND attr.list_value_id = " + statusId + " " +
+                "AND attr1.attr_id = " + DriverAttr.UNBAN_DATE_ATTR + " " +
+                "AND attr1.date_value IS NULL";
+        List<Driver> driverList = persistenceFacade.getSome(query, Driver.class);
+        return driverList;
     }
 
     @Override
-    public List<Driver> getDriversOnCalls() {
+    public List<Order> getOrdersByDriverId(BigInteger driverId) {
         String query = "" +
-                "";
-        List<Driver> driverList = null;
-        return driverList;
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
+                "WHERE obj.object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
+                "AND ref.attr_id = " + OrderAttr.DRIVER_ID_ATTR +
+                "AND ref.reference = " + driverId;
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        return orderList;
+    }
+
+    @Override
+    public List<Order> getOrdersByClientId(BigInteger clientId) {
+        String query = "" +
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
+                "WHERE obj.object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
+                "AND ref.attr_id = " + OrderAttr.CLIENT_ID_ATTR +
+                "AND ref.reference = " + clientId;
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        return orderList;
+    }
+
+    @Override
+    public <T extends Model> T getModelById(BigInteger modelId, Class modelClass) {
+        T model = persistenceFacade.getOne(modelId, modelClass);
+        return model != null ? model : null;
     }
 
 
@@ -122,18 +182,6 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public List<Driver> getDriversWithApproval() {
-        String query = "" +
-                "SELECT obj.object_id " +
-                "FROM objects obj " +
-                "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
-                "AND obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
-                "AND attr.list_value_id = " + DriverStatusValues.APPROVAL;
-        List<Driver> driverList = persistenceFacade.getSome(query, Driver.class);
-        return driverList;
-    }
-
-    @Override
     public List<Driver> getActiveDrivers() {
         String query = "" +
                 "SELECT obj.object_id " +
@@ -142,7 +190,7 @@ public class AdminServiceImpl implements AdminService{
                 "INNER JOIN Attributes attr1 ON obj.object_id = attr1.object_id " +
                 "WHERE obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
                 "AND attr.attr_id = " + DriverAttr.STATUS_ATTR + " " +
-                "AND attr.list_value_id <> " + DriverStatusValues.APPROVAL + " " +
+                "AND attr.list_value_id <> " + DriverStatusList.APPROVAL + " " +
                 "AND attr1.attr_id = " + DriverAttr.UNBAN_DATE_ATTR + " " +
                 "AND attr1.date_value IS NULL";
 
@@ -182,6 +230,7 @@ public class AdminServiceImpl implements AdminService{
         driver.setUnbanDate(null);
         persistenceFacade.update(driver);
     }
+
 
 
 }

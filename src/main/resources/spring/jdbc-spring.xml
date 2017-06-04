@@ -2,7 +2,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context
@@ -11,7 +10,6 @@
 
     <context:annotation-config/>
     <context:component-scan base-package="com.netcracker.project.study" />
-    <task:annotation-driven/>
 
     <bean class="com.netcracker.project.study.vaadin.configurations.VaadinConfiguration"/>
 
@@ -30,35 +28,4 @@
           class = "com.netcracker.project.study.persistence.manager.impl.PersistenceManager">
         <constructor-arg ref="dataSource"/>
     </bean>
-
-
-
-
-    <bean id="banJob"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="adminServiceImpl" />
-        <property name="targetMethod" value="setBanTask" />
-    </bean>
-
-    <bean id="simpleTrigger"
-          class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-        <property name="jobDetail" ref="banJob" />
-        <property name="repeatInterval" value="1000" />
-        <property name="startDelay" value="1000" />
-    </bean>
-
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="jobDetails">
-            <list>
-                <ref bean="banJob" />
-            </list>
-        </property>
-
-        <property name="triggers">
-            <list>
-                <ref bean="simpleTrigger" />
-            </list>
-        </property>
-    </bean>
-
 </beans>

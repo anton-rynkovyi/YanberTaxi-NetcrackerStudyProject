@@ -7,6 +7,7 @@ import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverAttr;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,10 @@ public class DriverServiceImpl implements DriverService {
 
     @Autowired
     PersistenceFacade persistenceFacade;
+
+    @Autowired
+    AdminService adminService;
+
 
     @Override
     public void acceptOrder(BigInteger orderId, BigInteger driverId) {
@@ -38,5 +43,7 @@ public class DriverServiceImpl implements DriverService {
         List<T> clients = persistenceFacade.getAll(BigInteger.valueOf(DriverAttr.OBJECT_TYPE_ID), Driver.class);
         return clients;
     }
+
+
 
 }

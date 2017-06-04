@@ -1,6 +1,7 @@
 package com.netcracker.project.study.vaadin.admin.components.popup;
 
 import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
@@ -56,7 +57,7 @@ public class DriverBanInfoPopUp extends VerticalLayout{
         Label phone = new Label("Phone: <i>" + driver.getPhoneNumber() + "</i>", ContentMode.HTML);
         Label email = new Label("Email: <i>" + driver.getEmail() + "</i>", ContentMode.HTML);
         Label exp = new Label("Experience: <i>" + driver.getExperience() + " years </i>", ContentMode.HTML);
-        Label status = new Label("Status: <i>" + driver.getStringStatus(driver) + "</i>", ContentMode.HTML);
+        Label status = new Label("Status: <i>" + DriverStatusEnum.getStatusValue(driver.getStatus()) + "</i>", ContentMode.HTML);
         driverForm.addComponents(name, midName, phone, email, exp, status);
 
         Panel driverPanel = new Panel("Personal information", driverForm);

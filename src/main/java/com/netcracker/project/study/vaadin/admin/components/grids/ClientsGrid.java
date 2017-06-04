@@ -1,8 +1,11 @@
 package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.popup.ClientCreatePopUp;
+import com.netcracker.project.study.vaadin.admin.components.popup.ClientInfoPopUp;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -18,19 +21,25 @@ public class ClientsGrid extends CustomComponent {
     @Autowired
     ClientCreatePopUp clientCreatePopUp;
 
+    @Autowired
+    ClientInfoPopUp clientInfoPopUp;
+
     @Autowired AdminService adminService;
 
     private Grid<Client> clientsGrid;
 
     private List<Client> clientsList;
 
-    private Window window;
+    private Window createWindow;
+
+    private Window viewClientWindow;
 
     @PostConstruct
     public void init() {
         clientsGrid = generateClientsGrid();
         VerticalLayout componentLayout = getFilledComponentLayout();
-        initWindow();
+        initCreateWindow();
+        initViewClientWindow();
         setGridSettings(clientsGrid);
         setCompositionRoot(componentLayout);
     }
@@ -76,25 +85,35 @@ public class ClientsGrid extends CustomComponent {
         return clientsList;
     }
 
-    private void initWindow() {
-        window = new Window("Add new client");
-        window.center();
-        window.setContent(clientCreatePopUp);
+    private void initCreateWindow() {
+        createWindow = new Window("Add new client");
+        createWindow.setIcon(VaadinIcons.USER);
+        createWindow.center();
+        createWindow.setContent(clientCreatePopUp);
     }
 
+    private void initViewClientWindow() {
+        viewClientWindow = new Window("Client information");
+        viewClientWindow.setIcon(VaadinIcons.INFO);
+        viewClientWindow.center();
+        viewClientWindow.setModal(true);
+        viewClientWindow.setContent(clientInfoPopUp);
+    }
+
+
     public Window getClientsCreateSubWindow() {
-        return window;
+        return createWindow;
     }
 
     private HorizontalLayout getControlButtons() {
         HorizontalLayout controlButtonsLayout = new HorizontalLayout();
-        controlButtonsLayout.setWidthUndefined();
-
+        controlButtonsLayout.setMargin(false);
+        controlButtonsLayout.setSpacing(false);
 
         Button btnAddClient = new Button("Add client", FontAwesome.PLUS);
         controlButtonsLayout.addComponent(btnAddClient);
         controlButtonsLayout.setComponentAlignment(btnAddClient, Alignment.BOTTOM_LEFT);
-        btnAddClient.addClickListener(event -> {UI.getCurrent().addWindow(window);});
+        btnAddClient.addClickListener(event -> {UI.getCurrent().addWindow(createWindow);});
 
 
         Button btnDeleteDriver = new Button("Delete client", FontAwesome.REMOVE);
@@ -125,6 +144,21 @@ public class ClientsGrid extends CustomComponent {
             //todo realization for update button
         });
 
+        Button btnClientInfo = new Button("Client info", VaadinIcons.INFO);
+        controlButtonsLayout.addComponent(btnClientInfo);
+        controlButtonsLayout.setComponentAlignment(btnClientInfo, Alignment.BOTTOM_RIGHT);
+        btnClientInfo.addClickListener(event ->{
+            if(!clientsGrid.asSingleSelect().isEmpty() ) {
+                Client client = clientsGrid.asSingleSelect().getValue();
+                clientInfoPopUp.init(client);
+                UI.getCurrent().addWindow(viewClientWindow);
+            }
+        });
+
         return controlButtonsLayout;
+    }
+
+    public Window getViewClientWindow() {
+        return  viewClientWindow;
     }
 }

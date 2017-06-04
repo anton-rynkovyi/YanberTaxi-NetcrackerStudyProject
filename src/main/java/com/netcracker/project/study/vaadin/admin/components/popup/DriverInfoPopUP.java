@@ -1,7 +1,10 @@
 package com.netcracker.project.study.vaadin.admin.components.popup;
 
+import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.car.Car;
+import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.shared.ui.ContentMode;
@@ -49,6 +52,7 @@ public class DriverInfoPopUP extends VerticalLayout {
     private void setTextFields(VerticalLayout rootLayout) {
         rootLayout.addComponent(setDriverAndCarInfoLayout());
         rootLayout.addComponent(setControlButtonsLayout());
+        rootLayout.addComponent(setDriverCommentsLayout());
     }
 
     private HorizontalLayout setDriverAndCarInfoLayout() {
@@ -61,7 +65,7 @@ public class DriverInfoPopUP extends VerticalLayout {
         Label phone = new Label("Phone: <i>" + driver.getPhoneNumber() + "</i>", ContentMode.HTML);
         Label email = new Label("Email: <i>" + driver.getEmail() + "</i>", ContentMode.HTML);
         Label exp = new Label("Experience: <i>" + driver.getExperience() + " years </i>", ContentMode.HTML);
-        Label status = new Label("Status: <i>" + driver.getStringStatus(driver) + "</i>", ContentMode.HTML);
+        Label status = new Label("Status: <i>" + DriverStatusEnum.getStatusValue(driver.getStatus()) + "</i>", ContentMode.HTML);
         driverForm.addComponents(name, midName, phone, email, exp, status);
 
         Panel driverPanel = new Panel("Personal information", driverForm);
@@ -97,7 +101,8 @@ public class DriverInfoPopUP extends VerticalLayout {
 
         Button btnFire = new Button("Fire");
         btnFire.addClickListener(clickEvent -> {
-
+            adminService.deleteModel(driver);
+            driversGrid.refreshGrid();
         });
         horizontalLayout.addComponent(btnFire);
 
@@ -113,20 +118,33 @@ public class DriverInfoPopUP extends VerticalLayout {
         return horizontalLayout;
     }
 
-    public List<Car> getDriverCarList() {
-        return driverCarList;
-    }
 
-    public void setDriverCarList(List<Car> driverCarList) {
-        this.driverCarList = driverCarList;
+    private VerticalLayout setDriverCommentsLayout() {
+        VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.setSizeFull();
+        verticalLayout.setMargin(false);
+        verticalLayout.setSpacing(false);
+        List<Order> orderList = adminService.getOrdersByDriverId(driver.getObjectId());
+        for (int i = 0; i < orderList.size(); i++) {
+            if (orderList.get(i).getDriverMemo() != null) {
+                if (orderList.get(i).getClientId() != null) {
+                    Client client = adminService.getModelById(orderList.get(i).getClientId(), Client.class);
+                    TextArea textArea = new TextArea();
+                    textArea.setCaptionAsHtml(true);
+                    textArea.setSizeFull();
+                    textArea.setCaption(client.getFirstName() + " " + client.getLastName());
+                    textArea.setEnabled(false);
+                    textArea.setValue(orderList.get(i).getDriverMemo());
+                    verticalLayout.addComponent(textArea);
+                    verticalLayout.addComponent(new Label());
+                }
+            }
+        }
+        return verticalLayout;
     }
 
     public Window getBanDaysWindow() {
         return banDaysWindow;
-    }
-
-    public void setBanDaysWindow(Window banDaysWindow) {
-        this.banDaysWindow = banDaysWindow;
     }
 
     public Driver getDriver() {
