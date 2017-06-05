@@ -1,31 +1,25 @@
-package com.netcracker.project.study.vaadin.driver.components.grids;
+
+package com.netcracker.project.study.vaadin.driver.components.tabs;
 
 import com.netcracker.project.study.model.order.Order;
-import com.netcracker.project.study.services.DriverService;
+import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.OrderService;
-import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
-import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
-import com.vaadin.navigator.View;
+import com.netcracker.project.study.vaadin.driver.components.popup.OrderInfoPopUp;
+import com.netcracker.project.study.vaadin.driver.pojos.*;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.math.BigInteger;
 import java.util.List;
 
-
 @SpringComponent
-public class NewOrdersGrid extends CustomComponent {
+public class AllOrdersTab extends CustomComponent {
 
-    @Autowired
-    OrderService orderService;
+    @Autowired AdminService adminService;
 
-    @Autowired
-    DriverService driverService;
-
-    OrdersViewForDrivers view;
+    @Autowired OrderService orderService;
 
     private Grid<OrderInfo> ordersGrid;
 
@@ -33,13 +27,31 @@ public class NewOrdersGrid extends CustomComponent {
 
     private List<Order> ordersList;
 
+    private Window orderInfoWindow;
+
+    @Autowired OrderInfoPopUp orderInfoPopUp;
+
+
+    public OrderInfoPopUp getOrderInfoPopUp(){
+        return orderInfoPopUp;
+    }
+
     @PostConstruct
     public void init() {
         ordersGrid = generateOrdersGrid();
+        initOrderInfoWindow();
         componentLayout = getFilledComponentLayout();
-        setButton();
+        componentLayout.addComponent(getButtons());
         setGridSettings(ordersGrid);
         setCompositionRoot(componentLayout);
+    }
+
+    private void initOrderInfoWindow() {
+        orderInfoWindow = new Window(" Information about the order");
+        orderInfoWindow.setIcon(FontAwesome.INFO_CIRCLE);
+        orderInfoWindow.center();
+        orderInfoWindow.setModal(true);
+        orderInfoWindow.setContent(orderInfoPopUp);
     }
 
     private VerticalLayout getFilledComponentLayout() {
@@ -48,39 +60,19 @@ public class NewOrdersGrid extends CustomComponent {
         componentLayout.setSpacing(false);
 
         componentLayout.addComponents(ordersGrid);
+
         return componentLayout;
     }
 
-    private HorizontalLayout setButton(){
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        componentLayout.setMargin(false);
-        componentLayout.setSpacing(false);
-
-        Button takeOrderButton = new Button("Take", FontAwesome.CAB);
-        takeOrderButton.addClickListener(event->{
-            if(!ordersGrid.asSingleSelect().isEmpty()){
-                OrderInfo order = ordersGrid.asSingleSelect().getValue();
-                driverService.acceptOrder(order.getObjectId(), BigInteger.valueOf(1));
-                refreshGrid();
-                view.Refresh();
-            }
-        });
-
-
-        horizontalLayout.addComponent(takeOrderButton);
-        horizontalLayout.setComponentAlignment(takeOrderButton,Alignment.BOTTOM_LEFT);
-        componentLayout.addComponent(takeOrderButton);
-        return horizontalLayout;
-    }
-
-    private void refreshGrid(){
-        ordersList =  orderService.getOrders(Order.NEW);
+    public void refreshGrid(){
+        ordersList = adminService.allModelsAsList(Order.class);
         ordersGrid.setItems(orderService.getOrdersInfo(ordersList));
     }
 
     private Grid<OrderInfo> generateOrdersGrid() {
+
         Grid<OrderInfo> ordersGrid = new Grid<>();
-        ordersList = orderService.getOrders(Order.NEW);
+        ordersList = adminService.allModelsAsList(Order.class);
 
         List<OrderInfo>ordersInfo = orderService.getOrdersInfo(ordersList);
 
@@ -95,9 +87,24 @@ public class NewOrdersGrid extends CustomComponent {
 
         return ordersGrid;
     }
+    private HorizontalLayout getButtons(){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        componentLayout.setMargin(false);
+        componentLayout.setSpacing(false);
 
-    public void setView(OrdersViewForDrivers view){
-        this.view = view;
+        Button viewOrderButton = new Button("View order", FontAwesome.INFO);
+        viewOrderButton.addClickListener(event->{
+            if(!ordersGrid.asSingleSelect().isEmpty()){
+                OrderInfo orderInfo = ordersGrid.asSingleSelect().getValue();
+                orderInfoPopUp.init(orderInfo);
+                UI.getCurrent().addWindow(orderInfoWindow);
+            }
+        });
+
+        componentLayout.addComponents(ordersGrid);
+        horizontalLayout.addComponent(viewOrderButton);
+        horizontalLayout.setComponentAlignment(viewOrderButton,Alignment.BOTTOM_LEFT);
+        return horizontalLayout;
     }
 
     private void setGridSettings(Grid<OrderInfo> ordersGrid) {
@@ -111,5 +118,5 @@ public class NewOrdersGrid extends CustomComponent {
     public List getOrdersList() {
         return ordersList;
     }
-
 }
+

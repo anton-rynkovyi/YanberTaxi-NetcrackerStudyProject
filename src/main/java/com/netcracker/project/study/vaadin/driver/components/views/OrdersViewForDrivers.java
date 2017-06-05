@@ -1,7 +1,7 @@
 package com.netcracker.project.study.vaadin.driver.components.views;
 
-import com.netcracker.project.study.vaadin.driver.components.grids.AllOrders;
-import com.netcracker.project.study.vaadin.driver.components.grids.NewOrdersGrid;
+import com.netcracker.project.study.vaadin.driver.components.tabs.AllOrdersTab;
+import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -18,10 +18,10 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
 
     @Autowired
-    private AllOrders allOrders;
+    private AllOrdersTab allOrders;
 
     @Autowired
-    private NewOrdersGrid newOrders;
+    private NewOrdersTab newOrders;
 
 
     TabSheet tabSheet;
@@ -29,6 +29,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     @PostConstruct
     void init() {
         tabSheet = getTabSheet();
+        tabSheet.setHeight(100,Unit.PERCENTAGE);
         addComponent(tabSheet);
     }
 

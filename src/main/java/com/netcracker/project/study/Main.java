@@ -6,6 +6,7 @@ import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderStatusList;
+import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
@@ -24,7 +25,7 @@ public class Main {
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, InstantiationException {
         ApplicationContext ctx =
                 new FileSystemXmlApplicationContext("src/main/webapp/WEB-INF/applicationContext.xml");
-        PersistenceFacade facade = (PersistenceFacade) ctx.getBean(PersistenceFacade.class);
+        PersistenceFacade facade =  ctx.getBean(PersistenceFacade.class);
         AdminService adminService = ctx.getBean(AdminServiceImpl.class);
         DriverService driverService = ctx.getBean(DriverServiceImpl.class);
 
@@ -163,40 +164,56 @@ public class Main {
         order1.setDriverMemo("2 - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
         facade.create(order1);*/
 
-        Order order = new Order();
+       /* Order order = new Order();
         order.setName(" order");
-        order.setClientId(BigInteger.valueOf(154));
-        order.setDriverId(BigInteger.valueOf(149));
+        order.setClientId(BigInteger.valueOf(4));
+        order.setDriverId(BigInteger.valueOf(1));
         order.setCost(BigDecimal.valueOf(105.90));
         order.setDistance(BigInteger.valueOf(4783));
-        order.setStatus(OrderStatusList.PERFORMED);
+        order.setStatus(OrderStatusList.NEW);
         order.setDriverMemo("NEW - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
-        facade.create(order);
-
-        /*Order order = new Order();
-        order.setClientId(BigInteger.valueOf(4));
-        order.setDriverId(BigInteger.valueOf(1));
-        order.setCost(BigDecimal.valueOf(67));
-        order.setDistance(BigInteger.valueOf(27));
-        order.setStatus(BigInteger.valueOf(6));
-        facade.create(order);
+        facade.create(order);*/
 
         Order order1 = new Order();
-        order.setClientId(BigInteger.valueOf(4));
-        order.setDriverId(BigInteger.valueOf(1));
-        order.setCost(BigDecimal.valueOf(123));
-        order.setDistance(BigInteger.valueOf(77));
-        order.setStatus(BigInteger.valueOf(6));
+        order1.setName("yoba1");
+        order1.setClientId(BigInteger.valueOf(4));
+        order1.setDriverId(BigInteger.valueOf(1));
+        order1.setCost(BigDecimal.valueOf(123));
+        order1.setDistance(BigInteger.valueOf(77));
+        order1.setStatus(BigInteger.valueOf(6));
         facade.create(order1);
 
         Order order2 = new Order();
-        order.setClientId(BigInteger.valueOf(4));
-        order.setDriverId(BigInteger.valueOf(1));
-        order.setCost(BigDecimal.valueOf(30));
-        order.setDistance(BigInteger.valueOf(12));
-        order.setStatus(BigInteger.valueOf(6));
-        facade.create(order2);*
+        order2.setName("yoba2");
+        order2.setClientId(BigInteger.valueOf(4));
+        order2.setDriverId(BigInteger.valueOf(1));
+        order2.setCost(BigDecimal.valueOf(30));
+        order2.setDistance(BigInteger.valueOf(12));
+        order2.setStatus(BigInteger.valueOf(6));
+        facade.create(order2);
 
+        Route route = new Route();
+        route.setName("lala");
+        route.setOrderId(BigInteger.valueOf(89));
+        route.setCheckPoint("dddw");
+        Route route1 = new Route();
+        route1.setName("lalass");
+        route1.setOrderId(BigInteger.valueOf(89));
+        route1.setCheckPoint("dddwfsfs");
+
+        Route route2 = new Route();
+        route2.setName("lala");
+        route2.setOrderId(BigInteger.valueOf(90));
+        route2.setCheckPoint("dddw");
+        Route route3 = new Route();
+        route3.setName("lalasdgsss");
+        route3.setOrderId(BigInteger.valueOf(90));
+        route3.setCheckPoint("dddwfsfsfsfss");
+
+        facade.create(route);
+        facade.create(route1);
+        facade.create(route2);
+        facade.create(route3);
 
        /* Order order1 = new Order();
         order.setName("Order_31");
