@@ -10,15 +10,15 @@ import java.util.Date;
 @ObjectType(objectTypeId = OrderStatusAttr.OBJECT_TYPE_ID)
 public class OrderStatus extends Model{
 
-    public static final BigInteger NEW = BigInteger.valueOf(11);
+    public static final BigInteger NEW = BigInteger.valueOf(6);
 
-    public static final BigInteger ACCEPTED = BigInteger.valueOf(12);
+    public static final BigInteger ACCEPTED = BigInteger.valueOf(7);
 
-    public static final BigInteger PERFORMED = BigInteger.valueOf(13);
+    public static final BigInteger PERFORMED = BigInteger.valueOf(8);
 
-    public static final BigInteger PERFORMING = BigInteger.valueOf(14);
+    public static final BigInteger PERFORMING = BigInteger.valueOf(9);
 
-    public static final BigInteger CANCELED = BigInteger.valueOf(15);
+    public static final BigInteger CANCELED = BigInteger.valueOf(10);
     @Reference(attrId = OrderStatusAttr.ORDER_ID_ATTR)
     private BigInteger orderId;
 

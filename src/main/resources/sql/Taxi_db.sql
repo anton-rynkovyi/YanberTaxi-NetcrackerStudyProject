@@ -66,23 +66,25 @@ INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,3,'free');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,4,'on call');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,5,'performing order');
 
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,1,'approval');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,2,'off dut');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,3,'free');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,4,'on call');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,5,'perform order');
+
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,6,'new');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,7,'accepted');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,8,'performed');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,9,'performing');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,10,'canceled');
 
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,11,'new');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,12,'accepted');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,13,'performed');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,14,'performing');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,15,'canceled');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,6,'new');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,7,'accepted');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,8,'performed');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,9,'performing');
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (31,10,'canceled');
 
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,16,'approval');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,17,'off dut');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,18,'free');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,19,'on call');
-INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,20,'perform order');
+
 
 drop sequence ob_id;
 create sequence ob_id;
