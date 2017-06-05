@@ -3,6 +3,7 @@ package com.netcracker.project.study.vaadin.admin.components.popup;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequestsGrid;
 import com.vaadin.icons.VaadinIcons;
@@ -20,6 +21,8 @@ import java.sql.Date;
 public class DriverUpdatePopUp extends VerticalLayout {
 
     @Autowired AdminService adminService;
+
+    @Autowired DriverService driverService;
 
     @Autowired DriversGrid driversGrid;
 
@@ -86,7 +89,7 @@ public class DriverUpdatePopUp extends VerticalLayout {
         experience.setIcon(FontAwesome.LONG_ARROW_UP);
         driverForm.addComponent(status);
 
-        carList = adminService.getCarByDriver(driver);
+        carList = driverService.getCarByDriver(driver);
         FormLayout carForm = new FormLayout();
         carForm.setDefaultComponentAlignment(Alignment.TOP_CENTER);
         carForm.setWidth(450, Unit.PIXELS);

@@ -4,6 +4,7 @@ import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.shared.ui.ContentMode;
@@ -25,13 +26,15 @@ public class DriverBanInfoPopUp extends VerticalLayout{
 
     @Autowired AdminService adminService;
 
+    @Autowired DriverService driverService;
+
     private Window banDaysWindow;
 
     private List<Car> driverCarList;
 
     public void init(Driver driver) {
         this.driver = driver;
-        this.driverCarList = adminService.getCarByDriver(driver);
+        this.driverCarList = driverService.getCarByDriver(driver);
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
         rootLayout.setWidthUndefined();
@@ -65,7 +68,7 @@ public class DriverBanInfoPopUp extends VerticalLayout{
 
 
         VerticalLayout carForm = new VerticalLayout();
-        List<Car> carList = adminService.getCarByDriver(driver);
+        List<Car> carList = driverService.getCarByDriver(driver);
         for (int i = 0; i < carList.size(); i++) {
             Car car = carList.get(i);
             System.out.println("CAR:" + car.getDriverId());

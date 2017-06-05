@@ -124,4 +124,30 @@ public class OrderServiceImpl implements OrderService{
         List<Order> orders = persistenceFacade.getAll(BigInteger.valueOf(OrderAttr.OBJECT_TYPE_ID), Order.class);
         return orders;
     }
+
+    @Override
+    public List<Order> getOrdersByDriverId(BigInteger driverId) {
+        String query = "" +
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
+                "WHERE obj.object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
+                "AND ref.attr_id = " + OrderAttr.DRIVER_ID_ATTR +
+                "AND ref.reference = " + driverId;
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        return orderList;
+    }
+
+    @Override
+    public List<Order> getOrdersByClientId(BigInteger clientId) {
+        String query = "" +
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
+                "WHERE obj.object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
+                "AND ref.attr_id = " + OrderAttr.CLIENT_ID_ATTR +
+                "AND ref.reference = " + clientId;
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        return orderList;
+    }
 }

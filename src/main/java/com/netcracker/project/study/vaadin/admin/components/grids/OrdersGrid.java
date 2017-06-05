@@ -46,6 +46,7 @@ public class OrdersGrid extends CustomComponent {
 
     private VerticalLayout getFilledComponentLayout() {
         VerticalLayout componentLayout = new VerticalLayout();
+        componentLayout.setSizeFull();
         componentLayout.setMargin(false);
         componentLayout.setSpacing(false);
 
@@ -61,8 +62,10 @@ public class OrdersGrid extends CustomComponent {
         ordersGrid.setItems(ordersList);
 
         ordersGrid.addColumn(Order::getObjectId).setCaption("№");
-        ordersGrid.addColumn(Order::getDriverId).setCaption("Driver");
-        ordersGrid.addColumn(Order::getClientId).setCaption("Client");
+        ordersGrid.addColumn(Order -> Order.getDriverOnOrder() != null ? Order.getDriverOnOrder().getFirstName() + " " +
+                Order.getDriverOnOrder().getLastName() : "").setCaption("Driver");
+        ordersGrid.addColumn(Order -> Order.getClientOnOrder() != null ? Order.getClientOnOrder().getFirstName() + " " +
+                Order.getClientOnOrder().getLastName() : "").setCaption("Client");
         ordersGrid.addColumn(Order::getStatus).setCaption("Status");
         ordersGrid.addColumn(Order::getCost).setCaption("Cost");
         ordersGrid.addColumn(Order::getDistance).setCaption("Distance");

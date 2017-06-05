@@ -4,6 +4,7 @@ package com.netcracker.project.study.vaadin.admin.views;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequestsGrid;
+import com.netcracker.project.study.vaadin.admin.components.logo.BottomTeamLogoLink;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -24,6 +25,8 @@ public class DriversView extends VerticalLayout implements View {
 
     @Autowired DriversBanGrid driversBanGrid;
 
+    @Autowired BottomTeamLogoLink bottomTeamLogoLink;
+
     TabSheet tabSheet;
 
     @PostConstruct
@@ -34,27 +37,7 @@ public class DriversView extends VerticalLayout implements View {
         tabSheet.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
         setTabs();
         addComponent(tabSheet);
-    }
-
-
-    private VerticalLayout getAllDriversTab() {
-        VerticalLayout controlLayout = new VerticalLayout();
-        controlLayout.setMargin(true);
-        controlLayout.setSpacing(false);
-        controlLayout.addComponent(driversGrid);
-        return controlLayout;
-    }
-
-    private VerticalLayout getDriversRequestsTab() {
-        VerticalLayout controlLayout = new VerticalLayout();
-        controlLayout.addComponent(driversRequestsGrid);
-        return controlLayout;
-    }
-
-    private VerticalLayout getDriversBanTab() {
-        VerticalLayout controlLayout = new VerticalLayout();
-        controlLayout.addComponent(driversBanGrid);
-        return controlLayout;
+        addComponent(bottomTeamLogoLink);
     }
 
     public void setTabs() {
@@ -63,6 +46,32 @@ public class DriversView extends VerticalLayout implements View {
                 "Drivers Requests(" + driversRequestsGrid.getDriversRequestsList().size() + ")");
         tabSheet.addTab(getDriversBanTab(), "Ban list");
     }
+
+    private VerticalLayout getAllDriversTab() {
+        VerticalLayout controlLayout = new VerticalLayout();
+        controlLayout.setSizeFull();
+        controlLayout.addComponent(driversGrid);
+        return controlLayout;
+    }
+
+    private VerticalLayout getDriversRequestsTab() {
+        VerticalLayout controlLayout = new VerticalLayout();
+        controlLayout.setSizeFull();
+        controlLayout.addComponent(new Label());
+        controlLayout.addComponent(driversRequestsGrid);
+        controlLayout.addComponent(new Label());
+        return controlLayout;
+    }
+
+    private VerticalLayout getDriversBanTab() {
+        VerticalLayout controlLayout = new VerticalLayout();
+        controlLayout.setSizeFull();
+        controlLayout.addComponent(new Label());
+        controlLayout.addComponent(driversBanGrid);
+        controlLayout.addComponent(new Label());
+        return controlLayout;
+    }
+
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {

@@ -26,4 +26,8 @@ public interface OrderService {
     List<Route> getRoutes(BigInteger orderId);
 
     List<Order> allModelsAsList();
+
+    List<Order> getOrdersByDriverId(BigInteger driverId);
+
+    List<Order> getOrdersByClientId(BigInteger clientId);
 }

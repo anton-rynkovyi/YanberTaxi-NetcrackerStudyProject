@@ -11,15 +11,12 @@ import com.netcracker.project.study.vaadin.admin.components.popup.DriverInfoPopU
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverCreatePopUp;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverUpdatePopUp;
 import com.vaadin.data.HasValue;
-import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
-import com.vaadin.ui.renderers.ButtonRenderer;
-import com.vaadin.ui.renderers.ClickableRenderer;
-import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,41 +55,29 @@ public class DriversGrid extends CustomComponent{
 
     private TextField fieldFilter;
 
-    //private ListDataProvider<Driver> dataProvider;
-
     @PostConstruct
     public void init() {
-        //initStatusChooser();
         initFilters();
         driversGrid = generateDriversGrid();
-        //initDataProvider();
         componentLayout = getFilledComponentLayout();
         initCreateDriverWindow();
         initDriverInfoWindow();
         initUpdateInfoWindow();
-        setGridSettings(driversGrid);
         setCompositionRoot(componentLayout);
-    }
-
-    private void initDataProvider() {
-        //dataProvider = (ListDataProvider<Driver>) driversGrid.getDataProvider();
     }
 
     private void initFilters(){
         filtersLayout = new HorizontalLayout();
-        //filtersLayout.setWidth(100,  Unit.PERCENTAGE);
         filtersLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
         initStatusChooser();
         filtersLayout.addComponent(statusSelect);
-
-
         initTextFieldFilter();
         filtersLayout.addComponent(fieldFilter);
-
     }
 
     private VerticalLayout getFilledComponentLayout() {
         VerticalLayout componentLayout = new VerticalLayout();
+        componentLayout.setSizeFull();
 
         componentLayout.setMargin(false);
         componentLayout.setSpacing(false);
@@ -144,30 +129,33 @@ public class DriversGrid extends CustomComponent{
             public void valueChange(HasValue.ValueChangeEvent valueChangeEvent) {
                 switch (valueChangeEvent.getValue().toString()) {
                     case "All":
-                        driversGrid.setItems(adminService.getActiveDrivers());
+                        driversGrid.setItems(driverService.getActiveDrivers());
                         break;
                     case "Off duty":
-                        driversGrid.setItems(adminService.getDriversByStatusId(DriverStatusList.OFF_DUTY));
+                        driversGrid.setItems(driverService.getDriversByStatusId(DriverStatusList.OFF_DUTY));
                         break;
                     case "Free":
-                        driversGrid.setItems(adminService.getDriversByStatusId(DriverStatusList.FREE));
+                        driversGrid.setItems(driverService.getDriversByStatusId(DriverStatusList.FREE));
                         break;
                     case "On call":
-                        driversGrid.setItems(adminService.getDriversByStatusId(DriverStatusList.ON_CALL));
+                        driversGrid.setItems(driverService.getDriversByStatusId(DriverStatusList.ON_CALL));
                         break;
                     case "Performing order":
-                        driversGrid.setItems(adminService.getDriversByStatusId(DriverStatusList.PERFORMING_ORDER));
+                        driversGrid.setItems(driverService.getDriversByStatusId(DriverStatusList.PERFORMING_ORDER));
                         break;
                 }
             }
         });
     }
 
-
     private Grid<Driver> generateDriversGrid() {
         driversGrid = new Grid<>();
+        driversGrid.setSizeFull();
+        driversGrid.setHeightByRows(8.8);
+
+
         driversGrid.setStyleName(ValoTheme.TABLE_SMALL);
-        driversGrid.setItems(adminService.getActiveDrivers());
+        driversGrid.setItems(driverService.getActiveDrivers());
         driversGrid.addColumn(Driver::getObjectId).setCaption("№");
         driversGrid.addColumn(Driver::getLastName).setCaption("Last name");
         driversGrid.addColumn(Driver::getFirstName).setCaption("First name");
@@ -178,13 +166,9 @@ public class DriversGrid extends CustomComponent{
         driversGrid.addColumn(Driver::getRating).setCaption("Rating");
         driversGrid.addColumn(Driver::getHireDate).setCaption("Hire date");
         driversGrid.addColumn(Driver::getExperience).setCaption("Exp");
-
         return driversGrid;
     }
 
-    private void setGridSettings(Grid<Driver> driversGrid) {
-        driversGrid.setSizeFull();
-    }
 
     private void initCreateDriverWindow() {
         createDriverWindow = new Window("Add new driver");
@@ -241,10 +225,6 @@ public class DriversGrid extends CustomComponent{
                     .withMessage("Are you want to delete " + firstName + " " + lastName + "?")
                     .withYesButton(() -> {
                         adminService.deleteModel(driver);
-/*
-                        driversList.remove(driver);
-                        driversGrid.setItems(driversList);
-*/
                     refreshGrid();
                     })
                     .withNoButton(() -> {})
@@ -281,15 +261,15 @@ public class DriversGrid extends CustomComponent{
 
     public void refreshGrid(){
         if (statusSelect.getValue().toString().equals("All")) {
-            driversGrid.setItems(adminService.getActiveDrivers());
+            driversGrid.setItems(driverService.getActiveDrivers());
         }else if (statusSelect.getValue().toString().equals("Off duty")) {
-            driversGrid.setItems(adminService.getDriversByStatusId(DriverStatusList.OFF_DUTY));
+            driversGrid.setItems(driverService.getDriversByStatusId(DriverStatusList.OFF_DUTY));
         }else if (statusSelect.getValue().toString().equals("Free")) {
-            driversGrid.setItems(adminService.getDriversByStatusId(DriverStatusList.FREE));
+            driversGrid.setItems(driverService.getDriversByStatusId(DriverStatusList.FREE));
         }else if (statusSelect.getValue().toString().equals("On call")) {
-            driversGrid.setItems(adminService.getDriversByStatusId(DriverStatusList.ON_CALL));
+            driversGrid.setItems(driverService.getDriversByStatusId(DriverStatusList.ON_CALL));
         }else if (statusSelect.getValue().toString().equals("Performing order")) {
-            driversGrid.setItems(adminService.getDriversByStatusId(DriverStatusList.PERFORMING_ORDER));
+            driversGrid.setItems(driverService.getDriversByStatusId(DriverStatusList.PERFORMING_ORDER));
         }
         //driversGrid.setItems(driversList);
     }

@@ -26,23 +26,11 @@ public interface AdminService {
 
     void updateModel(Model model);
 
-    List<Driver> getActiveDrivers();
-
-    List<Car> getCarByDriver(Driver driver);
-
-    List<Driver> getBannedDrivers();
-
     void unbanDriver(Driver driver);
 
     //void setBanTimer(Driver driver);
 
     void setBanTask();
-
-    List<Driver> getDriversByStatusId(BigInteger statusId);
-
-    List<Order> getOrdersByDriverId(BigInteger driverId);
-
-    List<Order> getOrdersByClientId(BigInteger clientId);
 
     <T extends Model> T getModelById(BigInteger modelId, Class modelClass);
 }

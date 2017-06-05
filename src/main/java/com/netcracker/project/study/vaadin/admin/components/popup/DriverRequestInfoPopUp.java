@@ -5,6 +5,8 @@ import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.DriverService;
+import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequestsGrid;
 import com.netcracker.project.study.services.tools.EmailMassageSender;
@@ -17,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @SpringComponent
 public class DriverRequestInfoPopUp extends VerticalLayout{
 
-    Driver driver;
+    private Driver driver;
 
     @Autowired
     DriversRequestsGrid driversRequestsGrid;
@@ -27,6 +29,9 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    DriverService driverService;
 
     RichTextArea richTextArea;
 
@@ -38,7 +43,7 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
 
     public void init(Driver driver) {
         this.driver = driver;
-        this.driverCarList = adminService.getCarByDriver(driver);
+        this.driverCarList = driverService.getCarByDriver(driver);
         System.out.println(driverCarList);
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
@@ -79,7 +84,7 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
 
         VerticalLayout carForm = new VerticalLayout();
         carForm.setWidth(100, Unit.PERCENTAGE);
-        List<Car> carList = adminService.getCarByDriver(driver);
+        List<Car> carList = driverService.getCarByDriver(driver);
         for (int i = 0; i < carList.size(); i++) {
             Car car = carList.get(i);
             System.out.println("CAR:" + car.getDriverId());
@@ -125,7 +130,7 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
                 return;
             }
             emailMassageSender.sendMassage(driver.getEmail(), richTextArea.getValue());
-            List<Car> carList = adminService.getCarByDriver(driver);
+            List<Car> carList = driverService.getCarByDriver(driver);
 
             for (int i = 0; i < carList.size(); i++) {
                 adminService.deleteModel(carList.get(i));

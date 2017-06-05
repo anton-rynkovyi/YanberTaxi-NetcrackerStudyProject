@@ -88,6 +88,11 @@
 			<artifactId>vaadin-icons</artifactId>
 			<version>2.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.appreciated</groupId>
+			<artifactId>material</artifactId>
+			<version>0.6.2</version>
+		</dependency>
 		<!--VAADIN SETTINGS-->
 		<dependency>
 			<groupId>com.vaadin</groupId>

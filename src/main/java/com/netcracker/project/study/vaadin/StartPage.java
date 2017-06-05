@@ -1,17 +1,11 @@
 package com.netcracker.project.study.vaadin;
 
-
-import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.services.AdminService;
-import com.netcracker.project.study.vaadin.admin.components.menu.HeaderMenuOld;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Theme("valo")
@@ -24,7 +18,6 @@ public class StartPage extends UI {
         VerticalLayout layoutContent = genLayoutContent();
         setContent(layoutContent);
 
-        //layoutContent.addComponent(headerMenu);
         Window window = new Window("  Enter menu", getStartWindow());
         window.center();
         window.setIcon(FontAwesome.HOME);

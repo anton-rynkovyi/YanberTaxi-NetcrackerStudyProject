@@ -5,6 +5,7 @@ import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverRequestInfoPopUp;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
@@ -28,6 +29,9 @@ public class DriversRequestsGrid  extends CustomComponent{
     private Window window;
 
     @Autowired AdminService adminService;
+
+    @Autowired
+    DriverService driverService;
 
     @Autowired DriverRequestInfoPopUp driverInfoPopUp;
 
@@ -106,7 +110,7 @@ public class DriversRequestsGrid  extends CustomComponent{
     }
 
     public void refreshGrid() {
-        driversRequestsList = adminService.getDriversByStatusId(DriverStatusList.APPROVAL);
+        driversRequestsList = driverService.getDriversByStatusId(DriverStatusList.APPROVAL);
         driversRequestsGrid.setItems(driversRequestsList);
     }
 

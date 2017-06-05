@@ -2,6 +2,7 @@ package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverBanInfoPopUp;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverInfoPopUP;
 import com.vaadin.server.FontAwesome;
@@ -25,6 +26,9 @@ public class DriversBanGrid extends CustomComponent{
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    DriverService driverService;
 
     @Autowired
     DriverBanInfoPopUp driverBanInfoPopUp;
@@ -91,7 +95,7 @@ public class DriversBanGrid extends CustomComponent{
     }
 
     public void refreshGrid(){
-        driverBanList = adminService.getBannedDrivers();
+        driverBanList = driverService.getBannedDrivers();
         driverBanGrid.setItems(driverBanList);
     }
 

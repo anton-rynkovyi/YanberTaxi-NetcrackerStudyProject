@@ -6,6 +6,8 @@ import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.DriverService;
+import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -23,6 +25,10 @@ public class DriverInfoPopUP extends VerticalLayout {
 
     @Autowired AdminService adminService;
 
+    @Autowired DriverService driverService;
+
+    @Autowired OrderService orderService;
+
     @Autowired BanDaysPopUp banDaysPopUp;
 
     private Window banDaysWindow;
@@ -31,7 +37,7 @@ public class DriverInfoPopUP extends VerticalLayout {
 
     public void init(Driver driver) {
         this.driver = driver;
-        this.driverCarList = adminService.getCarByDriver(driver);
+        this.driverCarList = driverService.getCarByDriver(driver);
         initBanDaysWindow();
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
@@ -73,7 +79,7 @@ public class DriverInfoPopUP extends VerticalLayout {
 
 
         VerticalLayout carForm = new VerticalLayout();
-        List<Car> carList = adminService.getCarByDriver(driver);
+        List<Car> carList = driverService.getCarByDriver(driver);
         for (int i = 0; i < carList.size(); i++) {
             Car car = carList.get(i);
             System.out.println("CAR:" + car.getDriverId());
@@ -124,7 +130,7 @@ public class DriverInfoPopUP extends VerticalLayout {
         verticalLayout.setSizeFull();
         verticalLayout.setMargin(false);
         verticalLayout.setSpacing(false);
-        List<Order> orderList = adminService.getOrdersByDriverId(driver.getObjectId());
+        List<Order> orderList = orderService.getOrdersByDriverId(driver.getObjectId());
         for (int i = 0; i < orderList.size(); i++) {
             if (orderList.get(i).getDriverMemo() != null) {
                 if (orderList.get(i).getClientId() != null) {

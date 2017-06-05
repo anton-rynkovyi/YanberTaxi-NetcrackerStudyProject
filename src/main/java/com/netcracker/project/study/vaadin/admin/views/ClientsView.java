@@ -1,12 +1,15 @@
 package com.netcracker.project.study.vaadin.admin.views;
 
 import com.netcracker.project.study.vaadin.admin.components.grids.ClientsGrid;
+import com.netcracker.project.study.vaadin.admin.components.logo.BottomTeamLogoLink;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -19,10 +22,18 @@ public class ClientsView extends VerticalLayout implements View {
     @Autowired
     private ClientsGrid clientsGrid;
 
+
+    @Autowired
+    BottomTeamLogoLink bottomTeamLogoLink;
+
     @PostConstruct
     void init() {
         TabSheet tabSheet = getTabSheet();
+        tabSheet.setSizeFull();
+        tabSheet.addStyleName(ValoTheme.TABSHEET_FRAMED);
+        tabSheet.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
         addComponent(tabSheet);
+        addComponent(bottomTeamLogoLink);
     }
 
     private TabSheet getTabSheet() {
@@ -35,8 +46,8 @@ public class ClientsView extends VerticalLayout implements View {
 
     private VerticalLayout getControlTab() {
         VerticalLayout controlLayout = new VerticalLayout();
+        controlLayout.addComponent(new Label());
         controlLayout.addComponent(clientsGrid);
-
         return controlLayout;
     }
 

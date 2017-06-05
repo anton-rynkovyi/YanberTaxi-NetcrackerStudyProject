@@ -1,5 +1,6 @@
 package com.netcracker.project.study.vaadin.admin.page;
 
+import com.netcracker.project.study.vaadin.admin.components.logo.BottomTeamLogoLink;
 import com.netcracker.project.study.vaadin.admin.components.menu.HeaderMenu;
 import com.netcracker.project.study.vaadin.admin.views.ClientsView;
 import com.netcracker.project.study.vaadin.admin.views.DriversView;
@@ -22,27 +23,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AdminPage extends UI {
 
     @Autowired
-    private HeaderMenu headerMenu;
+    HeaderMenu headerMenu;
 
     @Autowired
-    private SpringViewProvider provider;
+    SpringViewProvider provider;
 
     private Panel viewDisplay;
 
-    public static Navigator navigator;
+    private static Navigator navigator;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         VerticalLayout rootLayout = getVerticalLayout();
-        rootLayout.setMargin(false);
-        rootLayout.setSpacing(false);
+        rootLayout.setHeight(100, Unit.PERCENTAGE);
         setContent(rootLayout);
 
         rootLayout.addComponent(headerMenu);
 
         viewDisplay = getViewDisplay();
         rootLayout.addComponent(viewDisplay);
-        rootLayout.setExpandRatio(viewDisplay, 1.0f);
+        rootLayout.setExpandRatio(viewDisplay, 0.8f);
+
+        //rootLayout.addComponent(bottomTeamLogoLink);
 
 
         navigator = new Navigator(this, viewDisplay);
@@ -53,6 +55,8 @@ public class AdminPage extends UI {
 
     private VerticalLayout getVerticalLayout() {
         VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.setMargin(false);
+        verticalLayout.setSpacing(false);
         verticalLayout.setSizeFull();
         return verticalLayout;
     }

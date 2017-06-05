@@ -6,6 +6,9 @@ import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.ClientService;
+import com.netcracker.project.study.services.DriverService;
+import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.admin.components.grids.ClientsGrid;
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.server.FontAwesome;
@@ -25,6 +28,12 @@ public class ClientInfoPopUp extends VerticalLayout {
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    DriverService driverService;
+
+    @Autowired
+    OrderService orderService;
 
     @Autowired
     ClientsGrid clientsGrid;
@@ -88,7 +97,7 @@ public class ClientInfoPopUp extends VerticalLayout {
         verticalLayout.setMargin(false);
         verticalLayout.setSpacing(false);
         TextArea textArea;
-        List<Order> orderList = adminService.getOrdersByClientId(client.getObjectId());
+        List<Order> orderList = orderService.getOrdersByClientId(client.getObjectId());
         for (int i = 0; i < orderList.size(); i++) {
             if (orderList.get(i).getDriverMemo() != null) {
                 textArea = new TextArea();

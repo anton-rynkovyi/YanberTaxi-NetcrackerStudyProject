@@ -40,12 +40,12 @@ public class ClientsGrid extends CustomComponent {
         VerticalLayout componentLayout = getFilledComponentLayout();
         initCreateWindow();
         initViewClientWindow();
-        setGridSettings(clientsGrid);
         setCompositionRoot(componentLayout);
     }
 
     private VerticalLayout getFilledComponentLayout() {
         VerticalLayout componentLayout = new VerticalLayout();
+        componentLayout.setSizeFull();
         componentLayout.setMargin(false);
         componentLayout.setSpacing(false);
 
@@ -58,8 +58,9 @@ public class ClientsGrid extends CustomComponent {
     }
 
     private Grid<Client> generateClientsGrid() {
-
         Grid<Client> clientsGrid = new Grid<>();
+        clientsGrid.setSizeFull();
+
         clientsList = adminService.allModelsAsList(Client.class);
         clientsGrid.setItems(clientsList);
 
@@ -73,9 +74,6 @@ public class ClientsGrid extends CustomComponent {
         return clientsGrid;
     }
 
-    private void setGridSettings(Grid<Client> clientsGrid) {
-        clientsGrid.setSizeFull();
-    }
 
     public Grid<Client> getClientsGrid() {
         return clientsGrid;
