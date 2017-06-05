@@ -28,8 +28,8 @@ public enum  OrderStatusEnum {
     }
 
     public static String getStatusValue(BigInteger statusId){
-        for (OrderStatusEnum driverStatusEnum : values()){
-            if (driverStatusEnum.statusId == statusId) return driverStatusEnum.statusValue;
+        for (OrderStatusEnum orderStatusEnum : values()){
+            if (orderStatusEnum.statusId == statusId) return orderStatusEnum.statusValue;
         }
         return null;
     }

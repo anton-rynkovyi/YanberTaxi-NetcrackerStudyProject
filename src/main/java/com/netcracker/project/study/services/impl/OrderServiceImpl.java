@@ -1,14 +1,18 @@
 package com.netcracker.project.study.services.impl;
 
 
+import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderAttr;
+import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.model.order.route.RouteAttr;
+import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.OrderConstants;
 import com.netcracker.project.study.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,8 +20,10 @@ import java.math.BigInteger;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,26 +39,18 @@ public class OrderServiceImpl implements OrderService{
         //persistenceFacade.update(order);
     }
 
+
     @Override
+    @Transactional
     public void changeStatus(BigInteger status, Order order) {
         order.setStatus(status);
         persistenceFacade.update(order);
+        orderStatusLog(order);
     }
 
     @Override
     public String getStatusValue(BigInteger statusId) {
-        if(statusId.equals(Order.NEW)){
-            return "New";
-        }else if(statusId.equals(Order.ACCEPTED)){
-            return "Accepted";
-        }else if(statusId.equals(Order.PERFORMED)){
-            return "Performed";
-        }else if(statusId.equals(Order.PERFORMING)){
-            return "Performing";
-        }else if(statusId.equals(Order.CANCELED)){
-            return "Canceled";
-        }
-        return OrderConstants.NULL_STATUS;
+        return OrderStatusEnum.getStatusValue(statusId);
     }
 
     @Override
@@ -149,5 +147,14 @@ public class OrderServiceImpl implements OrderService{
                 "AND ref.reference = " + clientId;
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
+    }
+
+    @Override
+    public void orderStatusLog(Order order) {
+        OrderStatus orderStatus = new OrderStatus();
+        orderStatus.setOrderId(order.getObjectId());
+        orderStatus.setStatus(order.getStatus());
+        orderStatus.setTimeStamp(new Date(System.currentTimeMillis()));
+        persistenceFacade.create(orderStatus);
     }
 }

@@ -44,7 +44,7 @@ public class ConverterFactory implements Converter {
         if (field.isAnnotationPresent(AttrValue.class)) {
             attributes.put(attrId, fieldValue != null ? fieldValue.toString() : EMPTY_STRING);
         } else if (field.isAnnotationPresent(AttrDate.class)) {
-            attributes.put(attrId, fieldValue != null ? ((Date) fieldValue) : EMPTY_LONG);
+            attributes.put(attrId, fieldValue != null ? (fieldValue) : EMPTY_LONG);
         } else if (field.isAnnotationPresent(AttrList.class)) {
             attributes.put(attrId, fieldValue != null ? fieldValue : EMPTY_BIG_INTEGER);
         }

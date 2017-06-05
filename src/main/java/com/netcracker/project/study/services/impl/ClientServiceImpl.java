@@ -6,6 +6,7 @@ import com.netcracker.project.study.model.client.ClientAttr;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.route.Route;
+import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.ClientService;
@@ -42,7 +43,7 @@ public class ClientServiceImpl implements ClientService {
 
         orderService.calcPrice(distance, order);
 
-        order.setStatus(Order.NEW);
+        order.setStatus(OrderStatus.NEW);
         order.setDistance(BigInteger.valueOf(distance.longValue()));
         order.setName(addresses[0] + " - " + addresses[4]);
 
@@ -65,7 +66,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void cancelOrder(Order order) {
-        orderService.changeStatus(Order.CANCELED,order);
+        orderService.changeStatus(OrderStatus.CANCELED,order);
 
         //if not succeed transfer Order parameter and parameter will be Client
         /*String sqlQuery = "SELECT obj.object_id "+
@@ -86,6 +87,7 @@ public class ClientServiceImpl implements ClientService {
         }*/
     }
 
+    @Transactional
     @Override
     public void sendDriverRating(Order order, BigInteger driverRating) {
         order.setDriverRating(driverRating);
