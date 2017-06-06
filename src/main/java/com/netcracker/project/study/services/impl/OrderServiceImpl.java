@@ -129,11 +129,10 @@ public class OrderServiceImpl implements OrderService{
     public List<Order> getOrdersByDriverId(BigInteger driverId) {
         String query = "" +
                 "SELECT obj.object_id " +
-                "FROM Objects obj " +
-                "INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
-                "WHERE obj.object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
-                "AND ref.attr_id = " + OrderAttr.DRIVER_ID_ATTR +
-                "AND ref.reference = " + driverId;
+                "FROM objreference " +
+                "WHERE object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
+                "AND attr_id = " + OrderAttr.DRIVER_ID_ATTR +
+                "AND reference = " + driverId;
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }
@@ -142,11 +141,10 @@ public class OrderServiceImpl implements OrderService{
     public List<Order> getOrdersByClientId(BigInteger clientId) {
         String query = "" +
                 "SELECT obj.object_id " +
-                "FROM Objects obj " +
-                "INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
-                "WHERE obj.object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
-                "AND ref.attr_id = " + OrderAttr.CLIENT_ID_ATTR +
-                "AND ref.reference = " + clientId;
+                "FROM objreference " +
+                "WHERE object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
+                "AND attr_id = " + OrderAttr.CLIENT_ID_ATTR +
+                "AND reference = " + clientId;
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }
