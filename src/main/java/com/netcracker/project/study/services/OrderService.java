@@ -32,4 +32,6 @@ public interface OrderService {
     List<Order> getOrdersByClientId(BigInteger clientId);
 
     void orderStatusLog(Order order);
+
+    List<Order> getActiveOrdersByClientId(BigInteger clientId);
 }

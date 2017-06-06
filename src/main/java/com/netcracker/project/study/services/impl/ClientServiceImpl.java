@@ -120,4 +120,5 @@ public class ClientServiceImpl implements ClientService {
         driver.setRating(new BigDecimal(rating.divide(quantity)));
         persistenceFacade.update(driver);
     }
+
 }

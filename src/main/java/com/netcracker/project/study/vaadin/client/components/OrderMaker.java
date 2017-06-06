@@ -1,6 +1,8 @@
 package com.netcracker.project.study.vaadin.client.components;
 
 import com.netcracker.project.study.services.ClientService;
+import com.netcracker.project.study.services.OrderService;
+import com.vaadin.data.HasValue;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -17,6 +19,9 @@ public class OrderMaker extends CustomComponent {
 
     @Autowired
     ClientService clientService;
+
+    @Autowired
+    OrderService orderService;
 
     private TextField[] fields = new TextField[5];
 
@@ -172,18 +177,23 @@ public class OrderMaker extends CustomComponent {
                 if (fields[i] != null) textFieldsStrings[i] = fields[i].getValue();
             }
             if (!(distance.getValue().isEmpty()) && !(isFieldsEmpty(textFieldsStrings))) {
-                notifications.setVisible(false);
-                try {
-                    String distanceS = distance.getValue();
-                    if (distanceS.contains(",")) distanceS = distanceS.replace(',', '.');
-
-                    BigDecimal dist = BigDecimal.valueOf(Double.parseDouble(distanceS));
-                    cost.setValue(String.valueOf(dist.multiply(BigDecimal.valueOf(5))));
-                    clientService.makeOrder(BigInteger.valueOf(154), dist, textFieldsStrings);
-
-                } catch (NumberFormatException ex) {
+                if (orderService.getActiveOrdersByClientId(new BigInteger("88")).size()>0) {
+                    notifications.setValue("You have an active order. You can't simultaneously create multiple orders");
                     notifications.setVisible(true);
-                    notifications.setValue("Text field \"Distance\" may contain numbers only");
+                } else {
+                    notifications.setVisible(false);
+                    try {
+                        String distanceS = distance.getValue();
+                        if (distanceS.contains(",")) distanceS = distanceS.replace(',', '.');
+
+                        BigDecimal dist = BigDecimal.valueOf(Double.parseDouble(distanceS));
+                        cost.setValue(String.valueOf(dist.multiply(BigDecimal.valueOf(5))));
+                        clientService.makeOrder(BigInteger.valueOf(154), dist, textFieldsStrings);
+
+                    } catch (NumberFormatException ex) {
+                        notifications.setVisible(true);
+                        notifications.setValue("Text field \"Distance\" may contain numbers only");
+                    }
                 }
             } else {
                 notifications.setValue("Please set all fields");

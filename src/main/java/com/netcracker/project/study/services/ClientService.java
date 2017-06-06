@@ -19,4 +19,5 @@ public interface ClientService {
     void sendDriverRating(Order order, BigInteger driverRating);
 
     <T extends Model> List<T> allModelsAsList();
+
 }
