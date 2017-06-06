@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -128,7 +128,7 @@ public class DriverServiceImpl implements DriverService {
         DriverStatus driverStatus = new DriverStatus();
         driverStatus.setDriverId(driver.getObjectId());
         driverStatus.setStatus(driver.getStatus());
-        driverStatus.setTimeStamp(new Date());
+        driverStatus.setTimeStamp(new Date(System.currentTimeMillis()));
         persistenceFacade.create(driverStatus);
     }
 

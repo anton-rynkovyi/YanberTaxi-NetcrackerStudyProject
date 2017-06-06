@@ -9,6 +9,7 @@ import java.util.Date;
 @ObjectType(objectTypeId = DriverStatusAttr.OBJECT_TYPE_ID)
 public class DriverStatus extends Model implements DriverStatusAttr{
 
+
     @Reference(attrId = DriverStatusAttr.DRIVER_ID_ATTR)
     private BigInteger driverId;
 

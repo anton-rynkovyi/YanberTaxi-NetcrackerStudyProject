@@ -148,7 +148,6 @@ public class PersistenceManager implements Manager {
         return persistenceEntityList;
     }
 
-
     private Map<BigInteger, Object> getAttributes(List<Map<String, Object>> rowss) {
         Map<BigInteger, Object> attributes = new HashMap();
         for (Map row : rowss) {

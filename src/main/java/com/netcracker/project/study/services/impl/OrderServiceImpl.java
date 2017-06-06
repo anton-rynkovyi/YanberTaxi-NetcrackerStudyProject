@@ -23,7 +23,7 @@ import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Service
