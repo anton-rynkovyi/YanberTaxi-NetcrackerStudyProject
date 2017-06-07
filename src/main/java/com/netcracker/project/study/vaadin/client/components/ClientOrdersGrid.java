@@ -8,6 +8,7 @@ import com.vaadin.ui.Grid;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.math.BigInteger;
 import java.util.List;
 
 @SpringComponent
@@ -30,7 +31,7 @@ public class ClientOrdersGrid  extends CustomComponent {
     private Grid<Order> generateClientOrderGrid() {
         Grid<Order> ordersGrid = new Grid<>();
         ordersGrid.setSizeFull();
-        clientOrderList = orderService.allModelsAsList();
+        clientOrderList = orderService.getOrdersByClientId(new BigInteger("88"));
         ordersGrid.setItems(clientOrderList);
 
         ordersGrid.addColumn(Order::getObjectId).setCaption("№");

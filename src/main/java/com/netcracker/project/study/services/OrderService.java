@@ -30,4 +30,8 @@ public interface OrderService {
     List<Order> getOrdersByDriverId(BigInteger driverId);
 
     List<Order> getOrdersByClientId(BigInteger clientId);
+
+    void orderStatusLog(Order order);
+
+    List<Order> getActiveOrdersByClientId(BigInteger clientId);
 }

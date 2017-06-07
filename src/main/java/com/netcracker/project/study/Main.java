@@ -10,12 +10,15 @@ import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
+import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.services.impl.AdminServiceImpl;
 import com.netcracker.project.study.services.impl.DriverServiceImpl;
+import com.netcracker.project.study.services.impl.OrderServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import java.math.BigInteger;
@@ -28,6 +31,13 @@ public class Main {
         PersistenceFacade facade =  ctx.getBean(PersistenceFacade.class);
         AdminService adminService = ctx.getBean(AdminServiceImpl.class);
         DriverService driverService = ctx.getBean(DriverServiceImpl.class);
+        OrderService orderService = ctx.getBean(OrderServiceImpl.class);
+
+        Driver driver = new Driver();
+        facade.create(driver);
+        driverService.changeStatus(DriverStatusList.FREE,driver);
+        driverService.changeStatus(DriverStatusList.PERFORMING_ORDER,driver);
+
 
         /*for (int i = 0; i < 1000; i++) {
             Client client = new Client("NEW CLIENTssssssssssss", "It's client!");
@@ -41,7 +51,7 @@ public class Main {
        /* Driver driver = facade.getOne(BigInteger.valueOf(11), Driver.class);
         System.out.println(driver);*/
 
-       /* final Logger logger = LoggerFactory.getLogger(Main.class);
+       /*final Logger logger = LoggerFactory.getLogger(Main.class);
         logger.warn("MAIN");
         Driver driver = new Driver("ESSS", "It's driver");
         driver.setFirstName("Anton");
@@ -50,7 +60,7 @@ public class Main {
         driver.setStatus(new BigInteger("1"));
         driver.setRating(BigDecimal.valueOf(3));
         facade.create(driver);
-        System.out.println(driver);
+        System.out.println(driver);*/
 
         /*Driver driver = facade.getOne(BigInteger.valueOf(16), Driver.class);
         System.out.println("HD: " + driver.getHireDate());
@@ -174,7 +184,7 @@ public class Main {
         order.setDriverMemo("NEW - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
         facade.create(order);*/
 
-        Order order1 = new Order();
+        /*Order order1 = new Order();
         order1.setName("yoba1");
         order1.setClientId(BigInteger.valueOf(4));
         order1.setDriverId(BigInteger.valueOf(1));

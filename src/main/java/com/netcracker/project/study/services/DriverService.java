@@ -26,4 +26,8 @@ public interface DriverService {
 
     List<Driver> getBannedDrivers();
 
+    void driverStatusLog(Driver driver);
+
+    void changeStatus(BigInteger status, Driver driver);
+
 }

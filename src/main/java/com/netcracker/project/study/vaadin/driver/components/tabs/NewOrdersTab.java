@@ -1,6 +1,7 @@
 package com.netcracker.project.study.vaadin.driver.components.tabs;
 
 import com.netcracker.project.study.model.order.Order;
+import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.driver.components.popup.OrderInfoForNewOrders;
@@ -115,13 +116,13 @@ public class NewOrdersTab extends CustomComponent {
     }
 
     private void refreshGrid() {
-        ordersList = orderService.getOrders(Order.NEW);
+        ordersList = orderService.getOrders(OrderStatus.NEW);
         ordersGrid.setItems(orderService.getOrdersInfo(ordersList));
     }
 
     private Grid<OrderInfo> generateOrdersGrid() {
         Grid<OrderInfo> ordersGrid = new Grid<>();
-        ordersList = orderService.getOrders(Order.NEW);
+        ordersList = orderService.getOrders(OrderStatus.NEW);
 
         List<OrderInfo> ordersInfo = orderService.getOrdersInfo(ordersList);
 

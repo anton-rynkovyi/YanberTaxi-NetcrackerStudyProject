@@ -8,14 +8,19 @@ import com.netcracker.project.study.model.driver.DriverAttr;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.driver.car.CarAttr;
+import com.netcracker.project.study.model.driver.status.DriverStatus;
 import com.netcracker.project.study.model.order.Order;
+import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
+import com.netcracker.project.study.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -27,14 +32,17 @@ public class DriverServiceImpl implements DriverService {
     @Autowired
     AdminService adminService;
 
+    @Autowired
+    OrderService orderService;
+
 
     @Override
     public void acceptOrder(BigInteger orderId, BigInteger driverId) {
         Order order = persistenceFacade.getOne(orderId,Order.class);
-        if(order.getStatus().equals(Order.NEW)){
+        if(order.getStatus().equals(OrderStatus.NEW)){
             order.setDriverId(driverId);
-            order.setStatus(Order.ACCEPTED);
-            persistenceFacade.update(order);
+            orderService.changeStatus(OrderStatus.ACCEPTED,order);
+
         }else{
             throw new RuntimeException("The order must have status equals to new");
         }
@@ -105,6 +113,23 @@ public class DriverServiceImpl implements DriverService {
                 "AND attr.date_value IS NOT NULL";
         List<Driver> driverBanList = persistenceFacade.getSome(query, Driver.class);
         return driverBanList;
+    }
+
+    @Override
+    @Transactional
+    public void changeStatus(BigInteger status, Driver driver) {
+        driver.setStatus(status);
+        persistenceFacade.update(driver);
+        driverStatusLog(driver);
+    }
+
+    @Override
+    public void driverStatusLog(Driver driver) {
+        DriverStatus driverStatus = new DriverStatus();
+        driverStatus.setDriverId(driver.getObjectId());
+        driverStatus.setStatus(driver.getStatus());
+        driverStatus.setTimeStamp(new Date(System.currentTimeMillis()));
+        persistenceFacade.create(driverStatus);
     }
 
 
