@@ -19,7 +19,7 @@ public interface OrderService {
 
     String getStatusValue(BigInteger statusId);
 
-    List<OrderInfo>getOrdersInfo(List<Order>orders);
+    List<OrderInfo> getOrdersInfo(List<Order>orders);
 
     List<Order> getOrders(BigInteger statusId);
 
@@ -34,4 +34,8 @@ public interface OrderService {
     void orderStatusLog(Order order);
 
     List<Order> getActiveOrdersByClientId(BigInteger clientId);
+
+    List<Order> getPerformedOrdersByClientId(BigInteger clientId);
+
+    Order getOrder(BigInteger orderId);
 }

@@ -163,7 +163,23 @@ public class OrderServiceImpl implements OrderService{
                 " AND ref.reference = "+clientId+
                 " AND attr.attr_id = 18"+
                 " AND (attr.list_value_id = "+OrderStatus.NEW+" or attr.list_value_id = "+OrderStatus.PERFORMING+
-                " OR attr.list_value_id = "+OrderStatus.CANCELED+")";
+                " OR attr.list_value_id = "+OrderStatus.ACCEPTED+")";
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        return orderList;
+    }
+
+    @Override
+    public List<Order> getPerformedOrdersByClientId(BigInteger clientId) {
+        String query = "" +
+                "SELECT obj.object_id " +
+                " FROM Objects obj " +
+                " INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
+                " INNER JOIN Attributes attr ON obj.object_id=attr.object_id "+
+                " WHERE obj.object_type_id = "+OrderAttr.OBJECT_TYPE_ID +
+                " AND ref.attr_id = " +OrderAttr.CLIENT_ID_ATTR+
+                " AND ref.reference = "+clientId+
+                " AND attr.attr_id = 18"+
+                " AND attr.list_value_id = "+OrderStatus.PERFORMED;
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }
@@ -175,5 +191,10 @@ public class OrderServiceImpl implements OrderService{
         orderStatus.setStatus(order.getStatus());
         orderStatus.setTimeStamp(new Date(System.currentTimeMillis()));
         persistenceFacade.create(orderStatus);
+    }
+
+    @Override
+    public Order getOrder(BigInteger orderId) {
+        return persistenceFacade.getOne(orderId,Order.class);
     }
 }
