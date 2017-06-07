@@ -155,14 +155,14 @@ public class OrderServiceImpl implements OrderService{
     public List<Order> getActiveOrdersByClientId(BigInteger clientId) {
         String query = "" +
                 "SELECT obj.object_id " +
-                "FROM Objects obj " +
-                "INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
-                "INNER JOIN Attributes attr ON obj.object_id=attr.object_id"+
-                "WHERE obj.object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
-                "AND ref.attr_id = " + OrderAttr.CLIENT_ID_ATTR +
-                "AND ref.reference = " + clientId+
-                "AND attr.attr_id = 18"+
-                "AND (attr.list_value_id = "+OrderStatus.NEW+" or attr.list_value_id = "+OrderStatus.PERFORMING+
+                " FROM Objects obj " +
+                " INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
+                " INNER JOIN Attributes attr ON obj.object_id=attr.object_id "+
+                " WHERE obj.object_type_id = "+OrderAttr.OBJECT_TYPE_ID +
+                " AND ref.attr_id = " +OrderAttr.CLIENT_ID_ATTR+
+                " AND ref.reference = "+clientId+
+                " AND attr.attr_id = 18"+
+                " AND (attr.list_value_id = "+OrderStatus.NEW+" or attr.list_value_id = "+OrderStatus.PERFORMING+
                 " OR attr.list_value_id = "+OrderStatus.CANCELED+")";
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
