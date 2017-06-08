@@ -32,6 +32,7 @@ public class ClientOrdersGrid  extends CustomComponent {
         Grid<Order> ordersGrid = new Grid<>();
         ordersGrid.setSizeFull();
         clientOrderList = orderService.getOrdersByClientId(new BigInteger("88"));
+        orderService.getOrdersInfo(clientOrderList);
         ordersGrid.setItems(clientOrderList);
 
         ordersGrid.addColumn(Order::getObjectId).setCaption("№");
