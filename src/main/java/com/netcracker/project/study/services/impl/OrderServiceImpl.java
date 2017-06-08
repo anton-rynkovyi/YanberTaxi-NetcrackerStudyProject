@@ -94,6 +94,10 @@ public class OrderServiceImpl implements OrderService{
         return orderList;
     }
 
+    public Order getOrder(BigInteger orderId){
+        return persistenceFacade.getOne(orderId,Order.class);
+    }
+
     @Override
     public List<Route> getRoutes(BigInteger orderId) {
        String query = "SELECT object_id " +

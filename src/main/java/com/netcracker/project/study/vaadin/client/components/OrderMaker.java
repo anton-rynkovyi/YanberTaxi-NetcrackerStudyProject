@@ -268,7 +268,7 @@ public class OrderMaker extends CustomComponent {
                 List<Order> orderList = orderService.getActiveOrdersByClientId(new BigInteger("88"));
                 if (orderList.size()>0) {
                     for (Order order : orderList) {
-                        orderService.changeStatus(OrderStatus.CANCELED, order);
+                        orderService.changeStatus(OrderStatus.CANCELED, order.getObjectId());
                     }
                     initWindow("<b>Current order canceled</b> ");
                     UI.getCurrent().addWindow(window);

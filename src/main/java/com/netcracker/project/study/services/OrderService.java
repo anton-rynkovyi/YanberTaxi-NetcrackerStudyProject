@@ -37,4 +37,5 @@ public interface OrderService {
 
     List<Order>getCurrentOrderByDriverId(BigInteger driverId);
 
+    Order getOrder(BigInteger orderId);
 }
