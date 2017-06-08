@@ -1,5 +1,8 @@
 package com.netcracker.project.study.vaadin.driver.components.tabs;
 
+import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverStatusEnum;
+import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.services.DriverService;
@@ -14,7 +17,6 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.math.BigInteger;
 import java.util.List;
 
 
@@ -42,6 +44,8 @@ public class NewOrdersTab extends CustomComponent {
 
     Window window;
 
+    Driver driver;
+
     @PostConstruct
     public void init() {
         initRootLayout();
@@ -56,6 +60,10 @@ public class NewOrdersTab extends CustomComponent {
         componentLayout.setSizeFull();
 
         setCompositionRoot(componentLayout);
+    }
+
+    public void setDriver(Driver driver){
+        this.driver = driver;
     }
 
     private void initRootLayout() {
@@ -85,12 +93,12 @@ public class NewOrdersTab extends CustomComponent {
 
     private void refreshContent() {
         refreshGrid();
-        view.Refresh();
         orderInfoForNewOrders.init(null);
         takeOrderButton.setEnabled(false);
+        view.Refresh();
     }
 
-    private void initWindow(String client){
+    private void initSuccessfulOrderWindow(String client){
         window = new Window(" Information");
         window.setIcon(FontAwesome.INFO_CIRCLE);
         window.center();
@@ -101,15 +109,35 @@ public class NewOrdersTab extends CustomComponent {
         verticalLayout.addComponents(content,clientNameLabel);
         window.setContent(verticalLayout);
     }
+
+    private void initUnsuccessfulOrderWindow(){
+        window = new Window(" Information");
+        window.setIcon(FontAwesome.INFO_CIRCLE);
+        window.center();
+        window.setModal(true);
+        VerticalLayout verticalLayout = new VerticalLayout();
+        Label content = new Label("<b>You can't take this order. To have the possibility to take orders, your status must be \"free\"</b> ", ContentMode.HTML);
+        Label statusLabel = new Label("<b>Your status is: </b>" + DriverStatusEnum.getStatusValue(driver.getStatus()), ContentMode.HTML);
+        verticalLayout.addComponents(content,statusLabel);
+        window.setContent(verticalLayout);
+    }
+
     private void setTakeOrderButton() {
         takeOrderButton = new Button("Take", FontAwesome.CAB);
         takeOrderButton.addClickListener(event -> {
             if (!ordersGrid.asSingleSelect().isEmpty()) {
-                OrderInfo order = ordersGrid.asSingleSelect().getValue();
-                driverService.acceptOrder(order.getObjectId(), BigInteger.valueOf(1));
-                initWindow(order.getClientName());
-                refreshContent();
-                UI.getCurrent().addWindow(window);
+                List<Order>currentOrder = orderService.getCurrentOrderByDriverId(driver.getObjectId());
+                if(currentOrder.size() == 0){
+                    OrderInfo order = ordersGrid.asSingleSelect().getValue();
+                    driverService.acceptOrder(order.getObjectId(), driver.getObjectId());
+                    initSuccessfulOrderWindow(order.getClientName());
+                    refreshContent();
+                    UI.getCurrent().addWindow(window);
+                }else{
+                    initUnsuccessfulOrderWindow();
+                    refreshContent();
+                    UI.getCurrent().addWindow(window);
+                }
             }
         });
         takeOrderButton.setEnabled(false);

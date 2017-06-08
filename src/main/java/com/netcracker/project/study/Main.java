@@ -4,6 +4,7 @@ import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
+import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderStatusList;
 import com.netcracker.project.study.model.order.route.Route;
@@ -18,7 +19,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import java.math.BigInteger;
@@ -37,7 +37,6 @@ public class Main {
         facade.create(driver);
         driverService.changeStatus(DriverStatusList.FREE,driver);
         driverService.changeStatus(DriverStatusList.PERFORMING_ORDER,driver);
-
 
         /*for (int i = 0; i < 1000; i++) {
             Client client = new Client("NEW CLIENTssssssssssss", "It's client!");
@@ -118,7 +117,7 @@ public class Main {
         }*/
 
 
-       /* Driver driver = new Driver();
+        /*Driver driver = new Driver();
         driver.setName("Driver Vadim");
         driver.setFirstName("Vadim");
         driver.setLastName("Martsun");
@@ -129,7 +128,45 @@ public class Main {
         driver.setStatus(BigInteger.valueOf(3));
         adminService.createModel(driver);
 
-        Car car = new Car();
+        Driver driver1 = new Driver();
+        driver1.setName("Driver Ryn");
+        driver1.setFirstName("Anton");
+        driver1.setLastName("Rynkovoy");
+        driver1.setEmail("vrynkovoy@gmail.com");
+        driver1.setMiddleName("Vladimirovich");
+        driver1.setExperience(BigInteger.valueOf(5));
+        driver1.setPhoneNumber("(068)062-68-53");
+        driver1.setStatus(BigInteger.valueOf(3));
+        adminService.createModel(driver1);
+
+        Driver driver2 = new Driver();
+        driver2.setName("Driver Eugene");
+        driver2.setFirstName("Eugene");
+        driver2.setLastName("Doroganov");
+        driver2.setEmail("eugenedoroganov@gmail.com");
+        driver2.setMiddleName("Alexandrovich");
+        driver2.setExperience(BigInteger.valueOf(5));
+        driver2.setPhoneNumber("(068)066-78-53");
+        driver2.setStatus(BigInteger.valueOf(3));
+        adminService.createModel(driver2);
+
+        Client client = new Client();
+        client.setLastName("Yankovskaya");
+        client.setFirstName("Maria");
+        client.setPhoneNumber("(098)560-55-01");
+        client.setPoints(BigInteger.ONE);
+        adminService.createModel(client);
+
+
+        Client client1 = new Client();
+        client1.setLastName("Yoba");
+        client1.setFirstName("Pidor");
+        client1.setPhoneNumber("(098)560-55-01");
+        client1.setPoints(BigInteger.ONE);
+        adminService.createModel(client1);*/
+
+
+        /*Car car = new Car();
         car.setName("Vadim Car");
         car.setChildSeat(true);
         car.setStateNumber("BH80567");
@@ -152,42 +189,21 @@ public class Main {
         client.setFirstName("Anton");
         client.setLastName("Rynkovoy");
         client.setPhoneNumber("63-611-67-90");
-        facade.create(client1);
+        facade.create(client1);*/
+
 
         Order order = new Order();
-        order.setName(client.getLastName() + " order");
-        order.setClientId(client.getObjectId());
-        order.setDriverId(BigInteger.valueOf(115));
-        order.setCost(BigDecimal.valueOf(30.50));
-        order.setDistance(BigInteger.valueOf(5000));
-        order.setStatus(OrderStatusList.PERFORMED);
-        order.setDriverMemo("1 - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
-        facade.create(order);
-
-        Order order1 = new Order();
-        order1.setName(client1.getLastName() + " order");
-        order1.setClientId(client1.getObjectId());
-        order1.setDriverId(BigInteger.valueOf(115));
-        order1.setCost(BigDecimal.valueOf(30.50));
-        order1.setDistance(BigInteger.valueOf(5000));
-        order1.setStatus(OrderStatusList.PERFORMED);
-        order1.setDriverMemo("2 - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
-        facade.create(order1);*/
-
-       /* Order order = new Order();
         order.setName(" order");
         order.setClientId(BigInteger.valueOf(4));
-        order.setDriverId(BigInteger.valueOf(1));
         order.setCost(BigDecimal.valueOf(105.90));
         order.setDistance(BigInteger.valueOf(4783));
         order.setStatus(OrderStatusList.NEW);
         order.setDriverMemo("NEW - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
-        facade.create(order);*/
+        facade.create(order);
 
         /*Order order1 = new Order();
         order1.setName("yoba1");
         order1.setClientId(BigInteger.valueOf(4));
-        order1.setDriverId(BigInteger.valueOf(1));
         order1.setCost(BigDecimal.valueOf(123));
         order1.setDistance(BigInteger.valueOf(77));
         order1.setStatus(BigInteger.valueOf(6));
@@ -195,35 +211,29 @@ public class Main {
 
         Order order2 = new Order();
         order2.setName("yoba2");
-        order2.setClientId(BigInteger.valueOf(4));
-        order2.setDriverId(BigInteger.valueOf(1));
+        order2.setClientId(BigInteger.valueOf(5));
         order2.setCost(BigDecimal.valueOf(30));
         order2.setDistance(BigInteger.valueOf(12));
         order2.setStatus(BigInteger.valueOf(6));
         facade.create(order2);
-
+/*
         Route route = new Route();
         route.setName("lala");
-        route.setOrderId(BigInteger.valueOf(89));
+        route.setOrderId(BigInteger.valueOf(6));
         route.setCheckPoint("dddw");
         Route route1 = new Route();
         route1.setName("lalass");
-        route1.setOrderId(BigInteger.valueOf(89));
+        route1.setOrderId(BigInteger.valueOf(7));
         route1.setCheckPoint("dddwfsfs");
 
         Route route2 = new Route();
         route2.setName("lala");
-        route2.setOrderId(BigInteger.valueOf(90));
+        route2.setOrderId(BigInteger.valueOf(8));
         route2.setCheckPoint("dddw");
-        Route route3 = new Route();
-        route3.setName("lalasdgsss");
-        route3.setOrderId(BigInteger.valueOf(90));
-        route3.setCheckPoint("dddwfsfsfsfss");
 
         facade.create(route);
         facade.create(route1);
-        facade.create(route2);
-        facade.create(route3);
+        facade.create(route2);*/
 
        /* Order order1 = new Order();
         order.setName("Order_31");
@@ -250,6 +260,8 @@ public class Main {
 
         //driverService.acceptOrder(BigInteger.valueOf(10),BigInteger.valueOf(1));
 
+        List<Order>orders = orderService.getOrdersByDriverId(BigInteger.valueOf(11));
+        System.out.println(orders.size());
 
 
         /*List<Order>orders = adminService.allModelsAsList(Order.class);

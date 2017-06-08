@@ -15,7 +15,7 @@ public interface OrderService {
 
     void calcPrice(BigDecimal distance, Order order);
 
-    void changeStatus(BigInteger status, Order order);
+    void changeStatus(BigInteger status, BigInteger orderId);
 
     String getStatusValue(BigInteger statusId);
 
@@ -34,4 +34,7 @@ public interface OrderService {
     void orderStatusLog(Order order);
 
     List<Order> getActiveOrdersByClientId(BigInteger clientId);
+
+    List<Order>getCurrentOrderByDriverId(BigInteger driverId);
+
 }

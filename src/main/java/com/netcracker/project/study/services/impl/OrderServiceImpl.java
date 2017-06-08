@@ -2,12 +2,17 @@ package com.netcracker.project.study.services.impl;
 
 
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
+import com.netcracker.project.study.model.driver.DriverStatusList;
+
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderAttr;
 import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.model.order.route.RouteAttr;
 import com.netcracker.project.study.model.order.status.OrderStatus;
+
+import com.netcracker.project.study.model.order.status.OrderStatusAttr;
+
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.OrderConstants;
 import com.netcracker.project.study.services.OrderService;
@@ -42,7 +47,8 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional
-    public void changeStatus(BigInteger status, Order order) {
+    public void changeStatus(BigInteger status, BigInteger orderId) {
+        Order order = persistenceFacade.getOne(orderId,Order.class);
         order.setStatus(status);
         persistenceFacade.update(order);
         orderStatusLog(order);
@@ -126,7 +132,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public List<Order> getOrdersByDriverId(BigInteger driverId) {
         String query = "" +
-                "SELECT obj.object_id " +
+                "SELECT object_id " +
                 "FROM objreference " +
                 "WHERE object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
                 "AND attr_id = " + OrderAttr.DRIVER_ID_ATTR +
@@ -140,7 +146,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public List<Order> getOrdersByClientId(BigInteger clientId) {
         String query = "" +
-                "SELECT obj.object_id " +
+                "SELECT object_id " +
                 "FROM objreference " +
                 "WHERE object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
                 "AND attr_id = " + OrderAttr.CLIENT_ID_ATTR +
@@ -173,5 +179,18 @@ public class OrderServiceImpl implements OrderService{
         orderStatus.setStatus(order.getStatus());
         orderStatus.setTimeStamp(new Date(System.currentTimeMillis()));
         persistenceFacade.create(orderStatus);
+    }
+
+    public List<Order>getCurrentOrderByDriverId(BigInteger driverId){
+        String query = "SELECT obj.object_id" +
+                " FROM objects obj,attributes attr, objreference ref" +
+                " WHERE ref.object_id = obj.object_id AND" +
+                " ref.attr_id = " + Order.DRIVER_ID_ATTR + " AND" +
+                " ref.reference = " + driverId + " AND" +
+                " attr.object_id = obj.object_id AND" +
+                " obj.object_type_id = " + Order.OBJECT_TYPE_ID + " AND" +
+                "(attr.list_value_id = " + OrderStatus.ACCEPTED + " OR " + "attr.list_value_id = " + OrderStatus.PERFORMING + ")";
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        return orderList;
     }
 }

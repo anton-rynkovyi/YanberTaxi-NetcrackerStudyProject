@@ -66,7 +66,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void cancelOrder(Order order) {
-        orderService.changeStatus(OrderStatus.CANCELED,order);
+        orderService.changeStatus(OrderStatus.CANCELED,order.getObjectId());
 
         //if not succeed transfer Order parameter and parameter will be Client
         /*String sqlQuery = "SELECT obj.object_id "+

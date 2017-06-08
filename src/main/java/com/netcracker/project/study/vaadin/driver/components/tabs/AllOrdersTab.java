@@ -1,10 +1,14 @@
 
 package com.netcracker.project.study.vaadin.driver.components.tabs;
 
+import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.services.AdminService;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
+import com.netcracker.project.study.services.impl.DriverServiceImpl;
 import com.netcracker.project.study.vaadin.driver.components.popup.OrderInfoPopUp;
+import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.pojos.*;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -12,6 +16,7 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.math.BigInteger;
 import java.util.List;
 
 @SpringComponent
@@ -20,6 +25,8 @@ public class AllOrdersTab extends CustomComponent {
     @Autowired AdminService adminService;
 
     @Autowired OrderService orderService;
+
+    OrdersViewForDrivers view;
 
     private Grid<OrderInfo> ordersGrid;
 
@@ -31,6 +38,9 @@ public class AllOrdersTab extends CustomComponent {
 
     @Autowired OrderInfoPopUp orderInfoPopUp;
 
+    private CheckBox checkBox;
+
+    Driver driver;
 
     public OrderInfoPopUp getOrderInfoPopUp(){
         return orderInfoPopUp;
@@ -40,8 +50,10 @@ public class AllOrdersTab extends CustomComponent {
     public void init() {
         ordersGrid = generateOrdersGrid();
         initOrderInfoWindow();
+
         componentLayout = getFilledComponentLayout();
         componentLayout.addComponent(getButtons());
+
         setGridSettings(ordersGrid);
         setCompositionRoot(componentLayout);
     }
@@ -54,23 +66,43 @@ public class AllOrdersTab extends CustomComponent {
         orderInfoWindow.setContent(orderInfoPopUp);
     }
 
+    public void setView(OrdersViewForDrivers view) {
+        this.view = view;
+    }
+
     private VerticalLayout getFilledComponentLayout() {
         VerticalLayout componentLayout = new VerticalLayout();
         componentLayout.setMargin(false);
         componentLayout.setSpacing(false);
+
+        checkBox = new CheckBox("Depict only my orders");
+        checkBox.setValue(false);
+        componentLayout.addComponent(checkBox);
+        checkBox.addValueChangeListener(event->{
+            refreshGrid();
+            view.Refresh();
+        });
 
         componentLayout.addComponents(ordersGrid);
 
         return componentLayout;
     }
 
+    public void setDriver(Driver driver){
+        this.driver = driver;
+    }
+
     public void refreshGrid(){
-        ordersList = adminService.allModelsAsList(Order.class);
+        if(checkBox.getValue()){
+            ordersList = orderService.getOrdersByDriverId(driver.getObjectId());
+        }
+        else{
+            ordersList = adminService.allModelsAsList(Order.class);
+        }
         ordersGrid.setItems(orderService.getOrdersInfo(ordersList));
     }
 
     private Grid<OrderInfo> generateOrdersGrid() {
-
         Grid<OrderInfo> ordersGrid = new Grid<>();
         ordersList = adminService.allModelsAsList(Order.class);
 

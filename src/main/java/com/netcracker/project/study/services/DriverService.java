@@ -30,4 +30,7 @@ public interface DriverService {
 
     void changeStatus(BigInteger status, Driver driver);
 
+    void changeStatus(BigInteger status, BigInteger driverId);
+
+
 }

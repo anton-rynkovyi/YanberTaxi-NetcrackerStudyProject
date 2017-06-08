@@ -39,10 +39,13 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public void acceptOrder(BigInteger orderId, BigInteger driverId) {
         Order order = persistenceFacade.getOne(orderId,Order.class);
+        Driver driver = persistenceFacade.getOne(driverId,Driver.class);
         if(order.getStatus().equals(OrderStatus.NEW)){
             order.setDriverId(driverId);
-            orderService.changeStatus(OrderStatus.ACCEPTED,order);
-
+            order.setStatus(OrderStatus.ACCEPTED);
+            driver.setStatus(DriverStatusList.PERFORMING_ORDER);
+            persistenceFacade.update(order);
+            persistenceFacade.update(driver);
         }else{
             throw new RuntimeException("The order must have status equals to new");
         }
@@ -115,6 +118,7 @@ public class DriverServiceImpl implements DriverService {
         return driverBanList;
     }
 
+
     @Override
     @Transactional
     public void changeStatus(BigInteger status, Driver driver) {
@@ -132,5 +136,10 @@ public class DriverServiceImpl implements DriverService {
         persistenceFacade.create(driverStatus);
     }
 
+    public void changeStatus(BigInteger status, BigInteger driverId) {
+        Driver driver = persistenceFacade.getOne(driverId,Driver.class);
+        driver.setStatus(status);
+        persistenceFacade.update(driver);
+    }
 
 }
