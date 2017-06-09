@@ -39,8 +39,6 @@ public class OrderMaker extends CustomComponent {
 
     private TextField cost;
 
-    private String[] textFieldsStrings = new String[5];
-
     private VerticalLayout fieldsLayout = new VerticalLayout();
 
     private Label notifications;
@@ -207,8 +205,9 @@ public class OrderMaker extends CustomComponent {
             int count = getcountOfTextFields();
             if (count != 1) {
                 fields[4].setCaption("Destination (Address " + count + ")");
-                if (fields[count-1].getValue().isEmpty()) fields[count-1].setValue(" ");
+                if (!(fields[count-1].getValue().isEmpty())) fields[count-1].setValue("");
                 fieldsLayout.removeComponent(fields[count-1]);
+                fields[count-1] = null;
 
                 notifications.setVisible(false);
                 setcountOfTextFields(count-1);
@@ -220,11 +219,12 @@ public class OrderMaker extends CustomComponent {
 
         @Override
         public void buttonClick(Button.ClickEvent clickEvent) {
+            String[] textFieldsStrings = new String[5];
             for (int i = 0; i < fields.length; i++) {
                 if (fields[i] != null) textFieldsStrings[i] = fields[i].getValue();
             }
             if (!(distance.getValue().isEmpty()) && !(isFieldsEmpty(textFieldsStrings))) {
-                if (orderService.getActiveOrdersByClientId(new BigInteger("88")).size()>0) {
+                if (orderService.getActiveOrdersByClientId(BigInteger.valueOf(242)).size()>0) {
                    /* notifications.setValue("You have an active order. You can't simultaneously create multiple orders");
                     notifications.setVisible(true);*/
                     initWindow("<b>You have an active order. You can't simultaneously create multiple orders</b> ");
@@ -238,7 +238,7 @@ public class OrderMaker extends CustomComponent {
 
                         BigDecimal dist = BigDecimal.valueOf(Double.parseDouble(distanceS));
                         cost.setValue(String.valueOf(dist.multiply(BigDecimal.valueOf(5))));
-                        clientService.makeOrder(BigInteger.valueOf(88), dist, textFieldsStrings);
+                        clientService.makeOrder(BigInteger.valueOf(242), dist, textFieldsStrings);
                         /*notifications.setValue("Order create");
                         notifications.setVisible(true);*/
                         initWindow("<b>Order create</b> ");
@@ -265,7 +265,7 @@ public class OrderMaker extends CustomComponent {
 
         @Override
         public void buttonClick(Button.ClickEvent clickEvent) {
-                List<Order> orderList = orderService.getActiveOrdersByClientId(new BigInteger("88"));
+                List<Order> orderList = orderService.getActiveOrdersByClientId(BigInteger.valueOf(242));
                 if (orderList.size()>0) {
                     for (Order order : orderList) {
                         orderService.changeStatus(OrderStatus.CANCELED, order.getObjectId());
@@ -288,7 +288,7 @@ public class OrderMaker extends CustomComponent {
 
         @Override
         public void valueChange(HasValue.ValueChangeEvent valueChangeEvent) {
-            Order order = orderService.getOrder(new BigInteger("89"));
+            Order order = orderService.getOrder(BigInteger.valueOf(244));
             clientService.sendDriverRating(order,new BigInteger(valueChangeEvent.toString()));
         }
     }
@@ -302,7 +302,7 @@ public class OrderMaker extends CustomComponent {
 
     private void initWindow(String text){
         window = new Window(" Information");
-        window.setIcon(FontAwesome.INFO_CIRCLE);
+        window.setIcon(VaadinIcons.INFO_CIRCLE);
         window.center();
         window.setModal(true);
         VerticalLayout verticalLayout = new VerticalLayout();

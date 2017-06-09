@@ -55,7 +55,7 @@ public class ClientServiceImpl implements ClientService {
                 Route route = new Route(addresses[i]);
                 route.setOrderId(order.getObjectId());
                 route.setCheckPoint(addresses[i]);
-                route.setShowOrder(String.valueOf(count));
+                route.setShowOrder(BigInteger.valueOf(count));
 
                 persistenceFacade.create(route);
 

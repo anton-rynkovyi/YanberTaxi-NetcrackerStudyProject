@@ -19,7 +19,7 @@ public class Route extends Model{
     private @AttrValue String checkPoint;
 
     @Attribute(attrId = RouteAttr.SHOW_ORDER_ATTR)
-    private @AttrValue String showOrder;
+    private @AttrValue BigInteger showOrder;
 
     public Route() {}
 
@@ -47,11 +47,11 @@ public class Route extends Model{
         this.checkPoint=checkPoint;
     }
 
-    public String getShowOrder() {
+    public BigInteger getShowOrder() {
         return showOrder;
     }
 
-    public void setShowOrder(String showOrder) {
+    public void setShowOrder(BigInteger showOrder) {
         this.showOrder = showOrder;
     }
 }

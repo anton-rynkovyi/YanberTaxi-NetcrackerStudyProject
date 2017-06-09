@@ -170,8 +170,8 @@ public class OrderServiceImpl implements OrderService{
                 " AND ref.attr_id = " +OrderAttr.CLIENT_ID_ATTR+
                 " AND ref.reference = "+clientId+
                 " AND attr.attr_id = 18"+
-                " AND (attr.list_value_id = "+OrderStatus.NEW+" or attr.list_value_id = "+OrderStatus.PERFORMING+
-                " OR attr.list_value_id = "+OrderStatus.CANCELED+")";
+                " AND (attr.list_value_id = "+OrderStatus.NEW+" or attr.list_value_id = "+OrderStatus.PERFORMING+")";
+                //" OR attr.list_value_id = "+OrderStatus.CANCELED+")";
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }
