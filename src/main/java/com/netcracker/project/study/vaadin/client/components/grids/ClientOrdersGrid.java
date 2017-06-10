@@ -1,5 +1,6 @@
-package com.netcracker.project.study.vaadin.client.components;
+package com.netcracker.project.study.vaadin.client.components.grids;
 
+import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.services.OrderService;
@@ -20,7 +21,7 @@ public class ClientOrdersGrid  extends CustomComponent {
 
     private Grid<Order> clientOrderGrid;
 
-    private List<Order> clientOrderList;
+    Client client;
 
     @PostConstruct
     public void init() {
@@ -32,7 +33,7 @@ public class ClientOrdersGrid  extends CustomComponent {
     private Grid<Order> generateClientOrderGrid() {
         Grid<Order> ordersGrid = new Grid<>();
         ordersGrid.setSizeFull();
-        clientOrderList = orderService.getOrdersByClientId(BigInteger.valueOf(242));
+        List<Order> clientOrderList = orderService.getOrdersByClientId(BigInteger.valueOf(242));
         orderService.getOrdersInfo(clientOrderList);
         ordersGrid.setItems(clientOrderList);
 
@@ -49,5 +50,7 @@ public class ClientOrdersGrid  extends CustomComponent {
 
         return ordersGrid;
     }
+
+    public void setClient(Client client) {this.client = client;}
 
 }

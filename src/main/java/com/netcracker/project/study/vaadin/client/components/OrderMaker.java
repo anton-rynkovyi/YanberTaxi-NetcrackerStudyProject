@@ -1,13 +1,14 @@
 package com.netcracker.project.study.vaadin.client.components;
 
-import com.netcracker.project.study.model.driver.Driver;
+import com.github.appreciated.material.MaterialTheme;
+import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.order.Order;
-import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.OrderService;
+import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
+import com.netcracker.project.study.vaadin.client.components.grids.ClientOrdersGrid;
 import com.vaadin.data.HasValue;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -18,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 
 @SpringComponent
@@ -33,6 +33,9 @@ public class OrderMaker extends CustomComponent {
     @Autowired
     ClientOrdersGrid clientOrdersGrid;
 
+    @Autowired
+    private ClientCurrentOrderGrid clientCurrentOrderGrid;
+
     private TextField[] fields = new TextField[5];
 
     private TextField distance;
@@ -41,11 +44,11 @@ public class OrderMaker extends CustomComponent {
 
     private VerticalLayout fieldsLayout = new VerticalLayout();
 
-    private Label notifications;
-
     private int countOfTextFields = 1;
 
     Window window;
+
+    Client client;
 
     public void setcountOfTextFields(int number) {countOfTextFields = number;}
 
@@ -56,13 +59,8 @@ public class OrderMaker extends CustomComponent {
 
         VerticalLayout orderMaker = new VerticalLayout();
         orderMaker.setSpacing(false);
-        MarginInfo orderMakerMerginInfo = new MarginInfo(true, true, false, false);
+        MarginInfo orderMakerMerginInfo = new MarginInfo(false, true, false, false);
         orderMaker.setMargin(orderMakerMerginInfo);
-
-        notifications = new Label();
-        notifications.setVisible(false);
-        orderMaker.addComponent(notifications);
-        orderMaker.setComponentAlignment(notifications, Alignment.TOP_CENTER);
 
         HorizontalLayout orderForm = getOrderForm();
         MarginInfo orderFormMerginInfo = new MarginInfo(false, true, false, true);
@@ -72,25 +70,23 @@ public class OrderMaker extends CustomComponent {
         orderMaker.setComponentAlignment(orderForm, Alignment.MIDDLE_CENTER);
 
         HorizontalLayout layoutWithMakeOrderBtn = setButton();
-        MarginInfo orderMakerBtnMerginInfo = new MarginInfo(true, false, false, true);
+        MarginInfo orderMakerBtnMerginInfo = new MarginInfo(false, false, true, true);
         layoutWithMakeOrderBtn.setMargin(orderMakerBtnMerginInfo);
-        layoutWithMakeOrderBtn.setSpacing(false);
+        layoutWithMakeOrderBtn.setSpacing(true);
         orderMaker.addComponent(layoutWithMakeOrderBtn);
         orderMaker.setComponentAlignment(layoutWithMakeOrderBtn, Alignment.BOTTOM_LEFT);
 
-        HorizontalLayout layoutWithRadioButton = setRadioButton();
+        /*HorizontalLayout layoutWithRadioButton = setRadioButton();
         MarginInfo radioButtonBtnMerginInfo = new MarginInfo(true, false, false, true);
         layoutWithRadioButton.setMargin(radioButtonBtnMerginInfo);
         layoutWithRadioButton.setSpacing(false);
         orderMaker.addComponent(layoutWithRadioButton);
-        orderMaker.setComponentAlignment(layoutWithRadioButton, Alignment.BOTTOM_LEFT);
-
+        orderMaker.setComponentAlignment(layoutWithRadioButton, Alignment.BOTTOM_LEFT);*/
 
         setCompositionRoot(orderMaker);
-
-
-
     }
+
+    public void setClient(Client client) {this.client = client;}
 
     private HorizontalLayout getOrderForm() {
         HorizontalLayout root = new HorizontalLayout();
@@ -119,16 +115,18 @@ public class OrderMaker extends CustomComponent {
 
         fieldsLayout.addComponent(distanceAndCost);
 
-        Button btnAddTextField = new Button("Add address");
+        Button btnAddTextField = new Button("Add address", VaadinIcons.PLUS);
         btnAddTextField.setDescription("Please enter the starting point and destination.\n" +
                 "If you want to add interjacent point - push this button");
         Button.ClickListener fieldCounter = new TextFieldCounter();
         btnAddTextField.addClickListener(fieldCounter);
+        btnAddTextField.addStyleName(MaterialTheme.BUTTON_FRIENDLY);
 
-        Button btnDeleteTextField = new Button("Delete address");
+        Button btnDeleteTextField = new Button("Delete address", VaadinIcons.MINUS);
         btnDeleteTextField.setDescription("If you want to delete last interjacent point - push this button");
         Button.ClickListener fieldDeleter = new TextFieldDeleter();
         btnDeleteTextField.addClickListener(fieldDeleter);
+        btnDeleteTextField.addStyleName(MaterialTheme.BUTTON_DANGER);
 
         buttonsLayout.addComponent(btnAddTextField);
         buttonsLayout.addComponent(btnDeleteTextField);
@@ -150,20 +148,12 @@ public class OrderMaker extends CustomComponent {
         Button.ClickListener ordermakerListener = new OrderMakerListener();
         makeOrderButton.addClickListener(ordermakerListener);
 
-        Button cancelOrderButton = new Button("Cancel the order", VaadinIcons.CLOSE_BIG);
-        cancelOrderButton.setDescription("Press this button to cancel your order");
-        Button.ClickListener orderCancelListener = new OrderCancelListener();
-        cancelOrderButton.addClickListener(orderCancelListener);
-
-
         horizontalLayout.addComponent(makeOrderButton);
-        horizontalLayout.addComponent(cancelOrderButton);
-
 
         return horizontalLayout;
     }
 
-    private HorizontalLayout setRadioButton(){
+    /*private HorizontalLayout setRadioButton(){
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
 
@@ -176,7 +166,7 @@ public class OrderMaker extends CustomComponent {
 
 
         return horizontalLayout;
-    }
+    }*/
     class TextFieldCounter implements Button.ClickListener {
 
         @Override
@@ -190,8 +180,6 @@ public class OrderMaker extends CustomComponent {
 
                 setcountOfTextFields(++count);
             } else {
-                /*notifications.setValue("You can't create more then three interjacent points");
-                notifications.setVisible(true);*/
                 initWindow("<b>You can't create more then three interjacent points</b> ");
                 UI.getCurrent().addWindow(window);
             }
@@ -209,7 +197,6 @@ public class OrderMaker extends CustomComponent {
                 fieldsLayout.removeComponent(fields[count-1]);
                 fields[count-1] = null;
 
-                notifications.setVisible(false);
                 setcountOfTextFields(count-1);
             }
         }
@@ -224,74 +211,45 @@ public class OrderMaker extends CustomComponent {
                 if (fields[i] != null) textFieldsStrings[i] = fields[i].getValue();
             }
             if (!(distance.getValue().isEmpty()) && !(isFieldsEmpty(textFieldsStrings))) {
-                if (orderService.getActiveOrdersByClientId(BigInteger.valueOf(242)).size()>0) {
-                   /* notifications.setValue("You have an active order. You can't simultaneously create multiple orders");
-                    notifications.setVisible(true);*/
+                if (orderService.getActiveOrdersByClientId(client.getObjectId()).size()>0) {
                     initWindow("<b>You have an active order. You can't simultaneously create multiple orders</b> ");
                     UI.getCurrent().addWindow(window);
 
                 } else {
-                    notifications.setVisible(false);
                     try {
                         String distanceS = distance.getValue();
                         if (distanceS.contains(",")) distanceS = distanceS.replace(',', '.');
 
                         BigDecimal dist = BigDecimal.valueOf(Double.parseDouble(distanceS));
                         cost.setValue(String.valueOf(dist.multiply(BigDecimal.valueOf(5))));
-                        clientService.makeOrder(BigInteger.valueOf(242), dist, textFieldsStrings);
-                        /*notifications.setValue("Order create");
-                        notifications.setVisible(true);*/
-                        initWindow("<b>Order create</b> ");
+                        clientService.makeOrder(client.getObjectId(), dist, textFieldsStrings);
+                        initWindow("<b>Your order was created successfully</b> ");
                         UI.getCurrent().addWindow(window);
                         clientOrdersGrid.init();
-
+                        clientCurrentOrderGrid.init();
+                        for (int i = 0; i < fields.length; i++) {
+                            if (fields[i] != null) fields[i].clear();
+                        }
                     } catch (NumberFormatException ex) {
-                       /* notifications.setVisible(true);
-                        notifications.setValue("Text field \"Distance\" may contain numbers only");*/
                         initWindow("<b>Text field \"Distance\" may contain numbers only</b> ");
                         UI.getCurrent().addWindow(window);
                     }
                 }
             } else {
-                /*notifications.setValue("Please set all fields");
-                notifications.setVisible(true);*/
                 initWindow("<b>Please set all fields</b> ");
                 UI.getCurrent().addWindow(window);
             }
         }
     }
 
-    class OrderCancelListener implements Button.ClickListener {
-
-        @Override
-        public void buttonClick(Button.ClickEvent clickEvent) {
-                List<Order> orderList = orderService.getActiveOrdersByClientId(BigInteger.valueOf(242));
-                if (orderList.size()>0) {
-                    for (Order order : orderList) {
-                        orderService.changeStatus(OrderStatus.CANCELED, order.getObjectId());
-                    }
-                    initWindow("<b>Current order canceled</b> ");
-                    UI.getCurrent().addWindow(window);
-                    /*notifications.setValue("Current order canceled");
-                    notifications.setVisible(true);*/
-                    clientOrdersGrid.init();
-                } else {
-                    initWindow("<b>You don't have an active order</b> ");
-                    UI.getCurrent().addWindow(window);
-                    /*notifications.setValue("You don't have an active order");
-                    notifications.setVisible(true);*/
-                }
-        }
-    }
-
-    class RadioButtonListener implements RadioButtonGroup.ValueChangeListener {
+    /*class RadioButtonListener implements RadioButtonGroup.ValueChangeListener {
 
         @Override
         public void valueChange(HasValue.ValueChangeEvent valueChangeEvent) {
             Order order = orderService.getOrder(BigInteger.valueOf(244));
             clientService.sendDriverRating(order,new BigInteger(valueChangeEvent.toString()));
         }
-    }
+    }*/
 
     private boolean isFieldsEmpty(String[] textFieldsStrings) {
         for (String textFieldString : textFieldsStrings) {
