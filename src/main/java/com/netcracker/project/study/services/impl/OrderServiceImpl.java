@@ -134,17 +134,36 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public List<Order> getOrdersByDriverId(BigInteger driverId) {
-        String query = "" +
-                "SELECT object_id " +
-                "FROM objreference " +
-                "WHERE object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
-                "AND attr_id = " + OrderAttr.DRIVER_ID_ATTR +
-                "AND reference = " + driverId;
+    public List<Order> getOrdersByDriverId(BigInteger driverId, BigInteger orderStatusId) {
+        if (orderStatusId == null) {
+            String query = "SELECT obj.object_id " +
+                    "FROM Objects obj " +
+                    "INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
+                    "WHERE obj.object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
+                    "AND ref.attr_id = " + OrderAttr.DRIVER_ID_ATTR +
+                    "AND ref.reference = " + driverId;
+            List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+            return orderList;
+        }
+        String query = "SELECT obj.object_id " +
+        "FROM objects obj, objreference ref, attributes attr " +
+        "WHERE ref.object_id=obj.object_id " +
+        "AND attr.object_id=obj.object_id " +
+        "AND attr.object_id=ref.object_id " +
+        "AND obj.object_type_id =" + Order.OBJECT_TYPE_ID +
+        " AND ref.attr_id = " + Order.DRIVER_ID_ATTR +
+        " AND reference = " + driverId +
+        "AND attr.attr_id = " + Order.STATUS_ATTR +
+        " AND attr.list_value_id=" + orderStatusId;
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }
 
+
+    @Override
+    public List<OrderInfo> getOrdersInfoByDriverId(BigInteger driverId, BigInteger orderStatusId) {
+        return getOrdersInfo(getOrdersByDriverId(driverId,orderStatusId));
+    }
 
 
     @Override

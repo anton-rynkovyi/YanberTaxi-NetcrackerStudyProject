@@ -32,4 +32,14 @@ public enum DriverStatusEnum {
         }
         return null;
     }
+
+    public static List<String> getStatusList(){
+        List<String> statusList = new ArrayList<>();
+        statusList.add("Approval");
+        statusList.add("Off duty");
+        statusList.add("Free");
+        statusList.add("On call");
+        statusList.add("Performing order");
+        return statusList;
+    }
 }

@@ -27,7 +27,7 @@ public interface OrderService {
 
     List<Order> allModelsAsList();
 
-    List<Order> getOrdersByDriverId(BigInteger driverId);
+    List<Order> getOrdersByDriverId(BigInteger driverId, BigInteger orderStatusId);
 
     List<Order> getOrdersByClientId(BigInteger clientId);
 
@@ -38,4 +38,6 @@ public interface OrderService {
     List<Order>getCurrentOrderByDriverId(BigInteger driverId);
 
     Order getOrder(BigInteger orderId);
+
+    List<OrderInfo> getOrdersInfoByDriverId(BigInteger driverId, BigInteger orderStatusId);
 }

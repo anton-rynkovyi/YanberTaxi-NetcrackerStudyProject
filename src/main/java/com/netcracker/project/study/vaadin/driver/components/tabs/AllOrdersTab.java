@@ -2,7 +2,9 @@
 package com.netcracker.project.study.vaadin.driver.components.tabs;
 
 import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.order.Order;
+import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
@@ -10,6 +12,7 @@ import com.netcracker.project.study.services.impl.DriverServiceImpl;
 import com.netcracker.project.study.vaadin.driver.components.popup.OrderInfoPopUp;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.pojos.*;
+import com.vaadin.data.HasValue;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -17,14 +20,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringComponent
 public class AllOrdersTab extends CustomComponent {
 
-    @Autowired AdminService adminService;
+    @Autowired
+    AdminService adminService;
 
-    @Autowired OrderService orderService;
+    @Autowired
+    OrderService orderService;
 
     OrdersViewForDrivers view;
 
@@ -36,19 +42,21 @@ public class AllOrdersTab extends CustomComponent {
 
     private Window orderInfoWindow;
 
-    @Autowired OrderInfoPopUp orderInfoPopUp;
-
-    private CheckBox checkBox;
+    @Autowired
+    OrderInfoPopUp orderInfoPopUp;
 
     Driver driver;
 
-    public OrderInfoPopUp getOrderInfoPopUp(){
+    NativeSelect statusSelect;
+
+    public OrderInfoPopUp getOrderInfoPopUp() {
         return orderInfoPopUp;
     }
 
     @PostConstruct
     public void init() {
         ordersGrid = generateOrdersGrid();
+        initStatusSelect();
         initOrderInfoWindow();
 
         componentLayout = getFilledComponentLayout();
@@ -56,6 +64,45 @@ public class AllOrdersTab extends CustomComponent {
 
         setGridSettings(ordersGrid);
         setCompositionRoot(componentLayout);
+    }
+
+    private void initStatusSelect() {
+        statusSelect = new NativeSelect("Order status");
+        List<String> statusList = new ArrayList<>();
+        statusList.add("All");
+        statusList.add("Accepted");
+        statusList.add("Performing");
+        statusList.add("Performed");
+        statusList.add("Canceled");
+        statusSelect.setItems(statusList);
+
+        statusSelect.setEmptySelectionAllowed(false);
+        statusSelect.setValue(statusList.get(0));
+
+        statusSelect.addValueChangeListener(new HasValue.ValueChangeListener() {
+            @Override
+            public void valueChange(HasValue.ValueChangeEvent valueChangeEvent) {
+                switch (valueChangeEvent.getValue().toString()) {
+                    case "All":
+                        ordersGrid.setItems(orderService.getOrdersInfoByDriverId(driver.getObjectId(), null));
+                        break;
+                    case "Accepted":
+                        ordersGrid.setItems(orderService.getOrdersInfoByDriverId(driver.getObjectId(), OrderStatus.ACCEPTED));
+                        break;
+                    case "Performing":
+                        ordersGrid.setItems(orderService.getOrdersInfoByDriverId(driver.getObjectId(), OrderStatus.PERFORMING));
+                        break;
+                    case "Performed":
+                        ordersGrid.setItems(orderService.getOrdersInfoByDriverId(driver.getObjectId(), OrderStatus.PERFORMED));
+                        break;
+                    case "Canceled":
+                        ordersGrid.setItems(orderService.getOrdersInfoByDriverId(driver.getObjectId(), OrderStatus.CANCELED));
+                        break;
+                }
+            }
+        });
+
+
     }
 
     private void initOrderInfoWindow() {
@@ -75,30 +122,18 @@ public class AllOrdersTab extends CustomComponent {
         componentLayout.setMargin(false);
         componentLayout.setSpacing(false);
 
-        checkBox = new CheckBox("Depict only my orders");
-        checkBox.setValue(false);
-        componentLayout.addComponent(checkBox);
-        checkBox.addValueChangeListener(event->{
-            refreshGrid();
-            view.Refresh();
-        });
-
+        componentLayout.addComponent(statusSelect);
         componentLayout.addComponents(ordersGrid);
 
         return componentLayout;
     }
 
-    public void setDriver(Driver driver){
+    public void setDriver(Driver driver) {
         this.driver = driver;
     }
 
-    public void refreshGrid(){
-        if(checkBox.getValue()){
-            ordersList = orderService.getOrdersByDriverId(driver.getObjectId());
-        }
-        else{
-            ordersList = adminService.allModelsAsList(Order.class);
-        }
+    public void refreshGrid() {
+        ordersList = orderService.getOrdersByDriverId(driver.getObjectId(),null);
         ordersGrid.setItems(orderService.getOrdersInfo(ordersList));
     }
 
@@ -106,27 +141,27 @@ public class AllOrdersTab extends CustomComponent {
         Grid<OrderInfo> ordersGrid = new Grid<>();
         ordersList = adminService.allModelsAsList(Order.class);
 
-        List<OrderInfo>ordersInfo = orderService.getOrdersInfo(ordersList);
+        List<OrderInfo> ordersInfo = orderService.getOrdersInfo(ordersList);
 
         ordersGrid.setItems(ordersInfo);
 
         ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("#");
         ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");
-        ordersGrid.addColumn(OrderInfo::getDriverName).setCaption("Driver");
         ordersGrid.addColumn(OrderInfo::getStatus).setCaption("Status");
         ordersGrid.addColumn(OrderInfo::getCost).setCaption("Cost");
         ordersGrid.addColumn(OrderInfo::getDistance).setCaption("Distance");
 
         return ordersGrid;
     }
-    private HorizontalLayout getButtons(){
+
+    private HorizontalLayout getButtons() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         componentLayout.setMargin(false);
         componentLayout.setSpacing(false);
 
         Button viewOrderButton = new Button("View order", FontAwesome.INFO);
-        viewOrderButton.addClickListener(event->{
-            if(!ordersGrid.asSingleSelect().isEmpty()){
+        viewOrderButton.addClickListener(event -> {
+            if (!ordersGrid.asSingleSelect().isEmpty()) {
                 OrderInfo orderInfo = ordersGrid.asSingleSelect().getValue();
                 orderInfoPopUp.init(orderInfo);
                 UI.getCurrent().addWindow(orderInfoWindow);
@@ -135,7 +170,7 @@ public class AllOrdersTab extends CustomComponent {
 
         componentLayout.addComponents(ordersGrid);
         horizontalLayout.addComponent(viewOrderButton);
-        horizontalLayout.setComponentAlignment(viewOrderButton,Alignment.BOTTOM_LEFT);
+        horizontalLayout.setComponentAlignment(viewOrderButton, Alignment.BOTTOM_LEFT);
         return horizontalLayout;
     }
 

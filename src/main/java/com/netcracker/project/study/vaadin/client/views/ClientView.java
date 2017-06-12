@@ -15,6 +15,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 @SpringView(name = ClientView.VIEW_NAME)
+@SpringUI(path = "/client")
 public class ClientView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "client";
@@ -94,7 +96,7 @@ public class ClientView extends VerticalLayout implements View {
     }
 
     private void initFakeClient(){
-        client = facade.getOne(BigInteger.valueOf(242),Client.class);
+        client = facade.getOne(BigInteger.valueOf(4),Client.class);
     }
 
     private HorizontalLayout setMainButtons() {

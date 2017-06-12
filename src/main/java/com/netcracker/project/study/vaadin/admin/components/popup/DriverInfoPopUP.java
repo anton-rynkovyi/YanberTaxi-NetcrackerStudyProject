@@ -130,7 +130,7 @@ public class DriverInfoPopUP extends VerticalLayout {
         verticalLayout.setSizeFull();
         verticalLayout.setMargin(false);
         verticalLayout.setSpacing(false);
-        List<Order> orderList = orderService.getOrdersByDriverId(driver.getObjectId());
+        List<Order> orderList = orderService.getOrdersByDriverId(driver.getObjectId(),null);
         for (int i = 0; i < orderList.size(); i++) {
             if (orderList.get(i).getDriverMemo() != null) {
                 if (orderList.get(i).getClientId() != null) {

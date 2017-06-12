@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringView(name = OrdersViewForDrivers.VIEW_NAME)
