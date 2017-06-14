@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringView(name = OrdersViewForDrivers.VIEW_NAME)
@@ -85,7 +84,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     }
 
     private void initFakeDriver(){
-        driver = facade.getOne(BigInteger.valueOf(1),Driver.class);
+        driver = facade.getOne(BigInteger.valueOf(115),Driver.class);
     }
 
     public Driver getDriver(){

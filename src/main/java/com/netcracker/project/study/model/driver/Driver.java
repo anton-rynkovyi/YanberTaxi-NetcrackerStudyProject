@@ -1,7 +1,11 @@
 package com.netcracker.project.study.model.driver;
 
 import com.netcracker.project.study.model.Model;
+import com.netcracker.project.study.model.Role;
 import com.netcracker.project.study.model.annotations.*;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -9,8 +13,7 @@ import java.util.*;
 
 
 @ObjectType(objectTypeId = DriverAttr.OBJECT_TYPE_ID)
-public class Driver extends Model implements DriverAttr{
-
+public class Driver extends Model implements DriverAttr, UserDetails{
 
     @Attribute(attrId = DriverAttr.LAST_NAME_ATTR)
     private @AttrValue String lastName;
@@ -42,6 +45,20 @@ public class Driver extends Model implements DriverAttr{
     @Attribute(attrId = DriverAttr.UNBAN_DATE_ATTR)
     private @AttrDate Date unbanDate;
 
+
+    private List<Role> authorities;
+
+    private String password;
+
+    private boolean accountNonExpired;
+
+    private boolean accountNonLocked;
+
+    private boolean credentialsNonExpired;
+
+    private boolean enabled;
+
+
     public Driver() {}
 
     public Driver(String name) {
@@ -51,6 +68,19 @@ public class Driver extends Model implements DriverAttr{
     public Driver(String name, String description) {
         super(name, description);
     }
+
+    public Driver(String username, String password,
+                  boolean accountNonExpired, boolean accountNonLocked,
+                  boolean credentialsNonExpired, boolean enabled, List authorities) {
+        this.email = username;
+        this.password = password;
+        this.accountNonExpired = accountNonExpired;
+        this.accountNonLocked = accountNonLocked;
+        this.credentialsNonExpired = credentialsNonExpired;
+        this.enabled = enabled;
+        this.authorities = authorities;
+    }
+
 
     public String getLastName() {
         return lastName;
@@ -130,6 +160,70 @@ public class Driver extends Model implements DriverAttr{
 
     public void setUnbanDate(Date unbanDate) {
         this.unbanDate = unbanDate;
+    }
+
+
+    public void setAuthorities(List<Role> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.email = username;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public List<Role> getAuthorities() {
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 
     @Override

@@ -9,9 +9,9 @@
 
 
     <context:annotation-config/>
-    <context:component-scan base-package="com.netcracker.project.study" />
+    <context:component-scan base-package="com.netcracker.project.study.persistence" />
 
-    <bean class="com.netcracker.project.study.vaadin.configurations.VaadinConfiguration"/>
+    <bean class="com.netcracker.project.study.vaadin.configurations.VaadinConfig"/>
 
     <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />

@@ -1,6 +1,7 @@
 package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.order.Order;
+import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.popup.AdminOrderInfoPopUp;
 import com.vaadin.server.FontAwesome;
@@ -66,7 +67,7 @@ public class OrdersGrid extends CustomComponent {
                 Order.getDriverOnOrder().getLastName() : "").setCaption("Driver");
         ordersGrid.addColumn(Order -> Order.getClientOnOrder() != null ? Order.getClientOnOrder().getFirstName() + " " +
                 Order.getClientOnOrder().getLastName() : "").setCaption("Client");
-        ordersGrid.addColumn(Order::getStatus).setCaption("Status");
+        ordersGrid.addColumn(order -> OrderStatusEnum.getStatusValue(order.getStatus())).setCaption("Status");
         ordersGrid.addColumn(Order::getCost).setCaption("Cost");
         ordersGrid.addColumn(Order::getDistance).setCaption("Distance");
         ordersGrid.addColumn(Order::getDriverRating).setCaption("Driver rating");

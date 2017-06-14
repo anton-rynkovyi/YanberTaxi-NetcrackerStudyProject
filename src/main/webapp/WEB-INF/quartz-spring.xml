@@ -10,7 +10,7 @@
 
     <task:annotation-driven/>
     <context:annotation-config/>
-    <context:component-scan base-package="com.netcracker.project.study" />
+    <context:component-scan base-package="com.netcracker.project.study.services.tools" />
 
     <bean id="banJob"
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

@@ -28,6 +28,7 @@ public class DriverPage extends UI{
 
     private VerticalLayout verticalLayout;
 
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         setupLayout();
@@ -51,4 +52,6 @@ public class DriverPage extends UI{
         viewDisplay.setSizeFull();
         verticalLayout.addComponent(viewDisplay);
     }
+
+
 }

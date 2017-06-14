@@ -12,7 +12,7 @@ import java.util.Properties;
 public class EmailMassageSender {
 
     private final String MY_EMAIL = "anton.rynkovoy@gmail.com";
-    private final String MY_PASSWORD = "*****************";
+    private final String MY_PASSWORD = "******";
     private final String MAIL_SUBJECT = "YanberTaxi Support:)";
     private Properties props;
 
@@ -26,7 +26,7 @@ public class EmailMassageSender {
         props.put("mail.smtp.port", "465");
     }
 
-    public void sendMassage(String email, String massage) {
+    public void sendMassage(String email, String message) {
         Session session = Session.getDefaultInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(MY_EMAIL, MY_PASSWORD);
@@ -34,13 +34,13 @@ public class EmailMassageSender {
         });
 
         try {
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(MY_EMAIL));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-            message.setSubject(MAIL_SUBJECT);
-            message.setText(massage, "utf-8", "html");
+            MimeMessage mimeMessage = new MimeMessage(session);
+            mimeMessage.setFrom(new InternetAddress(MY_EMAIL));
+            mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            mimeMessage.setSubject(MAIL_SUBJECT);
+            mimeMessage.setText(message, "utf-8", "html");
 
-            Transport.send(message);
+            Transport.send(mimeMessage);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }

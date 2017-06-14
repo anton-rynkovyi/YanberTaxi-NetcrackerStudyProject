@@ -201,27 +201,6 @@ public class Main {
         order.setDriverMemo("NEW - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
         facade.create(order);
 
-        Order order1 = new Order();
-        order1.setName(" order");
-        order1.setDriverId(BigInteger.valueOf(1));
-        order1.setClientId(BigInteger.valueOf(4));
-        order1.setCost(BigDecimal.valueOf(105.90));
-        order1.setDistance(BigInteger.valueOf(4783));
-        order1.setStatus(OrderStatusList.PERFORMED);
-        order1.setDriverMemo("NEW - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
-        facade.create(order1);
-
-
-        Order order2 = new Order();
-        order2.setName(" order");
-        order2.setDriverId(BigInteger.valueOf(1));
-        order2.setClientId(BigInteger.valueOf(4));
-        order2.setCost(BigDecimal.valueOf(105.90));
-        order2.setDistance(BigInteger.valueOf(4783));
-        order2.setStatus(OrderStatusList.CANCELED);
-        order2.setDriverMemo("NEW - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
-        facade.create(order2);
-
         /*Order order1 = new Order();
         order1.setName("yoba1");
         order1.setClientId(BigInteger.valueOf(4));
@@ -281,8 +260,8 @@ public class Main {
 
         //driverService.acceptOrder(BigInteger.valueOf(10),BigInteger.valueOf(1));
 
-        List<Order>orders = orderService.getOrdersByDriverId(BigInteger.valueOf(11),null);
-        System.out.println(orders.size());
+       /* List<Order>orders = orderService.getOrdersByDriverId(BigInteger.valueOf(11));
+        System.out.println(orders.size());*/
 
 
         /*List<Order>orders = adminService.allModelsAsList(Order.class);
