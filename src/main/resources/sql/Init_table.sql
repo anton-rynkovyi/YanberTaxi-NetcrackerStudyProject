@@ -96,3 +96,15 @@ end;
     CONSTRAINT CON_ROBJECT_ID FOREIGN KEY (OBJECT_ID) REFERENCES OBJECTS (OBJECT_ID) ON DELETE CASCADE,
     CONSTRAINT CON_RATTR_ID FOREIGN KEY (ATTR_ID) REFERENCES ATTRTYPE (ATTR_ID) ON DELETE CASCADE
   );
+
+begin
+execute immediate 'drop table Users cascade constraint';
+exception
+ when others then null;
+end;
+/
+CREATE TABLE Users
+(object_id    NUMBER(20) REFERENCES OBJECTS (object_id),
+ login  VARCHAR2(50) NOT NULL,
+	password       VARCHAR2(20) NOT NULL
+    ) ;

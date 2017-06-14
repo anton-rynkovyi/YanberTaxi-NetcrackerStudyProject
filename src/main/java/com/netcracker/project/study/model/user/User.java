@@ -9,20 +9,19 @@ import com.netcracker.project.study.model.annotations.ObjectType;
 
 import java.math.BigInteger;
 
-@ObjectType(objectTypeId = UserAttr.OBJECT_TYPE_ID)
-public class User extends Model implements UserAttr {
+public class User extends Model {
 
-    @Attribute(attrId = UserAttr.LOGIN_ATTR)
-    private @AttrValue String login;
+    @Attribute(attrId = LOGIN)
+    private String login;
 
-    @Attribute(attrId = UserAttr.OBJECT_ID_ATTR)
-    private @AttrValue BigInteger objectId;
+    @Attribute(attrId = OBJECT_ID_USER)
+    private  BigInteger objectId;
 
-    @Attribute(attrId = UserAttr.PASSWORD_ATTR)
-    private @AttrValue String password;
+    @Attribute(attrId = PASSWORD)
+    private  String password;
 
-    @Attribute(attrId = UserAttr.ROLE_ATTR)
-    private @AttrList BigInteger role;
+    @Attribute(attrId = ROLE)
+    private  BigInteger role;
 
     public User() {}
 
