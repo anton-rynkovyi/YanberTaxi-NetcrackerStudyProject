@@ -19,6 +19,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import java.math.BigInteger;
@@ -33,10 +34,10 @@ public class Main {
         DriverService driverService = ctx.getBean(DriverServiceImpl.class);
         OrderService orderService = ctx.getBean(OrderServiceImpl.class);
 
-        Driver driver = new Driver();
+       /* Driver driver = new Driver();
         facade.create(driver);
         driverService.changeStatus(DriverStatusList.FREE,driver);
-        driverService.changeStatus(DriverStatusList.PERFORMING_ORDER,driver);
+        driverService.changeStatus(DriverStatusList.PERFORMING_ORDER,driver);*/
 
         /*for (int i = 0; i < 1000; i++) {
             Client client = new Client("NEW CLIENTssssssssssss", "It's client!");
@@ -117,7 +118,7 @@ public class Main {
         }*/
 
 
-        /*Driver driver = new Driver();
+        Driver driver = new Driver();
         driver.setName("Driver Vadim");
         driver.setFirstName("Vadim");
         driver.setLastName("Martsun");
@@ -128,16 +129,34 @@ public class Main {
         driver.setStatus(BigInteger.valueOf(3));
         adminService.createModel(driver);
 
+        Car car = new Car();
+        car.setChildSeat(true);
+        car.setDriverId(driver.getObjectId());
+        car.setModelType("CX9");
+        car.setMakeOfCar("Mazda");
+        car.setStateNumber("BH4454TC");
+        car.setReleaseDate(java.sql.Date.valueOf("2012-01-01"));
+        adminService.createModel(car);
+
+
         Driver driver1 = new Driver();
-        driver1.setName("Driver Ryn");
         driver1.setFirstName("Anton");
         driver1.setLastName("Rynkovoy");
-        driver1.setEmail("vrynkovoy@gmail.com");
-        driver1.setMiddleName("Vladimirovich");
+        driver1.setEmail("anton.rynkovoy@gmail.com");
+        driver1.setMiddleName("Andreevich");
         driver1.setExperience(BigInteger.valueOf(5));
         driver1.setPhoneNumber("(068)062-68-53");
         driver1.setStatus(BigInteger.valueOf(3));
         adminService.createModel(driver1);
+
+        Car car1 = new Car();
+        car1.setChildSeat(true);
+        car1.setDriverId(driver1.getObjectId());
+        car1.setModelType("6");
+        car1.setMakeOfCar("Mazda");
+        car1.setStateNumber("BH4373TC");
+        car1.setReleaseDate(java.sql.Date.valueOf("2004-01-01"));
+        adminService.createModel(car1);
 
         Driver driver2 = new Driver();
         driver2.setName("Driver Eugene");
@@ -150,20 +169,22 @@ public class Main {
         driver2.setStatus(BigInteger.valueOf(3));
         adminService.createModel(driver2);
 
-        Client client = new Client();
+        Car car2 = new Car();
+        car2.setChildSeat(false);
+        car2.setDriverId(driver2.getObjectId());
+        car2.setModelType("i8");
+        car2.setMakeOfCar("BMW");
+        car2.setStateNumber("YANBER");
+        car2.setReleaseDate(java.sql.Date.valueOf("2017-01-01"));
+        adminService.createModel(car2);
+
+        /*Client client = new Client();
         client.setLastName("Yankovskaya");
         client.setFirstName("Maria");
         client.setPhoneNumber("(098)560-55-01");
         client.setPoints(BigInteger.ONE);
-        adminService.createModel(client);
+        adminService.createModel(client);*/
 
-
-        Client client1 = new Client();
-        client1.setLastName("Yoba");
-        client1.setFirstName("Pidor");
-        client1.setPhoneNumber("(098)560-55-01");
-        client1.setPoints(BigInteger.ONE);
-        adminService.createModel(client1);*/
 
 
         /*Car car = new Car();
@@ -192,14 +213,14 @@ public class Main {
         facade.create(client1);*/
 
 
-        Order order = new Order();
+       /* Order order = new Order();
         order.setName(" order");
         order.setClientId(BigInteger.valueOf(4));
         order.setCost(BigDecimal.valueOf(105.90));
         order.setDistance(BigInteger.valueOf(4783));
         order.setStatus(OrderStatusList.NEW);
         order.setDriverMemo("NEW - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
-        facade.create(order);
+        facade.create(order);*/
 
         /*Order order1 = new Order();
         order1.setName("yoba1");

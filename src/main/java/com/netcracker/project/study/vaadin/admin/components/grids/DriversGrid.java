@@ -285,4 +285,8 @@ public class DriversGrid extends CustomComponent{
     public void setDriversList(List<Driver> driversList) {
         this.driversList = driversList;
     }
+
+    public Window getDriverInfoWindow() {
+        return driverInfoWindow;
+    }
 }

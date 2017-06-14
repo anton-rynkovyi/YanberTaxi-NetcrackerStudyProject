@@ -1,11 +1,12 @@
 package com.netcracker.project.study.vaadin.authorization.components.popups;
 
+import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+@SpringComponent
 public class ClientRegistration extends VerticalLayout{
-
-
 
     public ClientRegistration() {
         VerticalLayout root = genRootLayout();
@@ -22,8 +23,7 @@ public class ClientRegistration extends VerticalLayout{
 
     private Component genFields() {
         VerticalLayout verticalLayout = new VerticalLayout();
-
+        //TextField
         return verticalLayout;
     }
-
 }

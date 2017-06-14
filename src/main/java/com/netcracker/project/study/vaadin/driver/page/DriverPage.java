@@ -9,13 +9,18 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 
 import java.math.BigInteger;
 
 @Theme("valo")
+@UIScope
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @SpringUI(path = "/driver")
 public class DriverPage extends UI{
 

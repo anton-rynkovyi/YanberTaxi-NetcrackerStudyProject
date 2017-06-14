@@ -11,8 +11,8 @@ import java.util.Properties;
 @Service
 public class EmailMassageSender {
 
-    private final String MY_EMAIL = "anton.rynkovoy@gmail.com";
-    private final String MY_PASSWORD = "******";
+    private final String MY_EMAIL = "yanbertaxi.netcracker@gmail.com";
+    private final String MY_PASSWORD = "adminpassword";
     private final String MAIL_SUBJECT = "YanberTaxi Support:)";
     private Properties props;
 

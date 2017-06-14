@@ -15,14 +15,19 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.util.List;
 
 @SpringView(name = OrdersViewForDrivers.VIEW_NAME)
+@ViewScope
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "ordersForDriverPage";
@@ -60,7 +65,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     Button performButton;
 
     @PostConstruct
-    void init() {
+    public void init() {
         rootLayout = new VerticalLayout();
         initFakeDriver();
         currentOrderPanel = getCurrentorderPanel();
@@ -83,12 +88,12 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         addComponent(rootLayout);
     }
 
-    private void initFakeDriver(){
-        driver = facade.getOne(BigInteger.valueOf(115),Driver.class);
-    }
-
     public Driver getDriver(){
         return driver;
+    }
+
+    private void initFakeDriver(){
+        driver = facade.getOne(BigInteger.valueOf(202),Driver.class);
     }
 
     private String getDriverName(){

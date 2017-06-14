@@ -12,6 +12,7 @@ import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
+import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -108,7 +109,21 @@ public class DriverInfoPopUP extends VerticalLayout {
         Button btnFire = new Button("Fire");
         btnFire.addClickListener(clickEvent -> {
             adminService.deleteModel(driver);
-            driversGrid.refreshGrid();
+            String firstName = driver.getFirstName();
+            String lastName = driver.getLastName();
+            MessageBox
+                    .createQuestion()
+                    .withCaption("Delete")
+                    .withMessage("Are you want to fire " + firstName + " " + lastName + "?")
+                    .withYesButton(() -> {
+                        adminService.deleteModel(driver);
+                        driversGrid.refreshGrid();
+                    })
+                    .withNoButton(() -> {})
+                    .open();
+
+            driversGrid.getDriverInfoWindow().close();
+
         });
         horizontalLayout.addComponent(btnFire);
 

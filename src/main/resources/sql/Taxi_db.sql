@@ -93,8 +93,6 @@ INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (42,11,'admin');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (42,12,'driver');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (42,13,'clients');
 
-
-
 drop sequence ob_id;
 create sequence ob_id;
 

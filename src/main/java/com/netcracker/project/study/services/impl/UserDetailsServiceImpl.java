@@ -7,7 +7,9 @@ import com.netcracker.project.study.model.admin.Admin;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverAttr;
+import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import org.apache.xpath.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -32,18 +34,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     PersistenceFacade persistenceFacade;
 
+    @Autowired
+    OrdersViewForDrivers ordersViewForDrivers;
+
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
-        //Driver userDriver = persistenceFacade.getOne(BigInteger.valueOf(115), Driver.class);
-        Driver user = new Driver();
-        user.setUsername("admin");
+        Driver user = persistenceFacade.getOne(BigInteger.valueOf(202), Driver.class);
+        //Driver user = new Driver();
+        //user.setObjectId(BigInteger.valueOf(202));
+        user.setUsername("driver");
         user.setPassword("123");
         user.setAuthorities(ImmutableList.of(Role.ROLE_DRIVER));
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
         user.setEnabled(true);
+       //ordersViewForDrivers.init(user);
 
         return user;
     }
@@ -72,14 +79,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 "WHERE attr.value = '" + phoneNumber + "'";
         List<Model> users = persistenceFacade.getSome(query, Model.class);
         if (users != null && !users.isEmpty()) {
-            Model user = users.get(0);
-            if (user instanceof Driver) {
-                return ((T) user);
-            } else if (user instanceof Client) {
-                return (T) user;
-            } else if (user instanceof Admin) {
-                return (T) user;
-            }
+
         }
         return null;
     }

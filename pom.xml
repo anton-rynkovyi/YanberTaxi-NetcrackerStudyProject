@@ -94,6 +94,11 @@
 			<artifactId>material</artifactId>
 			<version>0.6.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>vaadin-toastr</artifactId>
+			<version>1.0.7</version>
+		</dependency>
 		<!--VAADIN SETTINGS-->
 		<dependency>
 			<groupId>com.vaadin</groupId>
