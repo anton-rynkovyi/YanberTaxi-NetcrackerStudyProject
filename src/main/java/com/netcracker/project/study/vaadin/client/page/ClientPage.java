@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 
 @Theme("valo")
-@SpringUI(path = "client")
+@SpringUI(path = "/client")
 //@Widgetset("AppWidgetset")
 public class ClientPage extends UI {
 

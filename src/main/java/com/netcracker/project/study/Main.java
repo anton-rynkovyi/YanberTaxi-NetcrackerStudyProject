@@ -256,23 +256,6 @@ public class Main {
         facade.create(route1);
         facade.create(route2);*/
 
-       /* Order order1 = new Order();
-        order.setName("Order_31");
-        order.setClientId(BigInteger.valueOf(4));
-        order.setDriverId(BigInteger.valueOf(1));
-        order.setCost(BigDecimal.valueOf(205));
-        order.setDistance(BigInteger.valueOf(142));
-        order.setStatus(BigInteger.valueOf(6));
-        facade.create(order1);
-        Order order2 = new Order();
-        order.setName("Order_41");
-        order.setClientId(BigInteger.valueOf(4));
-        order.setDriverId(BigInteger.valueOf(1));
-        order.setCost(BigDecimal.valueOf(190));
-        order.setDistance(BigInteger.valueOf(123));
-        order.setStatus(BigInteger.valueOf(6));
-        facade.create(order2);*/
-
        /*Order order = facade.getOne(BigInteger.valueOf(10),Order.class);
         System.out.println(order.getName());
         System.out.println(order.getClientId());

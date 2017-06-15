@@ -61,6 +61,13 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
+    public void setDistance(BigInteger orderId, long distance){
+        Order order = persistenceFacade.getOne(orderId,Order.class);
+        order.setDistance(BigInteger.valueOf(distance));
+        persistenceFacade.update(order);
+    }
+
+    @Override
     public List<OrderInfo> getOrdersInfo(List<Order> orders) {
         List<OrderInfo>orderInfos = new ArrayList<>();
         int counter = 1;

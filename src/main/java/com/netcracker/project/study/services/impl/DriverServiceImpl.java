@@ -43,7 +43,7 @@ public class DriverServiceImpl implements DriverService {
         if(order.getStatus().equals(OrderStatus.NEW)){
             order.setDriverId(driverId);
             order.setStatus(OrderStatus.ACCEPTED);
-            driver.setStatus(DriverStatusList.PERFORMING_ORDER);
+            driver.setStatus(DriverStatusList.ON_CALL);
             persistenceFacade.update(order);
             persistenceFacade.update(driver);
         }else{

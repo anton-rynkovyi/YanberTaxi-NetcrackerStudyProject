@@ -32,7 +32,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "ordersForDriverPage";
 
-
     @Autowired
     private AllOrdersTab allOrders;
 
@@ -62,14 +61,24 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     OrderInfo currentOrder;
 
-    Button performButton;
+    Button startPerformingButton;
+    Button finishPerformingButton;
+
+    Window window;
+
+    long startkm;
+    long finishkm;
 
     @PostConstruct
     public void init() {
         rootLayout = new VerticalLayout();
         initFakeDriver();
         currentOrderPanel = getCurrentorderPanel();
+
         initPerformingbutton();
+        initPerformedbutton();
+
+        setButtonsEnabled();
 
         tabSheet = getTabSheet();
         tabSheet.setHeight(100,Unit.PERCENTAGE);
@@ -88,12 +97,30 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         addComponent(rootLayout);
     }
 
+
+    private void setButtonsEnabled(){
+        if(currentOrder == null){
+            startPerformingButton.setEnabled(false);
+            finishPerformingButton.setEnabled(false);
+        }else{
+            if(currentOrder.getStatus().equals("Accepted")){
+                startPerformingButton.setEnabled(true);
+                finishPerformingButton.setEnabled(false);
+            }
+            if(currentOrder.getStatus().equals("Performing")){
+                startPerformingButton.setEnabled(false);
+                finishPerformingButton.setEnabled(true);
+            }
+        }
+
+    }
+
     public Driver getDriver(){
         return driver;
     }
 
     private void initFakeDriver(){
-        driver = facade.getOne(BigInteger.valueOf(202),Driver.class);
+        driver = facade.getOne(BigInteger.valueOf(1),Driver.class);
     }
 
     private String getDriverName(){
@@ -141,7 +168,12 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         tabSheet.addTab(getNewOrdersControlTab(),"New orders (" + getNewOrdersCount() + ")");
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.addComponent(currentOrderPanel);
-        verticalLayout.addComponent(performButton);
+
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.addComponent(startPerformingButton);
+        horizontalLayout.addComponent(finishPerformingButton);
+
+        verticalLayout.addComponent(horizontalLayout);
         tabSheet.addTab(verticalLayout,"Current order");
 
         return tabSheet;
@@ -149,14 +181,28 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     public void Refresh(){
         initFakeDriver();
-        driverPanel = getDriverStatus();
-        statusPanel = getDriverStatus();
-        ratingPanel = getDriverRating();
+        driverPanel.setContent(new Label("<b>" + getDriverName() + "</b>", ContentMode.HTML));
+        statusPanel.setContent(new Label("<b>" + DriverStatusEnum.getStatusValue(driver.getStatus()) + "</b>", ContentMode.HTML));
+        ratingPanel.setContent(new Label("<b>" + driver.getRating() + "</b>", ContentMode.HTML));
         tabSheet.getTab(1).setCaption("New orders (" + getNewOrdersCount() + ")");
         allOrders.refreshGrid();
-        currentOrderPanel = getCurrentorderPanel();
+        refreshCurrentOrderPanel();
+        setButtonsEnabled();
     }
 
+    private void refreshCurrentOrderPanel(){
+        List<Order>orders = orderService.getCurrentOrderByDriverId(driver.getObjectId());
+        if(orders.size() != 0){
+            List<OrderInfo> info = orderService.getOrdersInfo(orders);
+            currentOrder = info.get(info.size() - 1);
+            VerticalLayout verticalLayout = new VerticalLayout();
+            verticalLayout.addComponent(getOrderInfoLayout());
+            currentOrderPanel.setContent(verticalLayout);
+        }else{
+            Label label = new Label("You have no order performing");
+            currentOrderPanel.setContent(label);
+        }
+    }
     private Panel getCurrentorderPanel(){
         List<Order>orders = orderService.getCurrentOrderByDriverId(driver.getObjectId());
         Panel panel = new Panel("Current order");
@@ -175,17 +221,70 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     }
 
     private void initPerformingbutton(){
-        performButton = new Button("Perform");
-        performButton.addClickListener(event->{
-            if(currentOrder.getStatus().equals("Accepted")){
-                orderService.changeStatus(OrderStatus.PERFORMING,currentOrder.getObjectId());
-                driverService.changeStatus(DriverStatusList.PERFORMING_ORDER,driver.getObjectId());
-            }
-            if(currentOrder.getStatus().equals("Performing")){
-                orderService.changeStatus(OrderStatus.PERFORMED,currentOrder.getObjectId());
-                driverService.changeStatus(DriverStatusList.FREE,driver.getObjectId());
-            }
+        startPerformingButton = new Button("Start Performing");
+        startPerformingButton.addClickListener(event -> {
+
+            TextField textField = new TextField("Count of km");
+            HorizontalLayout horizontalLayout = new HorizontalLayout();
+            horizontalLayout.addComponent(textField);
+
+            Button ok = new Button("OK");
+            ok.addClickListener(newEvent->{
+                try{
+                    startkm = Long.parseLong(textField.getValue());
+                    orderService.changeStatus(OrderStatus.PERFORMING, currentOrder.getObjectId());
+                    driverService.changeStatus(DriverStatusList.PERFORMING_ORDER, driver.getObjectId());
+                }catch(NumberFormatException e){
+                }
+
+            });
+
+            horizontalLayout.addComponent(ok);
+
+            window = new Window();
+            window.setCaption("Enter km");
+            window.center();
+            window.setModal(true);
+            window.setContent(horizontalLayout);
+            UI.getCurrent().addWindow(window);
             Refresh();
+
+        });
+    }
+
+    private void initPerformedbutton(){
+        finishPerformingButton = new Button("Finish Performing");
+        finishPerformingButton.addClickListener(event -> {
+
+            TextField textField = new TextField("Count of km");
+            HorizontalLayout horizontalLayout = new HorizontalLayout();
+            horizontalLayout.addComponent(textField);
+
+            Button ok = new Button("OK");
+            ok.addClickListener(newEvent->{
+                try{
+                    finishkm = Long.parseLong(textField.getValue());
+                    long distance = finishkm - startkm;
+                    orderService.setDistance(currentOrder.getObjectId(),distance);
+                    orderService.changeStatus(OrderStatus.PERFORMED, currentOrder.getObjectId());
+                    driverService.changeStatus(DriverStatusList.FREE, driver.getObjectId());
+                }catch(NumberFormatException e){
+                }
+
+            });
+
+
+            horizontalLayout.addComponent(ok);
+
+            window = new Window();
+            window.setCaption("Enter km");
+            window.center();
+            window.setModal(true);
+            window.setContent(horizontalLayout);
+            UI.getCurrent().addWindow(window);
+
+            startPerformingButton.setEnabled(false);
+            finishPerformingButton.setEnabled(false);
         });
     }
 
@@ -230,4 +329,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         Refresh();
     }
+
+
 }

@@ -7,9 +7,12 @@ import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.OrderService;
+import com.netcracker.project.study.vaadin.Broadcaster;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientOrdersGrid;
 import com.netcracker.project.study.vaadin.client.components.OrderMaker;
+import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
+import com.vaadin.annotations.Push;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -29,6 +32,10 @@ import java.util.List;
 public class ClientView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "client";
+
+
+    @Autowired
+    OrdersViewForDrivers ordersViewForDrivers;
 
     @Autowired
     private OrderMaker orderMaker;
@@ -174,6 +181,7 @@ public class ClientView extends VerticalLayout implements View {
         @Override
         public void buttonClick(Button.ClickEvent clickEvent) {
             List<Order> orderList = orderService.getActiveOrdersByClientId(client.getObjectId());
+            Broadcaster.broadcast("sdsdfsfsf");
             if (orderList.size()>0) {
                 for (Order order : orderList) {
                     orderService.changeStatus(OrderStatus.CANCELED, order.getObjectId());

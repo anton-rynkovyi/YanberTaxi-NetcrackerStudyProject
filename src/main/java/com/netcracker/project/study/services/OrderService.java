@@ -17,6 +17,8 @@ public interface OrderService {
 
     void changeStatus(BigInteger status, BigInteger orderId);
 
+    void setDistance(BigInteger orderId, long distance);
+
     String getStatusValue(BigInteger statusId);
 
     List<OrderInfo>getOrdersInfo(List<Order>orders);
