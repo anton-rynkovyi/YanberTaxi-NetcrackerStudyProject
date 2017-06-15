@@ -30,6 +30,7 @@ public class OrderInfoForNewOrders extends HorizontalLayout {
     @Autowired
     OrderService orderService;
 
+
     public void init(OrderInfo orderInfo) {
         this.orderInfo = orderInfo;
         removeAllComponents();

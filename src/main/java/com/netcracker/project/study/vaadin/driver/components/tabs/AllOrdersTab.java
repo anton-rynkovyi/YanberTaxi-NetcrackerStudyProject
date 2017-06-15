@@ -57,6 +57,7 @@ public class AllOrdersTab extends CustomComponent {
         return orderInfoPopUp;
     }
 
+
     @PostConstruct
     public void init() {
         ordersGrid = generateOrdersGrid();

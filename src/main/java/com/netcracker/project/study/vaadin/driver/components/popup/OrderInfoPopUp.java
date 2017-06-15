@@ -27,6 +27,7 @@ public class OrderInfoPopUp extends VerticalLayout {
     HorizontalLayout rootLayout;
     @Autowired private OrderServiceImpl orderService;
 
+
     public void init(OrderInfo orderInfo) {
         this.orderInfo = orderInfo;
         removeAllComponents();

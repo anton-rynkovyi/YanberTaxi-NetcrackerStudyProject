@@ -52,6 +52,7 @@ public class OrderMaker extends CustomComponent {
 
     public int getcountOfTextFields() {return countOfTextFields;}
 
+
     @PostConstruct
     public void init() {
 
@@ -243,5 +244,4 @@ public class OrderMaker extends CustomComponent {
         verticalLayout.addComponent(content);
         window.setContent(verticalLayout);
     }
-
 }

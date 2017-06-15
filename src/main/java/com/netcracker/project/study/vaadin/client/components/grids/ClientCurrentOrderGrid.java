@@ -39,7 +39,7 @@ public class ClientCurrentOrderGrid extends CustomComponent {
 
     private VerticalLayout currentOrder() {
         List<Order> clientCurrentOrder = orderService.getCurrentOrderByClientId(client.getObjectId());
-        Order currentOrder = clientCurrentOrder.size() >0 ? clientCurrentOrder.get(0) : null;
+        Order currentOrder = clientCurrentOrder.size() > 0 ? clientCurrentOrder.get(0) : null;
 
         MarginInfo margin = new MarginInfo(false, false, false, true);
 

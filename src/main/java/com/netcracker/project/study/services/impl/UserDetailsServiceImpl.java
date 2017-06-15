@@ -72,8 +72,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return user;
     }
 
-
-
     public boolean hasRole(String role) {
         Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>)
                 SecurityContextHolder.getContext().getAuthentication().getAuthorities();
@@ -86,19 +84,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         return hasRole;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public <T extends Model> T findUserByPhoneNumber(String phoneNumber) {
         String query = "" +

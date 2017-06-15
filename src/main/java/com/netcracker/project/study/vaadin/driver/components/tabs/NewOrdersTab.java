@@ -50,6 +50,7 @@ public class NewOrdersTab extends CustomComponent {
 
     Driver driver;
 
+
     @PostConstruct
     public void init() {
         initRootLayout();
