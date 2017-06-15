@@ -11,6 +11,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -46,11 +47,12 @@ public class DriversRequestsGrid  extends CustomComponent{
 
     private void initWindow() {
         window = new Window("Driver information");
-        window.setIcon(VaadinIcons.INFO_CIRCLE);
+        window.setIcon(VaadinIcons.INFO);
         window.setWidthUndefined();
         window.setHeightUndefined();
         window.center();
         window.setModal(true);
+        window.setResizable(false);
         window.setContent(driverInfoPopUp);
     }
 

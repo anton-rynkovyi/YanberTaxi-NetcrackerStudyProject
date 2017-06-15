@@ -22,16 +22,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
-    /*@Autowired
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
+        /*auth.inMemoryAuthentication()
                 .withUser("admin").password("123").roles("ADMIN")
                 .and()
                 .withUser("client").password("123").roles("CLIENT")
                 .and()
-                .withUser("driver").password("123").roles("DRIVER");
-        //auth.userDetailsService(userDetailsService);
-    }*/
+                .withUser("driver").password("123").roles("DRIVER");*/
+        auth.userDetailsService(userDetailsService);
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

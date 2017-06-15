@@ -4,8 +4,10 @@ import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.popup.AdminOrderInfoPopUp;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,8 +42,10 @@ public class OrdersGrid extends CustomComponent {
 
     private void initOrderInfoWindow() {
         orderInfoWindow = new Window("Information about the order");
+        orderInfoWindow.setIcon(VaadinIcons.INFO);
         orderInfoWindow.center();
         orderInfoWindow.setModal(true);
+        orderInfoWindow.setResizable(false);
         orderInfoWindow.setContent(orderInfoPopUp);
     }
 

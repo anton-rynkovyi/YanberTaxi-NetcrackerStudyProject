@@ -12,6 +12,7 @@ import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequest
 import com.netcracker.project.study.services.tools.EmailMassageSender;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -26,8 +26,6 @@ import java.math.BigInteger;
 import java.util.List;
 
 @SpringView(name = OrdersViewForDrivers.VIEW_NAME)
-@ViewScope
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "ordersForDriverPage";
@@ -120,7 +118,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     }
 
     private void initFakeDriver(){
-        driver = facade.getOne(BigInteger.valueOf(1),Driver.class);
+        driver = facade.getOne(BigInteger.valueOf(202),Driver.class);
     }
 
     private String getDriverName(){

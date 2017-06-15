@@ -16,13 +16,17 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import de.steinwedel.messagebox.MessageBox;
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+
 
 @SpringComponent
 public class DriversGrid extends CustomComponent{
@@ -172,22 +176,28 @@ public class DriversGrid extends CustomComponent{
 
     private void initCreateDriverWindow() {
         createDriverWindow = new Window("Add new driver");
+        createDriverWindow.setIcon(VaadinIcons.INSERT);
         createDriverWindow.center();
         createDriverWindow.setModal(true);
+        createDriverWindow.setResizable(false);
         createDriverWindow.setContent(driverCreatePopUp);
     }
 
     private void initDriverInfoWindow() {
         driverInfoWindow = new Window("Driver information");
+        driverInfoWindow.setIcon(VaadinIcons.INFO);
         driverInfoWindow.center();
         driverInfoWindow.setModal(true);
+        driverInfoWindow.setResizable(false);
         driverInfoWindow.setContent(driverInfoPopUp);
     }
 
     private void initUpdateInfoWindow() {
         updateDriverWindow = new Window("Update driver");
+        updateDriverWindow.setIcon(VaadinIcons.UPLOAD);
         updateDriverWindow.center();
         updateDriverWindow.setModal(true);
+        updateDriverWindow.setResizable(false);
         updateDriverWindow.setContent(driverUpdatePopUp);
     }
 

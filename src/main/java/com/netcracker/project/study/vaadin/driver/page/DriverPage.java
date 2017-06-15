@@ -18,8 +18,6 @@ import org.springframework.context.annotation.Scope;
 import java.math.BigInteger;
 
 @Theme("valo")
-@UIScope
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @SpringUI(path = "/driver")
 public class DriverPage extends UI{
 
@@ -31,11 +29,6 @@ public class DriverPage extends UI{
     static private Navigator navigator;
 
     private VerticalLayout rootLayout;
-
-    Driver driver;
-
-    @Autowired
-    PersistenceFacade facade;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -53,15 +46,15 @@ public class DriverPage extends UI{
         navigator.addProvider(provider);
         navigator.navigateTo(OrdersViewForDrivers.VIEW_NAME);
 
-        OrdersViewForDrivers view = (OrdersViewForDrivers)navigator.getCurrentView();
+        //OrdersViewForDrivers view = (OrdersViewForDrivers)navigator.getCurrentView();
 
-        setPollInterval(1000);
+        /*setPollInterval(1000);
         addPollListener(new UIEvents.PollListener() {
             @Override
             public void poll(UIEvents.PollEvent event) {
                 view.Refresh();
             }
-        });
+        });*/
 
     }
 

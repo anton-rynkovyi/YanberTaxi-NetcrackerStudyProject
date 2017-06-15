@@ -12,6 +12,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 
-
+@ViewScope
 @SpringComponent
 public class OrderMaker extends CustomComponent {
 

@@ -5,6 +5,7 @@ import com.netcracker.project.study.vaadin.admin.views.DriversView;
 import com.netcracker.project.study.vaadin.client.views.ClientView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
@@ -19,12 +20,12 @@ import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolygon;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolyline;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 
 @Theme("valo")
 @SpringUI(path = "/client")
-//@Widgetset("AppWidgetset")
 public class ClientPage extends UI {
 
     @Autowired
@@ -39,6 +40,13 @@ public class ClientPage extends UI {
         VerticalLayout rootLayout = getVerticalLayout();
         rootLayout.setMargin(true);
         rootLayout.setSpacing(false);
+      /*  Button b = new Button("Logout");
+        rootLayout.addComponent(b);
+        b.addClickListener(clickEvent -> {
+            SecurityContextHolder.clearContext();
+            getUI().getSession().close();
+            getPage().setLocation("/auth");
+        });*/
         setContent(rootLayout);
 
         viewDisplay = getViewDisplay();

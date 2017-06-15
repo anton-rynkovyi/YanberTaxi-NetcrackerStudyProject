@@ -5,8 +5,10 @@ import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverBanInfoPopUp;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverInfoPopUP;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.PostConstruct;
+
 
 @SpringComponent
 public class DriversBanGrid extends CustomComponent{
@@ -47,8 +50,10 @@ public class DriversBanGrid extends CustomComponent{
 
     private void initDriverBanInfoWindow() {
         driverBanInfoWindow = new Window("Driver information");
+        driverBanInfoWindow.setIcon(VaadinIcons.INFO);
         driverBanInfoWindow.center();
         driverBanInfoWindow.setModal(true);
+        driverBanInfoWindow.setResizable(false);
         driverBanInfoWindow.setContent(driverBanInfoPopUp);
     }
 

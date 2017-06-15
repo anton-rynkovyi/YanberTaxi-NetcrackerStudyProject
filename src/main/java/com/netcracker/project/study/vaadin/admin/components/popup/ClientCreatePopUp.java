@@ -7,6 +7,7 @@ import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.grids.ClientsGrid;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+
 
 @SpringComponent
 public class ClientCreatePopUp extends VerticalLayout {

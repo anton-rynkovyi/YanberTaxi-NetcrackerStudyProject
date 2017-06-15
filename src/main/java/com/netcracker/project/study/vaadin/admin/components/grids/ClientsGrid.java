@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.util.*;
 
+
 @SpringComponent
 public class ClientsGrid extends CustomComponent {
 
@@ -87,6 +88,8 @@ public class ClientsGrid extends CustomComponent {
         createWindow = new Window("Add new client");
         createWindow.setIcon(VaadinIcons.USER);
         createWindow.center();
+        createWindow.setModal(true);
+        createWindow.setResizable(false);
         createWindow.setContent(clientCreatePopUp);
     }
 
@@ -95,6 +98,7 @@ public class ClientsGrid extends CustomComponent {
         viewClientWindow.setIcon(VaadinIcons.INFO);
         viewClientWindow.center();
         viewClientWindow.setModal(true);
+        viewClientWindow.setClosable(false);
         viewClientWindow.setContent(clientInfoPopUp);
     }
 

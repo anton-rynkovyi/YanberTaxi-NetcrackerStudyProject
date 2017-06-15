@@ -11,6 +11,7 @@ import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;

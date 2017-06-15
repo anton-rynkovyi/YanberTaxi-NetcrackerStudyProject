@@ -1,6 +1,7 @@
 package com.netcracker.project.study.services.impl;
 
 import com.netcracker.project.study.model.Model;
+import com.netcracker.project.study.model.Role;
 import com.netcracker.project.study.model.client.ClientAttr;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverAttr;
@@ -15,6 +16,7 @@ import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -37,6 +39,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Autowired
     DriverService driverService;
+
 
     @Override
     public boolean isVerificate(Driver driver) {

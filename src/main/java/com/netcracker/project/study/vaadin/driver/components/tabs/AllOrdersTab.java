@@ -15,14 +15,18 @@ import com.netcracker.project.study.vaadin.driver.pojos.*;
 import com.vaadin.data.HasValue;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+@ViewScope
 @SpringComponent
 public class AllOrdersTab extends CustomComponent {
 

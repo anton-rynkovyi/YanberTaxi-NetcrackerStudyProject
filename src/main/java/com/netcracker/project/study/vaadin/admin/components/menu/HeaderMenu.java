@@ -8,7 +8,6 @@ import com.vaadin.spring.annotation.*;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
-
 @SpringComponent
 public class HeaderMenu extends CustomComponent {
 

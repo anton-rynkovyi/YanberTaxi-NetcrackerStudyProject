@@ -18,19 +18,17 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.*;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.util.List;
 
-@Scope(value = "prototype")
 @SpringView(name = ClientView.VIEW_NAME)
-@SpringUI(path = "/client")
 public class ClientView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "client";
-
 
     @Autowired
     OrdersViewForDrivers ordersViewForDrivers;
@@ -102,7 +100,7 @@ public class ClientView extends VerticalLayout implements View {
     }
 
     public void initfakeClient(){
-        this.client = facade.getOne(BigInteger.valueOf(242), Client.class);
+        this.client = facade.getOne(BigInteger.valueOf(154), Client.class);
     }
 
     private HorizontalLayout setMainButtons() {

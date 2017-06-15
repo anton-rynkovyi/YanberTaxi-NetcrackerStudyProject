@@ -5,6 +5,7 @@ import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 

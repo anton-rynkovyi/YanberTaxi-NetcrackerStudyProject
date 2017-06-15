@@ -1,6 +1,8 @@
 package com.netcracker.project.study.vaadin.authorization.page;
 
 import com.github.appreciated.material.MaterialTheme;
+import com.netcracker.project.study.model.Role;
+import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.BottomTeamLogoLink;
 import com.netcracker.project.study.vaadin.authorization.components.popups.ClientRegistration;
 import com.netcracker.project.study.vaadin.configurations.SecurityConfig;
@@ -18,6 +20,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 
@@ -33,6 +36,9 @@ public class AuthorizationPage extends UI {
 
     @Autowired
     DaoAuthenticationProvider daoAuthenticationProvider;
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
 
     private Toastr toastr;
 
@@ -151,7 +157,13 @@ public class AuthorizationPage extends UI {
             try {
                 Authentication authenticated = daoAuthenticationProvider.authenticate(auth);
                 SecurityContextHolder.getContext().setAuthentication(authenticated);
-                getPage().setLocation("/driver");
+                if (userDetailsService.hasRole(Role.ROLE_CLIENT.name())) {
+                    getPage().setLocation("/client");
+                } else if (userDetailsService.hasRole(Role.ROLE_DRIVER.name())){
+                    getPage().setLocation("/driver");
+                } else if (userDetailsService.hasRole(Role.ROLE_ADMIN.name())) {
+                    getPage().setLocation("/admin");
+                }
             } catch (BadCredentialsException e){
                 toastr.toast(ToastBuilder.error("Wrong login or password!").build());
             }

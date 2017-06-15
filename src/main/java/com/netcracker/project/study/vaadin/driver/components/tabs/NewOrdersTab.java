@@ -10,16 +10,20 @@ import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.driver.components.popup.OrderInfoForNewOrders;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 
-
+@ViewScope
 @SpringComponent
 public class NewOrdersTab extends CustomComponent {
 
@@ -81,10 +85,11 @@ public class NewOrdersTab extends CustomComponent {
 
     private Panel getFilledLowPanel(Button button) {
         Panel panel = new Panel("Selected order");
-        panel.setSizeFull();
+        //panel.setSizeFull();
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.addComponent(orderInfoForNewOrders);
         verticalLayout.addComponent(button);
+        verticalLayout.addComponent(orderInfoForNewOrders);
+
         verticalLayout.setComponentAlignment(button, Alignment.BOTTOM_RIGHT);
         panel.setContent(verticalLayout);
 
@@ -123,7 +128,7 @@ public class NewOrdersTab extends CustomComponent {
     }
 
     private void setTakeOrderButton() {
-        takeOrderButton = new Button("Take", FontAwesome.CAB);
+        takeOrderButton = new Button("Take", VaadinIcons.TAXI);
         takeOrderButton.addClickListener(event -> {
             if (!ordersGrid.asSingleSelect().isEmpty()) {
                 List<Order>currentOrder = orderService.getCurrentOrderByDriverId(driver.getObjectId());

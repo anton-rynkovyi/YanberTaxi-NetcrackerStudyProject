@@ -6,14 +6,19 @@ import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.services.OrderService;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.util.List;
 
+
+@ViewScope
 @SpringComponent
 public class ClientOrdersGrid  extends CustomComponent {
 

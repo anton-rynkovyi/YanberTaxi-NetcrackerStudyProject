@@ -3,6 +3,7 @@ package com.netcracker.project.study.vaadin.admin.components.logo;
 import com.github.appreciated.material.MaterialTheme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Link;
