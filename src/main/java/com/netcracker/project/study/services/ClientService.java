@@ -12,7 +12,7 @@ public interface ClientService {
 
     void registrate(Client client);
 
-    void makeOrder(BigInteger clientId, BigDecimal distance, String[] addresses);
+    void makeOrder(BigInteger clientId, String[] addresses);
 
     void cancelOrder(Order order);
 

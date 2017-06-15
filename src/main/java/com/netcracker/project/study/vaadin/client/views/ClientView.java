@@ -2,7 +2,6 @@ package com.netcracker.project.study.vaadin.client.views;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
-import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
@@ -15,15 +14,16 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.ContentMode;
-import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.spring.annotation.*;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.util.List;
 
+@Scope(value = "prototype")
 @SpringView(name = ClientView.VIEW_NAME)
 @SpringUI(path = "/client")
 public class ClientView extends VerticalLayout implements View {
@@ -53,11 +53,13 @@ public class ClientView extends VerticalLayout implements View {
     private Window window;
 
     @PostConstruct
-    void init() {
-        initFakeClient();
+    public void init() {
+        initfakeClient();
         clientCurrentOrderGrid.setClient(client);
+        clientCurrentOrderGrid.init();
         orderMaker.setClient(client);
         clientOrdersGrid.setClient(client);
+        clientOrdersGrid.init();
 
         Label label = new Label("<h2>YanberTaxi</h2>", ContentMode.HTML);
         addComponent(label);
@@ -82,7 +84,6 @@ public class ClientView extends VerticalLayout implements View {
         ordersHistoryPanel.setIcon(VaadinIcons.RECORDS);
 
         HorizontalLayout clientCurrentOrder = new HorizontalLayout(clientCurrentOrderGrid);
-        clientCurrentOrder.setSizeFull();
 
         Panel currentOrderPanel = getPanel("Your current order", clientCurrentOrder);
         currentOrderPanel.setIcon(VaadinIcons.INFO_CIRCLE_O);
@@ -95,8 +96,8 @@ public class ClientView extends VerticalLayout implements View {
 
     }
 
-    private void initFakeClient(){
-        client = facade.getOne(BigInteger.valueOf(4),Client.class);
+    public void initfakeClient(){
+        this.client = facade.getOne(BigInteger.valueOf(242), Client.class);
     }
 
     private HorizontalLayout setMainButtons() {
@@ -140,7 +141,7 @@ public class ClientView extends VerticalLayout implements View {
         Label clientInfo = new Label("<b>" + getClientName() + "</b>", ContentMode.HTML);
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.addComponent(clientInfo);
-        horizontalLayout.setComponentAlignment(clientInfo,Alignment.BOTTOM_CENTER);
+        horizontalLayout.setComponentAlignment(clientInfo,Alignment.MIDDLE_CENTER);
         panel.setContent(horizontalLayout);
 
         return panel;

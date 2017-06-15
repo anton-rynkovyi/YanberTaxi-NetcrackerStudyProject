@@ -190,8 +190,23 @@ public class OrderServiceImpl implements OrderService{
                 " AND ref.attr_id = " +OrderAttr.CLIENT_ID_ATTR+
                 " AND ref.reference = "+clientId+
                 " AND attr.attr_id = 18"+
-                " AND (attr.list_value_id = "+OrderStatus.NEW+" or attr.list_value_id = "+OrderStatus.PERFORMING+")";
-                //" OR attr.list_value_id = "+OrderStatus.CANCELED+")";
+                " AND (attr.list_value_id = "+OrderStatus.NEW+" or attr.list_value_id = "+OrderStatus.ACCEPTED+")";
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        return orderList;
+    }
+
+    @Override
+    public List<Order> getPerformingOrdersByClientId(BigInteger clientId) {
+        String query = "" +
+                "SELECT obj.object_id " +
+                " FROM Objects obj " +
+                " INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
+                " INNER JOIN Attributes attr ON obj.object_id=attr.object_id "+
+                " WHERE obj.object_type_id = "+OrderAttr.OBJECT_TYPE_ID +
+                " AND ref.attr_id = " +OrderAttr.CLIENT_ID_ATTR+
+                " AND ref.reference = "+clientId+
+                " AND attr.attr_id = 18"+
+                " AND attr.list_value_id = "+OrderStatus.PERFORMING+"";
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }
@@ -205,6 +220,7 @@ public class OrderServiceImpl implements OrderService{
         persistenceFacade.create(orderStatus);
     }
 
+    @Override
     public List<Order>getCurrentOrderByDriverId(BigInteger driverId){
         String query = "SELECT obj.object_id" +
                 " FROM objects obj,attributes attr, objreference ref" +
@@ -214,6 +230,23 @@ public class OrderServiceImpl implements OrderService{
                 " attr.object_id = obj.object_id AND" +
                 " obj.object_type_id = " + Order.OBJECT_TYPE_ID + " AND" +
                 "(attr.list_value_id = " + OrderStatus.ACCEPTED + " OR " + "attr.list_value_id = " + OrderStatus.PERFORMING + ")";
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        return orderList;
+    }
+
+    @Override
+    public List<Order>getCurrentOrderByClientId(BigInteger clientId){
+        String query = "" +
+                "SELECT obj.object_id " +
+                " FROM Objects obj " +
+                " INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
+                " INNER JOIN Attributes attr ON obj.object_id=attr.object_id "+
+                " WHERE obj.object_type_id = "+OrderAttr.OBJECT_TYPE_ID +
+                " AND ref.attr_id = " +OrderAttr.CLIENT_ID_ATTR+
+                " AND ref.reference = "+clientId+
+                " AND attr.attr_id = 18"+
+                " AND (attr.list_value_id = "+OrderStatus.NEW+" or attr.list_value_id = "+OrderStatus.ACCEPTED+
+                " OR attr.list_value_id = "+OrderStatus.PERFORMING+")";
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }

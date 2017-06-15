@@ -35,7 +35,11 @@ public interface OrderService {
 
     List<Order> getActiveOrdersByClientId(BigInteger clientId);
 
+    List<Order> getPerformingOrdersByClientId(BigInteger clientId);
+
     List<Order>getCurrentOrderByDriverId(BigInteger driverId);
+
+    List<Order>getCurrentOrderByClientId(BigInteger clientId);
 
     Order getOrder(BigInteger orderId);
 

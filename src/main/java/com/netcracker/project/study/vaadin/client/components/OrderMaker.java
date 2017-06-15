@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 
 
 @SpringComponent
@@ -37,10 +38,6 @@ public class OrderMaker extends CustomComponent {
     private ClientCurrentOrderGrid clientCurrentOrderGrid;
 
     private TextField[] fields = new TextField[5];
-
-    private TextField distance;
-
-    private TextField cost;
 
     private VerticalLayout fieldsLayout = new VerticalLayout();
 
@@ -91,8 +88,6 @@ public class OrderMaker extends CustomComponent {
     private HorizontalLayout getOrderForm() {
         HorizontalLayout root = new HorizontalLayout();
 
-        HorizontalLayout distanceAndCost = new HorizontalLayout();
-
         VerticalLayout buttonsLayout = new VerticalLayout();
 
         buttonsLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
@@ -103,17 +98,6 @@ public class OrderMaker extends CustomComponent {
         fields[4].setIcon(VaadinIcons.FLAG_CHECKERED);
 
         fieldsLayout.addComponents(fields[0], fields[4]);
-
-        distance = new TextField("Distance");
-        distance.setIcon(VaadinIcons.ARROWS_LONG_H);
-        cost = new TextField("Cost");
-        cost.setIcon(VaadinIcons.MONEY);
-        cost.setEnabled(false);
-
-        distanceAndCost.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        distanceAndCost.addComponents(distance, cost);
-
-        fieldsLayout.addComponent(distanceAndCost);
 
         Button btnAddTextField = new Button("Add address", VaadinIcons.PLUS);
         btnAddTextField.setDescription("Please enter the starting point and destination.\n" +
@@ -210,29 +194,19 @@ public class OrderMaker extends CustomComponent {
             for (int i = 0; i < fields.length; i++) {
                 if (fields[i] != null) textFieldsStrings[i] = fields[i].getValue();
             }
-            if (!(distance.getValue().isEmpty()) && !(isFieldsEmpty(textFieldsStrings))) {
-                if (orderService.getActiveOrdersByClientId(client.getObjectId()).size()>0) {
+            if (!(isFieldsEmpty(textFieldsStrings))) {
+                if (orderService.getActiveOrdersByClientId(client.getObjectId()).size() >0
+                        || orderService.getPerformingOrdersByClientId(client.getObjectId()).size() >0 ) {
                     initWindow("<b>You have an active order. You can't simultaneously create multiple orders</b> ");
                     UI.getCurrent().addWindow(window);
-
                 } else {
-                    try {
-                        String distanceS = distance.getValue();
-                        if (distanceS.contains(",")) distanceS = distanceS.replace(',', '.');
-
-                        BigDecimal dist = BigDecimal.valueOf(Double.parseDouble(distanceS));
-                        cost.setValue(String.valueOf(dist.multiply(BigDecimal.valueOf(5))));
-                        clientService.makeOrder(client.getObjectId(), dist, textFieldsStrings);
-                        initWindow("<b>Your order was created successfully</b> ");
-                        UI.getCurrent().addWindow(window);
-                        clientOrdersGrid.init();
-                        clientCurrentOrderGrid.init();
-                        for (int i = 0; i < fields.length; i++) {
-                            if (fields[i] != null) fields[i].clear();
-                        }
-                    } catch (NumberFormatException ex) {
-                        initWindow("<b>Text field \"Distance\" may contain numbers only</b> ");
-                        UI.getCurrent().addWindow(window);
+                    clientService.makeOrder(client.getObjectId(), textFieldsStrings);
+                    initWindow("<b>Your order was created successfully</b> ");
+                    UI.getCurrent().addWindow(window);
+                    clientOrdersGrid.init();
+                    clientCurrentOrderGrid.init();
+                    for (int i = 0; i < fields.length; i++) {
+                        if (fields[i] != null) fields[i].clear();
                     }
                 }
             } else {

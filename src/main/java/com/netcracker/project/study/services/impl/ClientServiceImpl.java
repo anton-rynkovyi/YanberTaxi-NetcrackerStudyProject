@@ -37,14 +37,10 @@ public class ClientServiceImpl implements ClientService {
 
     @Transactional
     @Override
-    public void makeOrder(BigInteger clientId, BigDecimal distance, String[] addresses) {
+    public void makeOrder(BigInteger clientId, String[] addresses) {
         Order order = new Order();
         order.setClientId(clientId);
-
-        orderService.calcPrice(distance, order);
-
         order.setStatus(OrderStatus.NEW);
-        order.setDistance(BigInteger.valueOf(distance.longValue()));
         order.setName(addresses[0] + " - " + addresses[4]);
 
         persistenceFacade.create(order);
