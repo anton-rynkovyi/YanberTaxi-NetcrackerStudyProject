@@ -1,36 +1,29 @@
 package com.netcracker.project.study.model.user;
 
 
-import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.model.annotations.AttrList;
-import com.netcracker.project.study.model.annotations.AttrValue;
-import com.netcracker.project.study.model.annotations.Attribute;
-import com.netcracker.project.study.model.annotations.ObjectType;
 
 import java.math.BigInteger;
 
-public class User extends Model {
+public class User  {
 
-    @Attribute(attrId = LOGIN)
+    private BigInteger userId;
+
     private String login;
 
-    @Attribute(attrId = OBJECT_ID_USER)
     private  BigInteger objectId;
 
-    @Attribute(attrId = PASSWORD)
+
     private  String password;
 
-    @Attribute(attrId = ROLE)
-    private  BigInteger role;
+
+    private  String role;
 
     public User() {}
 
-    public User(String name) {
-        super(name);
-    }
 
-    public User(String name,String description) {
-        super(name,description);
+    public User(String login,String password) {
+        this.login = login;
+        this.password = password;
     }
 
     public String getLogin() {
@@ -57,12 +50,20 @@ public class User extends Model {
         this.password = password;
     }
 
-    public BigInteger getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(BigInteger role) {
+    public void setRole(String role) {
         this.role = role;
+    }
+
+    public BigInteger getUserId() {
+        return userId;
+    }
+
+    public void setUserId(BigInteger userId) {
+        this.userId = userId;
     }
 
     @Override

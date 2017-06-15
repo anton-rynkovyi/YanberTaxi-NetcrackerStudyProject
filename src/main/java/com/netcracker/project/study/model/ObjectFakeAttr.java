@@ -12,11 +12,4 @@ public interface ObjectFakeAttr {
 
     long PARENT_ID_ATTR = -4;
 
-    long OBJECT_ID_USER = -5;
-
-    long LOGIN = -6;
-
-    long PASSWORD = -7;
-
-    long ROLE = -8;
 }

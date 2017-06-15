@@ -106,6 +106,19 @@ end if;
 end;
 /
 
+drop sequence us_id;
+create sequence us_id;
+
+create or replace trigger user_id_trg
+before insert on users
+for each row
+begin
+if :new.user_id is null then
+select us_id.nextval into :new.user_id from dual;
+end if;
+end;
+/
+
 /*������ �������� ��� �������� ������ �������*/
 
 INSERT INTO OBJECTS (OBJECT_ID,PARENT_ID,OBJECT_TYPE_ID,NAME,DESCRIPTION) VALUES (11,NULL,1,'Driver Natasha',NULL);
