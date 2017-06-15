@@ -1,20 +1,12 @@
 package com.netcracker.project.study.vaadin.driver.page;
 
 import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.model.driver.DriverStatusEnum;
-import com.netcracker.project.study.persistence.facade.Facade;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
-import com.netcracker.project.study.vaadin.Broadcaster;
-import com.netcracker.project.study.vaadin.admin.views.OrdersView;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
-import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.event.UIEvents;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.spring.navigator.SpringViewProvider;
@@ -23,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 
-import javax.servlet.annotation.WebServlet;
 import java.math.BigInteger;
 
 @Theme("valo")
@@ -48,7 +39,6 @@ public class DriverPage extends UI{
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        initFakeDriver();
         rootLayout = new VerticalLayout();
         rootLayout.setSizeFull();
 
@@ -64,7 +54,6 @@ public class DriverPage extends UI{
         navigator.navigateTo(OrdersViewForDrivers.VIEW_NAME);
 
         OrdersViewForDrivers view = (OrdersViewForDrivers)navigator.getCurrentView();
-        view.setDriver(driver);
 
         setPollInterval(1000);
         addPollListener(new UIEvents.PollListener() {
@@ -74,10 +63,6 @@ public class DriverPage extends UI{
             }
         });
 
-    }
-
-    private void initFakeDriver(){
-        driver = facade.getOne(BigInteger.valueOf(1),Driver.class);
     }
 
 }

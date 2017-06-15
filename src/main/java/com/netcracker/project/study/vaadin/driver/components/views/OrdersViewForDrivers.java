@@ -268,6 +268,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
                     orderService.setDistance(currentOrder.getObjectId(),distance);
                     orderService.changeStatus(OrderStatus.PERFORMED, currentOrder.getObjectId());
                     driverService.changeStatus(DriverStatusList.FREE, driver.getObjectId());
+                    window.close();
                 }catch(NumberFormatException e){
                 }
 
@@ -320,7 +321,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         newOrders.setView(this);
         newOrders.setDriver(driver);
         controlLayout.addComponent(newOrders);
-
         return controlLayout;
     }
 
