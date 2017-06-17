@@ -20,6 +20,12 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
+import org.vaadin.addons.Toast;
+import org.vaadin.addons.ToastPosition;
+import org.vaadin.addons.ToastType;
+import org.vaadin.addons.Toastr;
+import org.vaadin.addons.builder.ToastBuilder;
+import org.vaadin.addons.builder.ToastOptionsBuilder;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
@@ -51,9 +57,13 @@ public class ClientView extends VerticalLayout implements View {
     @Autowired
     PersistenceFacade facade;
 
+    private Button newOrder, cancelOrder;
+
     Client client;
 
     private Window window;
+
+    private Toastr toastr;
 
     @PostConstruct
     public void init() {
@@ -67,6 +77,10 @@ public class ClientView extends VerticalLayout implements View {
         Label label = new Label("<h2>YanberTaxi</h2>", ContentMode.HTML);
         addComponent(label);
         setComponentAlignment(label, Alignment.TOP_RIGHT);
+
+        toastr = new Toastr();
+        addComponent(toastr);
+        setComponentAlignment(toastr, Alignment.BOTTOM_RIGHT);
 
         HorizontalLayout mainButtons = setMainButtons();
         addComponent(mainButtons);
@@ -100,28 +114,35 @@ public class ClientView extends VerticalLayout implements View {
     }
 
     public void initfakeClient(){
-        this.client = facade.getOne(BigInteger.valueOf(154), Client.class);
+        this.client = facade.getOne(BigInteger.valueOf(242), Client.class);
     }
 
     private HorizontalLayout setMainButtons() {
         HorizontalLayout root = new HorizontalLayout();
 
-        Button newOrder = new Button("Make new order", VaadinIcons.TAXI);
+        newOrder = new Button("Make new order", VaadinIcons.TAXI);
         newOrder.addStyleName(MaterialTheme.BUTTON_HUGE + " " + MaterialTheme.BUTTON_ICON_ALIGN_RIGHT + " "
                                 + MaterialTheme.BUTTON_FRIENDLY);
         newOrder.setDescription("Press this button to make your order");
         Button.ClickListener orderCreaterListener = new NewOrderCreater();
         newOrder.addClickListener(orderCreaterListener);
 
-        Button cancelOrder = new Button("Cancel the order", VaadinIcons.CLOSE_BIG);
+        cancelOrder = new Button("Cancel the order", VaadinIcons.CLOSE_BIG);
         cancelOrder.addStyleName(MaterialTheme.BUTTON_HUGE + " " + MaterialTheme.BUTTON_ICON_ALIGN_RIGHT + " "
                                     + MaterialTheme.BUTTON_DANGER);
         cancelOrder.setDescription("Press this button to cancel your last order");
         Button.ClickListener orderCancelListener = new OrderCancelListener();
         cancelOrder.addClickListener(orderCancelListener);
 
-        root.addComponent(newOrder);
+        if (isActiveOrderExist()) {
+            newOrder.setVisible(false);
+            cancelOrder.setVisible(true);
+        } else {
+            newOrder.setVisible(true);
+            cancelOrder.setVisible(false);
+        }
 
+        root.addComponent(newOrder);
         root.addComponent(cancelOrder);
 
         return root;
@@ -152,7 +173,8 @@ public class ClientView extends VerticalLayout implements View {
 
     private Panel getClientPoints(){
         Panel panel = new Panel("Your points: ");
-        Label pointsInfo = new Label("<b>" + client.getPoints() + "</b>", ContentMode.HTML);
+        BigInteger clientPoints = client.getPoints() != null ? client.getPoints() : BigInteger.ZERO;
+        Label pointsInfo = new Label("<b>" + clientPoints + "</b>", ContentMode.HTML);
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.addComponent(pointsInfo);
         panel.setContent(horizontalLayout);
@@ -169,6 +191,9 @@ public class ClientView extends VerticalLayout implements View {
             window.setIcon(VaadinIcons.KEYBOARD);
             window.setContent(orderMaker);
             UI.getCurrent().addWindow(window);
+            orderMaker.enableCancelOrderButton(cancelOrder);
+            orderMaker.disableNewOrderButton(newOrder);
+            orderMaker.closeOrderMakerWindow(window);
         }
     }
 
@@ -178,22 +203,48 @@ public class ClientView extends VerticalLayout implements View {
         public void buttonClick(Button.ClickEvent clickEvent) {
             List<Order> orderList = orderService.getActiveOrdersByClientId(client.getObjectId());
             if (orderList.size()>0) {
+                Order currentOrder = null;
                 for (Order order : orderList) {
+                    currentOrder = order;
                     orderService.changeStatus(OrderStatus.CANCELED, order.getObjectId());
                 }
-                initWindow("<b>Current order canceled</b> ");
-                UI.getCurrent().addWindow(window);
+                //toastr.toast(ToastBuilder.success("<b>Order " + currentOrder.getName() + " was canceled</b> ").build());
+                Toast toast = ToastBuilder.of(ToastType.Info, "<b>Order " + currentOrder.getName() + " was canceled</b> ")
+                        .caption("Infomation..")
+                        .options(ToastOptionsBuilder.having()
+                                .closeButton(true)
+                                .debug(false)
+                                .progressBar(true)
+                                .preventDuplicates(true)
+                                .position(ToastPosition.Bottom_Full_Width)
+                                .timeOut(10000)
+                                .build())
+                        .build();
+                toastr.toast(toast);
+
+                newOrder.setVisible(true);
+                cancelOrder.setVisible(false);
+
                 clientOrdersGrid.init();
                 clientCurrentOrderGrid.init();
             } else {
-                initWindow("<b>You don't have an active order</b> ");
+                initWindow("<b>You can't cancel performing order</b> ");
                 UI.getCurrent().addWindow(window);
             }
         }
     }
 
+    private boolean isActiveOrderExist() {
+        List<Order> orderList = orderService.getActiveOrdersByClientId(client.getObjectId());
+        List<Order> orderPerformingList = orderService.getPerformingOrdersByClientId(client.getObjectId());
+        if (orderList.size()>0 || orderPerformingList.size() > 0) return true;
+
+        return false;
+    }
+
     private void initWindow(String text){
         window = new Window(" Information");
+        window.setResizable(false);
         window.setIcon(VaadinIcons.INFO_CIRCLE);
         window.center();
         window.setModal(true);

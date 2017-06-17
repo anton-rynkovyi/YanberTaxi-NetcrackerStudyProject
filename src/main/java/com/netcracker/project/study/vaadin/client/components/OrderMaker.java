@@ -7,6 +7,7 @@ import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientOrdersGrid;
+import com.netcracker.project.study.vaadin.client.views.ClientView;
 import com.vaadin.data.HasValue;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
@@ -16,6 +17,10 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.addons.Toast;
+import org.vaadin.addons.ToastOptions;
+import org.vaadin.addons.ToastType;
+import org.vaadin.addons.Toastr;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -44,13 +49,15 @@ public class OrderMaker extends CustomComponent {
 
     private int countOfTextFields = 1;
 
-    Window window;
+    private Window window, orderMakerWindow;
 
-    Client client;
+    private Client client;
 
-    public void setcountOfTextFields(int number) {countOfTextFields = number;}
+    private Button newOrderButton, cancelOrderButton;
 
-    public int getcountOfTextFields() {return countOfTextFields;}
+    private void setcountOfTextFields(int number) {countOfTextFields = number;}
+
+    private int getcountOfTextFields() {return countOfTextFields;}
 
 
     @PostConstruct
@@ -86,6 +93,12 @@ public class OrderMaker extends CustomComponent {
     }
 
     public void setClient(Client client) {this.client = client;}
+
+    public void disableNewOrderButton(Button button) {newOrderButton = button;}
+
+    public void enableCancelOrderButton(Button button) {cancelOrderButton = button;}
+
+    public void closeOrderMakerWindow(Window orderMakerWindow) {this.orderMakerWindow = orderMakerWindow;}
 
     private HorizontalLayout getOrderForm() {
         HorizontalLayout root = new HorizontalLayout();
@@ -197,14 +210,19 @@ public class OrderMaker extends CustomComponent {
                 if (fields[i] != null) textFieldsStrings[i] = fields[i].getValue();
             }
             if (!(isFieldsEmpty(textFieldsStrings))) {
-                if (orderService.getActiveOrdersByClientId(client.getObjectId()).size() >0
-                        || orderService.getPerformingOrdersByClientId(client.getObjectId()).size() >0 ) {
+                if (orderService.getActiveOrdersByClientId(client.getObjectId()).size() > 0
+                        || orderService.getPerformingOrdersByClientId(client.getObjectId()).size() > 0 ) {
                     initWindow("<b>You have an active order. You can't simultaneously create multiple orders</b> ");
                     UI.getCurrent().addWindow(window);
                 } else {
                     clientService.makeOrder(client.getObjectId(), textFieldsStrings);
                     initWindow("<b>Your order was created successfully</b> ");
                     UI.getCurrent().addWindow(window);
+
+                    orderMakerWindow.close();
+                    cancelOrderButton.setVisible(true);
+                    newOrderButton.setVisible(false);
+
                     clientOrdersGrid.init();
                     clientCurrentOrderGrid.init();
                     for (int i = 0; i < fields.length; i++) {
@@ -236,6 +254,7 @@ public class OrderMaker extends CustomComponent {
 
     private void initWindow(String text){
         window = new Window(" Information");
+        window.setResizable(false);
         window.setIcon(VaadinIcons.INFO_CIRCLE);
         window.center();
         window.setModal(true);

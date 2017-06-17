@@ -1,20 +1,16 @@
 package com.netcracker.project.study.vaadin.client.components.grids;
 
-import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.services.OrderService;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
-import java.math.BigInteger;
 import java.util.List;
 
 
@@ -44,16 +40,16 @@ public class ClientOrdersGrid  extends CustomComponent {
         orderService.getOrdersInfo(clientOrderList);
         ordersGrid.setItems(clientOrderList);
 
-        ordersGrid.addColumn(Order::getObjectId).setCaption("№");
+        ordersGrid.addColumn(Order::getObjectId).setCaption("№").setId("№");
         ordersGrid.addColumn(Order -> Order.getName().substring(0, Order.getName().indexOf(" "))).setCaption("Start point");
         ordersGrid.addColumn(Order -> Order.getName().substring((Order.getName().indexOf("- "))+1)).setCaption("Destination");
         ordersGrid.addColumn(Order -> Order.getDriverOnOrder() != null ? Order.getDriverOnOrder().getFirstName() + " " +
-                Order.getDriverOnOrder().getLastName() : "").setCaption("Driver");
+                Order.getDriverOnOrder().getLastName() : "absent").setCaption("Driver");
         ordersGrid.addColumn(order -> OrderStatusEnum.getStatusValue(order.getStatus())).setCaption("Status");
         ordersGrid.addColumn(Order::getCost).setCaption("Cost");
         ordersGrid.addColumn(Order::getDistance).setCaption("Distance");
-        ordersGrid.addColumn(Order::getDriverRating).setCaption("Driver rating");
-        ordersGrid.addColumn(Order::getDriverMemo).setCaption("Driver comment");
+
+        ordersGrid.sort("№", SortDirection.DESCENDING);
 
         return ordersGrid;
     }

@@ -62,25 +62,11 @@ public class ClientCurrentOrderGrid extends CustomComponent {
             driverAndNumStat.setComponentAlignment(driverName, Alignment.TOP_CENTER);
             driverAndNumStat.setMargin(margin);
 
-            HorizontalLayout allRoutes = new HorizontalLayout();
-            allRoutes.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-            allRoutes.setMargin(margin);
-
             Label[] routes = getRoutes(currentOrder.getObjectId());
 
-            VerticalLayout trio = new VerticalLayout();
-            trio.addComponents(routes[0],routes[1]);
-            try {
-                if (routes[2] != null) trio.addComponent(routes[2]);
-            } catch (IndexOutOfBoundsException ex) {}
-
-            VerticalLayout pair = new VerticalLayout();
-            try {
-                if (routes[3] != null) pair.addComponent(routes[3]);
-                if (routes[4] != null) pair.addComponent(routes[4]);
-            } catch (IndexOutOfBoundsException ex) {}
-
-            allRoutes.addComponents(trio, pair);
+            VerticalLayout allRoutes = getLayoutWithRoutes(routes);
+            allRoutes.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+            allRoutes.setMargin(margin);
 
             currentOrderLayout.addComponents(driverAndNumStat, allRoutes);
             currentOrderLayout.setMargin(false);
@@ -101,7 +87,7 @@ public class ClientCurrentOrderGrid extends CustomComponent {
         for(int i = 0; i < routes.size(); i++){
             String value = "<b>Address " + (i+1) + ": </b>";
             if (i == 0) value = "<b>Starting Point (Address 1): </b>";
-            if (i == routes.size() - 1) value = "<b>Destination (Address " + (routes.size() - 1) + "): </b>";
+            if (i == routes.size() - 1) value = "<b>Destination (Address " + routes.size() + "): </b>";
             Label label = new Label(value + routes.get(i).getCheckPoint(), ContentMode.HTML);
             label.setIcon(VaadinIcons.MAP_MARKER);
             if (i == 0) label.setIcon(VaadinIcons.HOME_O);
@@ -110,5 +96,33 @@ public class ClientCurrentOrderGrid extends CustomComponent {
         }
 
         return routesLables;
+    }
+
+    private VerticalLayout getLayoutWithRoutes(Label[] routes) {
+        VerticalLayout layoutWithRoutes = new VerticalLayout();
+        int numOfRoutes = routes.length;
+        if ((numOfRoutes % 2) == 0) {
+            HorizontalLayout[] splitPanels = new HorizontalLayout[numOfRoutes/2];
+            for (int i = 0, j = 0; i < splitPanels.length; i++, j += 2) {
+                splitPanels[i] = new HorizontalLayout();
+                splitPanels[i].setSizeFull();
+                splitPanels[i].addComponents(routes[j], routes[j+1]);
+                layoutWithRoutes.addComponent(splitPanels[i]);
+                layoutWithRoutes.setComponentAlignment(splitPanels[i], Alignment.TOP_CENTER);
+            }
+        } else if ((numOfRoutes % 2) == 1) {
+            HorizontalLayout[] splitPanels = new HorizontalLayout[numOfRoutes/2];
+            for (int i = 0, j = 0; i < splitPanels.length; i++, j += 2) {
+                splitPanels[i] = new HorizontalLayout();
+                splitPanels[i].addComponents(routes[j], routes[j+1]);
+                layoutWithRoutes.addComponent(splitPanels[i]);
+                layoutWithRoutes.setComponentAlignment(splitPanels[i], Alignment.TOP_CENTER);
+            }
+            HorizontalLayout panel = new HorizontalLayout();
+            panel.addComponent(routes[numOfRoutes-1]);
+            layoutWithRoutes.addComponent(panel);
+            layoutWithRoutes.setComponentAlignment(panel, Alignment.TOP_CENTER);
+        }
+        return layoutWithRoutes;
     }
 }
