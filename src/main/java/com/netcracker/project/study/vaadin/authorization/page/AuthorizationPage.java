@@ -2,34 +2,36 @@ package com.netcracker.project.study.vaadin.authorization.page;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.Role;
+import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
-import com.netcracker.project.study.vaadin.admin.components.logo.BottomTeamLogoLink;
+import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.authorization.components.popups.ClientRegistration;
-import com.netcracker.project.study.vaadin.configurations.SecurityConfig;
+import com.netcracker.project.study.vaadin.common.components.PhoneField;
 import com.vaadin.annotations.Theme;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 
 @Theme("valo")
-@SpringUI(path = "auth")
+@SpringUI(path = "authorization")
 public class AuthorizationPage extends UI {
 
     @Autowired
-    BottomTeamLogoLink bottomTeamLogo;
+    Copyright bottomTeamLogo;
 
     @Autowired
     ClientRegistration clientRegistration;
@@ -40,14 +42,18 @@ public class AuthorizationPage extends UI {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    PersistenceFacade persistenceFacade;
+
     private Toastr toastr;
 
     private Window regAsClientWindow;
 
-    private TextField username;
+    private PhoneField username;
 
     private PasswordField password;
 
+    private CheckBox rememberMe;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -124,7 +130,6 @@ public class AuthorizationPage extends UI {
         horizontalLayout.addComponent(yanber);
         horizontalLayout.setComponentAlignment(yanber, Alignment.MIDDLE_RIGHT);
 
-
         horizontalLayout.addComponent(yanber);
         return horizontalLayout;
     }
@@ -136,8 +141,10 @@ public class AuthorizationPage extends UI {
         horizontalLayout.setMargin(false);
         horizontalLayout.setWidth(100, Unit.PERCENTAGE);
 
-        username = new TextField("Username");
-        username.setIcon(VaadinIcons.USER);
+        username = new PhoneField("Phone number");
+        username.setIcon(VaadinIcons.PHONE);
+
+
         horizontalLayout.addComponent(username);
         horizontalLayout.setComponentAlignment(username, Alignment.MIDDLE_LEFT);
         horizontalLayout.setExpandRatio(username, 0.40f);
@@ -159,13 +166,18 @@ public class AuthorizationPage extends UI {
                 SecurityContextHolder.getContext().setAuthentication(authenticated);
                 if (userDetailsService.hasRole(Role.ROLE_CLIENT.name())) {
                     getPage().setLocation("/client");
-                } else if (userDetailsService.hasRole(Role.ROLE_DRIVER.name())){
+                } else if (userDetailsService.hasRole(Role.ROLE_DRIVER.name())) {
                     getPage().setLocation("/driver");
                 } else if (userDetailsService.hasRole(Role.ROLE_ADMIN.name())) {
                     getPage().setLocation("/admin");
                 }
-            } catch (BadCredentialsException e){
+                if (rememberMe.isEnabled()) {
+
+                }
+            } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
                 toastr.toast(ToastBuilder.error("Wrong login or password!").build());
+                username.clear();
+                password.clear();
             }
         });
 
@@ -178,7 +190,7 @@ public class AuthorizationPage extends UI {
         horizontalLayout.setMargin(false);
         horizontalLayout.setWidth(100, Unit.PERCENTAGE);
 
-        CheckBox rememberMe = new CheckBox("Remember me");
+        rememberMe = new CheckBox("Remember me");
         horizontalLayout.addComponent(rememberMe);
         horizontalLayout.setComponentAlignment(rememberMe, Alignment.BOTTOM_LEFT);
         horizontalLayout.setExpandRatio(rememberMe, 0.6f);

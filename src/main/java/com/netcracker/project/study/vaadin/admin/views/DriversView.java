@@ -4,7 +4,7 @@ package com.netcracker.project.study.vaadin.admin.views;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequestsGrid;
-import com.netcracker.project.study.vaadin.admin.components.logo.BottomTeamLogoLink;
+import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -25,7 +25,8 @@ public class DriversView extends VerticalLayout implements View {
 
     @Autowired DriversBanGrid driversBanGrid;
 
-    @Autowired BottomTeamLogoLink bottomTeamLogoLink;
+    @Autowired
+    Copyright bottomTeamLogoLink;
 
     TabSheet tabSheet;
 

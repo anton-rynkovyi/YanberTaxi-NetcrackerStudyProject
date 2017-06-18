@@ -2,7 +2,6 @@ package com.netcracker.project.study.persistence.facade;
 
 
 import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.persistence.PersistenceEntity;
 
 import java.math.BigInteger;

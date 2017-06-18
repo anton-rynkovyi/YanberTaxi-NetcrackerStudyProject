@@ -1,26 +1,22 @@
 package com.netcracker.project.study;
 
+import com.google.common.collect.ImmutableList;
+import com.netcracker.project.study.model.Role;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.model.driver.DriverStatusEnum;
-import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.car.Car;
-import com.netcracker.project.study.model.order.Order;
-import com.netcracker.project.study.model.order.OrderStatusList;
-import com.netcracker.project.study.model.order.route.Route;
+import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.services.impl.AdminServiceImpl;
 import com.netcracker.project.study.services.impl.DriverServiceImpl;
 import com.netcracker.project.study.services.impl.OrderServiceImpl;
+import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
 import java.math.BigInteger;
 
@@ -31,8 +27,10 @@ public class Main {
                 new FileSystemXmlApplicationContext("src/main/webapp/WEB-INF/applicationContext.xml");
         PersistenceFacade facade =  ctx.getBean(PersistenceFacade.class);
         AdminService adminService = ctx.getBean(AdminServiceImpl.class);
+        UserDetailsServiceImpl userDetailsService = ctx.getBean(UserDetailsServiceImpl.class);
         DriverService driverService = ctx.getBean(DriverServiceImpl.class);
         OrderService orderService = ctx.getBean(OrderServiceImpl.class);
+        PersistenceManager manager = ctx.getBean(PersistenceManager.class);
 
        /* Driver driver = new Driver();
         facade.create(driver);
@@ -118,7 +116,7 @@ public class Main {
         }*/
 
 
-        Driver driver = new Driver();
+       /* Driver driver = new Driver();
         driver.setName("Driver Vadim");
         driver.setFirstName("Vadim");
         driver.setLastName("Martsun");
@@ -126,7 +124,7 @@ public class Main {
         driver.setMiddleName("Vladimirovich");
         driver.setExperience(BigInteger.valueOf(5));
         driver.setPhoneNumber("(068)067-68-53");
-        driver.setStatus(BigInteger.valueOf(3));
+        driver.setStatus(BigInteger.valueOf(2));
         adminService.createModel(driver);
 
         Car car = new Car();
@@ -137,7 +135,7 @@ public class Main {
         car.setStateNumber("BH4454TC");
         car.setReleaseDate(java.sql.Date.valueOf("2012-01-01"));
         adminService.createModel(car);
-
+*/
 
         Driver driver1 = new Driver();
         driver1.setFirstName("Anton");
@@ -145,10 +143,9 @@ public class Main {
         driver1.setEmail("anton.rynkovoy@gmail.com");
         driver1.setMiddleName("Andreevich");
         driver1.setExperience(BigInteger.valueOf(5));
-        driver1.setPhoneNumber("(068)062-68-53");
+        driver1.setPhoneNumber("(068)067-68-53");
         driver1.setStatus(BigInteger.valueOf(3));
         adminService.createModel(driver1);
-
         Car car1 = new Car();
         car1.setChildSeat(true);
         car1.setDriverId(driver1.getObjectId());
@@ -157,18 +154,25 @@ public class Main {
         car1.setStateNumber("BH4373TC");
         car1.setReleaseDate(java.sql.Date.valueOf("2004-01-01"));
         adminService.createModel(car1);
+        User userDriver = new User();
+        //userDriver.setUserDriver();
+        userDriver.setObjectId(driver1.getObjectId());
+        userDriver.setAuthorities(ImmutableList.of(Role.ROLE_DRIVER));
+        userDriver.setUsername(driver1.getPhoneNumber());
+        userDriver.setPassword("ryn123");
+        userDriver.setEnabled(true);
+        manager.createUser(userDriver);
+
 
         Driver driver2 = new Driver();
-        driver2.setName("Driver Eugene");
-        driver2.setFirstName("Eugene");
-        driver2.setLastName("Doroganov");
+        driver2.setFirstName("Ed");
+        driver2.setLastName("Belchik");
         driver2.setEmail("eugenedoroganov@gmail.com");
         driver2.setMiddleName("Alexandrovich");
         driver2.setExperience(BigInteger.valueOf(5));
         driver2.setPhoneNumber("(068)066-78-53");
         driver2.setStatus(BigInteger.valueOf(3));
         adminService.createModel(driver2);
-
         Car car2 = new Car();
         car2.setChildSeat(false);
         car2.setDriverId(driver2.getObjectId());
@@ -177,14 +181,44 @@ public class Main {
         car2.setStateNumber("YANBER");
         car2.setReleaseDate(java.sql.Date.valueOf("2017-01-01"));
         adminService.createModel(car2);
+        User userDriver1 = new User();
+        //userDriver.setUserDriver();
+        userDriver1.setObjectId(driver2.getObjectId());
+        userDriver1.setAuthorities(ImmutableList.of(Role.ROLE_DRIVER));
+        userDriver1.setUsername(driver2.getPhoneNumber());
+        userDriver1.setPassword("bel123");
+        userDriver1.setEnabled(true);
+        manager.createUser(userDriver1);
 
-        /*Client client = new Client();
-        client.setLastName("Yankovskaya");
-        client.setFirstName("Maria");
-        client.setPhoneNumber("(098)560-55-01");
-        client.setPoints(BigInteger.ONE);
-        adminService.createModel(client);*/
 
+        Client client = new Client();
+        client.setLastName("Cristiano");
+        client.setFirstName("Ronaldo");
+        client.setPhoneNumber("(011)111-11-11");
+        client.setPoints(BigInteger.valueOf(32));
+        adminService.createModel(client);
+        User userClient = new User();
+        userClient.setObjectId(client.getObjectId());
+        userClient.setAuthorities(ImmutableList.of(Role.ROLE_CLIENT));
+        userClient.setUsername(client.getPhoneNumber());
+        userClient.setPassword("ivan123");
+        userClient.setEnabled(true);
+        manager.createUser(userClient);
+
+
+        Client client1 = new Client();
+        client1.setLastName("Lionel");
+        client1.setFirstName("Messi");
+        client1.setPhoneNumber("(022)222-22-22");
+        client1.setPoints(BigInteger.valueOf(59));
+        adminService.createModel(client1);
+        User userClient1 = new User();
+        userClient1.setObjectId(client1.getObjectId());
+        userClient1.setAuthorities(ImmutableList.of(Role.ROLE_CLIENT));
+        userClient1.setUsername(client1.getPhoneNumber());
+        userClient1.setPassword("leo123");
+        userClient1.setEnabled(true);
+        manager.createUser(userClient1);
 
 
         /*Car car = new Car();

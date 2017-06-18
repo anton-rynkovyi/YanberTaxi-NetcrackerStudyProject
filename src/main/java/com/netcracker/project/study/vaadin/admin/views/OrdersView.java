@@ -1,7 +1,7 @@
 package com.netcracker.project.study.vaadin.admin.views;
 
 import com.netcracker.project.study.vaadin.admin.components.grids.OrdersGrid;
-import com.netcracker.project.study.vaadin.admin.components.logo.BottomTeamLogoLink;
+import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -22,7 +22,7 @@ public class OrdersView extends VerticalLayout implements View {
     private OrdersGrid ordersGrid;
 
     @Autowired
-    BottomTeamLogoLink bottomTeamLogoLink;
+    Copyright bottomTeamLogoLink;
 
     @PostConstruct
     void init() {

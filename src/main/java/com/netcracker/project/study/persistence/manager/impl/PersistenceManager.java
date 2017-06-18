@@ -1,8 +1,13 @@
 package com.netcracker.project.study.persistence.manager.impl;
 
+import com.google.common.collect.ImmutableList;
+import com.netcracker.project.study.model.Role;
+import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.PersistenceEntity;
 import com.netcracker.project.study.persistence.manager.Manager;
 import com.netcracker.project.study.persistence.manager.queries.Crud;
+import com.netcracker.project.study.persistence.manager.queries.UsersQueries;
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -13,7 +18,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
 import java.sql.Date;
@@ -25,7 +29,7 @@ import static java.sql.Types.*;
 public class PersistenceManager implements Manager {
 
 
-    private JdbcTemplate jdbcTemplate;
+    public JdbcTemplate jdbcTemplate;
 
 
     @Autowired
@@ -290,4 +294,51 @@ public class PersistenceManager implements Manager {
         };
     }
 
+    public User createUser(User user) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement ps =
+                        connection.prepareStatement(UsersQueries.CREATE_USERS, new String[] {"user_id"});
+                int i = 0;
+                ps.setString(++i, user.getObjectId().toString());
+                ps.setString(++i, user.getUsername());
+                ps.setString(++i, user.getPassword());
+                ps.setString(++i, String.valueOf(user.getAuthorities().get(0)));
+                return ps;
+            }
+        }, keyHolder);
+        user.setUserId(BigInteger.valueOf(keyHolder.getKey().longValue()));
+        return user;
+    }
+
+    @NotNull
+    private RowMapper<User> rowMapper1 = new RowMapper<User>() {
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User user = new User();
+            user.setUserId(rs.getBigDecimal("user_id").toBigInteger());
+            user.setObjectId(rs.getBigDecimal("object_id").toBigInteger());
+            user.setUsername(rs.getString("login"));
+            user.setPassword(rs.getString("password"));
+            user.setAuthorities(ImmutableList.of(Role.valueOf(rs.getString("role"))));
+            return user;
+        }
+    };
+
+    public long getObjectTypeIdByUser(User user) {
+        String query = "" +
+                "SELECT obj.object_type_id " +
+                "FROM Objects obj " +
+                "WHERE obj.object_id = " + user.getObjectId();
+        long objectTypeId = jdbcTemplate.queryForObject(query, Long.class);
+        return objectTypeId;
+    }
+
+    public User findUserByUsername(String username) {
+        String query = "" +
+                "SELECT * FROM Users WHERE login = '" + username + "'";
+        User user = jdbcTemplate.queryForObject(query, rowMapper1);
+        return user;
+    }
 }

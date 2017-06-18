@@ -2,8 +2,8 @@ package com.netcracker.project.study.persistence.facade.impl;
 
 
 import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.persistence.converter.impl.ConverterFactory;
 import com.netcracker.project.study.persistence.PersistenceEntity;
+import com.netcracker.project.study.persistence.converter.impl.ConverterFactory;
 import com.netcracker.project.study.persistence.facade.Facade;
 import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,13 +69,12 @@ public class PersistenceFacade implements Facade {
         List<PersistenceEntity> entities = manager.getSome(sqlQuery);
         List<Model> models = new ArrayList<>();
         for (int i = 0; i < entities.size(); i++) {
-            Model model = null;
+            Model model;
             model = converter.convertToModel(entities.get(i), modelClass);
             models.add(model);
         }
         return models;
     }
-
 }
 
 

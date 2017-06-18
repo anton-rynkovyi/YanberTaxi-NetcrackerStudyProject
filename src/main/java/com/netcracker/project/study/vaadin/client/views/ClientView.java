@@ -7,6 +7,7 @@ import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.OrderService;
+import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientOrdersGrid;
 import com.netcracker.project.study.vaadin.client.components.OrderMaker;
@@ -18,8 +19,7 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.*;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.vaadin.addons.Toast;
 import org.vaadin.addons.ToastPosition;
 import org.vaadin.addons.ToastType;
@@ -27,7 +27,6 @@ import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
 
-import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -57,6 +56,12 @@ public class ClientView extends VerticalLayout implements View {
     @Autowired
     PersistenceFacade facade;
 
+    @Autowired
+    DaoAuthenticationProvider daoAuthenticationProvider;
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+
     private Button newOrder, cancelOrder;
 
     Client client;
@@ -65,9 +70,9 @@ public class ClientView extends VerticalLayout implements View {
 
     private Toastr toastr;
 
-    @PostConstruct
+
     public void init() {
-        initfakeClient();
+        initClient();
         clientCurrentOrderGrid.setClient(client);
         clientCurrentOrderGrid.init();
         orderMaker.setClient(client);
@@ -113,8 +118,8 @@ public class ClientView extends VerticalLayout implements View {
 
     }
 
-    public void initfakeClient(){
-        this.client = facade.getOne(BigInteger.valueOf(242), Client.class);
+    public void initClient() {
+        this.client = userDetailsService.getCurrentUser();
     }
 
     private HorizontalLayout setMainButtons() {
@@ -256,6 +261,6 @@ public class ClientView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-
+        init();
     }
 }

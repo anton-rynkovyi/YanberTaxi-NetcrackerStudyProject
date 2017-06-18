@@ -2,7 +2,6 @@ package com.netcracker.project.study.vaadin.authorization.components.popups;
 
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 @SpringComponent

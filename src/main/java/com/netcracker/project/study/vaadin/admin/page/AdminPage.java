@@ -1,6 +1,5 @@
 package com.netcracker.project.study.vaadin.admin.page;
 
-import com.netcracker.project.study.vaadin.admin.components.logo.BottomTeamLogoLink;
 import com.netcracker.project.study.vaadin.admin.components.menu.HeaderMenu;
 import com.netcracker.project.study.vaadin.admin.views.ClientsView;
 import com.netcracker.project.study.vaadin.admin.views.DriversView;
@@ -13,7 +12,6 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Theme("valo")

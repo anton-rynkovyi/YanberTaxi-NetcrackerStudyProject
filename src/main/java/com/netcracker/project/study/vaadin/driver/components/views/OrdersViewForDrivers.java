@@ -8,6 +8,7 @@ import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
+import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.driver.components.tabs.AllOrdersTab;
 import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
@@ -55,6 +56,9 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     @Autowired
     DriverService driverService;
 
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+
     Panel currentOrderPanel;
 
     OrderInfo currentOrder;
@@ -67,10 +71,9 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     long startkm;
     long finishkm;
 
-    @PostConstruct
     public void init() {
         rootLayout = new VerticalLayout();
-        initFakeDriver();
+        initDriver();
         currentOrderPanel = getCurrentorderPanel();
 
         initPerformingbutton();
@@ -96,6 +99,10 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     }
 
 
+    private void initDriver(){
+        this.driver = userDetailsService.getCurrentUser();
+    }
+
     private void setButtonsEnabled(){
         if(currentOrder == null){
             startPerformingButton.setEnabled(false);
@@ -117,9 +124,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         return driver;
     }
 
-    private void initFakeDriver(){
-        driver = facade.getOne(BigInteger.valueOf(202),Driver.class);
-    }
 
     private String getDriverName(){
         return driver.getFirstName() + " " + driver.getLastName();
@@ -178,7 +182,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     }
 
     public void Refresh(){
-        initFakeDriver();
+        initDriver();
         driverPanel.setContent(new Label("<b>" + getDriverName() + "</b>", ContentMode.HTML));
         statusPanel.setContent(new Label("<b>" + DriverStatusEnum.getStatusValue(driver.getStatus()) + "</b>", ContentMode.HTML));
         ratingPanel.setContent(new Label("<b>" + driver.getRating() + "</b>", ContentMode.HTML));
@@ -325,6 +329,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        init();
         Refresh();
     }
 
