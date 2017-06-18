@@ -111,3 +111,6 @@ CREATE TABLE Users
   password    VARCHAR2(20) NOT NULL,
   role        VARCHAR2(50)
 ) ;
+
+
+COMMIT;
