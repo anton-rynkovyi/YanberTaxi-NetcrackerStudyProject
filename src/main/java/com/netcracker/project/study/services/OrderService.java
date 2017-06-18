@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    void calcPrice(BigDecimal distance, Order order);
+    void calcPrice(BigInteger distance, BigInteger orderId);
 
     void changeStatus(BigInteger status, BigInteger orderId);
 

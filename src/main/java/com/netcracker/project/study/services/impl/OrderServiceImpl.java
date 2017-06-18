@@ -1,9 +1,5 @@
 package com.netcracker.project.study.services.impl;
 
-
-import com.netcracker.project.study.model.driver.DriverStatusEnum;
-import com.netcracker.project.study.model.driver.DriverStatusList;
-
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderAttr;
 import com.netcracker.project.study.model.order.OrderStatusEnum;
@@ -11,13 +7,10 @@ import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.model.order.route.RouteAttr;
 import com.netcracker.project.study.model.order.status.OrderStatus;
 
-import com.netcracker.project.study.model.order.status.OrderStatusAttr;
-
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.OrderConstants;
 import com.netcracker.project.study.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -40,9 +33,12 @@ public class OrderServiceImpl implements OrderService{
     public static final BigDecimal COST_PER_KILOMETER = new BigDecimal("5");
 
     @Override
-    public void calcPrice(BigDecimal distance, Order order) {
-        order.setCost(distance.multiply(COST_PER_KILOMETER));
-        //persistenceFacade.update(order);
+    public void calcPrice(BigInteger distance, BigInteger orderId) {
+        Order order = persistenceFacade.getOne(orderId,Order.class);
+        BigDecimal decimalDistance = new BigDecimal(distance);
+        BigDecimal cost = decimalDistance.multiply(COST_PER_KILOMETER);
+        order.setCost(cost);
+        persistenceFacade.update(order);
     }
 
 
@@ -52,7 +48,7 @@ public class OrderServiceImpl implements OrderService{
         Order order = persistenceFacade.getOne(orderId,Order.class);
         order.setStatus(status);
         persistenceFacade.update(order);
-        orderStatusLog(order);
+        //orderStatusLog(order);
     }
 
     @Override
@@ -80,8 +76,9 @@ public class OrderServiceImpl implements OrderService{
                 orderInfo.setClientName((order.getClientId() == null)?OrderConstants.CLIENT_EMPTY:getClientInfo(order.getClientId()));
                 orderInfo.setCost(getValue(order.getCost(),OrderConstants.NULL_COST) + " " + OrderConstants.CURRENCY);
                 orderInfo.setDistance(getValue(order.getDistance(),OrderConstants.NULL_DISTANCE) + " " + OrderConstants.DISTANCE);
+                orderInfo.setRating(order.getDriverRating());
                 BigInteger status = order.getStatus();
-                orderInfo.setStatus((status == null)?OrderConstants.NULL_STATUS:getStatusValue(order.getStatus()));
+                orderInfo.setStatus((status == null)?OrderConstants.NULL_STATUS:getStatusValue(status));
 
                 orderInfos.add(orderInfo);
             }

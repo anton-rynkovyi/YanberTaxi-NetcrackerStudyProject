@@ -138,12 +138,12 @@ public class Main {
 */
 
         Driver driver1 = new Driver();
-        driver1.setFirstName("Anton");
-        driver1.setLastName("Rynkovoy");
-        driver1.setEmail("anton.rynkovoy@gmail.com");
-        driver1.setMiddleName("Andreevich");
+        driver1.setFirstName("Vadim");
+        driver1.setLastName("Martsun");
+        driver1.setEmail("vadimmartsun@gmail.com");
+        driver1.setMiddleName("Vladimirovich");
         driver1.setExperience(BigInteger.valueOf(5));
-        driver1.setPhoneNumber("(068)067-68-53");
+        driver1.setPhoneNumber("(063)395-02-04");
         driver1.setStatus(BigInteger.valueOf(3));
         adminService.createModel(driver1);
         Car car1 = new Car();

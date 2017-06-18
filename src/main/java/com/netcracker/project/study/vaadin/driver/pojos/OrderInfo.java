@@ -15,6 +15,7 @@ public class OrderInfo {
     private String status;
     private String cost;
     private String distance;
+    private BigInteger rating;
 
     public void setQueueN(int queueN) {
         this.queueN = queueN;
@@ -70,5 +71,13 @@ public class OrderInfo {
 
     public void setDistance(String distance) {
         this.distance = distance;
+    }
+
+    public BigInteger getRating() {
+        return rating;
+    }
+
+    public void setRating(BigInteger rating) {
+        this.rating = rating;
     }
 }

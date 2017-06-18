@@ -3,7 +3,7 @@ package com.netcracker.project.study.vaadin.driver.components.popup;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.services.impl.OrderServiceImpl;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
@@ -12,9 +12,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,45 +42,83 @@ public class OrderInfoPopUp extends VerticalLayout {
         rootLayout.setMargin(true);
     }
 
-    private void initOrderInfoLayout(){
+    private void initOrderInfoLayout() {
+
         VerticalLayout orderLayout = new VerticalLayout();
-        Label driverId = new Label("<b>Driver: </b>"+ orderInfo.getDriverName(), ContentMode.HTML);
-        driverId.setIcon(FontAwesome.MALE);
-        Label clientId = new Label("<b>Client: </b>" + orderInfo.getClientName(), ContentMode.HTML);
-        clientId.setIcon(FontAwesome.MALE);
-        Label status = new Label("<b>Status: </b>" + orderInfo.getStatus(), ContentMode.HTML);
-        status.setIcon(FontAwesome.ROUBLE);
-        Label cost = new Label("<b>Cost: </b>" + orderInfo.getCost(), ContentMode.HTML);
-        cost.setIcon(FontAwesome.DOLLAR);
-        Label distance = new Label("<b>Distance: </b>" + orderInfo.getDistance(), ContentMode.HTML);
-        distance.setIcon(FontAwesome.ARROWS_H);
-        orderLayout.addComponents(driverId,clientId,status,cost,distance);
+        if (orderInfo != null) {
+            Label header = new Label("<h2><center>General information</center></h2>", ContentMode.HTML);
 
-        Panel orderPanel = new Panel("Order", orderLayout);
-        orderPanel.setIcon(FontAwesome.MOBILE);
-        orderPanel.setWidth(300, Unit.PIXELS);
+            Panel generalInfoPanel = new Panel();
+            HorizontalLayout clientIdLayout = new HorizontalLayout();
+            Label clientId = new Label("<b>Client: </b>" + orderInfo.getClientName(), ContentMode.HTML);
+            Label iconLabel = new Label();
+            iconLabel.setIcon(VaadinIcons.MALE);
+            clientIdLayout.addComponents(iconLabel, clientId);
 
-        VerticalLayout routeLayout = getRoutesLayout();
-        Panel routePanel = new Panel("Route", routeLayout);
-        routePanel.setIcon(FontAwesome.ROAD);
-        routePanel.setWidth(300, Unit.PIXELS);
+            HorizontalLayout statusIdLayout = new HorizontalLayout();
+            Label status = new Label("<b>Status: </b>" + orderInfo.getStatus(), ContentMode.HTML);
+            Label iconStatus = new Label();
+            iconStatus.setIcon(VaadinIcons.RHOMBUS);
+            statusIdLayout.addComponents(iconStatus, status);
 
-        rootLayout.addComponent(orderPanel);
-        rootLayout.addComponent(routePanel);
+            HorizontalLayout costLayout = new HorizontalLayout();
+            Label cost = new Label("<b>Cost: </b>" + orderInfo.getCost(), ContentMode.HTML);
+            Label iconCost = new Label();
+            iconCost.setIcon(VaadinIcons.CASH);
+            costLayout.addComponents(iconCost, cost);
+
+            HorizontalLayout distanceLayout = new HorizontalLayout();
+            Label iconDistance = new Label();
+            iconDistance.setIcon(VaadinIcons.ARROWS_LONG_H);
+            Label distance = new Label("<b>Distance: </b>" + orderInfo.getDistance(), ContentMode.HTML);
+            distanceLayout.addComponents(iconDistance, distance);
+
+            HorizontalLayout ratingLayout = new HorizontalLayout();
+            Label iconRating = new Label();
+            iconRating.setIcon(VaadinIcons.STAR);
+
+            BigInteger rating = orderInfo.getRating();
+            if(rating == null){
+                rating = BigInteger.valueOf(0);
+            }
+
+            Label ratingLabel = new Label("<b>Rating: </b>" + rating.toString(), ContentMode.HTML);
+            ratingLayout.addComponents(iconRating,ratingLabel);
+
+
+            orderLayout.addComponents(header, clientIdLayout, statusIdLayout, costLayout, distanceLayout,ratingLayout);
+            generalInfoPanel.setContent(orderLayout);
+
+            rootLayout.addComponent(generalInfoPanel);
+
+            Panel routeInfoPanel = new Panel();
+
+            List<Label> labels = getRoutesLayout();
+            Label routeHeader = new Label("<h2><center>Route information</center></h2>", ContentMode.HTML);
+            VerticalLayout routeLayout = new VerticalLayout();
+            routeLayout.addComponent(routeHeader);
+            if (labels.size() == 0) {
+                Label noRouteLabel = new Label("No route provided");
+                routeLayout.addComponent(noRouteLabel);
+            }
+            routeInfoPanel.setContent(routeLayout);
+
+            rootLayout.addComponent(routeInfoPanel);
+        }
     }
 
-    private VerticalLayout getRoutesLayout(){
-        VerticalLayout routeLayout= new VerticalLayout();
+    private List<Label> getRoutesLayout(){
         List<Route> routes = orderService.getRoutes(orderInfo.getObjectId());
+        List<Label>labels = new ArrayList<>();
 
         int i = 0;
         for(Route route:routes){
             Label label = new Label("<b>Address " + i + ": </b>"+ route.getCheckPoint(), ContentMode.HTML);
-            label.setIcon(FontAwesome.MAP_MARKER);
-            routeLayout.addComponent(label);
+            labels.add(label);
+            label.setIcon(VaadinIcons.MAP_MARKER);
             i++;
         }
 
-        return routeLayout;
+        return labels;
     }
 }
