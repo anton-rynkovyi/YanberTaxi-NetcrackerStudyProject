@@ -23,15 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     DataSource dataSource;
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-       /* auth.inMemoryAuthentication()
-                .withUser("admin").password("123").roles("ADMIN")
-                .and()
-                .withUser("client").password("123").roles("CLIENT")
-                .and()
-                .withUser("driver").password("123").roles("DRIVER");*/
-
         /*auth.jdbcAuthentication().dataSource(dataSource)
                 .usersByUsernameQuery("select login as username, password, 1 as enabled from Users where login=?")
                 .authoritiesByUsernameQuery("select login as username, role from Users where login=?");*/
@@ -49,26 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/driver*").access("hasRole('ROLE_DRIVER')")
                 .antMatchers("/client*").access("hasRole('ROLE_CLIENT')")
                 .antMatchers("/authorization").permitAll()
-                //.antMatchers("/admin, /driver, /client").permitAll()
-                //.anyRequest().permitAll()
                 .and()
                 .formLogin()//.loginPage("/auth").failureUrl("/auth?error")
                 .usernameParameter("username").passwordParameter("password")
                 .and()
                 .logout().permitAll();
-       /* http.authorizeRequests()
-                .antMatchers("/admin**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/driver**").access("hasRole('ROLE_DRIVER')")
-                .antMatchers("/client**").access("hasRole('ROLE_CLIENT')")
-                .and()
-                .formLogin().loginPage("/auth").failureUrl("/login?error")
-                .usernameParameter("username").passwordParameter("password")
-                .and()
-                .logout().logoutSuccessUrl("/login?logout")
-                .and()
-                .exceptionHandling().accessDeniedPage("/403")
-                .and()
-                .csrf();*/
+
+        //http.headers().cacheControl().disable();
+
     }
 
     @Bean

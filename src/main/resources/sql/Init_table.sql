@@ -107,7 +107,7 @@ CREATE TABLE Users
 (
   user_id     NUMBER(20)  PRIMARY KEY,
   object_id   NUMBER(20) REFERENCES OBJECTS (object_id),
-  login       VARCHAR2(50) NOT NULL,
+  login       VARCHAR2(50) NOT NULL UNIQUE,
   password    VARCHAR2(20) NOT NULL,
   role        VARCHAR2(50)
 ) ;

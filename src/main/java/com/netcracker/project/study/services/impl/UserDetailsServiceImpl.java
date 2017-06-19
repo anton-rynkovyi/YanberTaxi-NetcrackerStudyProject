@@ -7,7 +7,7 @@ import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverAttr;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
-import com.netcracker.project.study.persistence.facade.impl.UserFacade;
+import com.netcracker.project.study.persistence.facade.impl.UserFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,12 +26,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     PersistenceFacade persistenceFacade;
 
     @Autowired
-    UserFacade userFacade;
+    UserFacadeImpl userFacadeImpl;
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
-        User user = userFacade.findUserByUsername(phoneNumber);
+        User user = userFacadeImpl.findUserByUsername(phoneNumber);
         return user;
     }
 
@@ -51,7 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public <T extends Model> T getCurrentUser() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        long objectTypeId = userFacade.getObjectTypeIdByUser(user);
+        long objectTypeId = userFacadeImpl.getObjectTypeIdByUser(user);
         if (objectTypeId == ClientAttr.OBJECT_TYPE_ID) {
             Client client = persistenceFacade.getOne(user.getObjectId(), Client.class);
             return (T) client;
@@ -60,5 +60,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return (T) driver;
         }
         return null;
+    }
+
+    public boolean isClientLoginExist(String phone) {
+        User user = userFacadeImpl.findClientByUsername(phone);
+        if (user == null) {
+            return false;
+        }
+        if (user.getUsername().equals(phone)) {
+            return true;
+        }
+        return false;
     }
 }

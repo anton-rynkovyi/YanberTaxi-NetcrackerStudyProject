@@ -9,6 +9,7 @@ import com.netcracker.project.study.persistence.manager.queries.Crud;
 import com.netcracker.project.study.persistence.manager.queries.UsersQueries;
 import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -326,19 +327,27 @@ public class PersistenceManager implements Manager {
         }
     };
 
-    public long getObjectTypeIdByUser(User user) {
-        String query = "" +
-                "SELECT obj.object_type_id " +
-                "FROM Objects obj " +
-                "WHERE obj.object_id = " + user.getObjectId();
-        long objectTypeId = jdbcTemplate.queryForObject(query, Long.class);
-        return objectTypeId;
+    public Long getObjectTypeIdByUser(User user) {
+        try {
+            String query = "" +
+                    "SELECT obj.object_type_id " +
+                    "FROM Objects obj " +
+                    "WHERE obj.object_id = " + user.getObjectId();
+            long objectTypeId = jdbcTemplate.queryForObject(query, Long.class);
+            return objectTypeId;
+        }catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public User findUserByUsername(String username) {
         String query = "" +
                 "SELECT * FROM Users WHERE login = '" + username + "'";
-        User user = jdbcTemplate.queryForObject(query, rowMapper1);
-        return user;
+        try {
+            User user = jdbcTemplate.queryForObject(query, rowMapper1);
+            return user;
+        }catch (EmptyResultDataAccessException e) {
+            return new User();
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.netcracker.project.study.vaadin.authorization.page;
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.Role;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.authorization.components.popups.ClientRegistration;
@@ -10,6 +11,7 @@ import com.netcracker.project.study.vaadin.common.components.PhoneField;
 import com.vaadin.annotations.Theme;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.ValueChangeMode;
@@ -47,43 +49,33 @@ public class AuthorizationPage extends UI {
 
     private Toastr toastr;
 
-    private Window regAsClientWindow;
-
+    @Autowired
+    private ClientRegistration regAsClientWindow;
     private PhoneField username;
-
     private PasswordField password;
-
     private CheckBox rememberMe;
+    private Window regWindow;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         VerticalLayout layoutContent = genLayoutContent();
         setContent(layoutContent);
 
-        Window window = new Window();
-        window.setContent(getStartWindow());
-        window.center();
-        window.setClosable(false);
-        window.setResizable(false);
-        window.setResponsive(false);
-        window.setDraggable(false);
+        regWindow = new Window();
+        regWindow.setContent(getStartWindow());
+        regWindow.center();
+        regWindow.setClosable(false);
+        regWindow.setResizable(false);
+        regWindow.setResponsive(false);
+        regWindow.setDraggable(false);
         //window.setModal(true);
-        window.setWindowMode(WindowMode.NORMAL);
-        //window.setIcon(FontAwesome.REGISTERED);
-        UI.getCurrent().addWindow(window);
-
-        initRegWindows();
-
+        regWindow.setWindowMode(WindowMode.NORMAL);
+        UI.getCurrent().addWindow(regWindow);
         layoutContent.addComponent(bottomTeamLogo);
         layoutContent.setComponentAlignment(bottomTeamLogo, Alignment.BOTTOM_CENTER);
     }
 
-    private void initRegWindows() {
-        regAsClientWindow = new Window("Client registration");
-        regAsClientWindow.center();
-        regAsClientWindow.setModal(true);
-        regAsClientWindow.setContent(clientRegistration);
-    }
+
 
     private VerticalLayout genLayoutContent() {
         VerticalLayout layoutContent = new VerticalLayout();
@@ -102,8 +94,6 @@ public class AuthorizationPage extends UI {
         form.setWidth(520, Unit.PIXELS);
 
         form.addComponent(genHeader());
-        //Label wrongAuth = new Label("<h6>Wrong login or password</h6>", ContentMode.HTML);
-        //form.addComponent(wrongAuth);
         form.addComponent(genRegFields());
         form.addComponent(genBottom());
 
@@ -184,6 +174,8 @@ public class AuthorizationPage extends UI {
         return horizontalLayout;
     }
 
+    PopupView popupView;
+
     private HorizontalLayout genBottom() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setSpacing(false);
@@ -195,7 +187,7 @@ public class AuthorizationPage extends UI {
         horizontalLayout.setComponentAlignment(rememberMe, Alignment.BOTTOM_LEFT);
         horizontalLayout.setExpandRatio(rememberMe, 0.6f);
 
-        PopupView popupView = new PopupView("Registration", genAsWho());
+        popupView = new PopupView("Registration", genAsWho());
         horizontalLayout.addComponent(popupView);
 
         horizontalLayout.setComponentAlignment(popupView, Alignment.BOTTOM_LEFT);
@@ -219,8 +211,11 @@ public class AuthorizationPage extends UI {
         asClient.setIcon(VaadinIcons.USER);
         asClient.setStyleName(MaterialTheme.BUTTON_LINK);
         verticalLayout.addComponent(asClient);
-        asDriver.addClickListener(clock -> {
-
+        asClient.addClickListener(clock -> {
+            addWindow(regAsClientWindow);
+            if (popupView != null && popupView.isPopupVisible()) {
+                popupView.setPopupVisible(false);
+            }
         });
 
         return verticalLayout;
