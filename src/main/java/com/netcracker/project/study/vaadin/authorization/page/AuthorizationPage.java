@@ -2,19 +2,22 @@ package com.netcracker.project.study.vaadin.authorization.page;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.Role;
+import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverAttr;
+import com.netcracker.project.study.model.driver.DriverStatusList;
+import com.netcracker.project.study.model.driver.status.DriverStatusAttr;
+import com.netcracker.project.study.model.user.User;
+import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
-import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.authorization.components.popups.ClientRegistration;
+import com.netcracker.project.study.vaadin.authorization.components.popups.DriverRegistration;
 import com.netcracker.project.study.vaadin.common.components.PhoneField;
 import com.vaadin.annotations.Theme;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
-import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
@@ -25,6 +28,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 
@@ -47,10 +51,16 @@ public class AuthorizationPage extends UI {
     @Autowired
     PersistenceFacade persistenceFacade;
 
-    private Toastr toastr;
+    @Autowired
+    UserFacade userFacade;
 
     @Autowired
-    private ClientRegistration regAsClientWindow;
+    ClientRegistration regAsClientWindow;
+
+    @Autowired
+    DriverRegistration regAsDriverWindow;
+
+    private Toastr toastr;
     private PhoneField username;
     private PasswordField password;
     private CheckBox rememberMe;
@@ -157,6 +167,14 @@ public class AuthorizationPage extends UI {
                 if (userDetailsService.hasRole(Role.ROLE_CLIENT.name())) {
                     getPage().setLocation("/client");
                 } else if (userDetailsService.hasRole(Role.ROLE_DRIVER.name())) {
+                    Driver driver = userDetailsService.findDriverByUserName(username.getValue());
+                    if (driver == null) {
+                        toastr.toast(ToastBuilder.error("Wrong login or password!").build());
+                    }
+                    if (driver.getStatus() == DriverStatusList.APPROVAL) {
+                        toastr.toast(ToastBuilder.info("You are not recruited yet. Watch your email address.").build());
+                        return;
+                    }
                     getPage().setLocation("/driver");
                 } else if (userDetailsService.hasRole(Role.ROLE_ADMIN.name())) {
                     getPage().setLocation("/admin");
@@ -204,7 +222,10 @@ public class AuthorizationPage extends UI {
         asDriver.setStyleName(MaterialTheme.BUTTON_LINK);
         verticalLayout.addComponent(asDriver);
         asDriver.addClickListener(clock -> {
-
+            addWindow(regAsDriverWindow);
+            if (popupView != null && popupView.isPopupVisible()) {
+                popupView.setPopupVisible(false);
+            }
         });
 
         Button asClient = new Button("As Client");

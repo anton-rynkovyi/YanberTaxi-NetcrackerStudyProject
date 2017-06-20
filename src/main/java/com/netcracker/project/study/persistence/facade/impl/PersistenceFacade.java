@@ -8,6 +8,7 @@ import com.netcracker.project.study.persistence.facade.Facade;
 import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class PersistenceFacade implements Facade {
 
 
     @Override
+    @Transactional
     public PersistenceEntity create(Model model) {
         PersistenceEntity entity;
         entity = manager.create(converter.convertToEntity(model));
@@ -75,6 +77,8 @@ public class PersistenceFacade implements Facade {
         }
         return models;
     }
+
+
 }
 
 

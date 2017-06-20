@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.math.BigInteger;
@@ -40,6 +41,7 @@ public class PersistenceManager implements Manager {
 
 
     @Override
+    @Transactional
     public PersistenceEntity create(PersistenceEntity persistenceEntity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -347,7 +349,7 @@ public class PersistenceManager implements Manager {
             User user = jdbcTemplate.queryForObject(query, rowMapper1);
             return user;
         }catch (EmptyResultDataAccessException e) {
-            return new User();
+            return null;
         }
     }
 }

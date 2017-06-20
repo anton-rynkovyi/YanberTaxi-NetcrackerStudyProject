@@ -2,16 +2,21 @@ package com.netcracker.project.study.model.admin;
 
 import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.Role;
+import com.netcracker.project.study.model.annotations.AttrValue;
+import com.netcracker.project.study.model.annotations.Attribute;
+import com.netcracker.project.study.model.annotations.ObjectType;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
+@ObjectType(objectTypeId = AdminAttr.OBJECT_TYPE_ID)
 public class Admin extends Model implements AdminAttr {
 
-    private String phoneNumber;
+    @Attribute(attrId = AdminAttr.PHONE_NUMBER_ATTR)
+    private @AttrValue String phoneNumber;
 
-    private String email;
-
+    @Attribute(attrId = AdminAttr.EMAIL_ATTR)
+    private @AttrValue String email;
 
     public Admin(){}
 

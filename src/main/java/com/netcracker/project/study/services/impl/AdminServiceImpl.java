@@ -2,6 +2,8 @@ package com.netcracker.project.study.services.impl;
 
 import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.Role;
+import com.netcracker.project.study.model.admin.Admin;
+import com.netcracker.project.study.model.admin.AdminAttr;
 import com.netcracker.project.study.model.client.ClientAttr;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverAttr;
@@ -77,35 +79,6 @@ public class AdminServiceImpl implements AdminService{
            }
         }
     }
-
-   /* @Override
-    public void setBanTimer(Driver driver) {
-
-        //Timer timer = new Timer();
-
-        *//*class BanTimer extends TimerTask {
-
-            @Override
-            public void run() {
-                long def = driver.getUnbanDate().getTime() - System.currentTimeMillis();
-                Driver d = persistenceFacade.getOne(driver.getObjectId(), Driver.class);
-                if (def < 0 || d.getUnbanDate() == null) {
-                    driver.setUnbanDate(null);
-                    persistenceFacade.update(driver);
-                    System.out.println("FINISH");
-                    driversGrid.refreshGrid();
-                    driversBanGrid.refreshGrid();
-                    timer.cancel();
-                    timer.purge();
-                    return;
-                }else {
-                    System.out.println(driver.getObjectId()+": " + def / 1000);
-                }
-            }
-        }*//*
-       // timer.schedule(new BanTimer(), 0, 1000);
-    }*/
-
 
     @Override
     public <T extends Model> T getModelById(BigInteger modelId, Class modelClass) {

@@ -28,8 +28,6 @@ public interface AdminService {
 
     void unbanDriver(Driver driver);
 
-    //void setBanTimer(Driver driver);
-
     void setBanTask();
 
     <T extends Model> T getModelById(BigInteger modelId, Class modelClass);

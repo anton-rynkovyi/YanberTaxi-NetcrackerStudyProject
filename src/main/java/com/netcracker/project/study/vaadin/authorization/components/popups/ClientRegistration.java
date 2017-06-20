@@ -17,7 +17,10 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.vaadin.addons.ToastOptions;
 import org.vaadin.addons.Toastr;
+import org.vaadin.addons.ToastrListener;
 import org.vaadin.addons.builder.ToastBuilder;
 
 import java.math.BigInteger;
@@ -35,7 +38,16 @@ public class ClientRegistration extends Window{
     @Autowired
     UserFacade userFacade;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     private Toastr toastr;
+    private PhoneField phone;
+    private PasswordField password1;
+    private PasswordField password2;
+    private TextField lastName;
+    private TextField firstName;
+    private TextField middleName;
 
     public ClientRegistration() {
         VerticalLayout root = genRootLayout();
@@ -62,17 +74,17 @@ public class ClientRegistration extends Window{
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         VerticalLayout verticalLayout2 = new VerticalLayout();
-        PhoneField phone = new PhoneField("Phone number");
-        PasswordField password1 = new PasswordField("Password");
-        PasswordField password2 = new PasswordField("Confirm password");
+        phone = new PhoneField("Phone number");
+        password1 = new PasswordField("Password");
+        password2 = new PasswordField("Confirm password");
         Button cancel = new Button("Cancel", VaadinIcons.EXIT);
         cancel.setWidth(100, Unit.PIXELS);
         verticalLayout2.addComponents(phone, password1, password2, cancel);
 
         VerticalLayout verticalLayout1 = new VerticalLayout();
-        TextField lastName = new TextField("Last name");
-        TextField firstName = new TextField("Last name");
-        TextField middleName = new TextField("Middle name");
+        lastName = new TextField("Last name");
+        firstName = new TextField("Last name");
+        middleName = new TextField("Middle name");
         Button ok = new Button("Ok", VaadinIcons.USER_CHECK);
         ok.setWidth(100, Unit.PIXELS);
         verticalLayout1.addComponents(lastName, firstName, middleName, ok);
@@ -94,7 +106,7 @@ public class ClientRegistration extends Window{
                 password2.clear();
                 return;
             }
-            if (userDetailsService.isClientLoginExist(phone.getValue())) {
+            if (userDetailsService.isLoginExist(phone.getValue())) {
                 toastr.toast(ToastBuilder.error("This phone number already exists!").build());
                 return;
             }
@@ -110,40 +122,36 @@ public class ClientRegistration extends Window{
             User user = new User();
             user.setObjectId(client.getObjectId());
             user.setUsername(client.getPhoneNumber());
-            user.setPassword(password2.getValue());
+            user.setPassword(passwordEncoder.encode(password2.getValue()));
             user.setEnabled(true);
             user.setAuthorities(ImmutableList.of(Role.ROLE_CLIENT));
             userFacade.createUser(user);
             toastr.toast(ToastBuilder.success(
-                    "You are successful registrated!\nEnter you login and password to continue the work.")
+                    "You are successfully registered!\nEnter you login and password to continue the work.")
                     .build());
             close();
+            phone.clear();
+            password1.clear();
+            password2.clear();
+            lastName.clear();
+            firstName.clear();
+            middleName.clear();
         });
-
         cancel.addClickListener(event -> {
             close();
+            phone.clear();
+            password1.clear();
+            password2.clear();
+            lastName.clear();
+            firstName.clear();
+            middleName.clear();
+        });
+
+        addCloseListener(e -> {
+           cancel.click();
         });
 
         horizontalLayout.addComponents(verticalLayout2, verticalLayout1);
-
-        return horizontalLayout;
-    }
-
-    @Deprecated
-    private Component genButtons() {
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setSizeFull();
-        //horizontalLayout.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
-
-        Button ok = new Button("Ok", VaadinIcons.USER_CHECK);
-        ok.setWidth(100, Unit.PIXELS);
-        Button cancel = new Button("Cancel", VaadinIcons.EXIT);
-        cancel.setWidth(100, Unit.PIXELS);
-
-        horizontalLayout.addComponents(cancel, ok);
-
-        horizontalLayout.setExpandRatio(cancel, 0.8f);
-        horizontalLayout.setExpandRatio(ok, 0.2f);
 
         return horizontalLayout;
     }

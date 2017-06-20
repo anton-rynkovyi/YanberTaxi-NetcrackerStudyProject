@@ -141,5 +141,4 @@ public class DriverServiceImpl implements DriverService {
         driver.setStatus(status);
         persistenceFacade.update(driver);
     }
-
 }

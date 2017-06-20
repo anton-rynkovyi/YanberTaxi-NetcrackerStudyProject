@@ -7,7 +7,7 @@ public interface UserFacade {
 
     User createUser(User user);
     Long getObjectTypeIdByUser(User user);
-    User findUserByUsername(String username);
-    User findClientByUsername(String phone);
-    User findDriverByUsername(String phone);
+    User findUserDetailsByUsername(String username);
+    User findClientDetailsByUsername(String phone);
+    User findDriverDetailsByUsername(String phone);
 }

@@ -1,9 +1,13 @@
 package com.netcracker.project.study;
 
 import com.google.common.collect.ImmutableList;
+import com.netcracker.project.study.model.Model;
 import com.netcracker.project.study.model.Role;
+import com.netcracker.project.study.model.admin.Admin;
+import com.netcracker.project.study.model.admin.AdminAttr;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverAttr;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
@@ -19,6 +23,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.math.BigInteger;
+import java.sql.Date;
+import java.util.List;
 
 public class Main {
 
@@ -116,7 +122,7 @@ public class Main {
         }*/
 
 
-       /* Driver driver = new Driver();
+        Driver driver = new Driver();
         driver.setName("Driver Vadim");
         driver.setFirstName("Vadim");
         driver.setLastName("Martsun");
@@ -135,7 +141,6 @@ public class Main {
         car.setStateNumber("BH4454TC");
         car.setReleaseDate(java.sql.Date.valueOf("2012-01-01"));
         adminService.createModel(car);
-*/
 
         Driver driver1 = new Driver();
         driver1.setFirstName("Vadim");
@@ -221,7 +226,31 @@ public class Main {
         manager.createUser(userClient1);
 
 
-        /*Car car = new Car();
+      /* Admin admin = new Admin();
+       admin.setPhoneNumber("(063)611-67-90");
+       admin.setEmail("admin@mail.com");
+       facade.create(admin);
+
+        User userClient1 = new User();
+        userClient1.setObjectId(admin.getObjectId());
+        userClient1.setAuthorities(ImmutableList.of(Role.ROLE_ADMIN));
+        userClient1.setUsername(admin.getPhoneNumber());
+        userClient1.setPassword("admin");
+        userClient1.setEnabled(true);
+        manager.createUser(userClient1);*/
+
+        /*String query = "" +
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
+                "WHERE attr.attr_id = " + DriverAttr.EMAIL_ATTR + " " +
+                "AND attr.value = 'admin@mail.com' " +
+                "OR attr.attr_id = " + AdminAttr.EMAIL_ATTR + " " +
+                "AND attr.value = 'admin@mail.com'";
+        List<Driver> model = facade.getSome(query, Driver.class);
+        System.out.println(model.get(0).getPhoneNumber());*/
+
+      /*  Car car = new Car();
         car.setName("Vadim Car");
         car.setChildSeat(true);
         car.setStateNumber("BH80567");
