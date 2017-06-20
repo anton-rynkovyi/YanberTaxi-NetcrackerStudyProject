@@ -83,7 +83,7 @@ public class ClientRegistration extends Window{
 
         VerticalLayout verticalLayout1 = new VerticalLayout();
         lastName = new TextField("Last name");
-        firstName = new TextField("Last name");
+        firstName = new TextField("First name");
         middleName = new TextField("Middle name");
         Button ok = new Button("Ok", VaadinIcons.USER_CHECK);
         ok.setWidth(100, Unit.PIXELS);

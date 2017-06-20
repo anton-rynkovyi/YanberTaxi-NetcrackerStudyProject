@@ -33,14 +33,14 @@ public class AdminServiceImpl implements AdminService{
     @Autowired
     PersistenceFacade persistenceFacade;
 
-    @Autowired
+   /* @Autowired
     DriversGrid driversGrid;
 
     @Autowired
     DriversBanGrid driversBanGrid;
 
     @Autowired
-    DriverService driverService;
+    DriverService driverService;*/
 
 
     @Override
@@ -64,7 +64,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public void setBanTask() {
-        List<Driver> driverList = driverService.getBannedDrivers();
+       /* List<Driver> driverList = driverService.getBannedDrivers();
         for (int i = 0; i < driverList.size(); i++) {
             Driver driver = driverList.get(i);
            long dif = driver.getUnbanDate().getTime() - System.currentTimeMillis();
@@ -77,7 +77,7 @@ public class AdminServiceImpl implements AdminService{
            } else {
                System.out.println(driver.getObjectId()+": " + dif / 1000);
            }
-        }
+        }*/
     }
 
     @Override

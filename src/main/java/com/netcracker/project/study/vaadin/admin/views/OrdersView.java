@@ -24,7 +24,6 @@ public class OrdersView extends VerticalLayout implements View {
     @Autowired
     Copyright bottomTeamLogoLink;
 
-    @PostConstruct
     void init() {
         TabSheet tabSheet = getTabSheet();
         tabSheet.setSizeFull();
@@ -50,6 +49,8 @@ public class OrdersView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-
+        ordersGrid.init();
+        ordersGrid.refreshGrid();
+        init();
     }
 }

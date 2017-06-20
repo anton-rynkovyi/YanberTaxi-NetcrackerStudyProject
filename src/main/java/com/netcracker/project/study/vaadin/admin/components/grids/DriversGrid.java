@@ -59,7 +59,6 @@ public class DriversGrid extends CustomComponent{
 
     private TextField fieldFilter;
 
-    @PostConstruct
     public void init() {
         initFilters();
         driversGrid = generateDriversGrid();

@@ -29,14 +29,15 @@ public class DriversRequestsGrid  extends CustomComponent{
 
     private Window window;
 
-    @Autowired AdminService adminService;
+    @Autowired
+    AdminService adminService;
 
     @Autowired
     DriverService driverService;
 
-    @Autowired DriverRequestInfoPopUp driverInfoPopUp;
+    @Autowired
+    DriverRequestInfoPopUp driverInfoPopUp;
 
-    @PostConstruct
     public void init() {
         driversRequestsGrid = generateDriversGrid();
         componentLayout = getFilledComponentLayout();

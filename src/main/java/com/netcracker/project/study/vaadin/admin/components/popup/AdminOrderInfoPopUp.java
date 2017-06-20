@@ -28,10 +28,6 @@ public class AdminOrderInfoPopUp extends VerticalLayout{
     @Autowired
     ClientInfoPopUp clientInfoPopUp;
 
-    private PopupView driverInfoWindow;
-
-    private PopupView clientInfoWindow;
-
     public void init(Order order) {
         this.order = order;
         //initDriverInfoWindow();

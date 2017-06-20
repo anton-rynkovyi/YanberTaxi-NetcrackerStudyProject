@@ -40,8 +40,7 @@ public class DriversBanGrid extends CustomComponent{
 
     private Window driverBanInfoWindow;
 
-    @PostConstruct
-    private void init() {
+    public void init() {
         initDriverBanInfoWindow();
         driverBanGrid = generateDriversGrid();
         rootLayout = generateRootlayout();
@@ -75,9 +74,9 @@ public class DriversBanGrid extends CustomComponent{
         refreshGrid();
         driverBanGrid.addColumn(Driver::getObjectId).setCaption("№");
         driverBanGrid.addColumn(driver -> new Timestamp(driver.getUnbanDate().getTime())).setCaption("Unban date");
-        driverBanGrid.addColumn(driver ->
+        /*driverBanGrid.addColumn(driver ->
                 dt.format(new Date(driver.getUnbanDate().getTime() - System.currentTimeMillis())))
-                .setCaption("Remain");
+                .setCaption("Remain");*/
         driverBanGrid.addColumn(Driver::getLastName).setCaption("Last name");
         driverBanGrid.addColumn(Driver::getFirstName).setCaption("First name");
         return driverBanGrid;

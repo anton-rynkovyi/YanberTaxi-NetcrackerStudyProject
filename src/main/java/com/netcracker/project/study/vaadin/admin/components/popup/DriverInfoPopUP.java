@@ -35,11 +35,11 @@ public class DriverInfoPopUP extends VerticalLayout {
 
     private Window banDaysWindow;
 
-    private List<Car> driverCarList;
+    //private List<Car> driverCarList;
 
     public void init(Driver driver) {
         this.driver = driver;
-        this.driverCarList = driverService.getCarByDriver(driver);
+        //this.driverCarList = driverService.getCarByDriver(driver);
         initBanDaysWindow();
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
@@ -58,9 +58,18 @@ public class DriverInfoPopUP extends VerticalLayout {
     }
 
     private void setTextFields(VerticalLayout rootLayout) {
+        rootLayout.addComponent(lastSeen());
         rootLayout.addComponent(setDriverAndCarInfoLayout());
         rootLayout.addComponent(setControlButtonsLayout());
         rootLayout.addComponent(setDriverCommentsLayout());
+    }
+
+    private Component lastSeen() {
+        //String ls = ad
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        Label lastSeen = new Label("<i>Last seen in <b>free</b> status:</i>", ContentMode.HTML);
+        horizontalLayout.addComponent(lastSeen);
+        return horizontalLayout;
     }
 
     private HorizontalLayout setDriverAndCarInfoLayout() {
@@ -84,7 +93,6 @@ public class DriverInfoPopUP extends VerticalLayout {
         List<Car> carList = driverService.getCarByDriver(driver);
         for (int i = 0; i < carList.size(); i++) {
             Car car = carList.get(i);
-            System.out.println("CAR:" + car.getDriverId());
             Label carName = new Label("<h2><b>" + car.getMakeOfCar() + "</b></h2><hr>", ContentMode.HTML);
             Label model = new Label("Model: <i>" + car.getModelType() + "</i>", ContentMode.HTML);
             Label releaseDate = new Label("Release date: <i>" + car.getReleaseDate() + "</i>", ContentMode.HTML);

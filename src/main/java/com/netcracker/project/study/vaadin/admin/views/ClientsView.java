@@ -25,7 +25,6 @@ public class ClientsView extends VerticalLayout implements View {
     @Autowired
     Copyright bottomTeamLogoLink;
 
-    @PostConstruct
     void init() {
         TabSheet tabSheet = getTabSheet();
         tabSheet.setSizeFull();
@@ -52,6 +51,8 @@ public class ClientsView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-
+        clientsGrid.init();
+        clientsGrid.refreshGrid();
+        init();
     }
 }

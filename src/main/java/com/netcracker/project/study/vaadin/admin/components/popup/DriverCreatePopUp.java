@@ -78,8 +78,6 @@ public class DriverCreatePopUp extends VerticalLayout {
         btnAddToDB.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-
-
                 Driver driver = new Driver();
                 driver.setName(lastName.getValue() +" " + firstName.getValue());
                 driver.setLastName(lastName.getValue());

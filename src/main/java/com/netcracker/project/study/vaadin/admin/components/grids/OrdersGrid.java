@@ -30,7 +30,6 @@ public class OrdersGrid extends CustomComponent {
     @Autowired
     AdminOrderInfoPopUp orderInfoPopUp;
 
-    @PostConstruct
     public void init() {
         ordersGrid = generateOrdersGrid();
         initOrderInfoWindow();
@@ -63,8 +62,6 @@ public class OrdersGrid extends CustomComponent {
     private Grid<Order> generateOrdersGrid() {
 
         Grid<Order> ordersGrid = new Grid<>();
-        ordersList = adminService.allModelsAsList(Order.class);
-        ordersGrid.setItems(ordersList);
 
         ordersGrid.addColumn(Order::getObjectId).setCaption("№");
         ordersGrid.addColumn(Order -> Order.getDriverOnOrder() != null ? Order.getDriverOnOrder().getFirstName() + " " +
@@ -107,6 +104,12 @@ public class OrdersGrid extends CustomComponent {
 
     public List getOrdersList() {
         return ordersList;
+    }
+
+    public void refreshGrid() {
+        ordersList = adminService.allModelsAsList(Order.class);
+        ordersGrid.setItems(ordersList);
+        init();
     }
 
 }

@@ -30,7 +30,6 @@ public class DriversView extends VerticalLayout implements View {
 
     TabSheet tabSheet;
 
-    @PostConstruct
     void init() {
         tabSheet = new TabSheet();
         tabSheet.setSizeFull();
@@ -76,6 +75,12 @@ public class DriversView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-
+        driversBanGrid.init();
+        driversGrid.init();
+        driversRequestsGrid.init();
+        driversRequestsGrid.refreshGrid();
+        driversRequestsGrid.refreshGrid();
+        driversBanGrid.refreshGrid();
+        init();
     }
 }

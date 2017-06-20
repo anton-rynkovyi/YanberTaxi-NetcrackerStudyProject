@@ -3,12 +3,14 @@ package com.netcracker.project.study.vaadin.admin.components.menu;
 import com.netcracker.project.study.vaadin.admin.components.grids.ModelGrid;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverCreatePopUp;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringComponent
 @Deprecated
+@ViewScope
 public class HeaderMenuOld extends CustomComponent {
 
     public static final String DRIVERS_TAB = "Drivers";

@@ -8,6 +8,7 @@ import com.netcracker.project.study.vaadin.admin.components.popup.ClientInfoPopU
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,6 @@ public class ClientsGrid extends CustomComponent {
 
     private Window viewClientWindow;
 
-    @PostConstruct
     public void init() {
         clientsGrid = generateClientsGrid();
         VerticalLayout componentLayout = getFilledComponentLayout();
@@ -61,9 +61,6 @@ public class ClientsGrid extends CustomComponent {
     private Grid<Client> generateClientsGrid() {
         Grid<Client> clientsGrid = new Grid<>();
         clientsGrid.setSizeFull();
-
-        clientsList = adminService.allModelsAsList(Client.class);
-        clientsGrid.setItems(clientsList);
 
         clientsGrid.addColumn(Client::getObjectId).setCaption("№");
         clientsGrid.addColumn(Client::getLastName).setCaption("Last name");
@@ -162,5 +159,10 @@ public class ClientsGrid extends CustomComponent {
 
     public Window getViewClientWindow() {
         return  viewClientWindow;
+    }
+
+    public void refreshGrid(){
+        clientsList = adminService.allModelsAsList(Client.class);
+        clientsGrid.setItems(clientsList);
     }
 }

@@ -107,7 +107,7 @@ public class CarRegistration extends Window {
         carsComponent = new ArrayList<>();
         cars = new ArrayList<>();
         yearsDate = new ArrayList<>();
-        for (int i = 2000; i < 2017; i++) {
+        for (int i = 2000; i < 2018; i++) {
             yearsDate.add(i);
         }
     }
@@ -165,11 +165,6 @@ public class CarRegistration extends Window {
                     car.setMakeOfCar(names.get(i).getValue());
                     car.setModelType(models.get(i).getValue());
                     car.setStateNumber(stateNumbers.get(i).getValue());
-                    for (int j = 0; j < yearsDate.size(); j++) {
-                        if (!prodDates.get(i).getValue().equals(yearsDate.get(j))){
-                            toastr.toast(ToastBuilder.warning("Wrong year of car production").build());
-                        }
-                    }
                     car.setReleaseDate(java.sql.Date.valueOf(prodDates.get(i).getValue()+"-01-01"));
                     car.setSeatsCount(new BigInteger(seatsCounts.get(i).getValue()));
                     car.setChildSeat(childSeats.get(i).getValue() ? true : false);
