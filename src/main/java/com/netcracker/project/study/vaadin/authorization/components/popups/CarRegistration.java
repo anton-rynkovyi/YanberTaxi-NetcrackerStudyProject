@@ -14,6 +14,7 @@ import com.vaadin.ui.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.vaadin.addons.Toastr;
@@ -37,6 +38,9 @@ public class CarRegistration extends Window {
     @Autowired
     UserFacade userFacade;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     private Driver driver;
     private String password;
 
@@ -48,11 +52,12 @@ public class CarRegistration extends Window {
     private ArrayList<TextField> names;
     private ArrayList<TextField> models;
     private ArrayList<TextField> stateNumbers;
-    private ArrayList<TextField> prodDates;
+    private ArrayList<ComboBox<Integer>> prodDates;
     private ArrayList<TextField> seatsCounts;
     private ArrayList<CheckBox> childSeats;
     private ArrayList<Component> carsComponent;
     private ArrayList<Car> cars;
+    private ArrayList<Integer> yearsDate;
 
     public CarRegistration() {
         genFieldsArray();
@@ -101,6 +106,10 @@ public class CarRegistration extends Window {
         childSeats = new ArrayList<>();
         carsComponent = new ArrayList<>();
         cars = new ArrayList<>();
+        yearsDate = new ArrayList<>();
+        for (int i = 2000; i < 2017; i++) {
+            yearsDate.add(i);
+        }
     }
 
     private Component genFields() {
@@ -108,7 +117,9 @@ public class CarRegistration extends Window {
         names.add(new TextField("Name of car"));
         models.add(new TextField("Model"));
         stateNumbers.add(new TextField("State number"));
-        prodDates.add(new TextField("Production year"));
+        ComboBox<Integer> prodYear = new ComboBox<>("Production year");
+        prodYear.setItems(yearsDate);
+        prodDates.add(prodYear);
         seatsCounts.add(new TextField("Seats count"));
         childSeats.add(new CheckBox("Child seat"));
         int lastCar = models.size()-1;
@@ -154,20 +165,24 @@ public class CarRegistration extends Window {
                     car.setMakeOfCar(names.get(i).getValue());
                     car.setModelType(models.get(i).getValue());
                     car.setStateNumber(stateNumbers.get(i).getValue());
+                    for (int j = 0; j < yearsDate.size(); j++) {
+                        if (!prodDates.get(i).getValue().equals(yearsDate.get(j))){
+                            toastr.toast(ToastBuilder.warning("Wrong year of car production").build());
+                        }
+                    }
                     car.setReleaseDate(java.sql.Date.valueOf(prodDates.get(i).getValue()+"-01-01"));
                     car.setSeatsCount(new BigInteger(seatsCounts.get(i).getValue()));
                     car.setChildSeat(childSeats.get(i).getValue() ? true : false);
                     cars.add(car);
                 }
             }
-            System.out.println("CARS: "  + cars.size());
             for (int i = 0; i < cars.size(); i++) {
                 persistenceFacade.create(cars.get(i));
             }
             User user = new User();
             user.setObjectId(driver.getObjectId());
             user.setUsername(driver.getPhoneNumber());
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
             user.setEnabled(true);
             user.setAuthorities(ImmutableList.of(Role.ROLE_DRIVER));
             userFacade.createUser(user);
