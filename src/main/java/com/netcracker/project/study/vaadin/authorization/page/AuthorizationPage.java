@@ -15,6 +15,7 @@ import com.netcracker.project.study.vaadin.authorization.components.popups.Clien
 import com.netcracker.project.study.vaadin.authorization.components.popups.DriverRegistration;
 import com.netcracker.project.study.vaadin.common.components.PhoneField;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
@@ -34,6 +35,7 @@ import org.vaadin.addons.builder.ToastBuilder;
 
 @Theme("valo")
 @SpringUI(path = "authorization")
+@Title("YanberTaxi-Authorization")
 public class AuthorizationPage extends UI {
 
     @Autowired

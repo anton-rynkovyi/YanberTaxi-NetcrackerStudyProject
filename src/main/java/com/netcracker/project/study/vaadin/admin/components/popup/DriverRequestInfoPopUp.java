@@ -14,6 +14,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 @SpringComponent
 public class DriverRequestInfoPopUp extends VerticalLayout{
@@ -153,7 +154,6 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
             adminService.updateModel(driver);
             driversGrid.refreshGrid();
             driversRequestsGrid.refreshGrid();
-
             driversRequestsGrid.getDriversRequestSubWindow().close();
         });
 

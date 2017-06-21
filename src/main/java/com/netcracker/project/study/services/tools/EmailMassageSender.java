@@ -42,7 +42,7 @@ public class EmailMassageSender {
 
             Transport.send(mimeMessage);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+           //throw new RuntimeException(e);
         }
     }
 }
