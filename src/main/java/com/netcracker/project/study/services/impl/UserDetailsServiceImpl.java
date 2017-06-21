@@ -62,9 +62,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (objectTypeId == ClientAttr.OBJECT_TYPE_ID) {
             Client client = persistenceFacade.getOne(user.getObjectId(), Client.class);
             return (T) client;
-        } else if (objectTypeId == DriverAttr.OBJECT_TYPE_ID) {
+        }
+        if (objectTypeId == DriverAttr.OBJECT_TYPE_ID) {
             Driver driver = persistenceFacade.getOne(user.getObjectId(), Driver.class);
             return (T) driver;
+        }
+        if (objectTypeId == AdminAttr.OBJECT_TYPE_ID) {
+            Admin admin = persistenceFacade.getOne(user.getObjectId(), Admin.class);
+            return (T) admin;
         }
         return null;
     }

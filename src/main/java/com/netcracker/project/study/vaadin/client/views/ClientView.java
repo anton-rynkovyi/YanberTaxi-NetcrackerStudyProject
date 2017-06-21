@@ -89,7 +89,7 @@ public class ClientView extends VerticalLayout implements View {
         clientOrdersGrid.setClient(client);
         clientOrdersGrid.init();
 
-        HorizontalLayout panelCaption = new HorizontalLayout();
+        /*HorizontalLayout panelCaption = new HorizontalLayout();
         panelCaption.addStyleName("v-panel-caption");
         panelCaption.setWidth("100%");
         panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
@@ -120,7 +120,7 @@ public class ClientView extends VerticalLayout implements View {
             getUI().getPage().setLocation("/authorization");
         });
         panelCaption.addComponent(action1);
-        addComponent(panelCaption);
+        addComponent(panelCaption);*/
 
        /* Label label = new Label("<h2>YanberTaxi</h2>", ContentMode.HTML);
         addComponent(label);

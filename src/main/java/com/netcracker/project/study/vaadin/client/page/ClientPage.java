@@ -1,7 +1,10 @@
 package com.netcracker.project.study.vaadin.client.page;
 
+import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.views.ClientsView;
 import com.netcracker.project.study.vaadin.admin.views.DriversView;
+import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.client.views.ClientView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -9,6 +12,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.tapio.googlemaps.GoogleMap;
@@ -35,16 +39,23 @@ public class ClientPage extends UI {
     @Autowired
     private SpringViewProvider provider;
 
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    ClientUpdate ClientWindow;
+
     private Panel viewDisplay;
+
 
     public static Navigator navigator;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         VerticalLayout rootLayout = getVerticalLayout();
-        rootLayout.setMargin(true);
-        rootLayout.setSpacing(false);
-
+       /* rootLayout.setMargin(true);
+        rootLayout.setSpacing(false);*/
+        rootLayout.setHeight(100, Unit.PERCENTAGE);
       /* Button b = new Button("Logout");
         rootLayout.addComponent(b);
         b.addClickListener(clickEvent -> {
@@ -53,10 +64,45 @@ public class ClientPage extends UI {
             getPage().setLocation("/auth");
         });*/
         setContent(rootLayout);
+        //rootLayout.setExpandRatio(viewDisplay, 1.0f);
+        HorizontalLayout panelCaption = new HorizontalLayout();
+       // panelCaption.addStyleName("v-panel-caption");
+        panelCaption.setWidth("100%");
+       // panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
+        Label label1 = new Label("YanberTaxi");
+        panelCaption.addComponent(label1);
+        panelCaption.setExpandRatio(label1, 1);
+        Client client = userDetailsService.getCurrentUser();
+        String clientName = client.getFirstName() + " " + client.getLastName();
+        Label label2 = new Label( "Hello, "+clientName);
+        panelCaption.addComponent(label2);
+
+        Button action = new Button();
+        action.setIcon(FontAwesome.PENCIL);
+        action.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        action.addStyleName(ValoTheme.BUTTON_SMALL);
+        action.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        action.addClickListener(clock -> {
+            ClientWindow.init(userDetailsService.getUser(),client);
+            getUI().addWindow(ClientWindow);
+        });
+        panelCaption.addComponent(action);
+        Button action1 = new Button("LogOut");
+        action1.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        action1.addStyleName(ValoTheme.BUTTON_SMALL);
+        action1.addClickListener(clickEvent -> {
+            SecurityContextHolder.clearContext();
+            getUI().getSession().close();
+            getUI().getPage().setLocation("/authorization");
+        });
+        panelCaption.addComponent(action1);
+        rootLayout.addComponent(panelCaption);
+
+
 
         viewDisplay = getViewDisplay();
         rootLayout.addComponent(viewDisplay);
-        //rootLayout.setExpandRatio(viewDisplay, 1.0f);
+        rootLayout.setExpandRatio(viewDisplay, 0.8f);
 
         navigator = new Navigator(this, viewDisplay);
         navigator.addProvider(provider);
