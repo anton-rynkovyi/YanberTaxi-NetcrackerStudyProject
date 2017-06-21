@@ -315,6 +315,23 @@ public class PersistenceManager implements Manager {
         return user;
     }
 
+    public void updateUser(User user) {
+        jdbcTemplate.update(UsersQueries.UPDATE_USERS,new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                int i = 0;
+                ps.setString(++i, user.getObjectId().toString());
+                ps.setString(++i, user.getObjectId().toString());
+                ps.setString(++i, user.getUsername());
+                ps.setString(++i, user.getPassword());
+                ps.setString(++i, String.valueOf(user.getAuthorities().get(0)));
+                ps.setString(++i, user.getUsername());
+                ps.setString(++i, user.getPassword());
+                ps.setString(++i, String.valueOf(user.getAuthorities().get(0)));
+            }
+        });
+    }
+
     @NotNull
     private RowMapper<User> rowMapper1 = new RowMapper<User>() {
         @Override

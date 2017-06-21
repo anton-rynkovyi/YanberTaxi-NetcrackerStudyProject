@@ -225,6 +225,20 @@ public class Main {
         userClient1.setEnabled(true);
         manager.createUser(userClient1);
 
+        Client client2 = new Client();
+        client1.setLastName("Lionel");
+        client1.setFirstName("Messi");
+        client1.setPhoneNumber("(077)777-77-77");
+        client1.setPoints(BigInteger.valueOf(59));
+        adminService.createModel(client1);
+        User userClient2 = new User();
+        userClient1.setObjectId(client1.getObjectId());
+        userClient1.setAuthorities(ImmutableList.of(Role.ROLE_CLIENT));
+        userClient1.setUsername(client1.getPhoneNumber());
+        userClient1.setPassword("leo123");
+        userClient1.setEnabled(true);
+        manager.createUser(userClient1);
+
 
       /* Admin admin = new Admin();
        admin.setPhoneNumber("(063)611-67-90");

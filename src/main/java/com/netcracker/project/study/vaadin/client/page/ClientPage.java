@@ -4,7 +4,9 @@ import com.netcracker.project.study.vaadin.admin.views.ClientsView;
 import com.netcracker.project.study.vaadin.admin.views.DriversView;
 import com.netcracker.project.study.vaadin.client.views.ClientView;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
@@ -19,6 +21,7 @@ import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapMarker;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolygon;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolyline;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 
 @Theme("valo")
 @SpringUI(path = "/client")
+@Title("YanberTaxi-Client")
 public class ClientPage extends UI {
 
     @Autowired
@@ -40,7 +44,8 @@ public class ClientPage extends UI {
         VerticalLayout rootLayout = getVerticalLayout();
         rootLayout.setMargin(true);
         rootLayout.setSpacing(false);
-      /*  Button b = new Button("Logout");
+
+      /* Button b = new Button("Logout");
         rootLayout.addComponent(b);
         b.addClickListener(clickEvent -> {
             SecurityContextHolder.clearContext();
@@ -70,4 +75,13 @@ public class ClientPage extends UI {
         springViewDisplay.setSizeFull();
         return  springViewDisplay;
     }
+
+
+    private Panel getStandartPanel() {
+        Panel panel = new Panel("Astronomer Panel");
+        panel.addStyleName("mypanelexample");
+        panel.setSizeUndefined(); // Shrink to fit content
+        return panel;
+    }
+
 }

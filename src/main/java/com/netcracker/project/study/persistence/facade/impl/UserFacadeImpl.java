@@ -23,6 +23,10 @@ public class UserFacadeImpl implements UserFacade{
         return someUser;
     }
 
+    public void updateUser(User user) {
+        manager.updateUser(user);
+    }
+
     public Long getObjectTypeIdByUser(User user) {
         Long userObjectTypeId = manager.getObjectTypeIdByUser(user);
         return userObjectTypeId;

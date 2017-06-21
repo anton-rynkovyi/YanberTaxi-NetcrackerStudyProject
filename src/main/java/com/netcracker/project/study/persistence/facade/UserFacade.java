@@ -10,4 +10,5 @@ public interface UserFacade {
     User findUserDetailsByUsername(String username);
     User findClientDetailsByUsername(String phone);
     User findDriverDetailsByUsername(String phone);
+    void updateUser(User user);
 }

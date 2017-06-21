@@ -69,6 +69,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return null;
     }
 
+    public <User> User getUser() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user;
+    }
+
     public boolean isClientLoginExist(String phone) {
         User user = userFacade.findClientDetailsByUsername(phone);
         if (user == null) {

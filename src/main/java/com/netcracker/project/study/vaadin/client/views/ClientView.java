@@ -8,18 +8,23 @@ import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
+import com.netcracker.project.study.vaadin.authorization.components.popups.ClientRegistration;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientOrdersGrid;
 import com.netcracker.project.study.vaadin.client.components.OrderMaker;
+import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.*;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.vaadin.addons.Toast;
 import org.vaadin.addons.ToastPosition;
 import org.vaadin.addons.ToastType;
@@ -27,7 +32,9 @@ import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
 
+import javax.swing.event.CaretListener;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringView(name = ClientView.VIEW_NAME)
@@ -62,6 +69,9 @@ public class ClientView extends VerticalLayout implements View {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    ClientUpdate ClientWindow;
+
     private Button newOrder, cancelOrder;
 
     Client client;
@@ -79,9 +89,42 @@ public class ClientView extends VerticalLayout implements View {
         clientOrdersGrid.setClient(client);
         clientOrdersGrid.init();
 
-        Label label = new Label("<h2>YanberTaxi</h2>", ContentMode.HTML);
+        HorizontalLayout panelCaption = new HorizontalLayout();
+        panelCaption.addStyleName("v-panel-caption");
+        panelCaption.setWidth("100%");
+        panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
+        Label label1 = new Label("YanberTaxi");
+        panelCaption.addComponent(label1);
+        panelCaption.setExpandRatio(label1, 1);
+
+        String clientName = getClientName();
+        Label label2 = new Label( "Hello, "+clientName);
+        panelCaption.addComponent(label2);
+
+        Button action = new Button();
+        action.setIcon(FontAwesome.PENCIL);
+        action.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        action.addStyleName(ValoTheme.BUTTON_SMALL);
+        action.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        action.addClickListener(clock -> {
+            ClientWindow.init(userDetailsService.getUser(),client);
+            getUI().addWindow(ClientWindow);
+        });
+        panelCaption.addComponent(action);
+        Button action1 = new Button("LogOut");
+        action1.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        action1.addStyleName(ValoTheme.BUTTON_SMALL);
+        action1.addClickListener(clickEvent -> {
+            SecurityContextHolder.clearContext();
+            getUI().getSession().close();
+            getUI().getPage().setLocation("/authorization");
+        });
+        panelCaption.addComponent(action1);
+        addComponent(panelCaption);
+
+       /* Label label = new Label("<h2>YanberTaxi</h2>", ContentMode.HTML);
         addComponent(label);
-        setComponentAlignment(label, Alignment.TOP_RIGHT);
+        setComponentAlignment(label, Alignment.TOP_RIGHT);*/
 
         toastr = new Toastr();
         addComponent(toastr);
