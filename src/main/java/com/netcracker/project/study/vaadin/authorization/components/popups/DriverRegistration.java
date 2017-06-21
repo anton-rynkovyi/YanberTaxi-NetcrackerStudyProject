@@ -9,20 +9,19 @@ import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
+import com.netcracker.project.study.services.tools.EmailValidator;
 import com.netcracker.project.study.vaadin.common.components.PhoneField;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
 
 @SpringComponent
 @Scope(value = "prototype")
@@ -40,6 +39,9 @@ public class DriverRegistration extends Window {
     @Autowired
     UserFacade userFacade;
 
+    @Autowired
+    EmailValidator emailValidator;
+
     private Toastr toastr;
     private PhoneField phone;
     private PasswordField password1;
@@ -51,6 +53,10 @@ public class DriverRegistration extends Window {
     private TextField exp;
 
     public DriverRegistration() {
+       init();
+    }
+
+    public void init() {
         VerticalLayout root = genRootLayout();
         root.addComponent(genFields());
         toastr = new Toastr();
@@ -76,6 +82,7 @@ public class DriverRegistration extends Window {
 
         VerticalLayout verticalLayout2 = new VerticalLayout();
         phone = new PhoneField("Phone number");
+        phone.setPlaceholder("(068)067-68-53");
         password1 = new PasswordField("Password");
         password2 = new PasswordField("Confirm password");
         email = new TextField("Email");
@@ -119,6 +126,22 @@ public class DriverRegistration extends Window {
                 toastr.toast(ToastBuilder.error("Email address already exists!").build());
                 return;
             }
+            if (!emailValidator.validate(email.getValue())) {
+                toastr.toast(ToastBuilder.error("Email address is not valid!").build());
+                return;
+            }
+            if (password2.getValue().length() < 8) {
+                toastr.toast(ToastBuilder.error("Password must be more than " +
+                        "" + password2.getValue().length() + " " +
+                        " characters").build());
+                return;
+            }
+            for (int i = 0; i < exp.getValue().length(); i++) {
+                if (!Character.isDigit(exp.getValue().charAt(i))) {
+                    toastr.toast(ToastBuilder.error("Wrong experience format!").build());
+                    return;
+                }
+            }
 
             Driver driver = new Driver();
             driver.setFirstName(firstName.getValue());
@@ -133,6 +156,7 @@ public class DriverRegistration extends Window {
             carRegistration.setDriverAndPassword(driver, password2.getValue());
             persistenceFacade.create(driver);
             //userFacade.createUser(user);
+            carRegistration.initDriverRegWindow(this);
             setContent(carRegistration.getContent());
         });
 

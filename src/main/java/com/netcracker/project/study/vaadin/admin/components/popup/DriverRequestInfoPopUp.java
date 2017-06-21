@@ -6,13 +6,11 @@ import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
-import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequestsGrid;
 import com.netcracker.project.study.services.tools.EmailMassageSender;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,7 +128,7 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
                 Notification.show("Write the massage");
                 return;
             }
-            emailMassageSender.sendMassage(driver.getEmail(), richTextArea.getValue());
+            emailMassageSender.sendMessage(driver.getEmail(), richTextArea.getValue());
             List<Car> carList = driverService.getCarByDriver(driver);
 
             for (int i = 0; i < carList.size(); i++) {
@@ -150,7 +148,7 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
                 Notification.show("Write the massage");
                 return;
             }
-            emailMassageSender.sendMassage(driver.getEmail(), richTextArea.getValue());
+            emailMassageSender.sendMessage(driver.getEmail(), richTextArea.getValue());
             driver.setStatus(DriverStatusList.OFF_DUTY);
             adminService.updateModel(driver);
             driversGrid.refreshGrid();

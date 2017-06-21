@@ -6,28 +6,22 @@ import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
-import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
-import com.netcracker.project.study.vaadin.authorization.page.AuthorizationPage;
 import com.netcracker.project.study.vaadin.common.components.PhoneField;
-import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.vaadin.addons.ToastOptions;
 import org.vaadin.addons.Toastr;
-import org.vaadin.addons.ToastrListener;
 import org.vaadin.addons.builder.ToastBuilder;
 
 import java.math.BigInteger;
 
 @SpringComponent
 @Scope(value = "prototype")
-public class ClientRegistration extends Window{
+public class ClientRegistration extends Window {
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -75,6 +69,7 @@ public class ClientRegistration extends Window{
 
         VerticalLayout verticalLayout2 = new VerticalLayout();
         phone = new PhoneField("Phone number");
+        phone.setPlaceholder("(068)067-68-53");
         password1 = new PasswordField("Password");
         password2 = new PasswordField("Confirm password");
         Button cancel = new Button("Cancel", VaadinIcons.EXIT);
@@ -110,6 +105,12 @@ public class ClientRegistration extends Window{
                 toastr.toast(ToastBuilder.error("This phone number already exists!").build());
                 return;
             }
+            if (password2.getValue().length() < 8) {
+                toastr.toast(ToastBuilder.error("Password must be more than " +
+                        "" + password2.getValue().length() + " " +
+                        " characters").build());
+                return;
+            }
 
             Client client = new Client();
             client.setFirstName(firstName.getValue());
@@ -126,16 +127,17 @@ public class ClientRegistration extends Window{
             user.setEnabled(true);
             user.setAuthorities(ImmutableList.of(Role.ROLE_CLIENT));
             userFacade.createUser(user);
-            toastr.toast(ToastBuilder.success(
-                    "You are successfully registered!\nEnter you login and password to continue the work.")
-                    .build());
-            close();
+            UI.getCurrent().setContent(toastr);
             phone.clear();
             password1.clear();
             password2.clear();
             lastName.clear();
             firstName.clear();
             middleName.clear();
+            close();
+            toastr.toast(ToastBuilder.success(
+                    "You are successfully registered!\nEnter your login and password to make orders.")
+                    .build());
         });
         cancel.addClickListener(event -> {
             close();
@@ -148,7 +150,7 @@ public class ClientRegistration extends Window{
         });
 
         addCloseListener(e -> {
-           cancel.click();
+            cancel.click();
         });
 
         horizontalLayout.addComponents(verticalLayout2, verticalLayout1);

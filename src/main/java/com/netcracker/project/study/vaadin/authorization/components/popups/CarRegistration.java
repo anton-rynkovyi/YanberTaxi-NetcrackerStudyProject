@@ -13,6 +13,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,6 +41,8 @@ public class CarRegistration extends Window {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    Window driverRegWindow;
 
     private Driver driver;
     private String password;
@@ -71,6 +74,10 @@ public class CarRegistration extends Window {
         toastr = new Toastr();
         root.addComponent(toastr);
         setContent(root);
+    }
+
+    public void initDriverRegWindow(Window window) {
+        this.driverRegWindow = window;
     }
 
     private VerticalLayout genRootLayout() {
@@ -147,11 +154,6 @@ public class CarRegistration extends Window {
         //horizontalLayout.setExpandRatio(prev, 0.8f);
         ok.addClickListener(event -> {
             for (int i = 0; i < carsLayout.getComponentCount(); i++) {
-                System.out.println(names.get(i).getValue() + " - " + names.size());
-                System.out.println(models.get(i).getValue() + " - " + models.size());
-                System.out.println(stateNumbers.get(i).getValue() + " - " + stateNumbers.size());
-                System.out.println(prodDates.get(i).getValue() + " - " + prodDates.size());
-                System.out.println(seatsCounts.get(i).getValue() + " - " + seatsCounts.size());
                 if (names.get(i).isEmpty()
                         || models.get(i).isEmpty()
                         || stateNumbers.get(i).isEmpty()
@@ -181,13 +183,18 @@ public class CarRegistration extends Window {
             user.setEnabled(true);
             user.setAuthorities(ImmutableList.of(Role.ROLE_DRIVER));
             userFacade.createUser(user);
-            close();
+
+            UI.getCurrent().setContent(toastr);
+            driverRegWindow.close();
+            toastr.toast(ToastBuilder.success(
+                    "You are successfully registered!\nAdministrator will contact you by email.")
+                    .build());
         });
 
         add.addClickListener(event -> {
-            if  (carsComponent.size() == 2) {
-                toastr.toast(ToastBuilder.warning("You cannot add more than two cars!").build());
-                return;
+                if  (carsComponent.size() == 2) {
+                    toastr.toast(ToastBuilder.warning("You cannot add more than two cars!").build());
+                    return;
             }
             carsComponent.add(genFields());
             carsLayout.addComponent(carsComponent.get(carsComponent.size()-1));
@@ -212,7 +219,7 @@ public class CarRegistration extends Window {
         });
 
         prev.addClickListener(event -> {
-           close();
+           driverRegWindow.close();
         });
 
         addCloseListener(e -> {
@@ -223,8 +230,8 @@ public class CarRegistration extends Window {
                prodDates.get(i).clear();
                seatsCounts.get(i).clear();
             }
-            close();
-            setContent(null);
+            driverRegWindow.close();
+            //setContent(null);
         });
 
         return horizontalLayout;
