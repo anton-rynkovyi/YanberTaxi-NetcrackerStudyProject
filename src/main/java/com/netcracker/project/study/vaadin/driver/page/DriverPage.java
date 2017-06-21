@@ -82,6 +82,7 @@ public class DriverPage extends UI{
         rootLayout.addComponent(panelCaption);
 
         viewDisplay = new Panel();
+        viewDisplay.setSizeFull();
 
         rootLayout.addComponent(viewDisplay);
         rootLayout.setExpandRatio(viewDisplay, 1.0f);
