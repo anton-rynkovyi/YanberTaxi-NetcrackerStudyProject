@@ -100,6 +100,10 @@ public class OrderInfoPopUp extends VerticalLayout {
             if (labels.size() == 0) {
                 Label noRouteLabel = new Label("No route provided");
                 routeLayout.addComponent(noRouteLabel);
+            }else{
+                for(Label label:labels){
+                    routeLayout.addComponent(label);
+                }
             }
             routeInfoPanel.setContent(routeLayout);
 

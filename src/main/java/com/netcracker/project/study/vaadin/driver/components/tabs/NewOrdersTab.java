@@ -152,7 +152,6 @@ public class NewOrdersTab extends CustomComponent {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         VerticalLayout orderLayout = new VerticalLayout();
-        Panel panel = new Panel();
 
         HorizontalLayout clientLayout = new HorizontalLayout();
         Label clientIcon = new Label();
@@ -178,8 +177,6 @@ public class NewOrdersTab extends CustomComponent {
         Label distance = new Label("<b>Distance:</b> " + currentOrder.getDistance(),ContentMode.HTML);
         distanceLayout.addComponents(distanceIcon,distance);
         orderLayout.addComponents(clientLayout,statusLayout,costLabel,distanceLayout);
-        panel.setContent(orderLayout);
-        Panel routeInfoPanel = new Panel();
 
         List<Label> labels = getRoutesLayout();
         VerticalLayout routeLayout = new VerticalLayout();
@@ -187,8 +184,11 @@ public class NewOrdersTab extends CustomComponent {
         if (labels.size() == 0) {
             Label noRouteLabel = new Label("No route provided");
             routeLayout.addComponent(noRouteLabel);
+        }else{
+            for(Label label:labels){
+                routeLayout.addComponent(label);
+            }
         }
-        routeInfoPanel.setContent(routeLayout);
 
         horizontalLayout.addComponents(orderLayout,routeLayout);
 
