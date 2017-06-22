@@ -89,58 +89,20 @@ public class ClientView extends VerticalLayout implements View {
         clientOrdersGrid.setClient(client);
         clientOrdersGrid.init();
 
-        /*HorizontalLayout panelCaption = new HorizontalLayout();
-        panelCaption.addStyleName("v-panel-caption");
-        panelCaption.setWidth("100%");
-        panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
-        Label label1 = new Label("YanberTaxi");
-        panelCaption.addComponent(label1);
-        panelCaption.setExpandRatio(label1, 1);
-
-        String clientName = getClientName();
-        Label label2 = new Label( "Hello, "+clientName);
-        panelCaption.addComponent(label2);
-
-        Button action = new Button();
-        action.setIcon(FontAwesome.PENCIL);
-        action.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        action.addStyleName(ValoTheme.BUTTON_SMALL);
-        action.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        action.addClickListener(clock -> {
-            ClientWindow.init(userDetailsService.getUser(),client);
-            getUI().addWindow(ClientWindow);
-        });
-        panelCaption.addComponent(action);
-        Button action1 = new Button("LogOut");
-        action1.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        action1.addStyleName(ValoTheme.BUTTON_SMALL);
-        action1.addClickListener(clickEvent -> {
-            SecurityContextHolder.clearContext();
-            getUI().getSession().close();
-            getUI().getPage().setLocation("/authorization");
-        });
-        panelCaption.addComponent(action1);
-        addComponent(panelCaption);*/
-
-       /* Label label = new Label("<h2>YanberTaxi</h2>", ContentMode.HTML);
-        addComponent(label);
-        setComponentAlignment(label, Alignment.TOP_RIGHT);*/
-
         toastr = new Toastr();
         addComponent(toastr);
-        setComponentAlignment(toastr, Alignment.BOTTOM_RIGHT);
+        setComponentAlignment(toastr, Alignment.TOP_RIGHT);
+
+        HorizontalLayout clientInformationFields = new HorizontalLayout();
+        Panel clientPoints = getClientPoints();
+        clientPoints.setStyleName(MaterialTheme.PANEL_BORDERLESS);
+        clientInformationFields.setSizeFull();
+        clientInformationFields.addComponent(clientPoints);
+        addComponent(clientInformationFields);
 
         HorizontalLayout mainButtons = setMainButtons();
         addComponent(mainButtons);
         setComponentAlignment(mainButtons, Alignment.TOP_CENTER);
-
-        HorizontalLayout clientInformationFields = new HorizontalLayout();
-        Panel clientNamePanel = getClientInfo();
-        Panel clientPoints = getClientPoints();
-
-        clientInformationFields.addComponents(clientNamePanel, clientPoints);
-        clientInformationFields.setSizeFull();
-        addComponent(clientInformationFields);
 
         HorizontalLayout historyOfClientOrders = new HorizontalLayout(clientOrdersGrid);
         historyOfClientOrders.setSizeFull();
@@ -208,25 +170,15 @@ public class ClientView extends VerticalLayout implements View {
         return client.getFirstName() + " " + client.getLastName();
     }
 
-    private Panel getClientInfo(){
-        Panel panel = new Panel("Your profile: ");
-        Label clientInfo = new Label("<b>" + getClientName() + "</b>", ContentMode.HTML);
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.addComponent(clientInfo);
-        horizontalLayout.setComponentAlignment(clientInfo,Alignment.MIDDLE_CENTER);
-        panel.setContent(horizontalLayout);
-
-        return panel;
-    }
-
     private Panel getClientPoints(){
-        Panel panel = new Panel("Your points: ");
+        Panel panel = new Panel();
+        HorizontalLayout clientPointslayout = new HorizontalLayout();
         BigInteger clientPoints = client.getPoints() != null ? client.getPoints() : BigInteger.ZERO;
-        Label pointsInfo = new Label("<b>" + clientPoints + "</b>", ContentMode.HTML);
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.addComponent(pointsInfo);
-        panel.setContent(horizontalLayout);
-
+        Label icon = new Label();
+        icon.setIcon(VaadinIcons.COIN_PILES);
+        Label pointsInfo = new Label("<b>Your points: " + clientPoints + "</b>", ContentMode.HTML);
+        clientPointslayout.addComponents(icon, pointsInfo);
+        panel.setContent(clientPointslayout);
         return panel;
     }
 
@@ -235,7 +187,7 @@ public class ClientView extends VerticalLayout implements View {
         @Override
         public void buttonClick(Button.ClickEvent clickEvent) {
             initWindow("");
-            window.setCaption("Add information about your order");
+            window.setCaption(" Add information about your order");
             window.setIcon(VaadinIcons.KEYBOARD);
             window.setContent(orderMaker);
             UI.getCurrent().addWindow(window);
@@ -256,19 +208,18 @@ public class ClientView extends VerticalLayout implements View {
                     currentOrder = order;
                     orderService.changeStatus(OrderStatus.CANCELED, order.getObjectId());
                 }
-                //toastr.toast(ToastBuilder.success("<b>Order " + currentOrder.getName() + " was canceled</b> ").build());
-                Toast toast = ToastBuilder.of(ToastType.Info, "<b>Order " + currentOrder.getName() + " was canceled</b> ")
-                        .caption("Infomation..")
+                Toast cancelOrderToast = ToastBuilder.of(ToastType.Info, "<b>Order " + currentOrder.getName() + " was canceled</b> ")
+                        .caption("Infomation")
                         .options(ToastOptionsBuilder.having()
                                 .closeButton(true)
                                 .debug(false)
                                 .progressBar(true)
                                 .preventDuplicates(true)
-                                .position(ToastPosition.Bottom_Full_Width)
+                                .position(ToastPosition.Top_Full_Width)
                                 .timeOut(10000)
                                 .build())
                         .build();
-                toastr.toast(toast);
+                toastr.toast(cancelOrderToast);
 
                 newOrder.setVisible(true);
                 cancelOrder.setVisible(false);
@@ -276,8 +227,14 @@ public class ClientView extends VerticalLayout implements View {
                 clientOrdersGrid.init();
                 clientCurrentOrderGrid.init();
             } else {
-                initWindow("<b>You can't cancel performing order</b> ");
-                UI.getCurrent().addWindow(window);
+                Toast cancelPerformingOrderToast = ToastBuilder.of(ToastType.Warning, "<b>You can't cancel performing order</b> ")
+                    .caption("Attention")
+                    .options(ToastOptionsBuilder.having()
+                            .preventDuplicates(true)
+                            .position(ToastPosition.Top_Right)
+                            .build())
+                     .build();
+                toastr.toast(cancelPerformingOrderToast);
             }
         }
     }
@@ -285,7 +242,7 @@ public class ClientView extends VerticalLayout implements View {
     private boolean isActiveOrderExist() {
         List<Order> orderList = orderService.getActiveOrdersByClientId(client.getObjectId());
         List<Order> orderPerformingList = orderService.getPerformingOrdersByClientId(client.getObjectId());
-        if (orderList.size()>0 || orderPerformingList.size() > 0) return true;
+        if (orderList.size() > 0 || orderPerformingList.size() > 0) return true;
 
         return false;
     }

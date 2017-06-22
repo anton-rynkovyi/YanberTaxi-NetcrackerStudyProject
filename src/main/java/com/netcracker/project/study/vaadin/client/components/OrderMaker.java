@@ -17,10 +17,9 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.addons.Toast;
-import org.vaadin.addons.ToastOptions;
-import org.vaadin.addons.ToastType;
-import org.vaadin.addons.Toastr;
+import org.vaadin.addons.*;
+import org.vaadin.addons.builder.ToastBuilder;
+import org.vaadin.addons.builder.ToastOptionsBuilder;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -49,7 +48,9 @@ public class OrderMaker extends CustomComponent {
 
     private int countOfTextFields = 1;
 
-    private Window window, orderMakerWindow;
+    private Window orderMakerWindow;
+
+    private Toastr toastr;
 
     private Client client;
 
@@ -81,6 +82,10 @@ public class OrderMaker extends CustomComponent {
         layoutWithMakeOrderBtn.setSpacing(true);
         orderMaker.addComponent(layoutWithMakeOrderBtn);
         orderMaker.setComponentAlignment(layoutWithMakeOrderBtn, Alignment.BOTTOM_LEFT);
+
+        toastr = new Toastr();
+        orderMaker.addComponent(toastr);
+        orderMaker.setComponentAlignment(toastr, Alignment.TOP_RIGHT);
 
         /*HorizontalLayout layoutWithRadioButton = setRadioButton();
         MarginInfo radioButtonBtnMerginInfo = new MarginInfo(true, false, false, true);
@@ -179,8 +184,14 @@ public class OrderMaker extends CustomComponent {
 
                 setcountOfTextFields(++count);
             } else {
-                initWindow("<b>You can't create more then three interjacent points</b> ");
-                UI.getCurrent().addWindow(window);
+                Toast routesCreateToast = ToastBuilder.of(ToastType.Info, "<b>You can't create more then three interjacent points</b> ")
+                        .caption("")
+                        .options(ToastOptionsBuilder.having()
+                                .preventDuplicates(true)
+                                .position(ToastPosition.Top_Right)
+                                .build())
+                        .build();
+                toastr.toast(routesCreateToast);
             }
         }
     }
@@ -197,6 +208,15 @@ public class OrderMaker extends CustomComponent {
                 fields[count-1] = null;
 
                 setcountOfTextFields(count-1);
+            } else {
+                Toast deleteRoutesTextFieldsToast = ToastBuilder.of(ToastType.Info, "<b>You can't delete this routes points</b> ")
+                        .caption("")
+                        .options(ToastOptionsBuilder.having()
+                                .preventDuplicates(true)
+                                .position(ToastPosition.Top_Right)
+                                .build())
+                        .build();
+                toastr.toast(deleteRoutesTextFieldsToast);
             }
         }
     }
@@ -212,26 +232,45 @@ public class OrderMaker extends CustomComponent {
             if (!(isFieldsEmpty(textFieldsStrings))) {
                 if (orderService.getActiveOrdersByClientId(client.getObjectId()).size() > 0
                         || orderService.getPerformingOrdersByClientId(client.getObjectId()).size() > 0 ) {
-                    initWindow("<b>You have an active order. You can't simultaneously create multiple orders</b> ");
-                    UI.getCurrent().addWindow(window);
+                    Toast toast = ToastBuilder.of(ToastType.Warning, "<b>You have an active order. You can't simultaneously create multiple orders</b> ")
+                            .caption("Attention")
+                            .options(ToastOptionsBuilder.having()
+                                    .preventDuplicates(true)
+                                    .position(ToastPosition.Top_Right)
+                                    .build())
+                            .build();
+                    toastr.toast(toast);
                 } else {
                     clientService.makeOrder(client.getObjectId(), textFieldsStrings);
-                    initWindow("<b>Your order was created successfully</b> ");
-                    UI.getCurrent().addWindow(window);
 
+                    for (int i = 0; i < fields.length; i++) {
+                        if (fields[i] != null) fields[i].clear();
+                    }
                     orderMakerWindow.close();
                     cancelOrderButton.setVisible(true);
                     newOrderButton.setVisible(false);
 
                     clientOrdersGrid.init();
                     clientCurrentOrderGrid.init();
-                    for (int i = 0; i < fields.length; i++) {
-                        if (fields[i] != null) fields[i].clear();
-                    }
+
+                    Toast orderMakerToast = ToastBuilder.of(ToastType.Success, "Your order was created successfully</b> ")
+                            .caption("Succes")
+                            .options(ToastOptionsBuilder.having()
+                                    .preventDuplicates(true)
+                                    .position(ToastPosition.Top_Right)
+                                    .build())
+                            .build();
+                    toastr.toast(orderMakerToast);
                 }
             } else {
-                initWindow("<b>Please set all fields</b> ");
-                UI.getCurrent().addWindow(window);
+                Toast setAllFieldsToast = ToastBuilder.of(ToastType.Warning, "<b>You haven't fill all information.\nPlease set all fields</b> ")
+                        .caption("Attention")
+                        .options(ToastOptionsBuilder.having()
+                                .preventDuplicates(true)
+                                .position(ToastPosition.Top_Right)
+                                .build())
+                        .build();
+                toastr.toast(setAllFieldsToast);
             }
         }
     }
@@ -250,17 +289,5 @@ public class OrderMaker extends CustomComponent {
             if (textFieldString != null && textFieldString.isEmpty()) return true;
         }
         return false;
-    }
-
-    private void initWindow(String text){
-        window = new Window(" Information");
-        window.setResizable(false);
-        window.setIcon(VaadinIcons.INFO_CIRCLE);
-        window.center();
-        window.setModal(true);
-        VerticalLayout verticalLayout = new VerticalLayout();
-        Label content = new Label(text, ContentMode.HTML);
-        verticalLayout.addComponent(content);
-        window.setContent(verticalLayout);
     }
 }
