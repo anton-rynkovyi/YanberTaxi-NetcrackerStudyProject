@@ -12,11 +12,13 @@ import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.ClickableRenderer;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
 @SpringComponent
 @Deprecated
+@Scope(value = "prototype")
 public class ModelGrid {
 
     @Autowired

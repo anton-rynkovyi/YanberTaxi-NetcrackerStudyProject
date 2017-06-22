@@ -10,6 +10,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.spring.events.EventScope;
@@ -21,22 +22,18 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 @SpringComponent
+@Scope(value = "prototype")
 public class BanDaysPopUp extends VerticalLayout {
 
-    @Autowired
     DriverInfoPopUP driverInfoPopUP;
 
     @Autowired
     AdminService adminService;
 
-    @Autowired
     DriversGrid driversGrid;
 
-    @Autowired
-    DriversBanGrid driversBanGrid;
-
-    @Autowired
-    RefreshListener refreshListener;
+   /* @Autowired
+    RefreshListener refreshListener;*/
 
     private Toastr toastr;
 
@@ -86,8 +83,6 @@ public class BanDaysPopUp extends VerticalLayout {
             }
             adminService.giveBan(driver, days);
             driversGrid.refreshGrid();
-            //eventBus.post("");
-            driversBanGrid.refreshGrid();
             driverInfoPopUP.getBanDaysWindow().close();
         });
 
@@ -115,5 +110,13 @@ public class BanDaysPopUp extends VerticalLayout {
         radioButtonGroup.setItems(banDayList);
 
         return radioButtonGroup;
+    }
+
+    public void setDriversGrid(DriversGrid driversGrid) {
+        this.driversGrid = driversGrid;
+    }
+
+    public void setDriverInfoPopUP(DriverInfoPopUP driverInfoPopUP) {
+        this.driverInfoPopUP = driverInfoPopUP;
     }
 }

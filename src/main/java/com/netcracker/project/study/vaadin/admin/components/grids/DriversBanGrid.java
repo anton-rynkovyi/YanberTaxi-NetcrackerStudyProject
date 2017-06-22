@@ -11,16 +11,16 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
 import java.sql.*;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.annotation.PostConstruct;
-
 
 @SpringComponent
+@Scope(value = "prototype")
 public class DriversBanGrid extends CustomComponent{
 
     private Grid<Driver> driverBanGrid;
@@ -90,6 +90,7 @@ public class DriversBanGrid extends CustomComponent{
         verticalLayout.setComponentAlignment(btnDriverInfo, Alignment.BOTTOM_RIGHT);
         btnDriverInfo.addClickListener(event -> {
             if (!driverBanGrid.asSingleSelect().isEmpty()) {
+                driverBanInfoPopUp.setDriversBanGrid(this);
                 Driver driver = driverBanGrid.asSingleSelect().getValue();
                 driverBanInfoPopUp.init(driver);
                 UI.getCurrent().addWindow(driverBanInfoWindow);
@@ -103,9 +104,6 @@ public class DriversBanGrid extends CustomComponent{
         driverBanGrid.setItems(driverBanList);
     }
 
-    public List<Driver> getDriverBanList(){
-        return driverBanList;
-    }
 
     public Window getDriverBanInfoWindow() {
         return driverBanInfoWindow;

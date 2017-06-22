@@ -17,12 +17,14 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.util.List;
 
 @SpringComponent
+@Scope(value = "prototype")
 public class ClientInfoPopUp extends VerticalLayout {
 
     private Client client;
@@ -36,7 +38,6 @@ public class ClientInfoPopUp extends VerticalLayout {
     @Autowired
     OrderService orderService;
 
-    @Autowired
     ClientsGrid clientsGrid;
 
     public void init(Client client) {
@@ -116,5 +117,9 @@ public class ClientInfoPopUp extends VerticalLayout {
             }
         }
         return verticalLayout;
+    }
+
+    public void setClientsGrid(ClientsGrid clientsGrid) {
+        this.clientsGrid = clientsGrid;
     }
 }

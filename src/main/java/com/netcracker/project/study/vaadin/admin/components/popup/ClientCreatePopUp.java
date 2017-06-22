@@ -13,17 +13,19 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 
 @SpringComponent
+@Scope(value = "prototype")
 public class ClientCreatePopUp extends VerticalLayout {
 
     @Autowired AdminService adminService;
 
-    @Autowired ClientsGrid clientsGrid;
+    ClientsGrid clientsGrid;
 
     @PostConstruct
     public void init() {
@@ -94,4 +96,7 @@ public class ClientCreatePopUp extends VerticalLayout {
         layout.addComponent(btnAddToDB);
     }
 
+    public void setClientsGrid(ClientsGrid clientsGrid) {
+        this.clientsGrid = clientsGrid;
+    }
 }

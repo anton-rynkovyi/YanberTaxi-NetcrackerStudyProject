@@ -45,6 +45,15 @@ public class DriversView extends VerticalLayout implements View {
         tabSheet.addTab(getDriversRequestsTab(),
                 "Drivers Requests(" + driversRequestsGrid.getDriversRequestsList().size() + ")");
         tabSheet.addTab(getDriversBanTab(), "Ban list");
+
+        tabSheet.addSelectedTabChangeListener(event -> {
+            driversGrid.refreshGrid();
+            driversRequestsGrid.refreshGrid();
+            driversBanGrid.refreshGrid();
+            tabSheet.getTab(1).setCaption(
+                    "Drivers Requests(" + driversRequestsGrid.getDriversRequestsList().size() + ")");
+        });
+
     }
 
     private VerticalLayout getAllDriversTab() {
@@ -78,6 +87,7 @@ public class DriversView extends VerticalLayout implements View {
         driversBanGrid.init();
         driversGrid.init();
         driversRequestsGrid.init();
+        driversRequestsGrid.setDriversGrid(driversGrid);
         driversRequestsGrid.refreshGrid();
         driversRequestsGrid.refreshGrid();
         driversBanGrid.refreshGrid();

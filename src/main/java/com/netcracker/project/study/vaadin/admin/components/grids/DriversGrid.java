@@ -30,6 +30,7 @@ import java.util.*;
 
 
 @SpringComponent
+@Scope(value = "prototype")
 public class DriversGrid extends CustomComponent{
 
     @Autowired AdminService adminService;
@@ -37,10 +38,11 @@ public class DriversGrid extends CustomComponent{
     @Autowired DriverService driverService;
 
     @Autowired DriverCreatePopUp driverCreatePopUp;
-
     @Autowired DriverInfoPopUP driverInfoPopUp;
-
     @Autowired DriverUpdatePopUp driverUpdatePopUp;
+
+    @Autowired DriversBanGrid driversBanGrid;
+    @Autowired DriversRequestsGrid driversRequestsGrid;
 
     private Grid<Driver> driversGrid;
 
@@ -218,6 +220,7 @@ public class DriversGrid extends CustomComponent{
         controlButtonsLayout.addComponent(btnAddDriver);
         controlButtonsLayout.setComponentAlignment(btnAddDriver, Alignment.BOTTOM_LEFT);
         btnAddDriver.addClickListener(event -> {
+            driverCreatePopUp.setDriversGrid(this);
             UI.getCurrent().addWindow(createDriverWindow);
         });
 
@@ -248,6 +251,7 @@ public class DriversGrid extends CustomComponent{
         btnUpdateDriver.addClickListener(event -> {
             if(!driversGrid.asSingleSelect().isEmpty() ) {
                 Driver driver = driversGrid.asSingleSelect().getValue();
+                driverUpdatePopUp.setDriversGrid(this);
                 driverUpdatePopUp.init(driver);
                 UI.getCurrent().addWindow(updateDriverWindow);
                 updateDriverWindow.center();
@@ -261,6 +265,8 @@ public class DriversGrid extends CustomComponent{
         btnDriverInfo.addClickListener(event ->{
             if(!driversGrid.asSingleSelect().isEmpty() ) {
                 Driver driver = driversGrid.asSingleSelect().getValue();
+                driverInfoPopUp.setDriversGrid(this);
+                driverInfoPopUp.setDriversBanGrid(driversBanGrid);
                 driverInfoPopUp.init(driver);
                 UI.getCurrent().addWindow(driverInfoWindow);
             }
@@ -298,5 +304,13 @@ public class DriversGrid extends CustomComponent{
 
     public Window getDriverInfoWindow() {
         return driverInfoWindow;
+    }
+
+    public DriversBanGrid getDriversBanGrid() {
+        return driversBanGrid;
+    }
+
+    public DriversGrid getDriverssGrid() {
+        return this;
     }
 }

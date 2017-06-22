@@ -13,17 +13,18 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @SpringComponent
+@Scope(value = "prototype")
 public class DriverBanInfoPopUp extends VerticalLayout{
 
     private Driver driver;
 
-    @Autowired DriversBanGrid driversBanGrid;
-
-    @Autowired DriversGrid driversGrid;
+    DriversBanGrid driversBanGrid;
 
     @Autowired AdminService adminService;
 
@@ -105,7 +106,7 @@ public class DriverBanInfoPopUp extends VerticalLayout{
                     .withYesButton(() -> {
                         driver.setUnbanDate(null);
                         adminService.updateModel(driver);
-                        driversGrid.refreshGrid();
+                        //driversGrid.refreshGrid();
                         driversBanGrid.refreshGrid();
                         driversBanGrid.getDriverBanInfoWindow().close();
                     })
@@ -149,4 +150,9 @@ public class DriverBanInfoPopUp extends VerticalLayout{
     public void setDriver(Driver driver) {
         this.driver = driver;
     }
+
+    public void setDriversBanGrid(DriversBanGrid driversBanGrid) {
+        this.driversBanGrid = driversBanGrid;
+    }
+
 }

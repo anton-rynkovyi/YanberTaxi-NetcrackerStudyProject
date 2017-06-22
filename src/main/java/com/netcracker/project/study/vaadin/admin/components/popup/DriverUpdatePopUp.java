@@ -12,6 +12,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 import java.math.BigDecimal;
@@ -19,15 +20,16 @@ import java.math.BigInteger;
 import java.sql.Date;
 
 @SpringComponent
+@Scope(value = "prototype")
 public class DriverUpdatePopUp extends VerticalLayout {
 
-    @Autowired AdminService adminService;
+    @Autowired
+    AdminService adminService;
 
-    @Autowired DriverService driverService;
+    @Autowired
+    DriverService driverService;
 
-    @Autowired DriversGrid driversGrid;
-
-    @Autowired DriversRequestsGrid driversRequestsGrid;
+    DriversGrid driversGrid;
 
     private Driver driver;
 
@@ -81,7 +83,7 @@ public class DriverUpdatePopUp extends VerticalLayout {
         driverForm.addComponent(email);
 
         TextField experience = new TextField("Experience",
-                driver.getExperience()  == null ? "" : String.valueOf(driver.getExperience()));
+                driver.getExperience() == null ? "" : String.valueOf(driver.getExperience()));
         experience.setIcon(FontAwesome.LONG_ARROW_UP);
         driverForm.addComponent(experience);
 
@@ -125,7 +127,7 @@ public class DriverUpdatePopUp extends VerticalLayout {
             carForm.addComponent(stateNumber[i]);
 
             releaseDate[i] = new TextField("Release date",
-                   car.getReleaseDate() != null ?  String.valueOf(car.getReleaseDate()) : "");
+                    car.getReleaseDate() != null ? String.valueOf(car.getReleaseDate()) : "");
             releaseDate[i].setIcon(VaadinIcons.CAR);
             releaseDate[i].beforeClientResponse(false);
             carForm.addComponent(releaseDate[i]);
@@ -142,9 +144,9 @@ public class DriverUpdatePopUp extends VerticalLayout {
             carForm.addComponent(childSeat[i]);*/
             childSeats[i] = new ComboBox("Child seat");
             childSeats[i].setItems(childSeatItems);
-            if(car.isChildSeat() == true) {
+            if (car.isChildSeat() == true) {
                 childSeats[i].setValue(childSeatItems[0]);
-            }else {
+            } else {
                 childSeats[i].setValue(childSeatItems[1]);
             }
             childSeats[i].setIcon(VaadinIcons.CAR);
@@ -163,7 +165,7 @@ public class DriverUpdatePopUp extends VerticalLayout {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
 
-                driver.setName(lastName.getValue() +" " + firstName.getValue());
+                driver.setName(lastName.getValue() + " " + firstName.getValue());
                 driver.setLastName(!lastName.getValue().equals("") ? lastName.getValue() : null);
                 driver.setFirstName(!firstName.getValue().equals("") ? firstName.getValue() : null);
                 driver.setMiddleName(!middleName.getValue().equals("") ? middleName.getValue() : null);
@@ -178,7 +180,6 @@ public class DriverUpdatePopUp extends VerticalLayout {
                 adminService.updateModel(driver);
 
                 driversGrid.refreshGrid();
-                driversRequestsGrid.refreshGrid();
 
                 lastName.setValue("");
                 firstName.setValue("");
@@ -196,7 +197,7 @@ public class DriverUpdatePopUp extends VerticalLayout {
                     car.setReleaseDate(!releaseDate[i].getValue().equals("") ? Date.valueOf(releaseDate[i].getValue()) : null);
                     car.setSeatsCount(!seatsCount[i].getValue().equals("") ? new BigInteger(seatsCount[i].getValue()) : null);
                     //car.setChildSeat(Boolean.parseBoolean(childSeat[i].getValue()));
-                    if(childSeats[i].getValue().equals(childSeatItems[0])){
+                    if (childSeats[i].getValue().equals(childSeatItems[0])) {
                         car.setChildSeat(true);
                     } else {
                         car.setChildSeat(false);
@@ -224,6 +225,10 @@ public class DriverUpdatePopUp extends VerticalLayout {
         });
 
         layout.addComponent(btnAddToDB);
+    }
+
+    public void setDriversGrid(DriversGrid driversGrid) {
+        this.driversGrid = driversGrid;
     }
 
 }

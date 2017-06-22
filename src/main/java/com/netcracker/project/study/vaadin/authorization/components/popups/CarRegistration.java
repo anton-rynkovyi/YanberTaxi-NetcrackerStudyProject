@@ -56,11 +56,12 @@ public class CarRegistration extends Window {
     private ArrayList<TextField> models;
     private ArrayList<TextField> stateNumbers;
     private ArrayList<ComboBox<Integer>> prodDates;
-    private ArrayList<TextField> seatsCounts;
+    private ArrayList<ComboBox<Integer>> seatsCounts;
     private ArrayList<CheckBox> childSeats;
     private ArrayList<Component> carsComponent;
     private ArrayList<Car> cars;
     private ArrayList<Integer> yearsDate;
+    private ArrayList<Integer> seats;
 
     public CarRegistration() {
         genFieldsArray();
@@ -114,8 +115,12 @@ public class CarRegistration extends Window {
         carsComponent = new ArrayList<>();
         cars = new ArrayList<>();
         yearsDate = new ArrayList<>();
+        seats = new ArrayList<>();
         for (int i = 2000; i < 2018; i++) {
             yearsDate.add(i);
+        }
+        for (int i = 2; i < 17; i++) {
+            seats.add(i);
         }
     }
 
@@ -127,7 +132,9 @@ public class CarRegistration extends Window {
         ComboBox<Integer> prodYear = new ComboBox<>("Production year");
         prodYear.setItems(yearsDate);
         prodDates.add(prodYear);
-        seatsCounts.add(new TextField("Seats count"));
+        ComboBox<Integer> seatsCountsCb = new ComboBox<>("Seats count");
+        seatsCountsCb.setItems(seats);
+        seatsCounts.add(seatsCountsCb);
         childSeats.add(new CheckBox("Child seat"));
         int lastCar = models.size()-1;
         verticalLayout.addComponents(
@@ -168,7 +175,7 @@ public class CarRegistration extends Window {
                     car.setModelType(models.get(i).getValue());
                     car.setStateNumber(stateNumbers.get(i).getValue());
                     car.setReleaseDate(java.sql.Date.valueOf(prodDates.get(i).getValue()+"-01-01"));
-                    car.setSeatsCount(new BigInteger(seatsCounts.get(i).getValue()));
+                    car.setSeatsCount(new BigInteger(String.valueOf(seatsCounts.get(i).getValue())));
                     car.setChildSeat(childSeats.get(i).getValue() ? true : false);
                     cars.add(car);
                 }

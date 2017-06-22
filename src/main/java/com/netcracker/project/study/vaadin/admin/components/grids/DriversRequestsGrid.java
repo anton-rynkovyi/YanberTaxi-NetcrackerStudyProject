@@ -14,11 +14,13 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 
 @SpringComponent
+@Scope(value = "prototype")
 public class DriversRequestsGrid  extends CustomComponent{
 
     private Grid<Driver> driversRequestsGrid;
@@ -29,6 +31,8 @@ public class DriversRequestsGrid  extends CustomComponent{
 
     private Window window;
 
+    DriversGrid driversGrid;
+
     @Autowired
     AdminService adminService;
 
@@ -37,6 +41,7 @@ public class DriversRequestsGrid  extends CustomComponent{
 
     @Autowired
     DriverRequestInfoPopUp driverInfoPopUp;
+
 
     public void init() {
         driversRequestsGrid = generateDriversGrid();
@@ -80,6 +85,7 @@ public class DriversRequestsGrid  extends CustomComponent{
         controlButtonsLayout.addComponent(btnViewDriver);
         btnViewDriver.addClickListener(clickEvent -> {
             if(!driversRequestsGrid.asSingleSelect().isEmpty() ) {
+                driverInfoPopUp.setDriversRequestsGrid(this);
                 Driver driver = driversRequestsGrid.asSingleSelect().getValue();
                 driverInfoPopUp.init(driver);
                 UI.getCurrent().addWindow(window);
@@ -91,8 +97,6 @@ public class DriversRequestsGrid  extends CustomComponent{
 
     private Grid<Driver> generateDriversGrid() {
         driversRequestsGrid = new Grid<>();
-        refreshGrid();
-        driversRequestsGrid.setItems(driversRequestsList);
         driversRequestsGrid.addColumn(Driver::getLastName).setCaption("Last name");
         driversRequestsGrid.addColumn(Driver::getFirstName).setCaption("First name");
         driversRequestsGrid.addColumn(Driver::getMiddleName).setCaption("Middle name");
@@ -127,4 +131,8 @@ public class DriversRequestsGrid  extends CustomComponent{
     }
 
     public Grid<Driver> getDriversRequestsGrid() {return driversRequestsGrid;}
+
+    public void setDriversGrid(DriversGrid driversGrid) {
+        this.driversGrid = driversGrid;
+    }
 }

@@ -9,6 +9,7 @@ import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
+import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -16,15 +17,19 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
 @SpringComponent
+@Scope(value = "prototype")
 public class DriverInfoPopUP extends VerticalLayout {
 
     private Driver driver;
 
-    @Autowired DriversGrid driversGrid;
+    DriversGrid driversGrid;
+
+    DriversBanGrid driversBanGrid;
 
     @Autowired AdminService adminService;
 
@@ -139,6 +144,8 @@ public class DriverInfoPopUP extends VerticalLayout {
 
         Button btnBan = new Button("Ban");
         btnBan.addClickListener(clickEvent -> {
+            banDaysPopUp.setDriversGrid(driversGrid);
+            banDaysPopUp.setDriverInfoPopUP(this);
             UI.getCurrent().addWindow(banDaysWindow);
 
         });
@@ -185,5 +192,13 @@ public class DriverInfoPopUP extends VerticalLayout {
 
     public void setDriver(Driver driver) {
         this.driver = driver;
+    }
+
+    public void setDriversGrid(DriversGrid driversGrid) {
+        this.driversGrid = driversGrid;
+    }
+
+    public void setDriversBanGrid(DriversBanGrid driversBanGrid) {
+        this.driversBanGrid = driversBanGrid;
     }
 }

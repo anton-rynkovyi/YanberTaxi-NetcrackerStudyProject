@@ -12,9 +12,11 @@ import com.vaadin.spring.annotation.*;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @SpringComponent
+@Scope(value = "prototype")
 public class HeaderMenu extends CustomComponent {
 
     private MenuBar menuBar;

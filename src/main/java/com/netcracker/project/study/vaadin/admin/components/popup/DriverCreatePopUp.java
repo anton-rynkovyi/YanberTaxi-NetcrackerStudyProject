@@ -11,6 +11,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -18,13 +19,12 @@ import java.math.BigInteger;
 import java.sql.Date;
 
 @SpringComponent
+@Scope(value = "prototype")
 public class DriverCreatePopUp extends VerticalLayout {
 
     @Autowired AdminService adminService;
 
-    @Autowired DriversGrid driversGrid;
-
-    @Autowired DriversRequestsGrid driversRequestsGrid;
+    DriversGrid driversGrid;
 
     @PostConstruct
     public void init() {
@@ -97,7 +97,6 @@ public class DriverCreatePopUp extends VerticalLayout {
                 driversGrid.getDriversGrid().setItems(driversGrid.getApprovedDriversList());*/
 
                 driversGrid.refreshGrid();
-                driversRequestsGrid.refreshGrid();
 
                 lastName.setValue("");
                 firstName.setValue("");
@@ -116,4 +115,7 @@ public class DriverCreatePopUp extends VerticalLayout {
         layout.addComponent(btnAddToDB);
     }
 
+    public void setDriversGrid(DriversGrid driversGrid) {
+        this.driversGrid = driversGrid;
+    }
 }

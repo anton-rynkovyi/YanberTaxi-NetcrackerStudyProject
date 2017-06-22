@@ -12,11 +12,13 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
 
 @SpringComponent
+@Scope(value = "prototype")
 public class ClientsGrid extends CustomComponent {
 
     @Autowired
@@ -86,6 +88,7 @@ public class ClientsGrid extends CustomComponent {
         createWindow.center();
         createWindow.setModal(true);
         createWindow.setResizable(false);
+        clientCreatePopUp.setClientsGrid(this);
         createWindow.setContent(clientCreatePopUp);
     }
 
@@ -95,6 +98,7 @@ public class ClientsGrid extends CustomComponent {
         viewClientWindow.center();
         viewClientWindow.setModal(true);
         viewClientWindow.setClosable(false);
+        clientCreatePopUp.setClientsGrid(this);
         viewClientWindow.setContent(clientInfoPopUp);
     }
 

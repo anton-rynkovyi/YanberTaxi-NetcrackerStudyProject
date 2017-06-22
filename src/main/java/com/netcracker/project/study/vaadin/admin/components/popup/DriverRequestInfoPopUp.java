@@ -15,19 +15,17 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 
 @SpringComponent
+@Scope(value = "prototype")
 public class DriverRequestInfoPopUp extends VerticalLayout{
 
     private Driver driver;
 
-    @Autowired
     DriversRequestsGrid driversRequestsGrid;
-
-    @Autowired
-    DriversGrid driversGrid;
 
     @Autowired
     AdminService adminService;
@@ -49,7 +47,6 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
         this.toastr = new Toastr();
         this.driver = driver;
         this.driverCarList = driverService.getCarByDriver(driver);
-        System.out.println(driverCarList);
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
         rootLayout.addComponent(toastr);
@@ -157,7 +154,6 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
             emailMassageSender.sendMessage(driver.getEmail(), richTextArea.getValue());
             driver.setStatus(DriverStatusList.OFF_DUTY);
             adminService.updateModel(driver);
-            driversGrid.refreshGrid();
             driversRequestsGrid.refreshGrid();
 
             driversRequestsGrid.getDriversRequestSubWindow().close();
@@ -176,5 +172,9 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
 
     public void setDriverCarList(List<Car> driverCarList) {
         this.driverCarList = driverCarList;
+    }
+
+    public void setDriversRequestsGrid(DriversRequestsGrid driversRequestsGrid) {
+        this.driversRequestsGrid = driversRequestsGrid;
     }
 }

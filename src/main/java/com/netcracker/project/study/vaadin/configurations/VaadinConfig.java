@@ -15,8 +15,8 @@ public class VaadinConfig {
         return new VaadinUIServlet();
     }*/
 
-    /*@Bean
+    @Bean
     public EventBus eventBus() {
         return new ScopedEventBus.DefaultApplicationEventBus();
-    }*/
+    }
 }

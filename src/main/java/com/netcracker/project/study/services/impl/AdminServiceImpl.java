@@ -73,8 +73,8 @@ public class AdminServiceImpl implements AdminService{
                driver.setUnbanDate(null);
                persistenceFacade.update(driver);
                System.out.println("FINISH");
-               driversGrid.refreshGrid();
-               driversBanGrid.refreshGrid();
+/*               driversGrid.refreshGrid();
+               driversBanGrid.refreshGrid()*/;
            } else {
                System.out.println(driver.getObjectId()+": " + dif / 1000);
            }
