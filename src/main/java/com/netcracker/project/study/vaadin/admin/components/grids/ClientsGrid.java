@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.util.*;
 
-
 @SpringComponent
 public class ClientsGrid extends CustomComponent {
 

@@ -1,5 +1,6 @@
 package com.netcracker.project.study.vaadin.admin.components.popup;
 
+import com.google.common.eventbus.EventBus;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
@@ -139,6 +140,7 @@ public class DriverInfoPopUP extends VerticalLayout {
         Button btnBan = new Button("Ban");
         btnBan.addClickListener(clickEvent -> {
             UI.getCurrent().addWindow(banDaysWindow);
+
         });
 
         horizontalLayout.addComponent(btnBan);

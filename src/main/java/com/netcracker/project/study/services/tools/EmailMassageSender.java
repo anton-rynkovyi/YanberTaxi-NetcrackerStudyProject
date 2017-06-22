@@ -39,10 +39,9 @@ public class EmailMassageSender {
             mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
             mimeMessage.setSubject(MAIL_SUBJECT);
             mimeMessage.setText(message, "utf-8", "html");
-
             Transport.send(mimeMessage);
         } catch (MessagingException e) {
-           //throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
 }

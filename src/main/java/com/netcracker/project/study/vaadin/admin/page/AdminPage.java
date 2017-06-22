@@ -1,5 +1,6 @@
 package com.netcracker.project.study.vaadin.admin.page;
 
+import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.vaadin.admin.components.menu.HeaderMenu;
 import com.netcracker.project.study.vaadin.admin.components.popup.AdminUpdate;
 import com.netcracker.project.study.vaadin.admin.views.ClientsView;
@@ -10,6 +11,8 @@ import com.vaadin.annotations.Title;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
@@ -18,7 +21,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-@Theme("valo")
+@Theme("mytheme")
 @SpringUI(path = "/admin")
 @Title("YanberTaxi-Administration")
 @SpringComponent
@@ -44,9 +47,15 @@ public class AdminPage extends UI {
         setContent(rootLayout);
 
         HorizontalLayout panelCaption = new HorizontalLayout();
+        panelCaption.setMargin(new MarginInfo(false, true, false, true));
+        panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+        panelCaption.setStyleName(MaterialTheme.LAYOUT_CARD);
+        //panelCaption.setStyleName("caption");
         panelCaption.setWidth("100%");
-        Label label1 = new Label("YanberTaxi");
+        panelCaption.setHeight(50, Unit.PIXELS);
+        Label label1 = new Label("<h3>YanberTaxi</h3>", ContentMode.HTML);
         panelCaption.addComponents(label1);
+        panelCaption.setComponentAlignment(label1, Alignment.MIDDLE_LEFT);
         //horizontalLayout.addComponent(menuBar);
         panelCaption.setExpandRatio(label1, 1);
         Label label2 = new Label( "Hello, Admin ");

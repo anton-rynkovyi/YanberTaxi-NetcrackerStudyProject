@@ -11,10 +11,12 @@ import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequest
 import com.netcracker.project.study.services.tools.EmailMassageSender;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.vaadin.addons.Toastr;
+import org.vaadin.addons.builder.ToastBuilder;
 
 @SpringComponent
 public class DriverRequestInfoPopUp extends VerticalLayout{
@@ -37,17 +39,20 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
 
     private List<Car> driverCarList;
 
+    private Toastr toastr;
+
     @Autowired
     EmailMassageSender emailMassageSender;
 
 
     public void init(Driver driver) {
+        this.toastr = new Toastr();
         this.driver = driver;
         this.driverCarList = driverService.getCarByDriver(driver);
         System.out.println(driverCarList);
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
-
+        rootLayout.addComponent(toastr);
         setTextFields(rootLayout);
         addComponent(rootLayout);
     }
@@ -126,7 +131,7 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
         Button btnDecline = new Button("Decline");
         btnDecline.addClickListener(clickEvent -> {
             if (richTextArea.getValue().isEmpty()) {
-                Notification.show("Write the massage");
+                toastr.toast(ToastBuilder.warning("Write answer for this driver").build());
                 return;
             }
             emailMassageSender.sendMessage(driver.getEmail(), richTextArea.getValue());
@@ -146,7 +151,7 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
         Button btnApprove = new Button("Approve");
         btnApprove.addClickListener(clickEvent -> {
             if (richTextArea.getValue().isEmpty()) {
-                Notification.show("Write the massage");
+                toastr.toast(ToastBuilder.warning("Write answer for this driver").build());
                 return;
             }
             emailMassageSender.sendMessage(driver.getEmail(), richTextArea.getValue());
@@ -154,6 +159,7 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
             adminService.updateModel(driver);
             driversGrid.refreshGrid();
             driversRequestsGrid.refreshGrid();
+
             driversRequestsGrid.getDriversRequestSubWindow().close();
         });
 

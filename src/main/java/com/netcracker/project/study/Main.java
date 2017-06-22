@@ -9,9 +9,6 @@ import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverAttr;
 import com.netcracker.project.study.model.driver.car.Car;
-import com.netcracker.project.study.model.order.Order;
-import com.netcracker.project.study.model.order.route.Route;
-import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
@@ -40,6 +37,9 @@ public class Main {
         DriverService driverService = ctx.getBean(DriverServiceImpl.class);
         OrderService orderService = ctx.getBean(OrderServiceImpl.class);
         PersistenceManager manager = ctx.getBean(PersistenceManager.class);
+
+
+
 
        /* Driver driver = new Driver();
         facade.create(driver);
@@ -197,44 +197,51 @@ public class Main {
         userDriver1.setPassword("bel123");
         userDriver1.setEnabled(true);
         manager.createUser(userDriver1);
-*/
 
-        /*Client client = new Client();
-        client.setLastName("");
-        client.setFirstName("");
-        client.setPhoneNumber("(000)000-00-01");
+
+        Client client = new Client();
+        client.setLastName("Cristiano");
+        client.setFirstName("Ronaldo");
+        client.setPhoneNumber("(011)111-11-11");
         client.setPoints(BigInteger.valueOf(32));
         adminService.createModel(client);
-
         User userClient = new User();
         userClient.setObjectId(client.getObjectId());
         userClient.setAuthorities(ImmutableList.of(Role.ROLE_CLIENT));
         userClient.setUsername(client.getPhoneNumber());
-        userClient.setPassword("yoba123");
+        userClient.setPassword("ivan123");
         userClient.setEnabled(true);
-        manager.createUser(userClient);*/
-
-      /*Order order = new Order();
-      order.setName("");
-      order.setStatus(OrderStatus.NEW);
-      order.setClientId(BigInteger.valueOf(128));
-
-      facade.create(order);*/
+        manager.createUser(userClient);
 
 
-     Route route = new Route();
-     route.setName("");
-     route.setCheckPoint("");
-     route.setOrderId(BigInteger.valueOf(129));
+        Client client1 = new Client();
+        client1.setLastName("Lionel");
+        client1.setFirstName("Messi");
+        client1.setPhoneNumber("(022)222-22-22");
+        client1.setPoints(BigInteger.valueOf(59));
+        adminService.createModel(client1);
+        User userClient1 = new User();
+        userClient1.setObjectId(client1.getObjectId());
+        userClient1.setAuthorities(ImmutableList.of(Role.ROLE_CLIENT));
+        userClient1.setUsername(client1.getPhoneNumber());
+        userClient1.setPassword("leo123");
+        userClient1.setEnabled(true);
+        manager.createUser(userClient1);
 
-        Route route1 = new Route();
-        route1.setName("");
-        route1.setCheckPoint("");
-        route1.setOrderId(BigInteger.valueOf(129));
-
-     facade.create(route);
-     facade.create(route1);
-
+        Client client2 = new Client();
+        client1.setLastName("Lionel");
+        client1.setFirstName("Messi");
+        client1.setPhoneNumber("(077)777-77-77");
+        client1.setPoints(BigInteger.valueOf(59));
+        adminService.createModel(client1);
+        User userClient2 = new User();
+        userClient1.setObjectId(client1.getObjectId());
+        userClient1.setAuthorities(ImmutableList.of(Role.ROLE_CLIENT));
+        userClient1.setUsername(client1.getPhoneNumber());
+        userClient1.setPassword("leo123");
+        userClient1.setEnabled(true);
+        manager.createUser(userClient1);
+*/
 
       /* Admin admin = new Admin();
        admin.setPhoneNumber("(063)611-67-90");

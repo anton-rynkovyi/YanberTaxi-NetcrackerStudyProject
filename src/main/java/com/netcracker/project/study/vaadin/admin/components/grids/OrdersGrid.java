@@ -60,9 +60,7 @@ public class OrdersGrid extends CustomComponent {
     }
 
     private Grid<Order> generateOrdersGrid() {
-
         Grid<Order> ordersGrid = new Grid<>();
-
         ordersGrid.addColumn(Order::getObjectId).setCaption("№");
         ordersGrid.addColumn(Order -> Order.getDriverOnOrder() != null ? Order.getDriverOnOrder().getFirstName() + " " +
                 Order.getDriverOnOrder().getLastName() : "").setCaption("Driver");
@@ -109,7 +107,7 @@ public class OrdersGrid extends CustomComponent {
     public void refreshGrid() {
         ordersList = adminService.allModelsAsList(Order.class);
         ordersGrid.setItems(ordersList);
-        init();
+        //init();
     }
 
 }

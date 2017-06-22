@@ -1,6 +1,8 @@
 package com.netcracker.project.study.vaadin.admin.components.popup;
 
+import com.google.common.eventbus.EventBus;
 import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
@@ -8,6 +10,9 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.addons.Toastr;
+import org.vaadin.addons.builder.ToastBuilder;
+import org.vaadin.spring.events.EventScope;
 
 import java.sql.Date;
 import java.util.Arrays;
@@ -30,13 +35,27 @@ public class BanDaysPopUp extends VerticalLayout {
     @Autowired
     DriversBanGrid driversBanGrid;
 
+    @Autowired
+    RefreshListener refreshListener;
+
+    private Toastr toastr;
+
+   /* @Autowired
+    org.vaadin.spring.events.EventBus eventBus;*/
+
     private List<String> banDayList = Arrays.asList("1 min", "3 min", "5 min", "7 min");
+
 
     @PostConstruct
     private void init() {
+        //uiEventBus.publish(EventScope.APPLICATION, new RefreshListener());
         VerticalLayout rootLayout = generateRootLayot();
         Panel panel = generatePanel();
         rootLayout.addComponent(panel);
+        toastr = new Toastr();
+        rootLayout.addComponent(toastr);
+
+        //eventBus.register(refreshListener);
         addComponent(rootLayout);
     }
 
@@ -61,10 +80,13 @@ public class BanDaysPopUp extends VerticalLayout {
             String radioValue[] = String.valueOf(radioButtonGroup.getValue()).split(" ");
             int days = Integer.parseInt(radioValue[0]);
             Driver driver = driverInfoPopUP.getDriver();
+            if (driver.getStatus().compareTo(DriverStatusList.OFF_DUTY) != 0){
+                toastr.toast(ToastBuilder.error("This driver has order. Try again later.").build());
+                return;
+            }
             adminService.giveBan(driver, days);
-            //driversGrid.getApprovedDriversList().remove(driver);
             driversGrid.refreshGrid();
-            driversBanGrid.getDriverBanList().add(driver);
+            //eventBus.post("");
             driversBanGrid.refreshGrid();
             driverInfoPopUP.getBanDaysWindow().close();
         });

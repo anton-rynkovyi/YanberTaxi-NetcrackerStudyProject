@@ -1,6 +1,7 @@
 package com.netcracker.project.study.vaadin.driver.page;
 
 
+import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
@@ -12,6 +13,8 @@ import com.vaadin.annotations.Title;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.*;
@@ -45,15 +48,23 @@ public class DriverPage extends UI{
     protected void init(VaadinRequest vaadinRequest) {
         rootLayout = new VerticalLayout();
         rootLayout.setSizeFull();
+        rootLayout.setMargin(false);
+        rootLayout.setSpacing(false);
+        rootLayout.setHeight(100, Unit.PERCENTAGE);
+
 
         setContent(rootLayout);
 
         HorizontalLayout panelCaption = new HorizontalLayout();
+        panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+        panelCaption.setStyleName(MaterialTheme.LAYOUT_CARD);
+        panelCaption.setMargin(new MarginInfo(false, true, false, true));
         // panelCaption.addStyleName("v-panel-caption");
         panelCaption.setWidth("100%");
         // panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
-        Label label1 = new Label("YanberTaxi");
+        Label label1 = new Label("<h3>YanberTaxi</h3>", ContentMode.HTML);
         panelCaption.addComponent(label1);
+        panelCaption.setComponentAlignment(label1, Alignment.MIDDLE_LEFT);
         panelCaption.setExpandRatio(label1, 1);
         Driver driver = userDetailsService.getCurrentUser();
         String driverName = driver.getFirstName() + " " + driver.getLastName();

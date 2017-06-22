@@ -25,9 +25,9 @@ public class DriverUpdatePopUp extends VerticalLayout {
 
     @Autowired DriverService driverService;
 
-    /*@Autowired DriversGrid driversGrid;
+    @Autowired DriversGrid driversGrid;
 
-    @Autowired DriversRequestsGrid driversRequestsGrid;*/
+    @Autowired DriversRequestsGrid driversRequestsGrid;
 
     private Driver driver;
 
@@ -177,8 +177,8 @@ public class DriverUpdatePopUp extends VerticalLayout {
 
                 adminService.updateModel(driver);
 
-                /*driversGrid.refreshGrid();
-                driversRequestsGrid.refreshGrid();*/
+                driversGrid.refreshGrid();
+                driversRequestsGrid.refreshGrid();
 
                 lastName.setValue("");
                 firstName.setValue("");

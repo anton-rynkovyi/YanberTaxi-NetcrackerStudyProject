@@ -29,12 +29,6 @@ public class DriverServiceImpl implements DriverService {
     @Autowired
     PersistenceFacade persistenceFacade;
 
-    @Autowired
-    AdminService adminService;
-
-    @Autowired
-    OrderService orderService;
-
 
     @Override
     public void acceptOrder(BigInteger orderId, BigInteger driverId) {

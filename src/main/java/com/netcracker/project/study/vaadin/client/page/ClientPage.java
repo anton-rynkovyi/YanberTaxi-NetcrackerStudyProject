@@ -1,5 +1,6 @@
 package com.netcracker.project.study.vaadin.client.page;
 
+import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.views.ClientsView;
@@ -13,6 +14,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.tapio.googlemaps.GoogleMap;
@@ -53,24 +55,21 @@ public class ClientPage extends UI {
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         VerticalLayout rootLayout = getVerticalLayout();
-       /* rootLayout.setMargin(true);
-        rootLayout.setSpacing(false);*/
+        rootLayout.setMargin(false);
+        rootLayout.setSpacing(false);
         rootLayout.setHeight(100, Unit.PERCENTAGE);
-      /* Button b = new Button("Logout");
-        rootLayout.addComponent(b);
-        b.addClickListener(clickEvent -> {
-            SecurityContextHolder.clearContext();
-            getUI().getSession().close();
-            getPage().setLocation("/auth");
-        });*/
         setContent(rootLayout);
         //rootLayout.setExpandRatio(viewDisplay, 1.0f);
         HorizontalLayout panelCaption = new HorizontalLayout();
+        panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+        panelCaption.setStyleName(MaterialTheme.LAYOUT_CARD);
+        panelCaption.setMargin(new MarginInfo(false, true, false, true));
        // panelCaption.addStyleName("v-panel-caption");
         panelCaption.setWidth("100%");
        // panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
-        Label label1 = new Label("YanberTaxi");
+        Label label1 = new Label("<h3>YanberTaxi<h3>", ContentMode.HTML);
         panelCaption.addComponent(label1);
+        panelCaption.setComponentAlignment(label1, Alignment.MIDDLE_LEFT);
         panelCaption.setExpandRatio(label1, 1);
         Client client = userDetailsService.getCurrentUser();
         String clientName = client.getFirstName() + " " + client.getLastName();
@@ -121,7 +120,6 @@ public class ClientPage extends UI {
         springViewDisplay.setSizeFull();
         return  springViewDisplay;
     }
-
 
     private Panel getStandartPanel() {
         Panel panel = new Panel("Astronomer Panel");

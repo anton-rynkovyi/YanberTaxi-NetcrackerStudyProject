@@ -10,6 +10,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.spring.events.EventBus;
 
 import javax.annotation.PostConstruct;
 
@@ -21,9 +22,11 @@ public class ClientsView extends VerticalLayout implements View {
     @Autowired
     private ClientsGrid clientsGrid;
 
-
     @Autowired
     Copyright bottomTeamLogoLink;
+
+    /*@Autowired
+    EventBus.UIEventBus eventBus;*/
 
     void init() {
         TabSheet tabSheet = getTabSheet();
