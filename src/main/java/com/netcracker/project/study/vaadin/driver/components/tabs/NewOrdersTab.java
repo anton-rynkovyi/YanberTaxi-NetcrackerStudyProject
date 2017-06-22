@@ -55,15 +55,24 @@ public class NewOrdersTab extends CustomComponent {
     private long startkm;
     private long finishkm;
 
+    HorizontalLayout startEndPointsLayout;
+    Panel routePanel;
+
     public void init() {
         initRootLayout();
-        ordersGrid = generateOrdersGrid();
+
+        routePanel = new Panel();
+        startEndPointsLayout = new HorizontalLayout();
+        routePanel.setContent(startEndPointsLayout);
+        routePanel.setSizeFull();
+        setStartEndPointsLayoutsEmpty();
+
+        VerticalLayout ordersGridLayout = generateOrdersGrid();
 
         setTakeOrderButton();
 
-        ordersHistoryPanel = getFilledHighPanel();
+        ordersHistoryPanel = getFilledHighPanel(ordersGridLayout);
         ordersHistoryPanel.setIcon(VaadinIcons.CLIPBOARD_TEXT);
-        setGridSettings(ordersGrid);
 
         initStartPerformingButton();
         initFinishPerformingButton();
@@ -79,7 +88,7 @@ public class NewOrdersTab extends CustomComponent {
         goHomeButton = getHomeButton();
         buttonsLayout.addComponents(goHomeButton,acceptOrderButton);
         buttonsLayout.setSpacing(true);
-        verticalLayout.addComponents(horizontalSplitPanel,buttonsLayout);
+        verticalLayout.addComponents(routePanel,horizontalSplitPanel,buttonsLayout);
         verticalLayout.setComponentAlignment(buttonsLayout,Alignment.BOTTOM_CENTER);
 
         componentLayout.addComponent(verticalLayout);
@@ -243,10 +252,10 @@ public class NewOrdersTab extends CustomComponent {
         componentLayout.setSpacing(true);
     }
 
-    private Panel getFilledHighPanel() {
+    private Panel getFilledHighPanel(VerticalLayout verticalLayout) {
         Panel panel = new Panel("Available orders");
         panel.setSizeFull();
-        panel.setContent(ordersGrid);
+        panel.setContent(verticalLayout);
         return panel;
     }
 
@@ -380,6 +389,7 @@ public class NewOrdersTab extends CustomComponent {
                     OrderInfo order = ordersGrid.asSingleSelect().getValue();
                     driverService.acceptOrder(order.getObjectId(), driver.getObjectId());
                     acceptOrderButton.setEnabled(false);
+                    setStartEndPointsLayoutsEmpty();
                 }
                 refreshContent();
                 refreshGoHomeButton();
@@ -395,8 +405,31 @@ public class NewOrdersTab extends CustomComponent {
         ordersGrid.setItems(orderService.getOrdersInfo(ordersList));
     }
 
-    private Grid<OrderInfo> generateOrdersGrid() {
-        Grid<OrderInfo> ordersGrid = new Grid<>();
+
+    private void setStartEndPointsLayout(String source,String destination){
+        startEndPointsLayout.removeAllComponents();
+        Label sourceLabel = new Label(source);
+        Label destinationLabel = new Label(destination);
+
+        Label iconLabel = new Label();
+        iconLabel.setIcon(VaadinIcons.ARROW_RIGHT);
+
+        startEndPointsLayout.addComponents(sourceLabel,iconLabel,destinationLabel);
+        startEndPointsLayout.setComponentAlignment(sourceLabel,Alignment.MIDDLE_CENTER);
+        startEndPointsLayout.setComponentAlignment(iconLabel,Alignment.MIDDLE_CENTER);
+        startEndPointsLayout.setComponentAlignment(destinationLabel,Alignment.MIDDLE_CENTER);
+        startEndPointsLayout.setSizeFull();
+        routePanel.setContent(startEndPointsLayout);
+    }
+
+    private void setStartEndPointsLayoutsEmpty(){
+        setStartEndPointsLayout("----------------","----------------");
+    }
+
+    private VerticalLayout generateOrdersGrid() {
+        VerticalLayout verticalLayout = new VerticalLayout();
+        ordersGrid = new Grid<>();
+        ordersGrid.setSizeFull();
         ordersList = orderService.getOrders(OrderStatus.NEW);
 
         List<OrderInfo> ordersInfo = orderService.getOrdersInfo(ordersList);
@@ -413,19 +446,27 @@ public class NewOrdersTab extends CustomComponent {
                         acceptOrderButton.setEnabled(true);
                     }
                 }
+                OrderInfo orderInfo = ordersGrid.asSingleSelect().getValue();
+                List<Route> routes = orderService.getRoutes(orderInfo.getObjectId());
+                if(!routes.isEmpty()){
+                    setStartEndPointsLayout(routes.get(0).getCheckPoint(),
+                            routes.get(routes.size() - 1).getCheckPoint());
+                }else{
+                   setStartEndPointsLayoutsEmpty();
+                }
+
             }
         });
 
-        return ordersGrid;
+        verticalLayout.addComponent(ordersGrid);
+
+        return verticalLayout;
     }
 
     public void setView(OrdersViewForDrivers view) {
         this.view = view;
     }
 
-    private void setGridSettings(Grid<OrderInfo> ordersGrid) {
-        ordersGrid.setSizeFull();
-    }
 
     public Grid<OrderInfo> getOrdersGrid() {
         return ordersGrid;

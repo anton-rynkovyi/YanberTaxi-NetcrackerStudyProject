@@ -4,6 +4,7 @@ import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.order.Order;
+import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
@@ -193,7 +194,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
             starIconLabel.setIcon(VaadinIcons.STAR);
             horizontalLayout.addComponent(starIconLabel);
         }
-
         panel.setContent(horizontalLayout);
 
         return panel;
@@ -203,8 +203,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     public void setDriver(Driver driver){
         this.driver = driver;
     }
-
-
 
     private VerticalLayout generateOrdersGrid() {
         VerticalLayout verticalLayout = new VerticalLayout();
@@ -223,6 +221,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
             ordersGrid.addColumn(OrderInfo::getCost).setCaption("Cost");
             ordersGrid.addColumn(OrderInfo::getDistance).setCaption("Distance");
             allOrdersGrid = ordersGrid;
+
             HorizontalLayout viewOrderButtonLayout = initViewOrderButton();
             verticalLayout.addComponents(allOrdersGrid,viewOrderButtonLayout);
         }else{
