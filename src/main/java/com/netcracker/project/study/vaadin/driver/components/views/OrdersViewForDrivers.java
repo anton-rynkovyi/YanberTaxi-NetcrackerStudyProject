@@ -4,7 +4,6 @@ import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.order.Order;
-import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
@@ -19,10 +18,6 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
-import javax.annotation.PostConstruct;
-import java.math.BigInteger;
 import java.util.List;
 
 @SpringView(name = OrdersViewForDrivers.VIEW_NAME)
@@ -34,31 +29,22 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     private NewOrdersTab newOrders;
 
     @Autowired
-    private PersistenceFacade facade;
+    private OrderService orderService;
 
     @Autowired
-    OrderService orderService;
-
-    @Autowired
-    DriverService driverService;
-
-    @Autowired
-    OrderInfoPopUp orderInfoPopUp;
+    private OrderInfoPopUp orderInfoPopUp;
 
     private Driver driver;
-
     private TabSheet tabSheet;
-
     private VerticalLayout rootLayout;
 
-    private Panel driverPanel;
     private Panel statusPanel;
     private Panel ratingPanel;
 
-    Grid allOrdersGrid;
-    List<Order> allOrdersList;
+    private Grid allOrdersGrid;
+    private List<Order> allOrdersList;
 
-    Window orderInfoWindow;
+    private Window orderInfoWindow;
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -75,16 +61,13 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-        driverPanel = getDriverInfo();
-        driverPanel.setIcon(VaadinIcons.USER);
-
         statusPanel = getDriverStatus();
         changeStatusIcon();
 
         ratingPanel = getDriverRating();
         ratingPanel.setIcon(VaadinIcons.STAR_O);
 
-        horizontalLayout.addComponents(driverPanel,statusPanel,ratingPanel);
+        horizontalLayout.addComponents(statusPanel,ratingPanel);
         horizontalLayout.setSizeFull();
 
         rootLayout.addComponent(horizontalLayout);
@@ -144,8 +127,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         return horizontalLayout;
     }
 
-
-
     public Driver getDriver(){
         return driver;
     }
@@ -154,27 +135,14 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         driver = userDetailsService.getCurrentUser();
     }
 
-    private String getDriverName(){
-        return driver.getFirstName() + " " + driver.getLastName();
-    }
-
-    private Panel getDriverInfo(){
-        Panel panel = new Panel("Name");
-        Label driverInfo = new Label("<b>" + getDriverName() + "</b>", ContentMode.HTML);
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.addComponent(driverInfo);
-        horizontalLayout.setComponentAlignment(driverInfo,Alignment.BOTTOM_CENTER);
-        panel.setContent(horizontalLayout);
-
-        return panel;
-    }
-
     private Panel getDriverStatus(){
         Panel panel = new Panel("Your status");
         Label statusInfo = new Label("<b>" + DriverStatusEnum.getStatusValue(driver.getStatus()) + "</b>", ContentMode.HTML);
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
+        horizontalLayout.setSizeFull();
         horizontalLayout.addComponent(statusInfo);
+        horizontalLayout.setComponentAlignment(statusInfo,Alignment.MIDDLE_CENTER);
         panel.setContent(horizontalLayout);
 
         return panel;
@@ -193,7 +161,9 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
             Label starIconLabel = new Label();
             starIconLabel.setIcon(VaadinIcons.STAR);
             horizontalLayout.addComponent(starIconLabel);
+            horizontalLayout.setComponentAlignment(starIconLabel,Alignment.MIDDLE_CENTER);
         }
+        horizontalLayout.setSizeFull();
         panel.setContent(horizontalLayout);
 
         return panel;
@@ -249,11 +219,12 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     public void Refresh(){
         initDriver();
         newOrders.setDriver(driver);
-        driverPanel.setContent(new Label("<b>" + getDriverName() + "</b>", ContentMode.HTML));
 
         Label statusLabel = new Label("<b>" + DriverStatusEnum.getStatusValue(driver.getStatus()) + "</b>", ContentMode.HTML);
         HorizontalLayout statusLayout = new HorizontalLayout();
+        statusLayout.setSizeFull();
         statusLayout.addComponent(statusLabel);
+        statusLayout.setComponentAlignment(statusLabel,Alignment.MIDDLE_CENTER);
         statusPanel.setContent(statusLayout);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -268,7 +239,9 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
             Label starIconLabel = new Label();
             starIconLabel.setIcon(VaadinIcons.STAR);
             horizontalLayout.addComponent(starIconLabel);
+            horizontalLayout.setComponentAlignment(starIconLabel,Alignment.MIDDLE_CENTER);
         }
+        horizontalLayout.setSizeFull();
         ratingPanel.setContent(horizontalLayout);
 
         tabSheet.getTab(0).setCaption("New orders (" + getNewOrdersCount() + ")");

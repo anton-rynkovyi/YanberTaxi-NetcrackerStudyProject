@@ -27,12 +27,12 @@ import java.util.List;
 public class NewOrdersTab extends CustomComponent {
 
     @Autowired
-    OrderService orderService;
+    private OrderService orderService;
 
     @Autowired
-    DriverService driverService;
+    private DriverService driverService;
 
-    OrdersViewForDrivers view;
+    private OrdersViewForDrivers view;
 
     private Grid<OrderInfo> ordersGrid;
     private HorizontalLayout componentLayout;
@@ -41,13 +41,13 @@ public class NewOrdersTab extends CustomComponent {
 
     private Panel ordersHistoryPanel;
 
-    Window window;
+    private Window window;
 
-    Driver driver;
+    private Driver driver;
 
     private Panel currentOrderPanel;
 
-    OrderInfo currentOrder;
+    private OrderInfo currentOrder;
 
     private Button startPerformingButton;
     private Button finishPerformingButton;
@@ -55,8 +55,8 @@ public class NewOrdersTab extends CustomComponent {
     private long startkm;
     private long finishkm;
 
-    HorizontalLayout startEndPointsLayout;
-    Panel routePanel;
+    private HorizontalLayout startEndPointsLayout;
+    private Panel routePanel;
 
     public void init() {
         initRootLayout();
@@ -224,18 +224,21 @@ public class NewOrdersTab extends CustomComponent {
     private Panel getCurrentorderPanel(){
         List<Order>orders = orderService.getCurrentOrderByDriverId(driver.getObjectId());
         Panel panel = new Panel("Current order");
-
+        VerticalLayout verticalLayout = new VerticalLayout();
         if(orders.size() != 0){
             List<OrderInfo> info = orderService.getOrdersInfo(orders);
             currentOrder = info.get(info.size() - 1);
-            VerticalLayout verticalLayout = new VerticalLayout();
             HorizontalLayout horizontalLayout = new HorizontalLayout(startPerformingButton,finishPerformingButton);
             horizontalLayout.setComponentAlignment(startPerformingButton,Alignment.MIDDLE_CENTER);
             horizontalLayout.setComponentAlignment(finishPerformingButton,Alignment.MIDDLE_CENTER);
             verticalLayout.addComponents(getOrderInfoLayout(),horizontalLayout);
+            verticalLayout.setSizeFull();
             panel.setContent(verticalLayout);
         }else{
             Label label = new Label("You have no order performing");
+            verticalLayout.addComponent(label);
+            verticalLayout.setComponentAlignment(label,Alignment.MIDDLE_CENTER);
+            verticalLayout.setSizeFull();
             panel.setContent(label);
         }
         return panel;
@@ -465,11 +468,6 @@ public class NewOrdersTab extends CustomComponent {
 
     public void setView(OrdersViewForDrivers view) {
         this.view = view;
-    }
-
-
-    public Grid<OrderInfo> getOrdersGrid() {
-        return ordersGrid;
     }
 
     public List getOrdersList() {
