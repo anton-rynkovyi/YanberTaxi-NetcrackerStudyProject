@@ -80,6 +80,14 @@ public class OrderServiceImpl implements OrderService{
                 BigInteger status = order.getStatus();
                 orderInfo.setStatus((status == null)?OrderConstants.NULL_STATUS:getStatusValue(status));
 
+                List<Route> orderRoute = getRoutes(order.getObjectId());
+                if(!orderRoute.isEmpty()){
+                    orderInfo.setStartPoint(orderRoute.get(0).getCheckPoint());
+                    orderInfo.setDestination(orderRoute.get(orderRoute.size() - 1).getCheckPoint());
+                }else{
+                    orderInfo.setStartPoint("---(is not set)---");
+                    orderInfo.setDestination("---(is not set)---");
+                }
                 orderInfos.add(orderInfo);
             }
         }

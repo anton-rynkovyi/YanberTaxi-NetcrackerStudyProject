@@ -135,4 +135,21 @@ public class DriverServiceImpl implements DriverService {
         driver.setStatus(status);
         persistenceFacade.update(driver);
     }
+
+    public boolean isBanned(BigInteger driverId){
+        String query = "" +
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
+                "WHERE obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
+                "AND obj.object_id = " + driverId +
+                " AND attr.attr_id = " + DriverAttr.UNBAN_DATE_ATTR + " " +
+                "AND attr.date_value IS NOT NULL";
+
+        List<Driver> driverBanList = persistenceFacade.getSome(query, Driver.class);
+        if(driverBanList.isEmpty()){
+            return false;
+        }
+        return true;
+    }
 }

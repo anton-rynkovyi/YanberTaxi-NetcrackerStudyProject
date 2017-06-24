@@ -117,8 +117,8 @@ select us_id.nextval into :new.user_id from dual;
 end if;
 end;
 /
+/*
 
-/*Drivers*/
 INSERT INTO OBJECTS (OBJECT_ID,PARENT_ID,OBJECT_TYPE_ID,NAME,DESCRIPTION) VALUES (NULL,NULL,1,'Natasha Stavitskaya',NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (1,ob_id.currval,'Natasha',NULL,NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (2,ob_id.currval,'Stavitskaya',NULL,NULL);
@@ -248,9 +248,9 @@ INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES 
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (9,ob_id.currval,NULL,NULL,5);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (10,ob_id.currval,NULL,NULL,NULL);
 INSERT INTO USERS VALUES (null,ob_id.currval,'mark@gmail.com','54636','ROLE_DRIVER');
-/*Drivers*/
 
-/*Clients*/
+
+
 INSERT INTO OBJECTS (OBJECT_ID,PARENT_ID,OBJECT_TYPE_ID,NAME,DESCRIPTION) VALUES (NULL,NULL,2,'Ludmila Pirogova',NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (11,ob_id.currval,'Pirogova',NULL,NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (12,ob_id.currval,'Ludmila',NULL,NULL);
@@ -332,9 +332,9 @@ INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES 
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (15,ob_id.currval,5,NULL, NULL);
 INSERT INTO USERS VALUES (null,ob_id.currval,'050-032-59-37','54897','ROLE_CLIENT');
 
-/*clients*/
 
-/*admin*/
+
+
 INSERT INTO OBJECTS (OBJECT_ID,PARENT_ID,OBJECT_TYPE_ID,NAME,DESCRIPTION) VALUES (NULL,NULL,8,'Admin',NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (39,ob_id.currval,'(063)611-67-90',NULL,NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (40,ob_id.currval,'yanbertaxi@gmail.com',NULL,NULL);
@@ -344,9 +344,9 @@ INSERT INTO OBJECTS (OBJECT_ID,PARENT_ID,OBJECT_TYPE_ID,NAME,DESCRIPTION) VALUES
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (39,ob_id.currval,'(068)067-68-53',NULL,NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (40,ob_id.currval,'yanbertaxi@gmail.com',NULL,NULL);
 INSERT INTO USERS VALUES (null,ob_id.currval,'(068)067-68-53','$2a$10$/kJykCLsIGPauDIcpQWgLurA7w8KNQYIoI4VKyXzR2R88MFnTqe4K','ROLE_ADMIN');
-/*admin*/
 
-/*orders*/
+
+
 
 DECLARE
 driver_number  number;
@@ -442,9 +442,9 @@ BEGIN
 
 END;
 /
-/*orders*/
 
-/*cars*/
+
+
 DECLARE
 driver_number  number;
 type driver is table of objects.object_id%type;
@@ -561,10 +561,8 @@ BEGIN
     INSERT INTO OBJREFERENCE(ATTR_ID,REFERENCE,OBJECT_ID) VALUES (28,driver_list(TRUNC(10)),ob_id.currval);
 END;
 /
-/*cars*/
 
 
-/*routes*/
 DECLARE
 order_number  number;
 type orders is table of objects.object_id%type;
@@ -681,11 +679,11 @@ BEGIN
     INSERT INTO OBJREFERENCE(ATTR_ID,REFERENCE,OBJECT_ID) VALUES (36,order_list(TRUNC(10)),ob_id.currval);
 END;
 /
-/*routes*/
+
 
 COMMIT;
 
-
+*/
 
 
 

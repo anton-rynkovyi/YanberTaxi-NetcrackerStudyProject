@@ -16,6 +16,8 @@ public class OrderInfo {
     private String cost;
     private String distance;
     private BigInteger rating;
+    private String startPoint;
+    private String destination;
 
     public void setQueueN(int queueN) {
         this.queueN = queueN;
@@ -79,5 +81,21 @@ public class OrderInfo {
 
     public void setRating(BigInteger rating) {
         this.rating = rating;
+    }
+
+    public String getStartPoint() {
+        return startPoint;
+    }
+
+    public void setStartPoint(String startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 }

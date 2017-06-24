@@ -440,6 +440,8 @@ public class NewOrdersTab extends CustomComponent {
         ordersGrid.setItems(ordersInfo);
 
         ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("#");
+        ordersGrid.addColumn(OrderInfo::getStartPoint).setCaption("Start");
+        ordersGrid.addColumn(OrderInfo::getDestination).setCaption("Destination");
         ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");
 
         ordersGrid.addSelectionListener(selectionEvent -> {

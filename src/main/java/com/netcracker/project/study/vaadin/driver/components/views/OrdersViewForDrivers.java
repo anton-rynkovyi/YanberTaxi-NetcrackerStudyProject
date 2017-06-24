@@ -1,5 +1,7 @@
 package com.netcracker.project.study.vaadin.driver.components.views;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
@@ -76,6 +78,14 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         addComponent(rootLayout);
     }
 
+    @Subscribe
+    private void listener(String event){
+        rootLayout.addComponent(new Label(event));
+        rootLayout.addComponent(new Label(event));
+        rootLayout.addComponent(new Label(event));
+        rootLayout.addComponent(new Label(event));
+    }
+
     private void changeStatusIcon(){
         if(driver.getStatus().equals(DriverStatusList.FREE)){
             statusPanel.setIcon(VaadinIcons.COFFEE);
@@ -114,6 +124,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
         Button viewOrderButton = new Button("View order", VaadinIcons.INFO);
         viewOrderButton.addClickListener(event -> {
+
             if (!allOrdersGrid.asSingleSelect().isEmpty()) {
                 OrderInfo orderInfo = (OrderInfo)allOrdersGrid.asSingleSelect().getValue();
                 orderInfoPopUp.init(orderInfo);
