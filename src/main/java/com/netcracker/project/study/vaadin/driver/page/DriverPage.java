@@ -4,12 +4,15 @@ package com.netcracker.project.study.vaadin.driver.page;
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverStatusEnum;
+import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.driver.components.popup.DriverUpdate;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
@@ -24,6 +27,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Theme("valo")
 @SpringUI(path = "/driver")
@@ -44,14 +49,17 @@ public class DriverPage extends UI{
 
     @Autowired
     DriverUpdate DriverWindow;
+
+    Driver driver;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+        getCurrentDriver();
         rootLayout = new VerticalLayout();
         rootLayout.setSizeFull();
         rootLayout.setMargin(false);
         rootLayout.setSpacing(false);
         rootLayout.setHeight(100, Unit.PERCENTAGE);
-
 
         setContent(rootLayout);
 
@@ -65,10 +73,11 @@ public class DriverPage extends UI{
         Label label1 = new Label("<h3>YanberTaxi</h3>", ContentMode.HTML);
         panelCaption.addComponent(label1);
         panelCaption.setComponentAlignment(label1, Alignment.MIDDLE_LEFT);
-        panelCaption.setExpandRatio(label1, 1);
+        panelCaption.setExpandRatio(label1, 0.1f);
+
         Driver driver = userDetailsService.getCurrentUser();
         String driverName = driver.getFirstName() + " " + driver.getLastName();
-        Label label2 = new Label( "Hello, "+driverName);
+        Label label2 = new Label( "Hello, " + driverName);
         panelCaption.addComponent(label2);
 
         Button action = new Button();
@@ -92,6 +101,25 @@ public class DriverPage extends UI{
         panelCaption.addComponent(action1);
         rootLayout.addComponent(panelCaption);
 
+
+        HorizontalLayout infoPanel = getDriverStatus();
+        infoPanel.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+        infoPanel.setStyleName(ValoTheme.PANEL_BORDERLESS);
+        infoPanel.setMargin(new MarginInfo(false, true, false, true));
+        infoPanel.setWidth("100%");
+
+        HorizontalLayout statusLayout = new HorizontalLayout();
+        infoPanel.addComponent(statusLayout);
+        infoPanel.setComponentAlignment(statusLayout,Alignment.TOP_LEFT);
+        infoPanel.setExpandRatio(statusLayout,1f);
+
+
+        HorizontalLayout stars = getDriverRating();
+        infoPanel.addComponent(stars);
+
+        rootLayout.addComponent(infoPanel);
+
+
         viewDisplay = new Panel();
         viewDisplay.setSizeFull();
 
@@ -114,4 +142,62 @@ public class DriverPage extends UI{
 
     }
 
+    private void getCurrentDriver(){
+        driver = userDetailsService.getCurrentUser();
+    }
+
+    private HorizontalLayout getDriverRating(){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        int total = 5;
+        int rating = driver.getRating().intValue();
+
+        Label ratingHeader = new Label("Rating: ",ContentMode.HTML);
+        horizontalLayout.addComponent(ratingHeader);
+
+        for(int i = 0;i < rating; i++){
+            Label star = new Label();
+            star.setIcon(VaadinIcons.STAR);
+            horizontalLayout.addComponent(star);
+        }
+
+        int remainedRating = total - rating;
+
+        for(int i = 0;i < remainedRating; i++){
+            Label star = new Label();
+            star.setIcon(VaadinIcons.STAR_O);
+            horizontalLayout.addComponent(star);
+        }
+        return horizontalLayout;
+    }
+
+    private HorizontalLayout getDriverStatus(){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+
+        Label statusHeader = new Label("Status: ",ContentMode.HTML);
+        horizontalLayout.addComponent(statusHeader);
+
+        Label statusIcon = getStatusIcon();
+        horizontalLayout.addComponent(statusIcon);
+
+        Label status = new Label(DriverStatusEnum.getStatusValue(driver.getStatus()));
+        horizontalLayout.addComponent(status);
+        return horizontalLayout;
+    }
+
+    private Label getStatusIcon(){
+        Label icon = new Label();
+        if(driver.getStatus().equals(DriverStatusList.FREE)){
+            icon.setIcon(VaadinIcons.COFFEE);
+        }
+        if(driver.getStatus().equals(DriverStatusList.ON_CALL)){
+            icon.setIcon(VaadinIcons.TAXI);
+        }
+        if(driver.getStatus().equals(DriverStatusList.PERFORMING_ORDER)){
+            icon.setIcon(VaadinIcons.ROAD);
+        }
+        if(driver.getStatus().equals(DriverStatusList.OFF_DUTY)){
+            icon.setIcon(VaadinIcons.HOME_O);
+        }
+        return icon;
+    }
 }
