@@ -2,10 +2,12 @@ package com.netcracker.project.study.vaadin.client.views;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.ClientService;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.authorization.components.popups.ClientRegistration;
@@ -55,6 +57,9 @@ public class ClientView extends VerticalLayout implements View {
     OrderService orderService;
 
     @Autowired
+    DriverService driverService;
+
+    @Autowired
     private ClientOrdersGrid clientOrdersGrid;
 
     @Autowired
@@ -93,12 +98,12 @@ public class ClientView extends VerticalLayout implements View {
         addComponent(toastr);
         setComponentAlignment(toastr, Alignment.TOP_RIGHT);
 
-        HorizontalLayout clientInformationFields = new HorizontalLayout();
-        Panel clientPoints = getClientPoints();
-        clientPoints.setStyleName(MaterialTheme.PANEL_BORDERLESS);
-        clientInformationFields.setSizeFull();
-        clientInformationFields.addComponent(clientPoints);
-        addComponent(clientInformationFields);
+//        HorizontalLayout clientInformationFields = new HorizontalLayout();
+//        Panel clientPoints = getClientPoints();
+//        clientPoints.setStyleName(MaterialTheme.PANEL_BORDERLESS);
+//        clientInformationFields.setSizeFull();
+//        clientInformationFields.addComponent(clientPoints);
+//        addComponent(clientInformationFields);
 
         HorizontalLayout mainButtons = setMainButtons();
         addComponent(mainButtons);
@@ -166,10 +171,6 @@ public class ClientView extends VerticalLayout implements View {
         return panel;
     }
 
-    private String getClientName(){
-        return client.getFirstName() + " " + client.getLastName();
-    }
-
     private Panel getClientPoints(){
         Panel panel = new Panel();
         HorizontalLayout clientPointslayout = new HorizontalLayout();
@@ -194,6 +195,7 @@ public class ClientView extends VerticalLayout implements View {
             orderMaker.enableCancelOrderButton(cancelOrder);
             orderMaker.disableNewOrderButton(newOrder);
             orderMaker.closeOrderMakerWindow(window);
+            orderMaker.showSuccesToaster(toastr);
         }
     }
 
@@ -202,11 +204,14 @@ public class ClientView extends VerticalLayout implements View {
         @Override
         public void buttonClick(Button.ClickEvent clickEvent) {
             List<Order> orderList = orderService.getActiveOrdersByClientId(client.getObjectId());
-            if (orderList.size()>0) {
+            if (orderList.size() > 0) {
                 Order currentOrder = null;
                 for (Order order : orderList) {
                     currentOrder = order;
                     orderService.changeStatus(OrderStatus.CANCELED, order.getObjectId());
+                    if (currentOrder.getDriverOnOrder() != null){
+                        driverService.changeStatus(DriverStatusList.FREE, currentOrder.getDriverOnOrder());
+                    }
                 }
                 Toast cancelOrderToast = ToastBuilder.of(ToastType.Info, "<b>Order " + currentOrder.getName() + " was canceled</b> ")
                         .caption("Infomation")

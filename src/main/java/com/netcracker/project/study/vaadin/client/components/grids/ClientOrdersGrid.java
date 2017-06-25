@@ -7,6 +7,7 @@ import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.client.components.popup.ClientOrderInfoPopUp;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
@@ -102,6 +103,6 @@ public class ClientOrdersGrid  extends CustomComponent {
 
     private void setGridSettings(Grid<Order> ordersGrid) {
         ordersGrid.setSizeFull();
-        ordersGrid.setHeightByRows(10.8);
+        ordersGrid.setHeightByRows(10);
     }
 }

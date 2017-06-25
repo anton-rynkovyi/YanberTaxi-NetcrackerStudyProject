@@ -3,10 +3,12 @@ package com.netcracker.project.study.vaadin.client.page;
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
+import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.client.views.ClientView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
@@ -19,6 +21,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 @Theme("valo")
@@ -34,6 +37,11 @@ public class ClientPage extends UI {
 
     @Autowired
     ClientUpdate ClientWindow;
+
+    @Autowired
+    Copyright bottomTeamLogo;
+
+    private Client client;
 
     private Panel viewDisplay;
 
@@ -59,7 +67,7 @@ public class ClientPage extends UI {
         panelCaption.addComponent(label1);
         panelCaption.setComponentAlignment(label1, Alignment.MIDDLE_LEFT);
         panelCaption.setExpandRatio(label1, 1);
-        Client client = userDetailsService.getCurrentUser();
+        client = userDetailsService.getCurrentUser();
         String clientName = client.getFirstName() + " " + client.getLastName();
         Label label2 = new Label( "Hello, "+clientName);
         panelCaption.addComponent(label2);
@@ -83,12 +91,16 @@ public class ClientPage extends UI {
             getUI().getPage().setLocation("/authorization");
         });
         panelCaption.addComponent(action1);
+
         rootLayout.addComponent(panelCaption);
 
-
+        HorizontalLayout clientPoints = getClientPoints();
+        rootLayout.addComponent(clientPoints);
+        rootLayout.setComponentAlignment(clientPoints, Alignment.BOTTOM_CENTER);
 
         viewDisplay = getViewDisplay();
         rootLayout.addComponent(viewDisplay);
+        rootLayout.addComponent(bottomTeamLogo);
         rootLayout.setExpandRatio(viewDisplay, 0.8f);
 
         navigator = new Navigator(this, viewDisplay);
@@ -114,6 +126,16 @@ public class ClientPage extends UI {
         panel.addStyleName("mypanelexample");
         panel.setSizeUndefined(); // Shrink to fit content
         return panel;
+    }
+
+    private HorizontalLayout getClientPoints(){
+        HorizontalLayout clientPointslayout = new HorizontalLayout();
+        BigInteger clientPoints = client.getPoints() != null ? client.getPoints() : BigInteger.ZERO;
+        Label icon = new Label();
+        icon.setIcon(VaadinIcons.COIN_PILES);
+        Label pointsInfo = new Label("<b>Your points: " + clientPoints + "</b>", ContentMode.HTML);
+        clientPointslayout.addComponents(icon, pointsInfo);
+        return clientPointslayout;
     }
 
 }

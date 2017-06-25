@@ -42,4 +42,6 @@ public interface OrderService {
     Order getOrder(BigInteger orderId);
 
     List<OrderInfo> getOrdersInfoByDriverId(BigInteger driverId, BigInteger orderStatusId);
+
+    void setCommentAboutDriver(Order order, String comment);
 }
