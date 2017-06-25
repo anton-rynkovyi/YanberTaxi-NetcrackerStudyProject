@@ -72,7 +72,8 @@ public class BanDaysPopUp extends VerticalLayout {
             String radioValue[] = String.valueOf(radioButtonGroup.getValue()).split(" ");
             int days = Integer.parseInt(radioValue[0]);
             Driver driver = driverInfoPopUP.getDriver();
-            if (driver.getStatus().compareTo(DriverStatusList.OFF_DUTY) != 0){
+            if (driver.getStatus().compareTo(DriverStatusList.OFF_DUTY) != 0 &&
+                    driver.getStatus().compareTo(DriverStatusList.FREE) != 0) {
                 toastr.toast(ToastBuilder.error("This driver has order. Try again later.").build());
                 return;
             }

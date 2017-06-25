@@ -3,6 +3,8 @@ package com.netcracker.project.study.vaadin.admin.components.popup;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.car.Car;
+import com.netcracker.project.study.model.user.User;
+import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
@@ -26,6 +28,9 @@ public class DriverBanInfoPopUp extends VerticalLayout{
     @Autowired AdminService adminService;
 
     @Autowired DriverService driverService;
+
+    @Autowired
+    UserFacade userFacade;
 
     private Window banDaysWindow;
 
@@ -103,7 +108,9 @@ public class DriverBanInfoPopUp extends VerticalLayout{
                     .withYesButton(() -> {
                         driver.setUnbanDate(null);
                         adminService.updateModel(driver);
-                        //driversGrid.refreshGrid();
+                        User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
+                        user.setEnabled(true);
+                        userFacade.updateUser(user);
                         driversBanGrid.refreshGrid();
                         driversBanGrid.getDriverBanInfoWindow().close();
                     })

@@ -9,6 +9,7 @@ import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.UserFacade;
+import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 
@@ -22,8 +23,12 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.vaadin.addons.Toast;
+import org.vaadin.addons.ToastPosition;
+import org.vaadin.addons.ToastType;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
+import org.vaadin.addons.builder.ToastOptionsBuilder;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -42,6 +47,9 @@ public class NewOrdersTab extends CustomComponent {
 
     @Autowired
     UserFacade userFacade;
+
+    @Autowired
+    AdminService adminService;
 
     private Toastr toastr;
 
@@ -142,10 +150,15 @@ public class NewOrdersTab extends CustomComponent {
         }
 
         button.addClickListener(clickEvent -> {
-            if (!isCanWork(driver)) {
+            if (isBanned()) {
+                SecurityContextHolder.clearContext();
+                return;
+            }
+            if (isDismissed()) {
                 logout();
                 return;
             }
+
             if(driver.getStatus().equals(DriverStatusList.FREE)){
                 button.setCaption("Start working");
                 driverService.changeStatus(DriverStatusList.OFF_DUTY,driver.getObjectId());
@@ -404,7 +417,11 @@ public class NewOrdersTab extends CustomComponent {
             acceptOrderButton.setEnabled(false);
         }
         acceptOrderButton.addClickListener(event -> {
-            if (!isCanWork(driver)) {
+            if (isBanned()) {
+                SecurityContextHolder.clearContext();
+                return;
+            }
+            if (isDismissed()) {
                 logout();
                 return;
             }
@@ -481,7 +498,6 @@ public class NewOrdersTab extends CustomComponent {
                 }else{
                    setStartEndPointsLayoutsEmpty();
                 }
-
             }
         });
 
@@ -491,24 +507,43 @@ public class NewOrdersTab extends CustomComponent {
     }
 
 
-    private boolean isCanWork(Driver driver) {
-        if (driver.getStatus().compareTo(DriverStatusList.DISMISSED) == 0) {
-           return false;
-        }
-        User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
-        if (!user.isEnabled()) {
-            toastr.toast(ToastBuilder.warning("You have been banned. Unban date: " +
-                    new Timestamp(driver.getUnbanDate().getTime())).build());
-            UI.getCurrent().setContent(toastr);
-            return false;
-        }
-        return true;
-    }
-
     private void logout() {
         SecurityContextHolder.clearContext();
         getUI().getSession().close();
         getUI().getPage().setLocation("/authorization");
+    }
+
+    private boolean isDismissed() {
+        if (driver.getStatus().compareTo(DriverStatusList.DISMISSED) == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isBanned() {
+        User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
+        if (!user.isEnabled()) {
+            UI.getCurrent().setContent(toastr);
+            Driver driver = adminService.getModelById(this.driver.getObjectId(), Driver.class);
+            Toast banToast = ToastBuilder.of(ToastType.Warning,
+                    "You have been banned." +
+                            "\nUnban date: " + new Timestamp(driver.getUnbanDate().getTime()) +
+                            "\n Contacts: yanbertaxi.netcracker@gmail.com")
+                    .caption("Information")
+                    .options(ToastOptionsBuilder.having()
+                            .closeButton(false)
+                            .debug(false)
+                            .progressBar(false)
+                            .preventDuplicates(true)
+                            .position(ToastPosition.Top_Full_Width)
+                            .tapToDismiss(false)
+                            .extendedTimeOut(600000)
+                            .build())
+                    .build();
+            toastr.toast(banToast);
+            return true;
+        }
+        return false;
     }
 
     public void setView(OrdersViewForDrivers view) {
