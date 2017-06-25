@@ -1,6 +1,5 @@
 package com.netcracker.project.study.vaadin.admin.components.popup;
 
-import com.google.common.eventbus.EventBus;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
@@ -13,7 +12,6 @@ import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +29,17 @@ public class DriverInfoPopUP extends VerticalLayout {
 
     DriversBanGrid driversBanGrid;
 
-    @Autowired AdminService adminService;
+    @Autowired
+    AdminService adminService;
 
-    @Autowired DriverService driverService;
+    @Autowired
+    DriverService driverService;
 
-    @Autowired OrderService orderService;
+    @Autowired
+    OrderService orderService;
 
-    @Autowired BanDaysPopUp banDaysPopUp;
+    @Autowired
+    BanDaysPopUp banDaysPopUp;
 
     private Window banDaysWindow;
 
@@ -64,7 +66,7 @@ public class DriverInfoPopUP extends VerticalLayout {
     }
 
     private void setTextFields(VerticalLayout rootLayout) {
-        rootLayout.addComponent(lastSeen());
+        //rootLayout.addComponent(lastSeen());
         rootLayout.addComponent(setDriverAndCarInfoLayout());
         rootLayout.addComponent(setControlButtonsLayout());
         rootLayout.addComponent(setDriverCommentsLayout());

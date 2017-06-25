@@ -1,48 +1,48 @@
 package com.netcracker.project.study.vaadin.admin.components.grids;
 
 
-import com.google.common.eventbus.Subscribe;
 import com.netcracker.project.study.model.driver.Driver;
-
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
-import com.netcracker.project.study.vaadin.admin.components.popup.DriverInfoPopUP;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverCreatePopUp;
+import com.netcracker.project.study.vaadin.admin.components.popup.DriverInfoPopUP;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverUpdatePopUp;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import de.steinwedel.messagebox.MessageBox;
-import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 
 @SpringComponent
 @Scope(value = "prototype")
 public class DriversGrid extends CustomComponent{
 
-    @Autowired AdminService adminService;
+    @Autowired
+    AdminService adminService;
 
-    @Autowired DriverService driverService;
+    @Autowired
+    DriverService driverService;
 
-    @Autowired DriverCreatePopUp driverCreatePopUp;
-    @Autowired DriverInfoPopUP driverInfoPopUp;
-    @Autowired DriverUpdatePopUp driverUpdatePopUp;
+    @Autowired
+    DriverCreatePopUp driverCreatePopUp;
+    @Autowired
+    DriverInfoPopUP driverInfoPopUp;
+    @Autowired
+    DriverUpdatePopUp driverUpdatePopUp;
 
-    @Autowired DriversBanGrid driversBanGrid;
-    @Autowired DriversRequestsGrid driversRequestsGrid;
+    @Autowired
+    DriversBanGrid driversBanGrid;
+    @Autowired
+    DriversRequestsGrid driversRequestsGrid;
 
     private Grid<Driver> driversGrid;
 
@@ -66,9 +66,9 @@ public class DriversGrid extends CustomComponent{
         initFilters();
         driversGrid = generateDriversGrid();
         componentLayout = getFilledComponentLayout();
-        initCreateDriverWindow();
+        //initCreateDriverWindow();
         initDriverInfoWindow();
-        initUpdateInfoWindow();
+        //initUpdateInfoWindow();
         setCompositionRoot(componentLayout);
     }
 
@@ -176,14 +176,14 @@ public class DriversGrid extends CustomComponent{
     }
 
 
-    private void initCreateDriverWindow() {
+    /*private void initCreateDriverWindow() {
         createDriverWindow = new Window("Add new driver");
         createDriverWindow.setIcon(VaadinIcons.INSERT);
         createDriverWindow.center();
         createDriverWindow.setModal(true);
         createDriverWindow.setResizable(false);
         createDriverWindow.setContent(driverCreatePopUp);
-    }
+    }*/
 
     private void initDriverInfoWindow() {
         driverInfoWindow = new Window("Driver information");
@@ -194,14 +194,14 @@ public class DriversGrid extends CustomComponent{
         driverInfoWindow.setContent(driverInfoPopUp);
     }
 
-    private void initUpdateInfoWindow() {
+    /*private void initUpdateInfoWindow() {
         updateDriverWindow = new Window("Update driver");
         updateDriverWindow.setIcon(VaadinIcons.UPLOAD);
         updateDriverWindow.center();
         updateDriverWindow.setModal(true);
         updateDriverWindow.setResizable(false);
         updateDriverWindow.setContent(driverUpdatePopUp);
-    }
+    }*/
 
     public Window getDriversCreateSubWindow() {
         return createDriverWindow;
@@ -216,16 +216,16 @@ public class DriversGrid extends CustomComponent{
         controlButtonsLayout.setMargin(false);
         controlButtonsLayout.setSpacing(false);
 
-        Button btnAddDriver = new Button("Add driver", VaadinIcons.PLUS);
+        /*Button btnAddDriver = new Button("Add driver", VaadinIcons.PLUS);
         controlButtonsLayout.addComponent(btnAddDriver);
         controlButtonsLayout.setComponentAlignment(btnAddDriver, Alignment.BOTTOM_LEFT);
         btnAddDriver.addClickListener(event -> {
             driverCreatePopUp.setDriversGrid(this);
             UI.getCurrent().addWindow(createDriverWindow);
-        });
+        });*/
 
 
-        Button btnDeleteDriver = new Button("Delete driver", VaadinIcons.FILE_REMOVE);
+       /* Button btnDeleteDriver = new Button("Delete driver", VaadinIcons.FILE_REMOVE);
         controlButtonsLayout.addComponent(btnDeleteDriver);
         controlButtonsLayout.setComponentAlignment(btnDeleteDriver, Alignment.BOTTOM_LEFT);
         btnDeleteDriver.addClickListener(event -> {
@@ -242,10 +242,10 @@ public class DriversGrid extends CustomComponent{
                     })
                     .withNoButton(() -> {})
                     .open();
-        });
+        });*/
 
 
-        Button btnUpdateDriver = new Button("Update driver", VaadinIcons.UPLOAD);
+       /* Button btnUpdateDriver = new Button("Update driver", VaadinIcons.UPLOAD);
         controlButtonsLayout.addComponent(btnUpdateDriver);
         controlButtonsLayout.setComponentAlignment(btnUpdateDriver, Alignment.BOTTOM_LEFT);
         btnUpdateDriver.addClickListener(event -> {
@@ -256,7 +256,7 @@ public class DriversGrid extends CustomComponent{
                 UI.getCurrent().addWindow(updateDriverWindow);
                 updateDriverWindow.center();
             }
-        });
+        });*/
 
 
         Button btnDriverInfo = new Button("Driver info", VaadinIcons.INFO);

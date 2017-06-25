@@ -19,9 +19,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -154,5 +154,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userFacade.findDriverDetailsByUsername(phone);
         Driver driver = persistenceFacade.getOne(user.getObjectId(), Driver.class);
         return driver;
+    }
+
+    public User findUserByUsername(String phone){
+        User user = userFacade.findDriverDetailsByUsername(phone);
+        return user;
+    }
+
+    public boolean isDriverBanned(Driver driver) {
+        User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
+        if (user.isEnabled()) {
+            return false;
+        }
+        return true;
+    }
+
+    public void deleteUser(User user) {
+        userFacade.deleteUser(user);
     }
 }

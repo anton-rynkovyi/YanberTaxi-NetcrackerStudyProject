@@ -1,13 +1,9 @@
 package com.netcracker.project.study.services;
 
 import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.model.driver.car.Car;
-import com.netcracker.project.study.model.order.Order;
 
 import java.math.BigInteger;
-import java.sql.Date;
 import java.util.List;
 
 public interface AdminService {

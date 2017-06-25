@@ -12,14 +12,13 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
-
 @SpringView(name = DriversView.VIEW_NAME)
 public class DriversView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "drivers";
 
-    @Autowired DriversGrid driversGrid;
+    @Autowired
+    DriversGrid driversGrid;
 
     @Autowired DriversRequestsGrid driversRequestsGrid;
 

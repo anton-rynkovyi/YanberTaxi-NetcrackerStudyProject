@@ -10,9 +10,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.spring.events.EventBus;
-
-import javax.annotation.PostConstruct;
 
 @SpringView(name = ClientsView.VIEW_NAME)
 public class ClientsView extends VerticalLayout implements View {

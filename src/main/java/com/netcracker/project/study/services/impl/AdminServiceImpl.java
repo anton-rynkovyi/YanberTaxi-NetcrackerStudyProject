@@ -1,38 +1,38 @@
 package com.netcracker.project.study.services.impl;
 
 import com.netcracker.project.study.model.Model;
-import com.netcracker.project.study.model.Role;
-import com.netcracker.project.study.model.admin.Admin;
-import com.netcracker.project.study.model.admin.AdminAttr;
 import com.netcracker.project.study.model.client.ClientAttr;
 import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.model.driver.DriverAttr;
 import com.netcracker.project.study.model.driver.DriverStatusList;
-import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.driver.car.CarAttr;
-import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderAttr;
+import com.netcracker.project.study.model.user.User;
+import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
-import com.vaadin.spring.annotation.ViewScope;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.sql.Date;
-import java.util.*;
+import java.util.List;
 
 @Service
-public class AdminServiceImpl implements AdminService{
+public class AdminServiceImpl implements AdminService {
 
     public final long ONE_DAY_MILLS = 1000 * 60 * 60 * 24;
 
     @Autowired
     PersistenceFacade persistenceFacade;
+
+    @Autowired
+    UserFacade userFacade;
 
     @Autowired
     DriversGrid driversGrid;
@@ -42,6 +42,12 @@ public class AdminServiceImpl implements AdminService{
 
     @Autowired
     DriverService driverService;
+
+    @Autowired
+    private SessionRegistry sessionRegistry;
+
+    @Autowired
+    HttpSessionEventPublisher httpSessionEventPublisher;
 
 
     @Override
@@ -56,10 +62,21 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public void giveBan(Driver driver, int days) {
-        Date date = new Date(System.currentTimeMillis() + 1000*60 * days); //todo "1000*60" change to ONE_DAY_MILLS const
+        Date date = new Date(System.currentTimeMillis() + 1000 * 60 * days); //todo "1000*60" change to ONE_DAY_MILLS const
+        User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
         driver.setUnbanDate(date);
         driver.setStatus(DriverStatusList.OFF_DUTY);
         persistenceFacade.update(driver);
+        user.setEnabled(false);
+        userFacade.updateUser(user);
+    }
+
+
+    private void logoutSession(String sessionId) {
+        SessionInformation session = sessionRegistry.getSessionInformation(sessionId);
+        if (session != null) {
+            session.expireNow();
+        }
     }
 
 
@@ -72,6 +89,9 @@ public class AdminServiceImpl implements AdminService{
            if (dif < 0 || driver.getUnbanDate() == null) {
                driver.setUnbanDate(null);
                persistenceFacade.update(driver);
+               User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
+               user.setEnabled(true);
+               userFacade.updateUser(user);
                System.out.println("FINISH");
 /*               driversGrid.refreshGrid();
                driversBanGrid.refreshGrid()*/;
@@ -80,6 +100,9 @@ public class AdminServiceImpl implements AdminService{
            }
         }
     }
+
+
+
 
     @Override
     public <T extends Model> T getModelById(BigInteger modelId, Class modelClass) {

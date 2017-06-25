@@ -8,16 +8,7 @@ import javax.servlet.annotation.WebServlet;
 public class VaadinUIServlet extends SpringVaadinServlet {
     /*@Override
     protected void servletInitialized() throws ServletException {
-        super.servletInitialized();
-        getService().setSystemMessagesProvider((SystemMessagesProvider) systemMessagesInfo -> {
-            CustomizedSystemMessages messages = new CustomizedSystemMessages();
-            // Don't show any messages, redirect immediately to the session expired URL
-            messages.setSessionExpiredNotificationEnabled(false);
-            // Force a logout to also end the HTTP session and not only the Vaadin session
-            messages.setSessionExpiredURL("logout");
-            // Don't show any message, reload the page instead
-            messages.setCommunicationErrorNotificationEnabled(false);
-            return messages;
-        });
+        ServletContext servletContext = VaadinServlet.getCurrent().getServletContext();
+
     }*/
 }

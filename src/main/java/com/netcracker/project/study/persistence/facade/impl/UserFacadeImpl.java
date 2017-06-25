@@ -1,7 +1,6 @@
 package com.netcracker.project.study.persistence.facade.impl;
 
 import com.netcracker.project.study.model.client.ClientAttr;
-import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverAttr;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.UserFacade;
@@ -10,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserFacadeImpl implements UserFacade{
+public class UserFacadeImpl implements UserFacade {
 
     @Autowired
     PersistenceManager manager;
@@ -64,4 +63,7 @@ public class UserFacadeImpl implements UserFacade{
         return null;
     }
 
+    public void deleteUser(User user) {
+        manager.deleteUser(user.getObjectId());
+    }
 }

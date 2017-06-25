@@ -1,21 +1,16 @@
 package com.netcracker.project.study.vaadin.admin.components.popup;
 
-import com.google.common.eventbus.EventBus;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.services.AdminService;
-import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
-import org.vaadin.spring.events.EventScope;
 
-import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
 

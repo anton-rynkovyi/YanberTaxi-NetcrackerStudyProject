@@ -4,16 +4,13 @@ import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverBanInfoPopUp;
-import com.netcracker.project.study.vaadin.admin.components.popup.DriverInfoPopUP;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;

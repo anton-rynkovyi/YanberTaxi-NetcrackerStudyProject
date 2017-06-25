@@ -3,10 +3,7 @@ package com.netcracker.project.study.vaadin.authorization.page;
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.Role;
 import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.model.driver.DriverAttr;
 import com.netcracker.project.study.model.driver.DriverStatusList;
-import com.netcracker.project.study.model.driver.status.DriverStatusAttr;
-import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
@@ -24,14 +21,17 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
+
+import java.sql.Timestamp;
 
 @Theme("valo")
 @SpringUI(path = "authorization")
@@ -61,6 +61,9 @@ public class AuthorizationPage extends UI {
 
     @Autowired
     DriverRegistration regAsDriverWindow;
+
+    @Autowired
+    BCryptPasswordEncoder encoder;
 
     private Toastr toastr;
     private PhoneField username;
@@ -188,6 +191,12 @@ public class AuthorizationPage extends UI {
                 toastr.toast(ToastBuilder.error("Wrong login or password!").build());
                 username.clear();
                 password.clear();
+            } catch (DisabledException e){
+                Driver driver = userDetailsService.findDriverByUserName(username.getValue());
+                if (userDetailsService.isDriverBanned(driver)) {
+                    toastr.toast(ToastBuilder.warning("You have been banned. Unban date: " +
+                            new Timestamp(driver.getUnbanDate().getTime())).build());
+                }
             }
         });
 

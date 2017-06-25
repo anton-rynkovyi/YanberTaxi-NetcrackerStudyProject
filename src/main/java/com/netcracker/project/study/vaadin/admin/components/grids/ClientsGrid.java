@@ -1,21 +1,16 @@
 package com.netcracker.project.study.vaadin.admin.components.grids;
 
 import com.netcracker.project.study.model.client.Client;
-import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.popup.ClientCreatePopUp;
 import com.netcracker.project.study.vaadin.admin.components.popup.ClientInfoPopUp;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
-import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.List;
 
 @SpringComponent
 @Scope(value = "prototype")
@@ -27,7 +22,8 @@ public class ClientsGrid extends CustomComponent {
     @Autowired
     ClientInfoPopUp clientInfoPopUp;
 
-    @Autowired AdminService adminService;
+    @Autowired
+    AdminService adminService;
 
     private Grid<Client> clientsGrid;
 
@@ -40,7 +36,7 @@ public class ClientsGrid extends CustomComponent {
     public void init() {
         clientsGrid = generateClientsGrid();
         VerticalLayout componentLayout = getFilledComponentLayout();
-        initCreateWindow();
+        //initCreateWindow();
         initViewClientWindow();
         setCompositionRoot(componentLayout);
     }
@@ -82,7 +78,7 @@ public class ClientsGrid extends CustomComponent {
         return clientsList;
     }
 
-    private void initCreateWindow() {
+   /* private void initCreateWindow() {
         createWindow = new Window("Add new client");
         createWindow.setIcon(VaadinIcons.USER);
         createWindow.center();
@@ -90,7 +86,7 @@ public class ClientsGrid extends CustomComponent {
         createWindow.setResizable(false);
         clientCreatePopUp.setClientsGrid(this);
         createWindow.setContent(clientCreatePopUp);
-    }
+    }*/
 
     private void initViewClientWindow() {
         viewClientWindow = new Window("Client information");
@@ -112,13 +108,13 @@ public class ClientsGrid extends CustomComponent {
         controlButtonsLayout.setMargin(false);
         controlButtonsLayout.setSpacing(false);
 
-        Button btnAddClient = new Button("Add client", FontAwesome.PLUS);
+        /*Button btnAddClient = new Button("Add client", FontAwesome.PLUS);
         controlButtonsLayout.addComponent(btnAddClient);
         controlButtonsLayout.setComponentAlignment(btnAddClient, Alignment.BOTTOM_LEFT);
-        btnAddClient.addClickListener(event -> {UI.getCurrent().addWindow(createWindow);});
+        btnAddClient.addClickListener(event -> {UI.getCurrent().addWindow(createWindow);});*/
 
 
-        Button btnDeleteDriver = new Button("Delete client", FontAwesome.REMOVE);
+        /*Button btnDeleteDriver = new Button("Delete client", FontAwesome.REMOVE);
         controlButtonsLayout.addComponent(btnDeleteDriver);
         controlButtonsLayout.setComponentAlignment(btnDeleteDriver, Alignment.BOTTOM_LEFT);
         btnDeleteDriver.addClickListener(event -> {
@@ -137,14 +133,14 @@ public class ClientsGrid extends CustomComponent {
                     .withNoButton(() -> {})
                     .open();
         });
+*/
 
-
-        Button btnUpdateDriver = new Button("Update client", FontAwesome.UPLOAD);
+       /* Button btnUpdateDriver = new Button("Update client", FontAwesome.UPLOAD);
         controlButtonsLayout.addComponent(btnUpdateDriver);
         controlButtonsLayout.setComponentAlignment(btnUpdateDriver, Alignment.BOTTOM_LEFT);
         btnDeleteDriver.addClickListener(event -> {
             //todo realization for update button
-        });
+        });*/
 
         Button btnClientInfo = new Button("Client info", VaadinIcons.INFO);
         controlButtonsLayout.addComponent(btnClientInfo);

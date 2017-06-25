@@ -1,31 +1,29 @@
 package com.netcracker.project.study.services.impl;
 
+import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderAttr;
 import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.model.order.route.RouteAttr;
 import com.netcracker.project.study.model.order.status.OrderStatus;
-
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.OrderConstants;
 import com.netcracker.project.study.services.OrderService;
+import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import com.netcracker.project.study.model.client.Client;
-import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
 
     @Autowired
     PersistenceFacade persistenceFacade;
@@ -72,13 +70,13 @@ public class OrderServiceImpl implements OrderService{
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.setQueueN(counter++);
                 orderInfo.setObjectId(order.getObjectId());
-                orderInfo.setDriverName((order.getDriverId() == null)?OrderConstants.DRIVER_EMPTY:getDriverInfo(order.getDriverId()));
-                orderInfo.setClientName((order.getClientId() == null)?OrderConstants.CLIENT_EMPTY:getClientInfo(order.getClientId()));
-                orderInfo.setCost(getValue(order.getCost(),OrderConstants.NULL_COST) + " " + OrderConstants.CURRENCY);
-                orderInfo.setDistance(getValue(order.getDistance(),OrderConstants.NULL_DISTANCE) + " " + OrderConstants.DISTANCE);
+                orderInfo.setDriverName((order.getDriverId() == null)? OrderConstants.DRIVER_EMPTY:getDriverInfo(order.getDriverId()));
+                orderInfo.setClientName((order.getClientId() == null)? OrderConstants.CLIENT_EMPTY:getClientInfo(order.getClientId()));
+                orderInfo.setCost(getValue(order.getCost(), OrderConstants.NULL_COST) + " " + OrderConstants.CURRENCY);
+                orderInfo.setDistance(getValue(order.getDistance(), OrderConstants.NULL_DISTANCE) + " " + OrderConstants.DISTANCE);
                 orderInfo.setRating(order.getDriverRating());
                 BigInteger status = order.getStatus();
-                orderInfo.setStatus((status == null)?OrderConstants.NULL_STATUS:getStatusValue(status));
+                orderInfo.setStatus((status == null)? OrderConstants.NULL_STATUS:getStatusValue(status));
 
                 List<Route> orderRoute = getRoutes(order.getObjectId());
                 if(!orderRoute.isEmpty()){
@@ -198,11 +196,11 @@ public class OrderServiceImpl implements OrderService{
                 " FROM Objects obj " +
                 " INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
                 " INNER JOIN Attributes attr ON obj.object_id=attr.object_id "+
-                " WHERE obj.object_type_id = "+OrderAttr.OBJECT_TYPE_ID +
-                " AND ref.attr_id = " +OrderAttr.CLIENT_ID_ATTR+
+                " WHERE obj.object_type_id = "+ OrderAttr.OBJECT_TYPE_ID +
+                " AND ref.attr_id = " + OrderAttr.CLIENT_ID_ATTR+
                 " AND ref.reference = "+clientId+
                 " AND attr.attr_id = 18"+
-                " AND (attr.list_value_id = "+OrderStatus.NEW+" or attr.list_value_id = "+OrderStatus.ACCEPTED+")";
+                " AND (attr.list_value_id = "+ OrderStatus.NEW+" or attr.list_value_id = "+ OrderStatus.ACCEPTED+")";
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }
@@ -214,11 +212,11 @@ public class OrderServiceImpl implements OrderService{
                 " FROM Objects obj " +
                 " INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
                 " INNER JOIN Attributes attr ON obj.object_id=attr.object_id "+
-                " WHERE obj.object_type_id = "+OrderAttr.OBJECT_TYPE_ID +
-                " AND ref.attr_id = " +OrderAttr.CLIENT_ID_ATTR+
+                " WHERE obj.object_type_id = "+ OrderAttr.OBJECT_TYPE_ID +
+                " AND ref.attr_id = " + OrderAttr.CLIENT_ID_ATTR+
                 " AND ref.reference = "+clientId+
                 " AND attr.attr_id = 18"+
-                " AND attr.list_value_id = "+OrderStatus.PERFORMING+"";
+                " AND attr.list_value_id = "+ OrderStatus.PERFORMING+"";
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }
@@ -253,12 +251,12 @@ public class OrderServiceImpl implements OrderService{
                 " FROM Objects obj " +
                 " INNER JOIN Objreference ref ON obj.object_id = ref.object_id " +
                 " INNER JOIN Attributes attr ON obj.object_id=attr.object_id "+
-                " WHERE obj.object_type_id = "+OrderAttr.OBJECT_TYPE_ID +
-                " AND ref.attr_id = " +OrderAttr.CLIENT_ID_ATTR+
+                " WHERE obj.object_type_id = "+ OrderAttr.OBJECT_TYPE_ID +
+                " AND ref.attr_id = " + OrderAttr.CLIENT_ID_ATTR+
                 " AND ref.reference = "+clientId+
                 " AND attr.attr_id = 18"+
-                " AND (attr.list_value_id = "+OrderStatus.NEW+" or attr.list_value_id = "+OrderStatus.ACCEPTED+
-                " OR attr.list_value_id = "+OrderStatus.PERFORMING+")";
+                " AND (attr.list_value_id = "+ OrderStatus.NEW+" or attr.list_value_id = "+ OrderStatus.ACCEPTED+
+                " OR attr.list_value_id = "+ OrderStatus.PERFORMING+")";
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }

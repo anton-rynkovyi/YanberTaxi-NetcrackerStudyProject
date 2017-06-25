@@ -8,12 +8,9 @@ import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
-import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.OrderService;
-import com.vaadin.event.dd.acceptcriteria.Or;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

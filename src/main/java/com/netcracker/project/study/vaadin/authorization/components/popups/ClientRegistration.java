@@ -124,8 +124,8 @@ public class ClientRegistration extends Window {
             user.setObjectId(client.getObjectId());
             user.setUsername(client.getPhoneNumber());
             user.setPassword(passwordEncoder.encode(password2.getValue()));
-            user.setEnabled(true);
             user.setAuthorities(ImmutableList.of(Role.ROLE_CLIENT));
+            user.setEnabled(true);
             userFacade.createUser(user);
             UI.getCurrent().setContent(toastr);
             phone.clear();

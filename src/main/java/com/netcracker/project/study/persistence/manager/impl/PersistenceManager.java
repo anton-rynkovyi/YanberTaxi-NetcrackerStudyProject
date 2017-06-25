@@ -214,7 +214,7 @@ public class PersistenceManager implements Manager {
         };
     }
 
-    private PreparedStatementSetter getPreparedStatementSetterAttributes(Map.Entry entry, PersistenceEntity persistenceEntity,boolean create) {
+    private PreparedStatementSetter getPreparedStatementSetterAttributes(Map.Entry entry, PersistenceEntity persistenceEntity, boolean create) {
         return new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
@@ -264,7 +264,7 @@ public class PersistenceManager implements Manager {
         };
     }
 
-    private PreparedStatementSetter getPreparedStatementSetterRef(Map.Entry entry, PersistenceEntity persistenceEntity,boolean create) {
+    private PreparedStatementSetter getPreparedStatementSetterRef(Map.Entry entry, PersistenceEntity persistenceEntity, boolean create) {
         return new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
@@ -308,6 +308,7 @@ public class PersistenceManager implements Manager {
                 ps.setString(++i, user.getUsername());
                 ps.setString(++i, user.getPassword());
                 ps.setString(++i, String.valueOf(user.getAuthorities().get(0)));
+                ps.setInt(++i, user.isEnabled() ? 1 : 0);
                 return ps;
             }
         }, keyHolder);
@@ -325,9 +326,11 @@ public class PersistenceManager implements Manager {
                 ps.setString(++i, user.getUsername());
                 ps.setString(++i, user.getPassword());
                 ps.setString(++i, String.valueOf(user.getAuthorities().get(0)));
+                ps.setInt(++i, user.isEnabled() ? 1 : 0);
                 ps.setString(++i, user.getUsername());
                 ps.setString(++i, user.getPassword());
                 ps.setString(++i, String.valueOf(user.getAuthorities().get(0)));
+                ps.setInt(++i, user.isEnabled() ? 1 : 0);
             }
         });
     }
@@ -342,6 +345,7 @@ public class PersistenceManager implements Manager {
             user.setUsername(rs.getString("login"));
             user.setPassword(rs.getString("password"));
             user.setAuthorities(ImmutableList.of(Role.valueOf(rs.getString("role"))));
+            user.setEnabled(rs.getInt("enabled") == 1 ? true : false);
             return user;
         }
     };
@@ -368,5 +372,9 @@ public class PersistenceManager implements Manager {
         }catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public void deleteUser(BigInteger objectId) {
+        jdbcTemplate.update(UsersQueries.DELETE_USERS, objectId.longValue());
     }
 }

@@ -11,4 +11,5 @@ public interface UserFacade {
     User findClientDetailsByUsername(String phone);
     User findDriverDetailsByUsername(String phone);
     void updateUser(User user);
+    void deleteUser(User user);
 }

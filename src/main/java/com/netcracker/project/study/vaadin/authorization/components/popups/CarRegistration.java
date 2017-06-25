@@ -11,19 +11,14 @@ import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 @SpringComponent

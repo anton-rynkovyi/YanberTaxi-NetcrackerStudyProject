@@ -6,16 +6,13 @@ import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
-import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 @SpringComponent

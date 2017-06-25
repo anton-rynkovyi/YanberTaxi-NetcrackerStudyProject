@@ -1,11 +1,7 @@
 package com.netcracker.project.study.vaadin.authorization.components.popups;
 
-import com.google.common.collect.ImmutableList;
-import com.netcracker.project.study.model.Role;
-import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusList;
-import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
@@ -15,7 +11,6 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
