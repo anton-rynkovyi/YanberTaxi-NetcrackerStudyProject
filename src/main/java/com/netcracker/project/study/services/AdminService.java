@@ -27,4 +27,6 @@ public interface AdminService {
     void setBanTask();
 
     <T extends Model> T getModelById(BigInteger modelId, Class modelClass);
+
+    void fireDriver(Driver driver);
 }

@@ -124,7 +124,8 @@ public class DriversGrid extends CustomComponent{
                 DriverStatusEnum.getStatusValue(DriverStatusList.OFF_DUTY),
                 DriverStatusEnum.getStatusValue(DriverStatusList.FREE),
                 DriverStatusEnum.getStatusValue(DriverStatusList.ON_CALL),
-                DriverStatusEnum.getStatusValue(DriverStatusList.PERFORMING_ORDER));
+                DriverStatusEnum.getStatusValue(DriverStatusList.PERFORMING_ORDER),
+                DriverStatusEnum.getStatusValue(DriverStatusList.DISMISSED));
         statusSelect.setItems(statusList);
 
         statusSelect.setEmptySelectionAllowed(false);
@@ -149,6 +150,9 @@ public class DriversGrid extends CustomComponent{
                     case "Performing order":
                         driversGrid.setItems(driverService.getDriversByStatusId(DriverStatusList.PERFORMING_ORDER));
                         break;
+                    case "Dismissed":
+                        driversGrid.setItems(driverService.getDriversByStatusId(DriverStatusList.DISMISSED));
+                        break;
                 }
             }
         });
@@ -158,7 +162,6 @@ public class DriversGrid extends CustomComponent{
         driversGrid = new Grid<>();
         driversGrid.setSizeFull();
         driversGrid.setHeightByRows(8.8);
-
 
         driversGrid.setStyleName(ValoTheme.TABLE_SMALL);
         driversGrid.setItems(driverService.getActiveDrivers());

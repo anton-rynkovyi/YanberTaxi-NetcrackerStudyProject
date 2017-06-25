@@ -8,7 +8,10 @@ import com.netcracker.project.study.model.admin.AdminAttr;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverAttr;
+import com.netcracker.project.study.model.driver.DriverStatusEnum;
+import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.car.Car;
+import com.netcracker.project.study.model.driver.status.DriverStatus;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.persistence.manager.impl.PersistenceManager;
@@ -37,6 +40,13 @@ public class Main {
         DriverService driverService = ctx.getBean(DriverServiceImpl.class);
         OrderService orderService = ctx.getBean(OrderServiceImpl.class);
         PersistenceManager manager = ctx.getBean(PersistenceManager.class);
+
+
+        Driver driver = facade.getOne(BigInteger.valueOf(6), Driver.class);
+        System.out.println(driver);
+
+    /*    Driver driver = userDetailsService.findDriverByUserName("(666)666-66-66");
+        System.out.println(driver.getStatus());*/
 
 
 

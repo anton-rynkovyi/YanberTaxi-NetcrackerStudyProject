@@ -108,7 +108,6 @@ public class DriverServiceImpl implements DriverService {
         return driverBanList;
     }
 
-
     @Override
     @Transactional
     public void changeStatus(BigInteger status, Driver driver) {

@@ -28,6 +28,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.vaadin.addons.ToastType;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 
@@ -178,6 +179,12 @@ public class AuthorizationPage extends UI {
                     }
                     if (driver.getStatus() == DriverStatusList.APPROVAL) {
                         toastr.toast(ToastBuilder.info("You are not recruited yet. Watch your email address.").build());
+                        return;
+                    }
+                    System.out.println(driver.getStatus());
+                    if (driver.getStatus() == DriverStatusList.DISMISSED) {
+                        toastr.toast(ToastBuilder.of(ToastType.Info,
+                                "You are dismissed.\nContacts:\nyanbertaxi.netcracker@gmail.com").build());
                         return;
                     }
                     getPage().setLocation("/driver");

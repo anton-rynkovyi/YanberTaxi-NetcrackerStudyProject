@@ -87,7 +87,7 @@ public class DriverRegistration extends Window {
 
         VerticalLayout verticalLayout1 = new VerticalLayout();
         lastName = new TextField("Last name");
-        firstName = new TextField("Last name");
+        firstName = new TextField("First name");
         middleName = new TextField("Middle name");
         exp = new TextField("Experience");
         Button next = new Button("Next", VaadinIcons.ARROW_CIRCLE_RIGHT);

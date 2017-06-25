@@ -125,15 +125,14 @@ public class DriverInfoPopUP extends VerticalLayout {
 
         Button btnFire = new Button("Fire");
         btnFire.addClickListener(clickEvent -> {
-            adminService.deleteModel(driver);
             String firstName = driver.getFirstName();
             String lastName = driver.getLastName();
             MessageBox
                     .createQuestion()
-                    .withCaption("Delete")
+                    .withCaption("Dismissal")
                     .withMessage("Are you want to fire " + firstName + " " + lastName + "?")
                     .withYesButton(() -> {
-                        adminService.deleteModel(driver);
+                        adminService.fireDriver(driver);
                         driversGrid.refreshGrid();
                     })
                     .withNoButton(() -> {})

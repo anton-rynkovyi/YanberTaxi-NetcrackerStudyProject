@@ -207,6 +207,7 @@ public class ConverterFactory implements Converter {
                 Reference referenceAnnotation = field.getAnnotation(Reference.class);
                 Object fieldValue = refMap.get(BigInteger.valueOf(referenceAnnotation.attrId()));
                 setValue(field, model, fieldValue);
+                System.out.println(fieldValue);
             }
         }
         return model;

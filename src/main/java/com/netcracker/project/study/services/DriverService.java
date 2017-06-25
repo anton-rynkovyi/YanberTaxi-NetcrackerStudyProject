@@ -27,5 +27,4 @@ public interface DriverService {
 
     void changeStatus(BigInteger status, BigInteger driverId);
 
-
 }

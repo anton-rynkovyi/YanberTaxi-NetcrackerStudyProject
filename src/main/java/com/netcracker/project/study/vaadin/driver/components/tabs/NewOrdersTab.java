@@ -3,9 +3,12 @@ package com.netcracker.project.study.vaadin.driver.components.tabs;
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusList;
+import com.netcracker.project.study.model.driver.status.DriverStatus;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.model.order.status.OrderStatus;
+import com.netcracker.project.study.model.user.User;
+import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 
@@ -17,8 +20,13 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.vaadin.addons.Toastr;
+import org.vaadin.addons.builder.ToastBuilder;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +39,11 @@ public class NewOrdersTab extends CustomComponent {
 
     @Autowired
     private DriverService driverService;
+
+    @Autowired
+    UserFacade userFacade;
+
+    private Toastr toastr;
 
     private OrdersViewForDrivers view;
 
@@ -61,6 +74,7 @@ public class NewOrdersTab extends CustomComponent {
     public void init() {
         initRootLayout();
 
+        toastr = new Toastr();
         routePanel = new Panel();
         startEndPointsLayout = new HorizontalLayout();
         routePanel.setContent(startEndPointsLayout);
@@ -128,6 +142,10 @@ public class NewOrdersTab extends CustomComponent {
         }
 
         button.addClickListener(clickEvent -> {
+            if (!isCanWork(driver)) {
+                logout();
+                return;
+            }
             if(driver.getStatus().equals(DriverStatusList.FREE)){
                 button.setCaption("Start working");
                 driverService.changeStatus(DriverStatusList.OFF_DUTY,driver.getObjectId());
@@ -386,6 +404,10 @@ public class NewOrdersTab extends CustomComponent {
             acceptOrderButton.setEnabled(false);
         }
         acceptOrderButton.addClickListener(event -> {
+            if (!isCanWork(driver)) {
+                logout();
+                return;
+            }
             if (!ordersGrid.asSingleSelect().isEmpty()) {
                 List<Order>currentOrder = orderService.getCurrentOrderByDriverId(driver.getObjectId());
                 if(currentOrder.size() == 0){
@@ -466,6 +488,27 @@ public class NewOrdersTab extends CustomComponent {
         verticalLayout.addComponent(ordersGrid);
 
         return verticalLayout;
+    }
+
+
+    private boolean isCanWork(Driver driver) {
+        if (driver.getStatus().compareTo(DriverStatusList.DISMISSED) == 0) {
+           return false;
+        }
+        User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
+        if (!user.isEnabled()) {
+            toastr.toast(ToastBuilder.warning("You have been banned. Unban date: " +
+                    new Timestamp(driver.getUnbanDate().getTime())).build());
+            UI.getCurrent().setContent(toastr);
+            return false;
+        }
+        return true;
+    }
+
+    private void logout() {
+        SecurityContextHolder.clearContext();
+        getUI().getSession().close();
+        getUI().getPage().setLocation("/authorization");
     }
 
     public void setView(OrdersViewForDrivers view) {

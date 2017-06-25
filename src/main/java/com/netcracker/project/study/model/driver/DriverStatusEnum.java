@@ -9,7 +9,8 @@ public enum DriverStatusEnum {
     OFF_DUTY(DriverStatusList.OFF_DUTY, "Off duty"),
     FREE(DriverStatusList.FREE, "Free"),
     ON_CALL(DriverStatusList.ON_CALL, "On call"),
-    PERFORMING_ORDER(DriverStatusList.PERFORMING_ORDER, "Performing order");
+    PERFORMING_ORDER(DriverStatusList.PERFORMING_ORDER, "Performing order"),
+    DISMISSED(DriverStatusList.DISMISSED, "Dismissed");
 
     private BigInteger statusId;
     private String statusValue;
@@ -40,6 +41,7 @@ public enum DriverStatusEnum {
         statusList.add("Free");
         statusList.add("On call");
         statusList.add("Performing order");
+        statusList.add("Dismissed");
         return statusList;
     }
 }

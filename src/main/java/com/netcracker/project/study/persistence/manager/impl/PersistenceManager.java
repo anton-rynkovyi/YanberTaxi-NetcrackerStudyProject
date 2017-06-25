@@ -168,6 +168,7 @@ public class PersistenceManager implements Manager {
             } else if (row.get("list_value_id") != null) {
                 value = String.valueOf(row.get("list_value_id"));
             }
+            System.out.println(value);
             attributes.put(attrId, value);
         }
         return attributes;
@@ -180,6 +181,7 @@ public class PersistenceManager implements Manager {
             BigInteger value = null;
             if (row.get("reference") != null) {
                 value = new BigInteger(row.get("reference")+"");
+                System.out.println(value);
             }
 
             reference.put(attrId, value);

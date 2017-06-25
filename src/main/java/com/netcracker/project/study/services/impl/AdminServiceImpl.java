@@ -149,4 +149,10 @@ public class AdminServiceImpl implements AdminService {
         driver.setUnbanDate(null);
         persistenceFacade.update(driver);
     }
+
+    @Override
+    public void fireDriver(Driver driver) {
+        driver.setStatus(DriverStatusList.DISMISSED);
+        persistenceFacade.update(driver);
+    }
 }

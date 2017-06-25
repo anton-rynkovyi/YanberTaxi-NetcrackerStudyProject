@@ -14,4 +14,6 @@ public interface DriverStatusList {
 
     BigInteger PERFORMING_ORDER = BigInteger.valueOf(5);
 
+    BigInteger DISMISSED = BigInteger.valueOf(0);
+
 }

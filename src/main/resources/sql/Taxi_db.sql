@@ -65,18 +65,20 @@ INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) VALUE
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) VALUES (40,8,NULL,NULL,'Email');
 
 
-
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,0,'dismissed');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,1,'approval');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,2,'off duty');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,3,'free');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,4,'on call');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (9,5,'performing order');
 
+INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,0,'dismissed');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,1,'approval');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,2,'off dut');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,3,'free');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,4,'on call');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (34,5,'perform order');
+
 
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,6,'new');
 INSERT INTO LISTS (attr_id,list_value_id,value) VALUES (18,7,'accepted');
@@ -122,7 +124,7 @@ end;
 INSERT INTO OBJECTS (OBJECT_ID,PARENT_ID,OBJECT_TYPE_ID,NAME,DESCRIPTION) VALUES (NULL,NULL,8,'Admin',NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (39,ob_id.currval,'(063)611-67-90',NULL,NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (40,ob_id.currval,'yanbertaxi@gmail.com',NULL,NULL);
-INSERT INTO USERS VALUES (null,ob_id.currval,'(063)611-67-90','$2a$10$/kJykCLsIGPauDIcpQWgLurA7w8KNQYIoI4VKyXzR2R88MFnTqe4K','ROLE_ADMIN',1);
+INSERT INTO USERS VALUES (null,ob_id.currval,'(063)611-67-90','$2a$10$/kJykCLsIGPauDIcpQWgLurA7w8KNQYIoI4VKyXzR2R88MFnTqe4K','ROLE_ADMIN', 1);
 
 INSERT INTO OBJECTS (OBJECT_ID,PARENT_ID,OBJECT_TYPE_ID,NAME,DESCRIPTION) VALUES (NULL,NULL,8,'Admin',NULL);
 INSERT INTO ATTRIBUTES(ATTR_ID,OBJECT_ID,VALUE,DATE_VALUE,list_value_id) VALUES (39,ob_id.currval,'(068)067-68-53',NULL,NULL);
