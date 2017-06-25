@@ -176,6 +176,12 @@ public class OrderServiceImpl implements OrderService {
         return getOrdersInfo(getOrdersByDriverId(driverId,orderStatusId));
     }
 
+    @Override
+    public void setCommentAboutDriver(Order order, String comment) {
+        order.setDriverMemo(comment);
+        persistenceFacade.update(order);
+    }
+
 
     @Override
     public List<Order> getOrdersByClientId(BigInteger clientId) {

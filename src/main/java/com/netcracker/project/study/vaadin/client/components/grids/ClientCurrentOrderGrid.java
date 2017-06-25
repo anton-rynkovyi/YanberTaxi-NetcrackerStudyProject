@@ -53,22 +53,10 @@ public class ClientCurrentOrderGrid extends CustomComponent {
             driverName.setIcon(VaadinIcons.MALE);
             Label status = new Label("<b>Status: </b>" + OrderStatusEnum.getStatusValue(currentOrder.getStatus()), ContentMode.HTML);
 
-            HorizontalLayout numAndStatus = new HorizontalLayout();
-            numAndStatus.addComponents(number, status);
-
-            VerticalLayout driverAndNumStat = new VerticalLayout();
-            driverAndNumStat.addComponents(numAndStatus, driverName);
-            driverAndNumStat.setComponentAlignment(numAndStatus, Alignment.TOP_CENTER);
-            driverAndNumStat.setComponentAlignment(driverName, Alignment.TOP_CENTER);
-            driverAndNumStat.setMargin(margin);
-
-            Label[] routes = getRoutes(currentOrder.getObjectId());
-
-            VerticalLayout allRoutes = getLayoutWithRoutes(routes);
-            allRoutes.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+            VerticalLayout allRoutes = getLayoutWithRoutes(getRoutes(currentOrder.getObjectId()), number, status, driverName);
             allRoutes.setMargin(margin);
 
-            currentOrderLayout.addComponents(driverAndNumStat, allRoutes);
+            currentOrderLayout.addComponents(allRoutes);
             currentOrderLayout.setMargin(false);
         } else {
             Label message = new Label("<b>You have no active order </b>", ContentMode.HTML);
@@ -98,30 +86,13 @@ public class ClientCurrentOrderGrid extends CustomComponent {
         return routesLables;
     }
 
-    private VerticalLayout getLayoutWithRoutes(Label[] routes) {
+    private VerticalLayout getLayoutWithRoutes(Label[] routes, Label...labels) {
         VerticalLayout layoutWithRoutes = new VerticalLayout();
-        int numOfRoutes = routes.length;
-        if ((numOfRoutes % 2) == 0) {
-            HorizontalLayout[] splitPanels = new HorizontalLayout[numOfRoutes/2];
-            for (int i = 0, j = 0; i < splitPanels.length; i++, j += 2) {
-                splitPanels[i] = new HorizontalLayout();
-                splitPanels[i].setSizeFull();
-                splitPanels[i].addComponents(routes[j], routes[j+1]);
-                layoutWithRoutes.addComponent(splitPanels[i]);
-                layoutWithRoutes.setComponentAlignment(splitPanels[i], Alignment.TOP_CENTER);
-            }
-        } else if ((numOfRoutes % 2) == 1) {
-            HorizontalLayout[] splitPanels = new HorizontalLayout[numOfRoutes/2];
-            for (int i = 0, j = 0; i < splitPanels.length; i++, j += 2) {
-                splitPanels[i] = new HorizontalLayout();
-                splitPanels[i].addComponents(routes[j], routes[j+1]);
-                layoutWithRoutes.addComponent(splitPanels[i]);
-                layoutWithRoutes.setComponentAlignment(splitPanels[i], Alignment.TOP_CENTER);
-            }
-            HorizontalLayout panel = new HorizontalLayout();
-            panel.addComponent(routes[numOfRoutes-1]);
-            layoutWithRoutes.addComponent(panel);
-            layoutWithRoutes.setComponentAlignment(panel, Alignment.TOP_CENTER);
+        for (Label label : labels) {
+            layoutWithRoutes.addComponent(label);
+        }
+        for (Label route : routes) {
+            layoutWithRoutes.addComponent(route);
         }
         return layoutWithRoutes;
     }

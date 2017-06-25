@@ -2,29 +2,21 @@ package com.netcracker.project.study.vaadin.client.components;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
-import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientOrdersGrid;
-import com.netcracker.project.study.vaadin.client.views.ClientView;
-import com.vaadin.data.HasValue;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.addons.*;
 import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
 
 import javax.annotation.PostConstruct;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Collection;
 
 @ViewScope
 @SpringComponent
@@ -105,6 +97,8 @@ public class OrderMaker extends CustomComponent {
 
     public void closeOrderMakerWindow(Window orderMakerWindow) {this.orderMakerWindow = orderMakerWindow;}
 
+    public void showSuccesToaster(Toastr toastr) {this.toastr = toastr;}
+
     private HorizontalLayout getOrderForm() {
         HorizontalLayout root = new HorizontalLayout();
 
@@ -120,6 +114,7 @@ public class OrderMaker extends CustomComponent {
         fieldsLayout.addComponents(fields[0], fields[4]);
 
         Button btnAddTextField = new Button("Add address", VaadinIcons.PLUS);
+        btnAddTextField.setWidth(170, Unit.PIXELS);
         btnAddTextField.setDescription("Please enter the starting point and destination.\n" +
                 "If you want to add interjacent point - push this button");
         Button.ClickListener fieldCounter = new TextFieldCounter();
@@ -127,6 +122,7 @@ public class OrderMaker extends CustomComponent {
         btnAddTextField.addStyleName(MaterialTheme.BUTTON_FRIENDLY);
 
         Button btnDeleteTextField = new Button("Delete address", VaadinIcons.MINUS);
+        btnDeleteTextField.setWidth(170, Unit.PIXELS);
         btnDeleteTextField.setDescription("If you want to delete last interjacent point - push this button");
         Button.ClickListener fieldDeleter = new TextFieldDeleter();
         btnDeleteTextField.addClickListener(fieldDeleter);
@@ -243,6 +239,15 @@ public class OrderMaker extends CustomComponent {
                 } else {
                     clientService.makeOrder(client.getObjectId(), textFieldsStrings);
 
+                    Toast orderMakerToast = ToastBuilder.of(ToastType.Success, "Your order was created successfully</b> ")
+                            .caption("Succes")
+                            .options(ToastOptionsBuilder.having()
+                                    .preventDuplicates(true)
+                                    .position(ToastPosition.Top_Right)
+                                    .build())
+                            .build();
+                    toastr.toast(orderMakerToast);
+
                     for (int i = 0; i < fields.length; i++) {
                         if (fields[i] != null) fields[i].clear();
                     }
@@ -252,15 +257,6 @@ public class OrderMaker extends CustomComponent {
 
                     clientOrdersGrid.init();
                     clientCurrentOrderGrid.init();
-
-                    Toast orderMakerToast = ToastBuilder.of(ToastType.Success, "Your order was created successfully</b> ")
-                            .caption("Succes")
-                            .options(ToastOptionsBuilder.having()
-                                    .preventDuplicates(true)
-                                    .position(ToastPosition.Top_Right)
-                                    .build())
-                            .build();
-                    toastr.toast(orderMakerToast);
                 }
             } else {
                 Toast setAllFieldsToast = ToastBuilder.of(ToastType.Warning, "<b>You haven't fill all information.\nPlease set all fields</b> ")
