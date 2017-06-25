@@ -6,6 +6,8 @@ import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
+import com.netcracker.project.study.model.driver.car.Car;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.driver.components.popup.DriverUpdate;
@@ -52,6 +54,9 @@ public class DriverPage extends UI{
 
     Driver driver;
 
+    @Autowired
+    DriverService driverService;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         getCurrentDriver();
@@ -67,57 +72,34 @@ public class DriverPage extends UI{
         panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         panelCaption.setStyleName(MaterialTheme.LAYOUT_CARD);
         panelCaption.setMargin(new MarginInfo(false, true, false, true));
-        // panelCaption.addStyleName("v-panel-caption");
+        panelCaption.setSpacing(true);
         panelCaption.setWidth("100%");
-        // panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
-        Label label1 = new Label("<h3>YanberTaxi</h3>", ContentMode.HTML);
-        panelCaption.addComponent(label1);
-        panelCaption.setComponentAlignment(label1, Alignment.MIDDLE_LEFT);
-        panelCaption.setExpandRatio(label1, 0.1f);
 
-        Driver driver = userDetailsService.getCurrentUser();
-        String driverName = driver.getFirstName() + " " + driver.getLastName();
-        Label label2 = new Label( "Hello, " + driverName);
-        panelCaption.addComponent(label2);
+        HorizontalLayout yanberLabel = getYanberLabel();
+        panelCaption.addComponent(yanberLabel);
+        panelCaption.setComponentAlignment(yanberLabel, Alignment.TOP_LEFT);
+        panelCaption.setExpandRatio(yanberLabel, 0.1f);
 
-        Button action = new Button();
-        action.setIcon(FontAwesome.PENCIL);
-        action.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        action.addStyleName(ValoTheme.BUTTON_SMALL);
-        action.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        action.addClickListener(clock -> {
-            DriverWindow.init();
-            getUI().addWindow(DriverWindow);
-        });
-        panelCaption.addComponent(action);
-        Button action1 = new Button("LogOut");
-        action1.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        action1.addStyleName(ValoTheme.BUTTON_SMALL);
-        action1.addClickListener(clickEvent -> {
-            SecurityContextHolder.clearContext();
-            getUI().getSession().close();
-            getUI().getPage().setLocation("/authorization");
-        });
-        panelCaption.addComponent(action1);
+
+        HorizontalLayout driverNameLayout = getDriverNameLayout();
+        panelCaption.addComponent(driverNameLayout);
+
+        HorizontalLayout ratingLayout = getDriverRatingLayout();
+        panelCaption.addComponent(ratingLayout);
+
+        HorizontalLayout driverStausLayout = getDriverStatus();
+        panelCaption.addComponent(driverStausLayout);
+        panelCaption.setComponentAlignment(driverStausLayout,Alignment.TOP_LEFT);
+
+
+       HorizontalLayout editButtonLayout = getEditButtonLayout();
+        panelCaption.addComponent(editButtonLayout);
+        panelCaption.setComponentAlignment(editButtonLayout,Alignment.TOP_RIGHT);
+
+        HorizontalLayout logOutButtonLayout = getLogOutButton();
+        panelCaption.addComponent(logOutButtonLayout);
+        panelCaption.setComponentAlignment(logOutButtonLayout,Alignment.TOP_RIGHT);
         rootLayout.addComponent(panelCaption);
-
-
-        HorizontalLayout infoPanel = getDriverStatus();
-        infoPanel.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        infoPanel.setStyleName(ValoTheme.PANEL_BORDERLESS);
-        infoPanel.setMargin(new MarginInfo(false, true, false, true));
-        infoPanel.setWidth("100%");
-
-        HorizontalLayout statusLayout = new HorizontalLayout();
-        infoPanel.addComponent(statusLayout);
-        infoPanel.setComponentAlignment(statusLayout,Alignment.TOP_LEFT);
-        infoPanel.setExpandRatio(statusLayout,1f);
-
-
-        HorizontalLayout stars = getDriverRating();
-        infoPanel.addComponent(stars);
-
-        rootLayout.addComponent(infoPanel);
 
 
         viewDisplay = new Panel();
@@ -142,17 +124,87 @@ public class DriverPage extends UI{
 
     }
 
+
+    private HorizontalLayout getYanberLabel(){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        Label yanberLabel = new Label("YanberTaxi", ContentMode.HTML);
+
+        horizontalLayout.addComponents(yanberLabel);
+
+        return horizontalLayout;
+
+    }
+    private HorizontalLayout getEditButtonLayout(){
+        Button editButton = new Button();
+        editButton.setIcon(VaadinIcons.PENCIL);
+        editButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        editButton.addStyleName(ValoTheme.BUTTON_SMALL);
+        editButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        editButton.addClickListener(clock -> {
+            DriverWindow.init();
+            getUI().addWindow(DriverWindow);
+        });
+
+        Label separatorLabel = new Label();
+        separatorLabel.setIcon(VaadinIcons.LINE_V);
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.addComponents(editButton);
+
+        HorizontalLayout separator = getSeparator();
+        horizontalLayout.addComponent(separator);
+        return  horizontalLayout;
+    }
+
+
+    private HorizontalLayout getLogOutButton(){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+
+        Button logOutButton = new Button("LogOut");
+        logOutButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        logOutButton.addStyleName(ValoTheme.BUTTON_SMALL);
+        logOutButton.addClickListener(clickEvent -> {
+            SecurityContextHolder.clearContext();
+            getUI().getSession().close();
+            getUI().getPage().setLocation("/authorization");
+        });
+
+        logOutButton.setIcon(VaadinIcons.EXIT);
+
+        horizontalLayout.addComponents(logOutButton);
+
+        return horizontalLayout;
+    }
+    private HorizontalLayout getDriverNameLayout(){
+        Driver driver = userDetailsService.getCurrentUser();
+        String driverName = driver.getFirstName() + " " + driver.getLastName();
+
+        Label helloLabel = new Label( "Hello, " + driverName,ContentMode.HTML);
+        Label iconUser = new Label();
+        iconUser.setIcon(VaadinIcons.USER);
+        Label separatorLabel = new Label();
+        separatorLabel.setIcon(VaadinIcons.LINE_V);
+
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+
+        HorizontalLayout separator = getSeparator();
+
+        horizontalLayout.addComponents(iconUser,helloLabel,separator);
+        return horizontalLayout;
+    }
     private void getCurrentDriver(){
         driver = userDetailsService.getCurrentUser();
     }
 
-    private HorizontalLayout getDriverRating(){
+    private HorizontalLayout getDriverRatingLayout(){
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         int total = 5;
         int rating = driver.getRating().intValue();
 
         Label ratingHeader = new Label("Rating: ",ContentMode.HTML);
-        horizontalLayout.addComponent(ratingHeader);
+        Label emptyLabel = new Label();
+        Label separatorlabel = new Label();
+        separatorlabel.setIcon(VaadinIcons.LINE_V);
+        horizontalLayout.addComponents(ratingHeader);
 
         for(int i = 0;i < rating; i++){
             Label star = new Label();
@@ -167,6 +219,9 @@ public class DriverPage extends UI{
             star.setIcon(VaadinIcons.STAR_O);
             horizontalLayout.addComponent(star);
         }
+
+        HorizontalLayout separator = getSeparator();
+        horizontalLayout.addComponents(separator);
         return horizontalLayout;
     }
 
@@ -181,6 +236,21 @@ public class DriverPage extends UI{
 
         Label status = new Label(DriverStatusEnum.getStatusValue(driver.getStatus()));
         horizontalLayout.addComponent(status);
+
+        HorizontalLayout separator = getSeparator();
+        horizontalLayout.addComponent(separator);
+        return horizontalLayout;
+    }
+
+    private HorizontalLayout getSeparator(){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+
+        Label emptyLabel = new Label();
+        Label separator = new Label();
+        separator.setIcon(VaadinIcons.LINE_V);
+
+        horizontalLayout.addComponents(emptyLabel,separator,emptyLabel);
+
         return horizontalLayout;
     }
 
