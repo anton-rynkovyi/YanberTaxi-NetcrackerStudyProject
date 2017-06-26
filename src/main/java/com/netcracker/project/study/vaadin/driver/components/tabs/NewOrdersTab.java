@@ -334,6 +334,7 @@ public class NewOrdersTab extends CustomComponent {
 
                     orderService.setDistance(currentOrder.getObjectId(),distance);
                     orderService.changeStatus(OrderStatus.PERFORMED, currentOrder.getObjectId());
+                    orderService.setClientPoints(currentOrder.getObjectId());
                     driverService.changeStatus(DriverStatusList.FREE, driver.getObjectId());
                     orderService.calcPrice(BigInteger.valueOf(distance),currentOrder.getObjectId());
 

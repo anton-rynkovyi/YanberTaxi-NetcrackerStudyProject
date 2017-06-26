@@ -266,4 +266,11 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orderList = persistenceFacade.getSome(query, Order.class);
         return orderList;
     }
+
+    public void setClientPoints(BigInteger orderId) {
+        Order order = persistenceFacade.getOne(orderId, Order.class);
+        Client client = order.getClientOnOrder();
+        client.setPoints(client.getPoints().add(order.getDistance()));
+        persistenceFacade.update(client);
+    }
 }
