@@ -9,6 +9,7 @@ import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
+import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.driver.components.popup.DriverUpdate;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
@@ -46,6 +47,9 @@ public class DriverPage extends UI{
     static private Navigator navigator;
 
     private VerticalLayout rootLayout;
+
+    @Autowired
+    Copyright bottomTeamLogo;
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -109,6 +113,7 @@ public class DriverPage extends UI{
         viewDisplay.setSizeFull();
 
         rootLayout.addComponent(viewDisplay);
+        rootLayout.addComponent(bottomTeamLogo);
         rootLayout.setExpandRatio(viewDisplay, 1.0f);
 
         navigator = new Navigator(this, viewDisplay);
