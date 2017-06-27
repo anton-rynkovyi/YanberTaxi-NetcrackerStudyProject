@@ -19,9 +19,6 @@ public class ClientsView extends VerticalLayout implements View {
     @Autowired
     private ClientsGrid clientsGrid;
 
-    @Autowired
-    Copyright bottomTeamLogoLink;
-
     /*@Autowired
     EventBus.UIEventBus eventBus;*/
 
@@ -31,7 +28,6 @@ public class ClientsView extends VerticalLayout implements View {
         tabSheet.addStyleName(ValoTheme.TABSHEET_FRAMED);
         tabSheet.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
         addComponent(tabSheet);
-        addComponent(bottomTeamLogoLink);
     }
 
     private TabSheet getTabSheet() {

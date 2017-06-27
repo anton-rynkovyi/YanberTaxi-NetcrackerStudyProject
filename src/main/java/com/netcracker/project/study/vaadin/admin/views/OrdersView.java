@@ -21,16 +21,12 @@ public class OrdersView extends VerticalLayout implements View {
     @Autowired
     private OrdersGrid ordersGrid;
 
-    @Autowired
-    Copyright bottomTeamLogoLink;
-
     void init() {
         TabSheet tabSheet = getTabSheet();
         tabSheet.setSizeFull();
         tabSheet.addStyleName(ValoTheme.TABSHEET_FRAMED);
         tabSheet.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
         addComponent(tabSheet);
-        addComponent(bottomTeamLogoLink);
     }
 
     private TabSheet getTabSheet() {

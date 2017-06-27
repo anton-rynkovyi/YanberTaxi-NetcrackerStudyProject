@@ -24,9 +24,6 @@ public class DriversView extends VerticalLayout implements View {
 
     @Autowired DriversBanGrid driversBanGrid;
 
-    @Autowired
-    Copyright bottomTeamLogoLink;
-
     TabSheet tabSheet;
 
     void init() {
@@ -36,7 +33,6 @@ public class DriversView extends VerticalLayout implements View {
         tabSheet.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
         setTabs();
         addComponent(tabSheet);
-        addComponent(bottomTeamLogoLink);
     }
 
     public void setTabs() {

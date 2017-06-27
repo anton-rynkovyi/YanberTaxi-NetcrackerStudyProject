@@ -1,6 +1,7 @@
 package com.netcracker.project.study.vaadin.admin.page;
 
 import com.github.appreciated.material.MaterialTheme;
+import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.admin.components.menu.HeaderMenu;
 import com.netcracker.project.study.vaadin.admin.components.popup.AdminUpdate;
 import com.netcracker.project.study.vaadin.admin.views.ClientsView;
@@ -33,6 +34,9 @@ public class AdminPage extends UI {
     @Autowired
     SpringViewProvider provider;
 
+    @Autowired
+    Copyright bottomTeamLogo;
+
     private Panel viewDisplay;
 
     private static Navigator navigator;
@@ -43,6 +47,8 @@ public class AdminPage extends UI {
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         VerticalLayout rootLayout = getVerticalLayout();
+        rootLayout.setMargin(false);
+        rootLayout.setSpacing(false);
         rootLayout.setHeight(100, Unit.PERCENTAGE);
         setContent(rootLayout);
 
@@ -85,9 +91,8 @@ public class AdminPage extends UI {
 
         viewDisplay = getViewDisplay();
         rootLayout.addComponent(viewDisplay);
+        rootLayout.addComponent(bottomTeamLogo);
         rootLayout.setExpandRatio(viewDisplay, 0.8f);
-
-        //rootLayout.addComponent(bottomTeamLogoLink);
 
 
         navigator = new Navigator(this, viewDisplay);
