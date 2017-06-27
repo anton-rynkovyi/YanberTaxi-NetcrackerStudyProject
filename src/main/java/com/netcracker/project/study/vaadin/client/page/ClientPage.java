@@ -90,15 +90,16 @@ public class ClientPage extends UI {
             getUI().addWindow(ClientWindow);
         });
         panelCaption.addComponent(action);
-        Button action1 = new Button("LogOut");
-        action1.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        action1.addStyleName(ValoTheme.BUTTON_SMALL);
-        action1.addClickListener(clickEvent -> {
+        Button logOutButton = new Button("LogOut");
+        logOutButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        logOutButton.addStyleName(ValoTheme.BUTTON_SMALL);
+        logOutButton.addClickListener(clickEvent -> {
             SecurityContextHolder.clearContext();
             getUI().getSession().close();
             getUI().getPage().setLocation("/authorization");
         });
-        panelCaption.addComponent(action1);
+        logOutButton.setIcon(VaadinIcons.EXIT);
+        panelCaption.addComponent(logOutButton);
 
         rootLayout.addComponent(panelCaption);
 

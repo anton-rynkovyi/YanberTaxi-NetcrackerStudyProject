@@ -9,6 +9,7 @@ import com.netcracker.project.study.vaadin.admin.views.DriversView;
 import com.netcracker.project.study.vaadin.admin.views.OrdersView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
@@ -77,15 +78,16 @@ public class AdminPage extends UI {
             getUI().addWindow(AdminWindow);
         });
         panelCaption.addComponent(action);
-        Button action1 = new Button("LogOut");
-        action1.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        action1.addStyleName(ValoTheme.BUTTON_SMALL);
-        action1.addClickListener(clickEvent -> {
+        Button logOutButton = new Button("LogOut");
+        logOutButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        logOutButton.addStyleName(ValoTheme.BUTTON_SMALL);
+        logOutButton.addClickListener(clickEvent -> {
             SecurityContextHolder.clearContext();
             getUI().getSession().close();
             getUI().getPage().setLocation("/authorization");
         });
-        panelCaption.addComponent(action1);
+        logOutButton.setIcon(VaadinIcons.EXIT);
+        panelCaption.addComponent(logOutButton);
         rootLayout.addComponent(panelCaption);
         rootLayout.addComponent(headerMenu);
 
