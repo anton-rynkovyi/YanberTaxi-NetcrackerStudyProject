@@ -13,6 +13,7 @@ import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 
+import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 import com.vaadin.icons.VaadinIcons;
@@ -50,6 +51,9 @@ public class NewOrdersTab extends CustomComponent {
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    private org.vaadin.spring.events.EventBus.UIEventBus uiEventBus;
 
     private Toastr toastr;
 
@@ -343,6 +347,8 @@ public class NewOrdersTab extends CustomComponent {
                     window.close();
                     refreshContent();
                     refreshGoHomeButton();
+                    /*оповестить слушателей*/
+                    uiEventBus.publish(this, new RefreshClientViewEvent(this, "Usage details updated"));
 
                 }catch(NumberFormatException e){
                     errorLabel.setCaption("Incorrect data. Only digits are admissible");

@@ -4,6 +4,7 @@ import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
+import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.client.views.ClientView;
 import com.vaadin.annotations.Theme;
@@ -20,7 +21,10 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.vaadin.spring.events.EventBus;
+import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
@@ -40,6 +44,10 @@ public class ClientPage extends UI {
 
     @Autowired
     Copyright bottomTeamLogo;
+
+    @Autowired
+    private EventBus.UIEventBus uiEventBus;
+
 
     private Client client;
 
@@ -106,6 +114,19 @@ public class ClientPage extends UI {
         navigator = new Navigator(this, viewDisplay);
         navigator.addProvider(provider);
         navigator.navigateTo(ClientView.VIEW_NAME);
+
+
+    }
+
+    @PostConstruct
+    public void afterPropertiesSet() {
+        uiEventBus.subscribe(this,false);
+    }
+
+    @EventBusListenerMethod
+    public void closeSymmUsageWindow(RefreshClientViewEvent event) {
+        System.out.println("Yeah! Your event bus work");
+        //blah
     }
 
     private VerticalLayout getVerticalLayout() {

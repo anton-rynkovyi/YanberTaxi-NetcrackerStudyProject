@@ -36,6 +36,8 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     @Autowired
     private OrderInfoPopUp orderInfoPopUp;
 
+
+
     private Driver driver;
     private TabSheet tabSheet;
     private VerticalLayout rootLayout;
