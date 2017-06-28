@@ -19,6 +19,7 @@ import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.event.UIEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
@@ -81,10 +82,13 @@ public class DriverPage extends UI {
     private Toastr toastr;
 
     @Autowired
-    UserFacade userFacade;
+    private UserFacade userFacade;
 
     @Autowired
-    AdminService adminService;
+    private AdminService adminService;
+
+    //10 seconds
+    private final int timerInterval = 10000;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -146,15 +150,13 @@ public class DriverPage extends UI {
         navigator.addProvider(provider);
         navigator.navigateTo(OrdersViewForDrivers.VIEW_NAME);
 
-        //OrdersViewForDrivers view = (OrdersViewForDrivers)navigator.getCurrentView();
-
-        /*setPollInterval(1000);
+        setPollInterval(timerInterval);
         addPollListener(new UIEvents.PollListener() {
             @Override
             public void poll(UIEvents.PollEvent event) {
-                view.Refresh();
+                ((OrdersViewForDrivers)navigator.getCurrentView()).Refresh();
             }
-        });*/
+        });
 
     }
 

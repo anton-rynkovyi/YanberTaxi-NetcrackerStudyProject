@@ -70,7 +70,13 @@ public class PersistenceFacade implements Facade {
     public List getSome(String sqlQuery, Class modelClass){
         List<PersistenceEntity> entities = manager.getSome(sqlQuery);
         List<Model> models = new ArrayList<>();
-        for (int i = 0; i < entities.size(); i++) {
+        /*for (int i = 0; i < entities.size(); i++) {
+            Model model;
+            model = converter.convertToModel(entities.get(i), modelClass);
+            models.add(model);
+        }*/
+
+        for (int i = entities.size() - 1; i >= 0; i--) {
             Model model;
             model = converter.convertToModel(entities.get(i), modelClass);
             models.add(model);

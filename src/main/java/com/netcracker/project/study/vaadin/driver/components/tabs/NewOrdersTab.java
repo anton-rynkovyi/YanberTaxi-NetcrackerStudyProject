@@ -104,8 +104,7 @@ public class NewOrdersTab extends CustomComponent {
         HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel(ordersHistoryPanel, currentOrderPanel);
 
         HorizontalLayout buttonsLayout = new HorizontalLayout();
-        goHomeButton = getHomeButton();
-        buttonsLayout.addComponents(goHomeButton, acceptOrderButton);
+        buttonsLayout.addComponents(acceptOrderButton);
         buttonsLayout.setSpacing(true);
         verticalLayout.addComponents(horizontalSplitPanel, buttonsLayout);
         verticalLayout.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
@@ -137,57 +136,7 @@ public class NewOrdersTab extends CustomComponent {
 
     }
 
-    private Button getHomeButton() {
-        Button button = new Button("Go home");
 
-        if (driver.getStatus().equals(DriverStatusList.FREE)) {
-            button.setCaption("Go home");
-            button.setEnabled(true);
-        } else if (driver.getStatus().equals(DriverStatusList.OFF_DUTY)) {
-            button.setCaption("Start working");
-            button.setEnabled(true);
-        } else {
-            button.setEnabled(false);
-        }
-
-        button.addClickListener(clickEvent -> {
-            if (isBanned()) {
-                SecurityContextHolder.clearContext();
-                return;
-            }
-            if (isDismissed()) {
-                logout();
-                return;
-            }
-
-            if (driver.getStatus().equals(DriverStatusList.FREE)) {
-                button.setCaption("Start working");
-                driverService.changeStatus(DriverStatusList.OFF_DUTY, driver.getObjectId());
-                acceptOrderButton.setEnabled(false);
-            }
-            if (driver.getStatus().equals(DriverStatusList.OFF_DUTY)) {
-                button.setCaption("Go home");
-                driverService.changeStatus(DriverStatusList.FREE, driver.getObjectId());
-                acceptOrderButton.setEnabled(true);
-            }
-            refreshContent();
-        });
-
-        button.setIcon(VaadinIcons.HOME);
-        return button;
-    }
-
-    private void refreshGoHomeButton() {
-        if (driver.getStatus().equals(DriverStatusList.FREE)) {
-            goHomeButton.setCaption("Go home");
-            goHomeButton.setEnabled(true);
-        } else if (driver.getStatus().equals(DriverStatusList.OFF_DUTY)) {
-            goHomeButton.setCaption("Start working");
-            goHomeButton.setEnabled(true);
-        } else {
-            goHomeButton.setEnabled(false);
-        }
-    }
 
     private HorizontalLayout getOrderInfoLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -313,7 +262,8 @@ public class NewOrdersTab extends CustomComponent {
     public void refreshContent() {
         refreshGrid();
         acceptOrderButton.setEnabled(false);
-        view.Refresh();
+        ((DriverPage)getUI()).refreshUI();
+       // view.Refresh();
         refreshCurrentOrderPanel();
         setButtonsEnabled();
     }
@@ -342,7 +292,7 @@ public class NewOrdersTab extends CustomComponent {
                     currentOrder = null;
                     window.close();
                     refreshContent();
-                    refreshGoHomeButton();
+                    ((DriverPage)getUI()).setStatusButtonEnabled(true);
                     appEventBus.publish(this, new RefreshClientViewEvent(this, "abc"));
 
 
@@ -388,7 +338,7 @@ public class NewOrdersTab extends CustomComponent {
                     driverService.changeStatus(DriverStatusList.PERFORMING_ORDER, driver.getObjectId());
                     window.close();
                     refreshContent();
-                    refreshGoHomeButton();
+                    ((DriverPage)getUI()).setStatusButtonEnabled(false);
                 } catch (NumberFormatException e) {
                     errorLabel.setCaption("Incorrect data. Only digits are admissible");
                 }
@@ -436,8 +386,8 @@ public class NewOrdersTab extends CustomComponent {
                     acceptOrderButton.setEnabled(false);
                     // setStartEndPointsLayoutsEmpty();
                 }
+                ((DriverPage)getUI()).setStatusButtonEnabled(false);
                 refreshContent();
-                refreshGoHomeButton();
 
             }
         });

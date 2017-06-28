@@ -178,6 +178,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         if(allOrdersList != null) {
             refreshOrdersGrid();
         }
+        newOrders.refreshContent();
     }
 
 
