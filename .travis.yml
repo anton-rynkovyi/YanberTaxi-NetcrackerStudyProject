@@ -6,3 +6,6 @@ jdk:
 
 notifications:
     slack: netcracker-group:pnthVRzbYczwYYwB1jNaL5sU
+
+install:
+ - travis_wait
