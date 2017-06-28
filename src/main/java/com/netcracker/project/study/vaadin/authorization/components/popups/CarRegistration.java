@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
+import org.vaadin.spring.events.EventBus;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -37,14 +38,14 @@ public class CarRegistration extends Window {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    Window driverRegWindow;
+    private Window driverBackWindow;
+
+    private Window driverRegWindow;
 
     private Driver driver;
     private String password;
 
-    /*@Autowired
-    DriverRegistration driverRegistration;*/
-    private  VerticalLayout root;
+    private VerticalLayout root;
     private HorizontalLayout carsLayout;
     private Toastr toastr;
     private ArrayList<TextField> names;
@@ -131,7 +132,7 @@ public class CarRegistration extends Window {
         seatsCountsCb.setItems(seats);
         seatsCounts.add(seatsCountsCb);
         childSeats.add(new CheckBox("Child seat"));
-        int lastCar = models.size()-1;
+        int lastCar = models.size() - 1;
         verticalLayout.addComponents(
                 names.get(lastCar), models.get(lastCar),
                 stateNumbers.get(lastCar), prodDates.get(lastCar),
@@ -169,7 +170,7 @@ public class CarRegistration extends Window {
                     car.setMakeOfCar(names.get(i).getValue());
                     car.setModelType(models.get(i).getValue());
                     car.setStateNumber(stateNumbers.get(i).getValue());
-                    car.setReleaseDate(java.sql.Date.valueOf(prodDates.get(i).getValue()+"-01-01"));
+                    car.setReleaseDate(java.sql.Date.valueOf(prodDates.get(i).getValue() + "-01-01"));
                     car.setSeatsCount(new BigInteger(String.valueOf(seatsCounts.get(i).getValue())));
                     car.setChildSeat(childSeats.get(i).getValue() ? true : false);
                     cars.add(car);
@@ -194,12 +195,12 @@ public class CarRegistration extends Window {
         });
 
         add.addClickListener(event -> {
-                if  (carsComponent.size() == 2) {
-                    toastr.toast(ToastBuilder.warning("You cannot add more than two cars!").build());
-                    return;
+            if (carsComponent.size() == 2) {
+                toastr.toast(ToastBuilder.warning("You cannot add more than two cars!").build());
+                return;
             }
             carsComponent.add(genFields());
-            carsLayout.addComponent(carsComponent.get(carsComponent.size()-1));
+            carsLayout.addComponent(carsComponent.get(carsComponent.size() - 1));
         });
 
         del.addClickListener(event -> {
@@ -208,29 +209,35 @@ public class CarRegistration extends Window {
                 return;
             }
             if (cars.size() > 1) {
-                cars.remove(cars.size()-1);
+                cars.remove(cars.size() - 1);
             }
-            carsLayout.removeComponent(carsComponent.get(carsComponent.size()-1));
+            carsLayout.removeComponent(carsComponent.get(carsComponent.size() - 1));
             //cars.remove(cars.size()-1);
-            carsComponent.remove(carsComponent.get(carsComponent.size()-1));
-            names.remove(names.size()-1);
-            models.remove(models.size()-1);
-            stateNumbers.remove(stateNumbers.size()-1);
-            prodDates.remove(prodDates.size()-1);
-            seatsCounts.remove(seatsCounts.size()-1);
+            carsComponent.remove(carsComponent.get(carsComponent.size() - 1));
+            names.remove(names.size() - 1);
+            models.remove(models.size() - 1);
+            stateNumbers.remove(stateNumbers.size() - 1);
+            prodDates.remove(prodDates.size() - 1);
+            seatsCounts.remove(seatsCounts.size() - 1);
         });
 
         prev.addClickListener(event -> {
-           driverRegWindow.close();
+            names.clear();
+            models.clear();
+            stateNumbers.clear();
+            prodDates.clear();
+            stateNumbers.clear();
+            driverRegWindow.close();
+            UI.getCurrent().getPage().setLocation("/authorization");
         });
 
         addCloseListener(e -> {
             for (int i = 0; i < carsLayout.getComponentCount(); i++) {
-               names.get(i).clear();
-               models.get(i).clear();
-               stateNumbers.get(i).clear();
-               prodDates.get(i).clear();
-               seatsCounts.get(i).clear();
+                names.get(i).clear();
+                models.get(i).clear();
+                stateNumbers.get(i).clear();
+                prodDates.get(i).clear();
+                seatsCounts.get(i).clear();
             }
             driverRegWindow.close();
             //setContent(null);
@@ -242,5 +249,9 @@ public class CarRegistration extends Window {
     public void setDriverAndPassword(Driver driver, String password) {
         this.driver = driver;
         this.password = password;
+    }
+
+    public void setDriverBackWindow(Window driverBackWindow) {
+        this.driverBackWindow = driverBackWindow;
     }
 }

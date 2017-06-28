@@ -121,7 +121,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         this.driver = driver;
     }
 
-    private VerticalLayout generateOrdersGrid() {
+    public VerticalLayout generateOrdersGrid() {
         VerticalLayout verticalLayout = new VerticalLayout();
         allOrdersList = orderService.getOrdersByDriverId(driver.getObjectId(),null);
 
@@ -176,7 +176,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
         allOrdersList = orderService.getOrdersByDriverId(driver.getObjectId(),null);
         if(allOrdersList != null) {
-            allOrdersGrid.setItems(orderService.getOrdersInfo(allOrdersList));
+            refreshOrdersGrid();
         }
     }
 
@@ -189,7 +189,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         return newOrders.getOrdersList().size();
     }
 
-
     private VerticalLayout getNewOrdersControlTab(){
         VerticalLayout controlLayout = new VerticalLayout();
         newOrders.setView(this);
@@ -198,11 +197,16 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         return controlLayout;
     }
 
+    public void refreshOrdersGrid() {
+        System.out.println("REFRESH FROM VIEW");
+        allOrdersGrid.setItems(orderService.getOrdersInfo(allOrdersList));
+    }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         init();
+        newOrders.refreshGrid();
+        orderService.setNewOrdersTab(newOrders);
+        //orderService.setOrdersViewForDrivers(this);
     }
-
-
 }

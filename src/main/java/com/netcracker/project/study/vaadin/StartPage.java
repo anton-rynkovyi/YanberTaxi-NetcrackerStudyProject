@@ -10,7 +10,8 @@ import com.vaadin.ui.*;
 
 @Theme("valo")
 @Title("YanberTaxi. It's a future!")
-@SpringUI(path = "")
+//@SpringUI(path = "")
+@Deprecated
 public class StartPage extends UI {
 
     @Override

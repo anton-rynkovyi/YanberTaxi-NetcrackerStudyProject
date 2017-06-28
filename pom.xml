@@ -222,19 +222,6 @@
             <artifactId>spring-webmvc</artifactId>
             <version>4.3.7.RELEASE</version>
         </dependency>
-		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>19.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.vaadin.spring.addons/vaadin-spring-addon-eventbus -->
-		<!--<dependency>-->
-			<!--<groupId>org.vaadin.spring.addons</groupId>-->
-			<!--<artifactId>vaadin-spring-addon-eventbus</artifactId>-->
-			<!--<version>2.0.0.RELEASE</version>-->
-		<!--</dependency>-->
-
 		<dependency>
 			<groupId>org.vaadin.spring.addons</groupId>
 			<artifactId>vaadin-spring-addon-eventbus</artifactId>

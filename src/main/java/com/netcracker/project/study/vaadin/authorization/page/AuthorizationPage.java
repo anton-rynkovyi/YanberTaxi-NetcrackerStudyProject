@@ -10,6 +10,7 @@ import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.authorization.components.popups.ClientRegistration;
 import com.netcracker.project.study.vaadin.authorization.components.popups.DriverRegistration;
+import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.common.components.PhoneField;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -31,6 +32,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.vaadin.addons.ToastType;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
+import org.vaadin.spring.events.EventBus;
 
 import java.sql.Timestamp;
 
@@ -63,8 +65,6 @@ public class AuthorizationPage extends UI {
     @Autowired
     DriverRegistration regAsDriverWindow;
 
-    @Autowired
-    BCryptPasswordEncoder encoder;
 
     private Toastr toastr;
     private PhoneField username;
@@ -166,6 +166,7 @@ public class AuthorizationPage extends UI {
         horizontalLayout.setComponentAlignment(signIn, Alignment.BOTTOM_CENTER);
         horizontalLayout.setExpandRatio(signIn, 0.20f);
         signIn.addClickListener(clickEvent -> {
+
             Authentication auth = new UsernamePasswordAuthenticationToken(username.getValue(), password.getValue());
             try {
                 Authentication authenticated = daoAuthenticationProvider.authenticate(auth);

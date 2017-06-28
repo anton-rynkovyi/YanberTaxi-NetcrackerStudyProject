@@ -2,14 +2,17 @@ package com.netcracker.project.study.vaadin.admin.views;
 
 import com.netcracker.project.study.vaadin.admin.components.grids.OrdersGrid;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
+import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 
 import javax.annotation.PostConstruct;
 
@@ -41,6 +44,11 @@ public class OrdersView extends VerticalLayout implements View {
         controlLayout.addComponent(new Label());
         controlLayout.addComponent(ordersGrid);
         return controlLayout;
+    }
+
+    @EventBusListenerMethod
+    public void closeSymmUsageWindow(RefreshClientViewEvent event) {
+
     }
 
     @Override

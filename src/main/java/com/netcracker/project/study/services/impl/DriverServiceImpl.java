@@ -11,7 +11,9 @@ import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.DriverService;
+import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,8 @@ public class DriverServiceImpl implements DriverService {
 
     @Autowired
     PersistenceFacade persistenceFacade;
+
+
 
 
     @Override

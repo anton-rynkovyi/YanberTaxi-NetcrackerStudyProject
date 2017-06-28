@@ -147,6 +147,7 @@ public class ClientRegistration extends Window {
             lastName.clear();
             firstName.clear();
             middleName.clear();
+            //setContent();
         });
 
         addCloseListener(e -> {

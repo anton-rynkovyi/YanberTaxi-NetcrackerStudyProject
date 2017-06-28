@@ -47,16 +47,32 @@
         <property name="startDelay" value="1000" />
     </bean>
 
+    <bean id="refreshDriverOrdersJob"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="orderServiceImpl" />
+        <property name="targetMethod" value="refreshOrders" />
+    </bean>
+
+    <bean id="simpleTrigger2"
+          class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="refreshDriverOrdersJob" />
+        <property name="repeatInterval" value="5000" />
+        <property name="startDelay" value="1000" />
+    </bean>
+
+
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="jobDetails">
             <list>
                 <ref bean="banJob" />
+                <ref bean="refreshDriverOrdersJob"/>
             </list>
         </property>
 
         <property name="triggers">
             <list>
                 <ref bean="simpleTrigger" />
+                <ref bean="simpleTrigger2" />
             </list>
         </property>
     </bean>

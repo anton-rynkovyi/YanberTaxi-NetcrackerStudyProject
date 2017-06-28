@@ -5,12 +5,17 @@ import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversRequestsGrid;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
+import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.spring.events.EventBus;
+import org.vaadin.spring.events.annotation.EventBusListenerMethod;
+
+import javax.annotation.PostConstruct;
 
 @SpringView(name = DriversView.VIEW_NAME)
 public class DriversView extends VerticalLayout implements View {
@@ -48,7 +53,6 @@ public class DriversView extends VerticalLayout implements View {
             tabSheet.getTab(1).setCaption(
                     "Drivers Requests(" + driversRequestsGrid.getDriversRequestsList().size() + ")");
         });
-
     }
 
     private VerticalLayout getAllDriversTab() {

@@ -46,13 +46,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/driver*").access("hasRole('ROLE_DRIVER')")
                 .antMatchers("/client*").access("hasRole('ROLE_CLIENT')")
                 .antMatchers("/authorization").permitAll()
+                .antMatchers("/").authenticated()
                 .and()
                 .formLogin()//.loginPage("/auth").failureUrl("/auth?error")
                 .usernameParameter("username").passwordParameter("password")
                 .and()
                 .logout().permitAll();
-        http.sessionManagement().maximumSessions(1)
-                .sessionRegistry(sessionRegistry()).expiredUrl("/authorization");
 
         //http.headers().cacheControl().disable();
 

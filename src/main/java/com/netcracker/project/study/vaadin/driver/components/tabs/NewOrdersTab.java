@@ -78,6 +78,7 @@ public class NewOrdersTab extends CustomComponent {
 
     private Button startPerformingButton;
     private Button finishPerformingButton;
+    private Button goHomeButton;
     private long startkm;
     private long finishkm;
 
@@ -103,10 +104,11 @@ public class NewOrdersTab extends CustomComponent {
         HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel(ordersHistoryPanel, currentOrderPanel);
 
         HorizontalLayout buttonsLayout = new HorizontalLayout();
-        buttonsLayout.addComponents(acceptOrderButton);
+        goHomeButton = getHomeButton();
+        buttonsLayout.addComponents(goHomeButton, acceptOrderButton);
         buttonsLayout.setSpacing(true);
-        verticalLayout.addComponents(horizontalSplitPanel,buttonsLayout);
-        verticalLayout.setComponentAlignment(buttonsLayout,Alignment.BOTTOM_CENTER);
+        verticalLayout.addComponents(horizontalSplitPanel, buttonsLayout);
+        verticalLayout.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
 
         componentLayout.addComponent(verticalLayout);
         componentLayout.setSizeFull();
@@ -114,20 +116,20 @@ public class NewOrdersTab extends CustomComponent {
         setCompositionRoot(componentLayout);
     }
 
-    public void setAcceptButtonEnabled(boolean value){
+    public void setAcceptButtonEnabled(boolean value) {
         acceptOrderButton.setEnabled(value);
     }
 
-    private void setButtonsEnabled(){
-        if(currentOrder == null){
+    private void setButtonsEnabled() {
+        if (currentOrder == null) {
             startPerformingButton.setEnabled(false);
             finishPerformingButton.setEnabled(false);
-        }else{
-            if(currentOrder.getStatus().equals("Accepted")){
+        } else {
+            if (currentOrder.getStatus().equals("Accepted")) {
                 startPerformingButton.setEnabled(true);
                 finishPerformingButton.setEnabled(false);
             }
-            if(currentOrder.getStatus().equals("Performing")){
+            if (currentOrder.getStatus().equals("Performing")) {
                 startPerformingButton.setEnabled(false);
                 finishPerformingButton.setEnabled(true);
             }
@@ -135,35 +137,87 @@ public class NewOrdersTab extends CustomComponent {
 
     }
 
-    private HorizontalLayout getOrderInfoLayout(){
+    private Button getHomeButton() {
+        Button button = new Button("Go home");
+
+        if (driver.getStatus().equals(DriverStatusList.FREE)) {
+            button.setCaption("Go home");
+            button.setEnabled(true);
+        } else if (driver.getStatus().equals(DriverStatusList.OFF_DUTY)) {
+            button.setCaption("Start working");
+            button.setEnabled(true);
+        } else {
+            button.setEnabled(false);
+        }
+
+        button.addClickListener(clickEvent -> {
+            if (isBanned()) {
+                SecurityContextHolder.clearContext();
+                return;
+            }
+            if (isDismissed()) {
+                logout();
+                return;
+            }
+
+            if (driver.getStatus().equals(DriverStatusList.FREE)) {
+                button.setCaption("Start working");
+                driverService.changeStatus(DriverStatusList.OFF_DUTY, driver.getObjectId());
+                acceptOrderButton.setEnabled(false);
+            }
+            if (driver.getStatus().equals(DriverStatusList.OFF_DUTY)) {
+                button.setCaption("Go home");
+                driverService.changeStatus(DriverStatusList.FREE, driver.getObjectId());
+                acceptOrderButton.setEnabled(true);
+            }
+            refreshContent();
+        });
+
+        button.setIcon(VaadinIcons.HOME);
+        return button;
+    }
+
+    private void refreshGoHomeButton() {
+        if (driver.getStatus().equals(DriverStatusList.FREE)) {
+            goHomeButton.setCaption("Go home");
+            goHomeButton.setEnabled(true);
+        } else if (driver.getStatus().equals(DriverStatusList.OFF_DUTY)) {
+            goHomeButton.setCaption("Start working");
+            goHomeButton.setEnabled(true);
+        } else {
+            goHomeButton.setEnabled(false);
+        }
+    }
+
+    private HorizontalLayout getOrderInfoLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         VerticalLayout orderLayout = new VerticalLayout();
 
         HorizontalLayout clientLayout = new HorizontalLayout();
         Label clientIcon = new Label();
-        Label client = new Label("<b>Client:</b> " + currentOrder.getClientName(),ContentMode.HTML);
+        Label client = new Label("<b>Client:</b> " + currentOrder.getClientName(), ContentMode.HTML);
         clientIcon.setIcon(VaadinIcons.MALE);
-        clientLayout.addComponents(clientIcon,client);
+        clientLayout.addComponents(clientIcon, client);
 
         HorizontalLayout statusLayout = new HorizontalLayout();
         Label statusIcon = new Label();
         statusIcon.setIcon(VaadinIcons.RHOMBUS);
-        Label status = new Label("<b>Status:</b> " + currentOrder.getStatus(),ContentMode.HTML);
-        statusLayout.addComponents(statusIcon,status);
+        Label status = new Label("<b>Status:</b> " + currentOrder.getStatus(), ContentMode.HTML);
+        statusLayout.addComponents(statusIcon, status);
 
         HorizontalLayout costLabel = new HorizontalLayout();
         Label costIcon = new Label();
         costIcon.setIcon(VaadinIcons.CASH);
-        Label cost = new Label("<b>Cost:</b> " + currentOrder.getCost(),ContentMode.HTML);
-        costLabel.addComponents(costIcon,cost);
+        Label cost = new Label("<b>Cost:</b> " + currentOrder.getCost(), ContentMode.HTML);
+        costLabel.addComponents(costIcon, cost);
 
         HorizontalLayout distanceLayout = new HorizontalLayout();
         Label distanceIcon = new Label();
         distanceIcon.setIcon(VaadinIcons.ARROWS_LONG_H);
-        Label distance = new Label("<b>Distance:</b> " + currentOrder.getDistance(),ContentMode.HTML);
-        distanceLayout.addComponents(distanceIcon,distance);
-        orderLayout.addComponents(clientLayout,statusLayout,costLabel,distanceLayout);
+        Label distance = new Label("<b>Distance:</b> " + currentOrder.getDistance(), ContentMode.HTML);
+        distanceLayout.addComponents(distanceIcon, distance);
+        orderLayout.addComponents(clientLayout, statusLayout, costLabel, distanceLayout);
 
         List<Label> labels = getRoutesLayout();
         VerticalLayout routeLayout = new VerticalLayout();
@@ -171,24 +225,24 @@ public class NewOrdersTab extends CustomComponent {
         if (labels.size() == 0) {
             Label noRouteLabel = new Label("No route provided");
             routeLayout.addComponent(noRouteLabel);
-        }else{
-            for(Label label:labels){
+        } else {
+            for (Label label : labels) {
                 routeLayout.addComponent(label);
             }
         }
 
-        horizontalLayout.addComponents(orderLayout,routeLayout);
+        horizontalLayout.addComponents(orderLayout, routeLayout);
 
         return horizontalLayout;
     }
 
-    private List<Label> getRoutesLayout(){
+    private List<Label> getRoutesLayout() {
         List<Route> routes = orderService.getRoutes(currentOrder.getObjectId());
-        List<Label>labels = new ArrayList<>();
+        List<Label> labels = new ArrayList<>();
 
         int i = 0;
-        for(Route route:routes){
-            Label label = new Label("<b>Address " + i + ": </b>"+ route.getCheckPoint(), ContentMode.HTML);
+        for (Route route : routes) {
+            Label label = new Label("<b>Address " + i + ": </b>" + route.getCheckPoint(), ContentMode.HTML);
             labels.add(label);
             label.setIcon(VaadinIcons.MAP_MARKER);
             i++;
@@ -198,24 +252,23 @@ public class NewOrdersTab extends CustomComponent {
     }
 
 
-
-    private Panel getCurrentorderPanel(){
-        List<Order>orders = orderService.getCurrentOrderByDriverId(driver.getObjectId());
+    private Panel getCurrentorderPanel() {
+        List<Order> orders = orderService.getCurrentOrderByDriverId(driver.getObjectId());
         Panel panel = new Panel("Current order");
         VerticalLayout verticalLayout = new VerticalLayout();
-        if(orders.size() != 0){
+        if (orders.size() != 0) {
             List<OrderInfo> info = orderService.getOrdersInfo(orders);
             currentOrder = info.get(info.size() - 1);
-            HorizontalLayout horizontalLayout = new HorizontalLayout(startPerformingButton,finishPerformingButton);
-            horizontalLayout.setComponentAlignment(startPerformingButton,Alignment.MIDDLE_CENTER);
-            horizontalLayout.setComponentAlignment(finishPerformingButton,Alignment.MIDDLE_CENTER);
-            verticalLayout.addComponents(getOrderInfoLayout(),horizontalLayout);
+            HorizontalLayout horizontalLayout = new HorizontalLayout(startPerformingButton, finishPerformingButton);
+            horizontalLayout.setComponentAlignment(startPerformingButton, Alignment.MIDDLE_CENTER);
+            horizontalLayout.setComponentAlignment(finishPerformingButton, Alignment.MIDDLE_CENTER);
+            verticalLayout.addComponents(getOrderInfoLayout(), horizontalLayout);
             verticalLayout.setSizeFull();
             panel.setContent(verticalLayout);
-        }else{
+        } else {
             Label label = new Label("You have no order performing");
             verticalLayout.addComponent(label);
-            verticalLayout.setComponentAlignment(label,Alignment.MIDDLE_CENTER);
+            verticalLayout.setComponentAlignment(label, Alignment.MIDDLE_CENTER);
             verticalLayout.setSizeFull();
             panel.setContent(label);
         }
@@ -223,7 +276,7 @@ public class NewOrdersTab extends CustomComponent {
 
     }
 
-    public void setDriver(Driver driver){
+    public void setDriver(Driver driver) {
         this.driver = driver;
     }
 
@@ -240,33 +293,32 @@ public class NewOrdersTab extends CustomComponent {
         return panel;
     }
 
-    private void refreshCurrentOrderPanel(){
-        List<Order>orders = orderService.getCurrentOrderByDriverId(driver.getObjectId());
-        if(orders.size() != 0){
+    private void refreshCurrentOrderPanel() {
+        List<Order> orders = orderService.getCurrentOrderByDriverId(driver.getObjectId());
+        if (orders.size() != 0) {
             List<OrderInfo> info = orderService.getOrdersInfo(orders);
             currentOrder = info.get(info.size() - 1);
             VerticalLayout verticalLayout = new VerticalLayout();
             HorizontalLayout horizontalLayout = new HorizontalLayout();
-            horizontalLayout.addComponents(startPerformingButton,finishPerformingButton);
-            verticalLayout.addComponents(getOrderInfoLayout(),horizontalLayout);
+            horizontalLayout.addComponents(startPerformingButton, finishPerformingButton);
+            verticalLayout.addComponents(getOrderInfoLayout(), horizontalLayout);
             currentOrderPanel.setContent(verticalLayout);
-        }else{
-            Label label = new Label("You have no order performing",ContentMode.HTML);
+        } else {
+            Label label = new Label("You have no order performing", ContentMode.HTML);
             currentOrderPanel.setContent(label);
         }
 
     }
 
-    private void refreshContent() {
+    public void refreshContent() {
         refreshGrid();
         acceptOrderButton.setEnabled(false);
-        ((DriverPage)getUI()).refreshUI();
         view.Refresh();
         refreshCurrentOrderPanel();
         setButtonsEnabled();
     }
 
-    private void initFinishPerformingButton(){
+    private void initFinishPerformingButton() {
         finishPerformingButton = new Button("Finish Performing");
         finishPerformingButton.addClickListener(event -> {
 
@@ -275,35 +327,35 @@ public class NewOrdersTab extends CustomComponent {
             verticalLayout.addComponent(textField);
             Label errorLabel = new Label();
             Button ok = new Button("OK");
-            ok.addClickListener(newEvent->{
-                try{
+            ok.addClickListener(newEvent -> {
+                try {
                     finishkm = Long.parseLong(textField.getValue());
                     long distance = finishkm - startkm;
 
-                    orderService.setDistance(currentOrder.getObjectId(),distance);
+                    orderService.setDistance(currentOrder.getObjectId(), distance);
                     orderService.changeStatus(OrderStatus.PERFORMED, currentOrder.getObjectId());
                     orderService.setClientPoints(currentOrder.getObjectId());
                     driverService.changeStatus(DriverStatusList.FREE, driver.getObjectId());
-                    orderService.calcPrice(BigInteger.valueOf(distance),currentOrder.getObjectId());
+                    orderService.calcPrice(BigInteger.valueOf(distance), currentOrder.getObjectId());
 
                     acceptOrderButton.setEnabled(true);
                     currentOrder = null;
                     window.close();
                     refreshContent();
-                    ((DriverPage)getUI()).setStatusButtonEnabled(true);
+                    refreshGoHomeButton();
                     appEventBus.publish(this, new RefreshClientViewEvent(this, "abc"));
 
 
-                }catch(NumberFormatException e){
+                } catch (NumberFormatException e) {
                     errorLabel.setCaption("Incorrect data. Only digits are admissible");
                 }
             });
 
             verticalLayout.addComponent(errorLabel);
-            verticalLayout.setComponentAlignment(errorLabel,Alignment.MIDDLE_CENTER);
-            verticalLayout.setComponentAlignment(textField,Alignment.MIDDLE_CENTER);
+            verticalLayout.setComponentAlignment(errorLabel, Alignment.MIDDLE_CENTER);
+            verticalLayout.setComponentAlignment(textField, Alignment.MIDDLE_CENTER);
             verticalLayout.addComponent(ok);
-            verticalLayout.setComponentAlignment(ok,Alignment.MIDDLE_CENTER);
+            verticalLayout.setComponentAlignment(ok, Alignment.MIDDLE_CENTER);
             verticalLayout.setSpacing(true);
 
             window = new Window();
@@ -318,7 +370,7 @@ public class NewOrdersTab extends CustomComponent {
         });
     }
 
-    private void initStartPerformingButton(){
+    private void initStartPerformingButton() {
         startPerformingButton = new Button("Start Performing");
         startPerformingButton.addClickListener(event -> {
 
@@ -329,25 +381,25 @@ public class NewOrdersTab extends CustomComponent {
             Label errorLabel = new Label();
             Button ok = new Button("OK");
 
-            ok.addClickListener(newEvent->{
-                try{
+            ok.addClickListener(newEvent -> {
+                try {
                     startkm = Long.parseLong(textField.getValue());
                     orderService.changeStatus(OrderStatus.PERFORMING, currentOrder.getObjectId());
                     driverService.changeStatus(DriverStatusList.PERFORMING_ORDER, driver.getObjectId());
                     window.close();
                     refreshContent();
-                    ((DriverPage)getUI()).setStatusButtonEnabled(false);
-                }catch(NumberFormatException e){
+                    refreshGoHomeButton();
+                } catch (NumberFormatException e) {
                     errorLabel.setCaption("Incorrect data. Only digits are admissible");
                 }
 
             });
 
             verticalLayout.addComponent(errorLabel);
-            verticalLayout.setComponentAlignment(errorLabel,Alignment.MIDDLE_CENTER);
+            verticalLayout.setComponentAlignment(errorLabel, Alignment.MIDDLE_CENTER);
             verticalLayout.addComponent(ok);
-            verticalLayout.setComponentAlignment(textField,Alignment.MIDDLE_CENTER);
-            verticalLayout.setComponentAlignment(ok,Alignment.MIDDLE_CENTER);
+            verticalLayout.setComponentAlignment(textField, Alignment.MIDDLE_CENTER);
+            verticalLayout.setComponentAlignment(ok, Alignment.MIDDLE_CENTER);
             verticalLayout.setSpacing(true);
 
             window = new Window();
@@ -364,7 +416,7 @@ public class NewOrdersTab extends CustomComponent {
     private void setTakeOrderButton() {
         acceptOrderButton = new Button("Accept", VaadinIcons.ARROW_RIGHT);
         acceptOrderButton.setStyleName(MaterialTheme.BUTTON_ICON_ALIGN_RIGHT);
-        if(currentOrder != null){
+        if (currentOrder != null) {
             acceptOrderButton.setEnabled(false);
         }
         acceptOrderButton.addClickListener(event -> {
@@ -377,15 +429,15 @@ public class NewOrdersTab extends CustomComponent {
                 return;
             }
             if (!ordersGrid.asSingleSelect().isEmpty()) {
-                List<Order>currentOrder = orderService.getCurrentOrderByDriverId(driver.getObjectId());
-                if(currentOrder.size() == 0){
+                List<Order> currentOrder = orderService.getCurrentOrderByDriverId(driver.getObjectId());
+                if (currentOrder.size() == 0) {
                     OrderInfo order = ordersGrid.asSingleSelect().getValue();
                     driverService.acceptOrder(order.getObjectId(), driver.getObjectId());
                     acceptOrderButton.setEnabled(false);
-                   // setStartEndPointsLayoutsEmpty();
+                    // setStartEndPointsLayoutsEmpty();
                 }
                 refreshContent();
-                ((DriverPage)getUI()).setStatusButtonEnabled(false);
+                refreshGoHomeButton();
 
             }
         });
@@ -393,7 +445,7 @@ public class NewOrdersTab extends CustomComponent {
         acceptOrderButton.setEnabled(false);
     }
 
-    private void refreshGrid() {
+    public void refreshGrid() {
         ordersList = orderService.getOrders(OrderStatus.NEW);
         ordersGrid.setItems(orderService.getOrdersInfo(ordersList));
     }
@@ -430,14 +482,14 @@ public class NewOrdersTab extends CustomComponent {
         ordersGrid.setItems(ordersInfo);
 
         ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("#");
-        ordersGrid.addColumn(OrderInfo::getStartPoint).setCaption("Departure");
+        ordersGrid.addColumn(OrderInfo::getStartPoint).setCaption("Start");
         ordersGrid.addColumn(OrderInfo::getDestination).setCaption("Destination");
         ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");
 
         ordersGrid.addSelectionListener(selectionEvent -> {
             if (!ordersGrid.asSingleSelect().isEmpty()) {
-                if(currentOrder == null){
-                    if(!driver.getStatus().equals(DriverStatusList.OFF_DUTY)){
+                if (currentOrder == null) {
+                    if (!driver.getStatus().equals(DriverStatusList.OFF_DUTY)) {
                         acceptOrderButton.setEnabled(true);
                     }
                 }

@@ -2,6 +2,8 @@ package com.netcracker.project.study.services;
 
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.route.Route;
+import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
+import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 
 import java.math.BigInteger;
@@ -46,4 +48,9 @@ public interface OrderService {
     void setCommentAboutDriver(Order order, String comment);
 
     void setClientPoints(BigInteger orderId);
+
+    void setNewOrdersTab(NewOrdersTab newOrdersTab);
+
+    void refreshOrders();
+
 }

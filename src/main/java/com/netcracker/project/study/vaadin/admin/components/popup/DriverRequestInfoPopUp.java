@@ -53,6 +53,8 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
         this.driverCarList = driverService.getCarByDriver(driver);
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
+        rootLayout.setHeightUndefined();
+        rootLayout.setWidthUndefined();
         rootLayout.addComponent(toastr);
         setTextFields(rootLayout);
         addComponent(rootLayout);

@@ -290,7 +290,7 @@ public class DriverPage extends UI {
     private HorizontalLayout getLogOutButton() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-        Button logOutButton = new Button("LogOut");
+        Button logOutButton = new Button("Logout");
         logOutButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
         logOutButton.addStyleName(ValoTheme.BUTTON_SMALL);
         logOutButton.addClickListener(clickEvent -> {

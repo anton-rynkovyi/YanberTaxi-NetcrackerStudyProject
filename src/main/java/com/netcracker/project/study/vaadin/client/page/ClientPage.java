@@ -52,12 +52,6 @@ public class ClientPage extends UI {
     @Autowired
     Copyright bottomTeamLogo;
 
-    @Autowired
-    private EventBus.UIEventBus uiEventBus;
-
-    @Autowired
-    private DriverEvaluation driverEvaluation;
-
 
     private Client client;
 
@@ -129,17 +123,6 @@ public class ClientPage extends UI {
 
     }
 
-    @PostConstruct
-    public void afterPropertiesSet() {
-        uiEventBus.subscribe(this,true);
-
-    }
-
-    @EventBusListenerMethod
-    public void closeSymmUsageWindow(RefreshClientViewEvent event) {
-        driverEvaluation.init();
-        getUI().addWindow(driverEvaluation);
-    }
 
     private VerticalLayout getVerticalLayout() {
         VerticalLayout verticalLayout = new VerticalLayout();

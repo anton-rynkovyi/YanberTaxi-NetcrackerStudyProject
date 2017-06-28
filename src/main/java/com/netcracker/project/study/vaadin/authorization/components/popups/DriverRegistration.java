@@ -153,6 +153,7 @@ public class DriverRegistration extends Window {
             //userFacade.createUser(user);
             carRegistration.initDriverRegWindow(this);
             setContent(carRegistration.getContent());
+            carRegistration.setDriverBackWindow(this);
         });
 
         cancel.addClickListener(event -> {

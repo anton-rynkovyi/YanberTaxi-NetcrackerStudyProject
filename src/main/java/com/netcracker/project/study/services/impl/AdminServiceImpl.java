@@ -14,6 +14,7 @@ import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
@@ -24,6 +25,7 @@ import java.sql.Date;
 import java.util.List;
 
 @Service
+@Scope(value = "prototype")
 public class AdminServiceImpl implements AdminService {
 
     public final long ONE_DAY_MILLS = 1000 * 60 * 60 * 24;
@@ -33,12 +35,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     UserFacade userFacade;
-
-    @Autowired
-    DriversGrid driversGrid;
-
-    @Autowired
-    DriversBanGrid driversBanGrid;
 
     @Autowired
     DriverService driverService;

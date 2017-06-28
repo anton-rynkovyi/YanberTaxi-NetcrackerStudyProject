@@ -14,4 +14,12 @@ public class RefreshClientViewEvent {
         this.page = page;
         this.driverId = driverId;
     }
+
+    public String getDriverId() {
+        return driverId;
+    }
+
+    public NewOrdersTab getPage() {
+        return page;
+    }
 }

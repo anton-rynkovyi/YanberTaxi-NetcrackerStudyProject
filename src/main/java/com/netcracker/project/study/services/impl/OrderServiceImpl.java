@@ -11,6 +11,8 @@ import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.OrderConstants;
 import com.netcracker.project.study.services.OrderService;
+import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
+import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     PersistenceFacade persistenceFacade;
+
+    private NewOrdersTab newOrdersTab;
 
     public static final BigDecimal COST_PER_KILOMETER = new BigDecimal("5");
 
@@ -273,5 +277,14 @@ public class OrderServiceImpl implements OrderService {
         Client client = order.getClientOnOrder();
         client.setPoints(client.getPoints().add(order.getDistance()));
         persistenceFacade.update(client);
+    }
+
+    public void setNewOrdersTab(NewOrdersTab newOrdersTab) {
+        this.newOrdersTab = newOrdersTab;
+    }
+
+    public void refreshOrders() {
+        System.out.println(newOrdersTab);
+        newOrdersTab.refreshContent();
     }
 }

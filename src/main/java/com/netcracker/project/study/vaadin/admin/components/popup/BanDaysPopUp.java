@@ -1,5 +1,6 @@
 package com.netcracker.project.study.vaadin.admin.components.popup;
 
+import com.google.common.eventbus.EventBus;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.services.AdminService;
@@ -25,7 +26,7 @@ public class BanDaysPopUp extends VerticalLayout {
     @Autowired
     AdminService adminService;
 
-    DriversGrid driversGrid;
+    private DriversGrid driversGrid;
 
    /* @Autowired
     RefreshListener refreshListener;*/
@@ -33,18 +34,18 @@ public class BanDaysPopUp extends VerticalLayout {
     private Toastr toastr;
 
    /* @Autowired
-    org.vaadin.spring.events.EventBus eventBus;*/
+    private EventBus eventBus;*/
 
     private List<String> banDayList = Arrays.asList("1 min", "3 min", "5 min", "7 min");
 
 
     @PostConstruct
     private void init() {
-        //uiEventBus.publish(EventScope.APPLICATION, new RefreshListener());
         VerticalLayout rootLayout = generateRootLayot();
         Panel panel = generatePanel();
         rootLayout.addComponent(panel);
         toastr = new Toastr();
+        //eventBus = new EventBus();
         rootLayout.addComponent(toastr);
 
         //eventBus.register(refreshListener);
@@ -88,8 +89,6 @@ public class BanDaysPopUp extends VerticalLayout {
         btnCancel.addClickListener(clickEvent -> {
             driverInfoPopUP.getBanDaysWindow().close();
         });
-
-
         return horizontalLayout;
     }
 

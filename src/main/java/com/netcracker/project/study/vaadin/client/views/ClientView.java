@@ -1,6 +1,7 @@
 package com.netcracker.project.study.vaadin.client.views;
 
 import com.github.appreciated.material.MaterialTheme;
+import com.google.common.eventbus.EventBus;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.order.Order;
@@ -14,7 +15,9 @@ import com.netcracker.project.study.vaadin.authorization.components.popups.Clien
 import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientOrdersGrid;
 import com.netcracker.project.study.vaadin.client.components.OrderMaker;
+import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
+import com.netcracker.project.study.vaadin.client.popups.DriverEvaluation;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
@@ -33,7 +36,9 @@ import org.vaadin.addons.ToastType;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
+import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 
+import javax.annotation.PostConstruct;
 import javax.swing.event.CaretListener;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -77,6 +82,14 @@ public class ClientView extends VerticalLayout implements View {
     @Autowired
     ClientUpdate ClientWindow;
 
+    @Autowired
+    private org.vaadin.spring.events.EventBus.ViewEventBus viewEventBus;
+
+    @Autowired
+    private DriverEvaluation driverEvaluation;
+
+    private UI ui;
+
     private Button newOrder, cancelOrder;
 
     Client client;
@@ -93,6 +106,7 @@ public class ClientView extends VerticalLayout implements View {
         orderMaker.setClient(client);
         clientOrdersGrid.setClient(client);
         clientOrdersGrid.init();
+        ui = UI.getCurrent();
 
         toastr = new Toastr();
         addComponent(toastr);
@@ -263,6 +277,8 @@ public class ClientView extends VerticalLayout implements View {
         verticalLayout.addComponent(content);
         window.setContent(verticalLayout);
     }
+
+
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
