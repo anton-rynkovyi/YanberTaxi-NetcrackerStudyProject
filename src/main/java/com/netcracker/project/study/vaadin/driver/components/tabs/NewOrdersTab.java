@@ -81,19 +81,10 @@ public class NewOrdersTab extends CustomComponent {
     private long startkm;
     private long finishkm;
 
-    private HorizontalLayout startEndPointsLayout;
-    private Panel routePanel;
-
     public void init() {
         initRootLayout();
 
         toastr = new Toastr();
-        routePanel = new Panel();
-        startEndPointsLayout = new HorizontalLayout();
-        routePanel.setContent(startEndPointsLayout);
-        routePanel.setSizeFull();
-        setStartEndPointsLayoutsEmpty();
-
         VerticalLayout ordersGridLayout = generateOrdersGrid();
 
         setTakeOrderButton();
@@ -114,7 +105,7 @@ public class NewOrdersTab extends CustomComponent {
         HorizontalLayout buttonsLayout = new HorizontalLayout();
         buttonsLayout.addComponents(acceptOrderButton);
         buttonsLayout.setSpacing(true);
-        verticalLayout.addComponents(routePanel,horizontalSplitPanel,buttonsLayout);
+        verticalLayout.addComponents(horizontalSplitPanel,buttonsLayout);
         verticalLayout.setComponentAlignment(buttonsLayout,Alignment.BOTTOM_CENTER);
 
         componentLayout.addComponent(verticalLayout);
@@ -391,7 +382,7 @@ public class NewOrdersTab extends CustomComponent {
                     OrderInfo order = ordersGrid.asSingleSelect().getValue();
                     driverService.acceptOrder(order.getObjectId(), driver.getObjectId());
                     acceptOrderButton.setEnabled(false);
-                    setStartEndPointsLayoutsEmpty();
+                   // setStartEndPointsLayoutsEmpty();
                 }
                 refreshContent();
                 ((DriverPage)getUI()).setStatusButtonEnabled(false);
@@ -408,7 +399,7 @@ public class NewOrdersTab extends CustomComponent {
     }
 
 
-    private void setStartEndPointsLayout(String source,String destination){
+    /*private void setStartEndPointsLayout(String source,String destination){
         startEndPointsLayout.removeAllComponents();
         Label sourceLabel = new Label(source);
         Label destinationLabel = new Label(destination);
@@ -422,11 +413,11 @@ public class NewOrdersTab extends CustomComponent {
         startEndPointsLayout.setComponentAlignment(destinationLabel,Alignment.MIDDLE_CENTER);
         startEndPointsLayout.setSizeFull();
         routePanel.setContent(startEndPointsLayout);
-    }
+    }*/
 
-    private void setStartEndPointsLayoutsEmpty(){
+    /*private void setStartEndPointsLayoutsEmpty(){
         setStartEndPointsLayout("----------------","----------------");
-    }
+    }*/
 
     private VerticalLayout generateOrdersGrid() {
         VerticalLayout verticalLayout = new VerticalLayout();
@@ -452,12 +443,12 @@ public class NewOrdersTab extends CustomComponent {
                 }
                 OrderInfo orderInfo = ordersGrid.asSingleSelect().getValue();
                 List<Route> routes = orderService.getRoutes(orderInfo.getObjectId());
-                if(!routes.isEmpty()){
+                /*if(!routes.isEmpty()){
                     setStartEndPointsLayout(routes.get(0).getCheckPoint(),
                             routes.get(routes.size() - 1).getCheckPoint());
                 }else{
                    setStartEndPointsLayoutsEmpty();
-                }
+                }*/
             }
         });
 

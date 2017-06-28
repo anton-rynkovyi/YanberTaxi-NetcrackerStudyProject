@@ -7,10 +7,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
@@ -23,7 +20,7 @@ public class OrderInfoPopUp extends VerticalLayout {
 
     private OrderInfo orderInfo;
 
-    HorizontalLayout rootLayout;
+    VerticalLayout rootLayout;
     @Autowired private OrderServiceImpl orderService;
 
 
@@ -36,7 +33,7 @@ public class OrderInfoPopUp extends VerticalLayout {
     }
 
     private void initRootLayout(){
-        rootLayout = new HorizontalLayout();
+        rootLayout = new VerticalLayout();
         rootLayout.setSizeFull();
         rootLayout.setSpacing(true);
         rootLayout.setMargin(true);
@@ -88,41 +85,91 @@ public class OrderInfoPopUp extends VerticalLayout {
 
             orderLayout.addComponents(header, clientIdLayout, statusIdLayout, costLayout, distanceLayout,ratingLayout);
             generalInfoPanel.setContent(orderLayout);
+            generalInfoPanel.setIcon(VaadinIcons.CLIPBOARD_TEXT);
 
-            rootLayout.addComponent(generalInfoPanel);
+            HorizontalLayout horizontalLayout = new HorizontalLayout();
+            horizontalLayout.addComponent(generalInfoPanel);
+
 
             Panel routeInfoPanel = new Panel();
 
-            List<Label> labels = getRoutesLayout();
+            List<HorizontalLayout> routes = getRoutesLayout();
             Label routeHeader = new Label("<h2><center>Route information</center></h2>", ContentMode.HTML);
             VerticalLayout routeLayout = new VerticalLayout();
             routeLayout.addComponent(routeHeader);
-            if (labels.size() == 0) {
+            if (routes.size() == 0) {
                 Label noRouteLabel = new Label("No route provided");
                 routeLayout.addComponent(noRouteLabel);
             }else{
-                for(Label label:labels){
-                    routeLayout.addComponent(label);
+                for(HorizontalLayout route:routes){
+                    routeLayout.addComponent(route);
                 }
             }
+            routeLayout.setSizeFull();
             routeInfoPanel.setContent(routeLayout);
+            routeInfoPanel.setIcon(VaadinIcons.ROAD);
 
-            rootLayout.addComponent(routeInfoPanel);
+            routeInfoPanel.setSizeFull();
+
+            horizontalLayout.addComponent(routeInfoPanel);
+
+            TextArea commentLayout = new TextArea();
+            String driverMemo = orderInfo.getDriverMemo();
+
+            Panel commentPanel = new Panel("Comment");
+            commentPanel.setIcon(VaadinIcons.COMMENT_ELLIPSIS_O);
+
+            commentPanel.setContent(commentLayout);
+            commentLayout.setSizeFull();
+            commentPanel.setSizeFull();
+
+            if(driverMemo == null){
+                commentLayout.setValue("Client has not left comment yet.");
+            }else{
+                commentLayout.setValue(driverMemo);
+            }
+
+            commentLayout.setEnabled(false);
+            rootLayout.addComponent(horizontalLayout);
+            rootLayout.addComponent(commentPanel);
         }
     }
 
-    private List<Label> getRoutesLayout(){
+    private List<HorizontalLayout> getRoutesLayout(){
         List<Route> routes = orderService.getRoutes(orderInfo.getObjectId());
-        List<Label>labels = new ArrayList<>();
+        List<HorizontalLayout>routesLayout = new ArrayList<>();
 
-        int i = 0;
-        for(Route route:routes){
-            Label label = new Label("<b>Address " + i + ": </b>"+ route.getCheckPoint(), ContentMode.HTML);
-            labels.add(label);
-            label.setIcon(VaadinIcons.MAP_MARKER);
+
+
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        Label label = new Label("<b>Departure " + ": </b>"+ routes.get(0).getCheckPoint(), ContentMode.HTML);
+        Label mapMarkerIcon = new Label();
+        mapMarkerIcon.setIcon(VaadinIcons.HOME_O);
+
+        horizontalLayout.addComponents(mapMarkerIcon,label);
+        routesLayout.add(horizontalLayout);
+
+        int i = 1;
+        for(int j = 1;j < routes.size() - 1; j++){
+            horizontalLayout = new HorizontalLayout();
+            label = new Label("<b>Address " + i + ": </b>"+ routes.get(j).getCheckPoint(), ContentMode.HTML);
+            mapMarkerIcon = new Label();
+            mapMarkerIcon.setIcon(VaadinIcons.MAP_MARKER);
+
+            horizontalLayout.addComponents(mapMarkerIcon,label);
+            routesLayout.add(horizontalLayout);
             i++;
         }
 
-        return labels;
+        horizontalLayout = new HorizontalLayout();
+        label = new Label("<b>Destination " + ": </b>"+ routes.get(routes.size() - 1).getCheckPoint(), ContentMode.HTML);
+        mapMarkerIcon = new Label();
+        mapMarkerIcon.setIcon(VaadinIcons.FLAG_CHECKERED);
+
+        horizontalLayout.addComponents(mapMarkerIcon,label);
+        routesLayout.add(horizontalLayout);
+
+
+        return routesLayout;
     }
 }

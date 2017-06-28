@@ -18,6 +18,7 @@ public class OrderInfo {
     private BigInteger rating;
     private String startPoint;
     private String destination;
+    private String driverMemo;
 
     public void setQueueN(int queueN) {
         this.queueN = queueN;
@@ -97,5 +98,13 @@ public class OrderInfo {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public String getDriverMemo() {
+        return driverMemo;
+    }
+
+    public void setDriverMemo(String driverMemo) {
+        this.driverMemo = driverMemo;
     }
 }
