@@ -60,8 +60,12 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         tabSheet = getTabSheet();
         rootLayout.addComponent(tabSheet);
 
+        rootLayout.setSizeFull();
+        rootLayout.setExpandRatio(tabSheet,0.1f);
+        setSizeFull();
 
         addComponent(rootLayout);
+
     }
 
     public void setAcceptButtonEnabled(boolean value){
@@ -131,6 +135,8 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
             ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("#");
             ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");
             ordersGrid.addColumn(OrderInfo::getStatus).setCaption("Status");
+            ordersGrid.addColumn(OrderInfo::getStartPoint).setCaption("Departure");
+            ordersGrid.addColumn(OrderInfo::getDestination).setCaption("Destination");
             ordersGrid.addColumn(OrderInfo::getCost).setCaption("Cost");
             ordersGrid.addColumn(OrderInfo::getDistance).setCaption("Distance");
             allOrdersGrid = ordersGrid;
@@ -143,7 +149,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
             panel.setContent(noOrdersLabel);
             verticalLayout.addComponent(panel);
         }
-
+        verticalLayout.setSizeFull();
         return verticalLayout;
     }
 

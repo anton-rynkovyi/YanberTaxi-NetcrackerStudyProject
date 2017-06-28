@@ -41,17 +41,13 @@
   @include valo;
 
   // Insert your own theme rules here
-  .yanber-taxi-label {
-    color: aqua;
-    font-style: italic;
+  .panel{
+    background-color: rgb(193,216,248);
   }
 
-  .caption{
-    background-color: darkorange;
+  .driverStatusLayout{
+    border: 1px solid #ccc;
   }
 
-  .root-layout{
-    background-color: red;
-  }
 
 }

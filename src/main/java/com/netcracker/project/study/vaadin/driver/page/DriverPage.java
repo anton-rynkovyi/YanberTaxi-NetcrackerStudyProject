@@ -140,8 +140,7 @@ public class DriverPage extends UI {
 
         rootLayout.addComponent(viewDisplay);
         rootLayout.addComponent(bottomTeamLogo);
-        rootLayout.setExpandRatio(viewDisplay, 1.0f);
-
+        rootLayout.setExpandRatio(viewDisplay, 0.8f);
 
         navigator = new Navigator(this, viewDisplay);
         navigator.addProvider(provider);
