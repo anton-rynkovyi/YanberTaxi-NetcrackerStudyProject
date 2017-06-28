@@ -12,6 +12,7 @@ import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.driver.components.popup.OrderInfoPopUp;
 import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
+import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
@@ -36,14 +37,9 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     @Autowired
     private OrderInfoPopUp orderInfoPopUp;
 
-
-
     private Driver driver;
     private TabSheet tabSheet;
     private VerticalLayout rootLayout;
-
-    private Panel statusPanel;
-    private Panel ratingPanel;
 
     private Grid allOrdersGrid;
     private List<Order> allOrdersList;
@@ -62,45 +58,14 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         newOrders.init();
 
         tabSheet = getTabSheet();
-
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-
-        statusPanel = getDriverStatus();
-        changeStatusIcon();
-
-        ratingPanel = getDriverRating();
-        ratingPanel.setIcon(VaadinIcons.STAR_O);
-
-        horizontalLayout.addComponents(statusPanel,ratingPanel);
-        horizontalLayout.setSizeFull();
-
-        rootLayout.addComponent(horizontalLayout);
         rootLayout.addComponent(tabSheet);
+
 
         addComponent(rootLayout);
     }
 
-    @Subscribe
-    private void listener(String event){
-        rootLayout.addComponent(new Label(event));
-        rootLayout.addComponent(new Label(event));
-        rootLayout.addComponent(new Label(event));
-        rootLayout.addComponent(new Label(event));
-    }
-
-    private void changeStatusIcon(){
-        if(driver.getStatus().equals(DriverStatusList.FREE)){
-            statusPanel.setIcon(VaadinIcons.COFFEE);
-        }
-        if(driver.getStatus().equals(DriverStatusList.ON_CALL)){
-            statusPanel.setIcon(VaadinIcons.TAXI);
-        }
-        if(driver.getStatus().equals(DriverStatusList.PERFORMING_ORDER)){
-            statusPanel.setIcon(VaadinIcons.ROAD);
-        }
-        if(driver.getStatus().equals(DriverStatusList.OFF_DUTY)){
-            statusPanel.setIcon(VaadinIcons.HOME_O);
-        }
+    public void setAcceptButtonEnabled(boolean value){
+        newOrders.setAcceptButtonEnabled(value);
     }
 
     private void initOrderInfoWindow() {
@@ -147,41 +112,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     private void initDriver(){
         driver = userDetailsService.getCurrentUser();
     }
-
-    private Panel getDriverStatus(){
-        Panel panel = new Panel("Your status");
-        Label statusInfo = new Label("<b>" + DriverStatusEnum.getStatusValue(driver.getStatus()) + "</b>", ContentMode.HTML);
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-
-        horizontalLayout.setSizeFull();
-        horizontalLayout.addComponent(statusInfo);
-        horizontalLayout.setComponentAlignment(statusInfo,Alignment.MIDDLE_CENTER);
-        panel.setContent(horizontalLayout);
-
-        return panel;
-    }
-
-    private Panel getDriverRating(){
-        Panel panel = new Panel("Your rating");
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-
-        int rating = 3;
-        if(driver.getRating() != null){
-            rating = driver.getRating().intValue();
-        }
-
-        for(int i = 0; i < rating; i++ ){
-            Label starIconLabel = new Label();
-            starIconLabel.setIcon(VaadinIcons.STAR);
-            horizontalLayout.addComponent(starIconLabel);
-            horizontalLayout.setComponentAlignment(starIconLabel,Alignment.MIDDLE_CENTER);
-        }
-        horizontalLayout.setSizeFull();
-        panel.setContent(horizontalLayout);
-
-        return panel;
-    }
-
 
     public void setDriver(Driver driver){
         this.driver = driver;
@@ -233,33 +163,10 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         initDriver();
         newOrders.setDriver(driver);
 
-        Label statusLabel = new Label("<b>" + DriverStatusEnum.getStatusValue(driver.getStatus()) + "</b>", ContentMode.HTML);
-        HorizontalLayout statusLayout = new HorizontalLayout();
-        statusLayout.setSizeFull();
-        statusLayout.addComponent(statusLabel);
-        statusLayout.setComponentAlignment(statusLabel,Alignment.MIDDLE_CENTER);
-        statusPanel.setContent(statusLayout);
-
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        changeStatusIcon();
-        int rating = 3;
-
-        if(driver.getRating() != null){
-            rating = (int)driver.getRating().doubleValue();
-        }
-
-        for(int i = 0; i < rating; i++ ){
-            Label starIconLabel = new Label();
-            starIconLabel.setIcon(VaadinIcons.STAR);
-            horizontalLayout.addComponent(starIconLabel);
-            horizontalLayout.setComponentAlignment(starIconLabel,Alignment.MIDDLE_CENTER);
-        }
-        horizontalLayout.setSizeFull();
-        ratingPanel.setContent(horizontalLayout);
+        ((DriverPage)getUI()).refreshUI();
 
         tabSheet.getTab(0).setCaption("New orders (" + getNewOrdersCount() + ")");
         tabSheet.getTab(1).setCaption("History of orders (" + getAllOrdersCount() + ")");
-
 
         allOrdersList = orderService.getOrdersByDriverId(driver.getObjectId(),null);
         if(allOrdersList != null) {

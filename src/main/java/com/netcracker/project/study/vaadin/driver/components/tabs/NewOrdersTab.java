@@ -15,6 +15,7 @@ import com.netcracker.project.study.services.OrderService;
 
 import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
+import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
@@ -77,7 +78,6 @@ public class NewOrdersTab extends CustomComponent {
 
     private Button startPerformingButton;
     private Button finishPerformingButton;
-    private Button goHomeButton;
     private long startkm;
     private long finishkm;
 
@@ -112,8 +112,7 @@ public class NewOrdersTab extends CustomComponent {
         HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel(ordersHistoryPanel, currentOrderPanel);
 
         HorizontalLayout buttonsLayout = new HorizontalLayout();
-        goHomeButton = getHomeButton();
-        buttonsLayout.addComponents(goHomeButton,acceptOrderButton);
+        buttonsLayout.addComponents(acceptOrderButton);
         buttonsLayout.setSpacing(true);
         verticalLayout.addComponents(routePanel,horizontalSplitPanel,buttonsLayout);
         verticalLayout.setComponentAlignment(buttonsLayout,Alignment.BOTTOM_CENTER);
@@ -122,6 +121,10 @@ public class NewOrdersTab extends CustomComponent {
         componentLayout.setSizeFull();
 
         setCompositionRoot(componentLayout);
+    }
+
+    public void setAcceptButtonEnabled(boolean value){
+        acceptOrderButton.setEnabled(value);
     }
 
     private void setButtonsEnabled(){
@@ -139,58 +142,6 @@ public class NewOrdersTab extends CustomComponent {
             }
         }
 
-    }
-
-    private Button getHomeButton(){
-        Button button = new Button("Go home");
-
-        if(driver.getStatus().equals(DriverStatusList.FREE)){
-            button.setCaption("Go home");
-            button.setEnabled(true);
-        }else if(driver.getStatus().equals(DriverStatusList.OFF_DUTY)){
-            button.setCaption("Start working");
-            button.setEnabled(true);
-        }else{
-            button.setEnabled(false);
-        }
-
-        button.addClickListener(clickEvent -> {
-            if (isBanned()) {
-                SecurityContextHolder.clearContext();
-                return;
-            }
-            if (isDismissed()) {
-                logout();
-                return;
-            }
-
-            if(driver.getStatus().equals(DriverStatusList.FREE)){
-                button.setCaption("Start working");
-                driverService.changeStatus(DriverStatusList.OFF_DUTY,driver.getObjectId());
-                acceptOrderButton.setEnabled(false);
-            }
-            if(driver.getStatus().equals(DriverStatusList.OFF_DUTY)){
-                button.setCaption("Go home");
-                driverService.changeStatus(DriverStatusList.FREE,driver.getObjectId());
-                acceptOrderButton.setEnabled(true);
-            }
-            refreshContent();
-        });
-
-        button.setIcon(VaadinIcons.HOME);
-        return button;
-    }
-
-    private void refreshGoHomeButton(){
-        if(driver.getStatus().equals(DriverStatusList.FREE)){
-            goHomeButton.setCaption("Go home");
-            goHomeButton.setEnabled(true);
-        }else if(driver.getStatus().equals(DriverStatusList.OFF_DUTY)){
-            goHomeButton.setCaption("Start working");
-            goHomeButton.setEnabled(true);
-        }else{
-            goHomeButton.setEnabled(false);
-        }
     }
 
     private HorizontalLayout getOrderInfoLayout(){
@@ -318,6 +269,7 @@ public class NewOrdersTab extends CustomComponent {
     private void refreshContent() {
         refreshGrid();
         acceptOrderButton.setEnabled(false);
+        ((DriverPage)getUI()).refreshUI();
         view.Refresh();
         refreshCurrentOrderPanel();
         setButtonsEnabled();
@@ -347,7 +299,7 @@ public class NewOrdersTab extends CustomComponent {
                     currentOrder = null;
                     window.close();
                     refreshContent();
-                    refreshGoHomeButton();
+                    ((DriverPage)getUI()).setStatusButtonEnabled(true);
                     appEventBus.publish(this, new RefreshClientViewEvent(this, "abc"));
 
 
@@ -393,7 +345,7 @@ public class NewOrdersTab extends CustomComponent {
                     driverService.changeStatus(DriverStatusList.PERFORMING_ORDER, driver.getObjectId());
                     window.close();
                     refreshContent();
-                    refreshGoHomeButton();
+                    ((DriverPage)getUI()).setStatusButtonEnabled(false);
                 }catch(NumberFormatException e){
                     errorLabel.setCaption("Incorrect data. Only digits are admissible");
                 }
@@ -442,7 +394,7 @@ public class NewOrdersTab extends CustomComponent {
                     setStartEndPointsLayoutsEmpty();
                 }
                 refreshContent();
-                refreshGoHomeButton();
+                ((DriverPage)getUI()).setStatusButtonEnabled(false);
 
             }
         });
