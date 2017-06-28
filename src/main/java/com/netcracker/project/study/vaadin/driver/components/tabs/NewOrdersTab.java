@@ -30,6 +30,7 @@ import org.vaadin.addons.ToastType;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
+import org.vaadin.spring.events.EventBus;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -53,7 +54,7 @@ public class NewOrdersTab extends CustomComponent {
     AdminService adminService;
 
     @Autowired
-    private org.vaadin.spring.events.EventBus.UIEventBus uiEventBus;
+    private EventBus.ApplicationEventBus appEventBus;
 
     private Toastr toastr;
 
@@ -347,8 +348,8 @@ public class NewOrdersTab extends CustomComponent {
                     window.close();
                     refreshContent();
                     refreshGoHomeButton();
-                    /*оповестить слушателей*/
-                    uiEventBus.publish(this, new RefreshClientViewEvent(this, "Usage details updated"));
+                    appEventBus.publish(this, new RefreshClientViewEvent(this, "abc"));
+
 
                 }catch(NumberFormatException e){
                     errorLabel.setCaption("Incorrect data. Only digits are admissible");

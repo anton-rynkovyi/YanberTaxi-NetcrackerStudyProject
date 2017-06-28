@@ -6,14 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class RefreshClientViewEvent {
 
-    @Autowired
-    private org.vaadin.spring.events.EventBus.UIEventBus uiEventBus;
-
-    private final NewOrdersTab components;
     private final String driverId;
+    private final NewOrdersTab page;
 
-    public RefreshClientViewEvent (NewOrdersTab components, String s) {
-        this.components = components;
-        driverId = s;
+
+    public RefreshClientViewEvent (NewOrdersTab page, String driverId) {
+        this.page = page;
+        this.driverId = driverId;
     }
 }

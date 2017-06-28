@@ -6,6 +6,7 @@ import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
+import com.netcracker.project.study.vaadin.client.popups.DriverEvaluation;
 import com.netcracker.project.study.vaadin.client.views.ClientView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -21,6 +22,12 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.vaadin.addons.Toast;
+import org.vaadin.addons.ToastPosition;
+import org.vaadin.addons.ToastType;
+import org.vaadin.addons.Toastr;
+import org.vaadin.addons.builder.ToastBuilder;
+import org.vaadin.addons.builder.ToastOptionsBuilder;
 import org.vaadin.spring.events.EventBus;
 import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 
@@ -47,6 +54,9 @@ public class ClientPage extends UI {
 
     @Autowired
     private EventBus.UIEventBus uiEventBus;
+
+    @Autowired
+    private DriverEvaluation driverEvaluation;
 
 
     private Client client;
@@ -121,13 +131,14 @@ public class ClientPage extends UI {
 
     @PostConstruct
     public void afterPropertiesSet() {
-        uiEventBus.subscribe(this,false);
+        uiEventBus.subscribe(this,true);
+
     }
 
     @EventBusListenerMethod
     public void closeSymmUsageWindow(RefreshClientViewEvent event) {
-        System.out.println("Yeah! Your event bus work");
-        //blah
+        driverEvaluation.init();
+        getUI().addWindow(driverEvaluation);
     }
 
     private VerticalLayout getVerticalLayout() {
