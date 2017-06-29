@@ -89,6 +89,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    public void sendDriverMemo(Order order, String driverMemo) {
+        order.setDriverMemo(driverMemo);
+        persistenceFacade.update(order);
+    }
+
+    @Override
     public <T extends Model> List<T> allModelsAsList() {
         List<T> clients = persistenceFacade.getAll(BigInteger.valueOf(ClientAttr.OBJECT_TYPE_ID), Client.class);
         return clients;
@@ -107,11 +113,16 @@ public class ClientServiceImpl implements ClientService {
         BigInteger rating = BigInteger.valueOf(0);
         BigInteger quantity = BigInteger.valueOf(0);
         for (Order order:orders) {
-            rating.add(order.getDriverRating());
-            quantity.add(BigInteger.valueOf(1));
+            if (order.getDriverRating()!=null) {
+                rating = rating.add(order.getDriverRating());
+                quantity = quantity.add(BigInteger.valueOf(1));
+            }
+
         }
-        driver.setRating(new BigDecimal(rating.divide(quantity)));
-        persistenceFacade.update(driver);
+        if (!quantity.equals(BigInteger.valueOf(0))) {
+            driver.setRating(new BigDecimal(rating.divide(quantity)));
+            persistenceFacade.update(driver);
+        }
     }
 
 

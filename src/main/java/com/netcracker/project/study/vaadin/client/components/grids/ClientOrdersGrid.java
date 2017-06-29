@@ -12,6 +12,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.addons.Toastr;
 
 import java.util.List;
 
@@ -32,6 +33,8 @@ public class ClientOrdersGrid  extends CustomComponent {
 
     private Window orderInfoWindow;
 
+    private Toastr toastr;
+
     private Client client;
 
     public void init() {
@@ -39,6 +42,9 @@ public class ClientOrdersGrid  extends CustomComponent {
         initOrderInfoWindow();
         componentLayout = getFilledComponentLayout();
         componentLayout.addComponent(getButtons());
+
+        toastr = new Toastr();
+        componentLayout.addComponent(toastr);
         setGridSettings(clientOrderGrid);
         setCompositionRoot(componentLayout);
     }
@@ -92,7 +98,7 @@ public class ClientOrdersGrid  extends CustomComponent {
         viewOrderButton.addClickListener(event->{
             if(!clientOrderGrid.asSingleSelect().isEmpty()){
                 Order order = clientOrderGrid.asSingleSelect().getValue();
-                orderInfoPopUp.init(order);
+                orderInfoPopUp.init(order, toastr);
                 UI.getCurrent().addWindow(orderInfoWindow);
             }
         });

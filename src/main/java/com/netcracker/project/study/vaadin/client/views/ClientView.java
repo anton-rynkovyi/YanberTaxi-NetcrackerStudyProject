@@ -1,7 +1,6 @@
 package com.netcracker.project.study.vaadin.client.views;
 
 import com.github.appreciated.material.MaterialTheme;
-import com.google.common.eventbus.EventBus;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.order.Order;
@@ -16,6 +15,7 @@ import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrent
 import com.netcracker.project.study.vaadin.client.components.grids.ClientOrdersGrid;
 import com.netcracker.project.study.vaadin.client.components.OrderMaker;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
+import com.netcracker.project.study.vaadin.client.events.SendClientMessage;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.client.popups.DriverEvaluation;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
@@ -36,6 +36,7 @@ import org.vaadin.addons.ToastType;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
+import org.vaadin.spring.events.EventBus;
 import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 
 import javax.annotation.PostConstruct;
@@ -83,12 +84,10 @@ public class ClientView extends VerticalLayout implements View {
     ClientUpdate ClientWindow;
 
     @Autowired
-    private org.vaadin.spring.events.EventBus.ViewEventBus viewEventBus;
+    private EventBus.UIEventBus viewEventBus;
 
     @Autowired
     private DriverEvaluation driverEvaluation;
-
-    private UI ui;
 
     private Button newOrder, cancelOrder;
 
@@ -98,15 +97,18 @@ public class ClientView extends VerticalLayout implements View {
 
     private Toastr toastr;
 
+    private UI currentUi;
+
+    List<Order> currentOrders ;
 
     public void init() {
+        currentUi = getUI();
         initClient();
         clientCurrentOrderGrid.setClient(client);
         clientCurrentOrderGrid.init();
         orderMaker.setClient(client);
         clientOrdersGrid.setClient(client);
         clientOrdersGrid.init();
-        ui = UI.getCurrent();
 
         toastr = new Toastr();
         addComponent(toastr);
@@ -182,18 +184,6 @@ public class ClientView extends VerticalLayout implements View {
         panel.setSizeFull();
         panel.setContent(component);
 
-        return panel;
-    }
-
-    private Panel getClientPoints(){
-        Panel panel = new Panel();
-        HorizontalLayout clientPointslayout = new HorizontalLayout();
-        BigInteger clientPoints = client.getPoints() != null ? client.getPoints() : BigInteger.ZERO;
-        Label icon = new Label();
-        icon.setIcon(VaadinIcons.COIN_PILES);
-        Label pointsInfo = new Label("<b>Your points: " + clientPoints + "</b>", ContentMode.HTML);
-        clientPointslayout.addComponents(icon, pointsInfo);
-        panel.setContent(clientPointslayout);
         return panel;
     }
 
@@ -278,10 +268,64 @@ public class ClientView extends VerticalLayout implements View {
         window.setContent(verticalLayout);
     }
 
-
-
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         init();
+    }
+
+
+    @PostConstruct
+    public void afterPropertiesSet() {
+        viewEventBus.subscribe(this,true);
+
+    }
+
+    @EventBusListenerMethod
+    public void closeSymmUsageWindow(RefreshClientViewEvent event) {
+        currentOrders = orderMaker.getOrdersList();
+        if (currentOrders == null) {
+            return;
+        }
+        for (Order currentOrder:currentOrders) {
+            if (currentOrder.getObjectId().equals(event.getOrderId())) {
+                clientOrdersGrid.init();
+                clientCurrentOrderGrid.init();
+                driverEvaluation.init(event.getOrderId());
+                newOrder.setVisible(true);
+                cancelOrder.setVisible(false);
+                if (!currentUi.getWindows().contains(driverEvaluation)) {
+                    currentUi.addWindow(driverEvaluation);
+                }
+            }
+        }
+
+    }
+
+    @EventBusListenerMethod
+    public void sendMessageWindow(SendClientMessage event) {
+        currentOrders = orderMaker.getOrdersList();
+        if (currentOrders == null) {
+            return;
+        }
+        for (Order currentOrder:currentOrders) {
+            if (currentOrder.getObjectId().equals(event.getOrderId())) {
+                clientOrdersGrid.init();
+                clientCurrentOrderGrid.init();
+                Window message = new Window();
+                VerticalLayout verticalLayout = new VerticalLayout();
+                verticalLayout.setWidth(400, Unit.PIXELS);
+                verticalLayout.setMargin(true);
+                verticalLayout.setSpacing(true);
+                TextField text = new TextField();
+                text.setData("Your order is already accepted");
+                text.setReadOnly(true);
+                verticalLayout.addComponent(text);
+                message.setModal(true);
+                message.setResizable(false);
+                currentUi.addWindow(message);
+                message.setContent(verticalLayout);
+            }
+        }
+
     }
 }

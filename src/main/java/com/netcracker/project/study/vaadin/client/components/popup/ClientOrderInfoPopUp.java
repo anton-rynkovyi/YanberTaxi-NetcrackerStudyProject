@@ -12,6 +12,7 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.addons.Toast;
 import org.vaadin.addons.ToastPosition;
@@ -32,13 +33,15 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
 
     private Order order;
 
+    private RadioButtonGroup rateRudioButtons;
+
     private Button btnComment;
 
     private TextArea textArea;
 
     private Toastr toastr;
 
-    public void init(Order order) {
+    public void init(Order order, Toastr toastr) {
         this.order = order;
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
@@ -48,7 +51,7 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
         rootLayout.addComponent(setOrderInfoLayout());
         addComponent(rootLayout);
 
-        toastr = new Toastr();
+        this.toastr = toastr;
         addComponent(toastr);
     }
 
@@ -68,9 +71,12 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
         HorizontalLayout statusInfo = getOrderStatusInfoLayout(order);
         HorizontalLayout orderCostInfo = getOrderCostInfoLayout(order);
         HorizontalLayout distanceInfo = getDistanceInfoLayout(order);
-        HorizontalLayout driverRatingInfo = getDriverRatingInfoLayout(order);
+        HorizontalLayout[] driverRatingInfo = getDriverRatingLayoutWithPermission(order);
 
-        orderForm.addComponents(orderNumberInfo, driverNameInfo, statusInfo, orderCostInfo, distanceInfo, driverRatingInfo);
+        orderForm.addComponents(orderNumberInfo, driverNameInfo, statusInfo, orderCostInfo, distanceInfo);
+        for (int i = 0; i < driverRatingInfo.length; i++){
+            orderForm.addComponent(driverRatingInfo[i]);
+        }
 
         Label[] routes = getRoutes(order.getObjectId());
         VerticalLayout allRoutes = getLayoutWithRoutes(routes);
@@ -80,17 +86,9 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
         routesAndDetalies.addComponents(orderForm, allRoutes);
         allInfo.addComponent(routesAndDetalies);
 
-        btnComment = new Button("Leave a comment", VaadinIcons.COMMENT_ELLIPSIS);
-        btnComment.setStyleName(MaterialTheme.BUTTON_ICON_ALIGN_RIGHT);
-        btnComment.setDescription("Press this button to leave your comment about the driver");
-        Button.ClickListener commentLeaverListener = new CommentLeaverListener();
-        btnComment.addClickListener(commentLeaverListener);
+        btnComment = getBtnComment();
 
-        textArea = new TextArea();
-        textArea.setIcon(VaadinIcons.COMMENT);
-        textArea.setEnabled(true);
-        textArea.setWidth(800, Unit.PIXELS);
-        textArea.setCaption("Comment for Driver");
+        textArea = getTextAreaForComment();
 
         getCommentPermission(order, textArea, btnComment);
 
@@ -106,6 +104,26 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
         rootLayout.addComponent(orderPanel);
 
         return rootLayout;
+    }
+
+    private Button getBtnComment(){
+        Button button = new Button("Leave a comment", VaadinIcons.COMMENT_ELLIPSIS);
+        button.setStyleName(MaterialTheme.BUTTON_ICON_ALIGN_RIGHT);
+        button.setDescription("Press this button to leave your comment about the driver");
+        Button.ClickListener commentLeaverListener = new CommentLeaverListener();
+        button.addClickListener(commentLeaverListener);
+
+        return button;
+    }
+
+    private TextArea getTextAreaForComment(){
+        TextArea textArea = new TextArea();
+        textArea.setIcon(VaadinIcons.COMMENT);
+        textArea.setEnabled(true);
+        textArea.setWidth(800, Unit.PIXELS);
+        textArea.setCaption("Comment for Driver");
+
+        return textArea;
     }
 
     private HorizontalLayout getOrderNumberInfoLayout(Order order) {
@@ -162,16 +180,99 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
         return distanceInfo;
     }
 
-    private HorizontalLayout getDriverRatingInfoLayout(Order order){
-        HorizontalLayout driverRatingInfo = new HorizontalLayout();
-        Label driverRating = new Label("Driver rating: <i>" +
-                (order.getDriverRating() != null ? order.getDriverRating() : "N/A")+
-                "</i>", ContentMode.HTML);
+    private RadioButtonGroup getRadioButton(){
+
+        RadioButtonGroup<Integer> single = new RadioButtonGroup<>("Choose driver rating");
+        single.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
+        single.setItems(1,2,3,4,5);
+
+        return single;
+    }
+
+    private Button getRateButton(){
+        Button btnRate = new Button("Rate driver", VaadinIcons.STAR);
+        btnRate.addStyleName(MaterialTheme.BUTTON_ICON_ALIGN_RIGHT);
+        btnRate.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                if (rateRudioButtons.getValue() != null) {
+                    int rating = Integer.parseInt(rateRudioButtons.getValue().toString());
+                    orderService.setDriverRating(order, rating);
+                    makeAndPushToast(ToastType.Success, ToastPosition.Top_Right, "You have successfully evaluated the driver");
+                    init(order, toastr);
+                } else {
+                    makeAndPushToast(ToastType.Warning, ToastPosition.Top_Right, "You don't choose rating");
+                }
+            }
+        });
+        return btnRate;
+    }
+
+    private HorizontalLayout[] getDriverRatingLayout(Order order, String labelText){
+        HorizontalLayout[] driverRatingInfo;
+        if (order.getDriverRating() == null){
+            driverRatingInfo = new HorizontalLayout[4];
+
+            Label label = new Label(labelText);
+            label.setStyleName(MaterialTheme.LABEL_COLORED);
+
+            driverRatingInfo[0] = new HorizontalLayout(label);
+            HorizontalLayout stars = getDriverRatingStars(0);
+            driverRatingInfo[1] = new HorizontalLayout(stars);
+            rateRudioButtons = getRadioButton();
+            driverRatingInfo[2] = new HorizontalLayout(rateRudioButtons);
+            driverRatingInfo[3] = new HorizontalLayout(getRateButton());
+        } else {
+            driverRatingInfo = new HorizontalLayout[1];
+            driverRatingInfo[0] = getDriverRatingStars(order.getDriverRating().intValue());
+        }
+        return driverRatingInfo;
+    }
+
+    private HorizontalLayout[] getDriverRatingLayoutWithPermission(Order order){
+        HorizontalLayout[] driverRatingLayout;
+        if (!(order.getStatus().equals(OrderStatusList.CANCELED))) {
+            if (order.getDriverRating() != null) {
+                driverRatingLayout = getDriverRatingLayout(order, "");
+            } else
+            if (order.getStatus().equals(OrderStatusList.PERFORMED)) {
+                driverRatingLayout = getDriverRatingLayout(order,"You may rate the driver");
+            } else {
+                driverRatingLayout = getDriverRatingLayout(order,"You may rate the driver when order has status \"Perfomed\"");
+                driverRatingLayout[2].setEnabled(false);
+                driverRatingLayout[3].setEnabled(false);
+            }
+        } else {
+            driverRatingLayout = getDriverRatingLayout(order, "You can't rate the driver because order was canceled");
+            driverRatingLayout[2].setVisible(false);
+            driverRatingLayout[3].setVisible(false);
+        }
+        return driverRatingLayout;
+    }
+
+    private HorizontalLayout getDriverRatingStars(int driverRating){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        int total = 5;
+
+        Label ratingHeader = new Label("Driver rating: ",ContentMode.HTML);
         Label driverRatingIcon = new Label();
         driverRatingIcon.setIcon(VaadinIcons.USER_STAR);
-        driverRatingInfo.addComponents(driverRatingIcon, driverRating);
+        horizontalLayout.addComponents(driverRatingIcon, ratingHeader);
 
-        return driverRatingInfo;
+        for(int i = 0;i < driverRating; i++){
+            Label star = new Label();
+            star.setIcon(VaadinIcons.STAR);
+            horizontalLayout.addComponent(star);
+        }
+
+        int remainedRating = total - driverRating;
+
+        for(int i = 0;i < remainedRating; i++){
+            Label star = new Label();
+            star.setIcon(VaadinIcons.STAR_O);
+            horizontalLayout.addComponent(star);
+        }
+        return horizontalLayout;
     }
 
     private Label[] getRoutes(BigInteger orderId){
@@ -205,7 +306,7 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
             if (order.getDriverMemo() != null) {
                 textArea.setValue(order.getDriverMemo());
                 textArea.setReadOnly(true);
-                btnComment.setEnabled(false);
+                btnComment.setVisible(false);
             } else
             if (order.getStatus().equals(OrderStatusList.PERFORMED)) {
                 textArea.setPlaceholder("You are not leaving comment for this driver.\nYou may click on text field and leave your comment");
@@ -227,27 +328,22 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
         public void buttonClick(Button.ClickEvent clickEvent) {
             String comment = textArea.getValue().trim();
             if (comment.isEmpty()){
-                Toast emptyCommentToast = ToastBuilder.of(ToastType.Info, "<b>You can't leave empty comment</b>")
-                        .options(ToastOptionsBuilder.having()
-                                .preventDuplicates(true)
-                                .position(ToastPosition.Top_Right)
-                                .build())
-                        .build();
-                toastr.toast(emptyCommentToast);
+                makeAndPushToast(ToastType.Warning, ToastPosition.Top_Right, "You can't leave empty comment");
             } else {
                 orderService.setCommentAboutDriver(order, comment);
-                Toast succesCommentToast = ToastBuilder.of(ToastType.Success, "<b>Your comment added successfully</b>")
-                        .options(ToastOptionsBuilder.having()
-                                .preventDuplicates(true)
-                                .position(ToastPosition.Top_Right)
-                                .build())
-                        .build();
-                toastr.toast(succesCommentToast);
-                if (order.getDriverMemo() != null) {
-                    btnComment.setEnabled(false);
-                    textArea.setReadOnly(true);
-                }
+                makeAndPushToast(ToastType.Success, ToastPosition.Top_Right, "Your comment added successfully");
+                init(order, toastr);
             }
         }
+    }
+
+    private void makeAndPushToast(ToastType toastType, ToastPosition toastPosition, String toastText){
+        Toast toast = ToastBuilder.of(toastType, "<b>"+ toastText + "</b>")
+                .options(ToastOptionsBuilder.having()
+                        .preventDuplicates(true)
+                        .position(toastPosition)
+                        .build())
+                .build();
+        toastr.toast(toast);
     }
 }

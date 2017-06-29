@@ -272,11 +272,18 @@ public class OrderServiceImpl implements OrderService {
         return orderList;
     }
 
+    @Override
     public void setClientPoints(BigInteger orderId) {
         Order order = persistenceFacade.getOne(orderId, Order.class);
         Client client = order.getClientOnOrder();
         client.setPoints(client.getPoints().add(order.getDistance()));
         persistenceFacade.update(client);
+    }
+
+    @Override
+    public void setDriverRating(Order order, int rating) {
+        order.setDriverRating(BigInteger.valueOf(rating));
+        persistenceFacade.update(order);
     }
 
     public void setNewOrdersTab(NewOrdersTab newOrdersTab) {

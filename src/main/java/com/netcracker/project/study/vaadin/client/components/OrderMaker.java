@@ -2,6 +2,7 @@ package com.netcracker.project.study.vaadin.client.components;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
@@ -17,6 +18,7 @@ import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @ViewScope
 @SpringComponent
@@ -46,12 +48,18 @@ public class OrderMaker extends CustomComponent {
 
     private Client client;
 
+
+    private List<Order> ordersList;
+
     private Button newOrderButton, cancelOrderButton;
 
     private void setcountOfTextFields(int number) {countOfTextFields = number;}
 
     private int getcountOfTextFields() {return countOfTextFields;}
 
+    public List<Order> getOrdersList() {
+        return ordersList;
+    }
 
     @PostConstruct
     public void init() {
@@ -79,13 +87,6 @@ public class OrderMaker extends CustomComponent {
         orderMaker.addComponent(toastr);
         orderMaker.setComponentAlignment(toastr, Alignment.TOP_RIGHT);
 
-        /*HorizontalLayout layoutWithRadioButton = setRadioButton();
-        MarginInfo radioButtonBtnMerginInfo = new MarginInfo(true, false, false, true);
-        layoutWithRadioButton.setMargin(radioButtonBtnMerginInfo);
-        layoutWithRadioButton.setSpacing(false);
-        orderMaker.addComponent(layoutWithRadioButton);
-        orderMaker.setComponentAlignment(layoutWithRadioButton, Alignment.BOTTOM_LEFT);*/
-
         setCompositionRoot(orderMaker);
     }
 
@@ -95,7 +96,24 @@ public class OrderMaker extends CustomComponent {
 
     public void enableCancelOrderButton(Button button) {cancelOrderButton = button;}
 
-    public void closeOrderMakerWindow(Window orderMakerWindow) {this.orderMakerWindow = orderMakerWindow;}
+    public void closeOrderMakerWindow(Window orderMakerWindow) {
+        this.orderMakerWindow = orderMakerWindow;
+        orderMakerWindow.addCloseListener(new Window.CloseListener() {
+            @Override
+            public void windowClose(Window.CloseEvent closeEvent) {
+                for (int i = 0; i < fields.length; i++) {
+                    if (fields[i] != null) fields[i].clear();
+                }
+                for (int i = 1; i < 4; i++){
+                    if (fields[i] != null) {
+                        fieldsLayout.removeComponent(fields[i]);
+                        fields[i] = null;
+                    }
+                    setcountOfTextFields(1);
+                }
+            }
+        });
+    }
 
     public void showSuccesToaster(Toastr toastr) {this.toastr = toastr;}
 
@@ -153,20 +171,6 @@ public class OrderMaker extends CustomComponent {
         return horizontalLayout;
     }
 
-    /*private HorizontalLayout setRadioButton(){
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-
-
-        RadioButtonGroup<Integer> single = new RadioButtonGroup<>("Single Selection");
-        single.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
-        RadioButtonGroup.ValueChangeListener singleListener = new RadioButtonListener();
-        single.setItems(1,2,3,4,5);
-
-        horizontalLayout.addComponent(single);
-
-
-        return horizontalLayout;
-    }*/
     class TextFieldCounter implements Button.ClickListener {
 
         @Override
@@ -180,14 +184,7 @@ public class OrderMaker extends CustomComponent {
 
                 setcountOfTextFields(++count);
             } else {
-                Toast routesCreateToast = ToastBuilder.of(ToastType.Info, "<b>You can't create more then three interjacent points</b> ")
-                        .caption("")
-                        .options(ToastOptionsBuilder.having()
-                                .preventDuplicates(true)
-                                .position(ToastPosition.Top_Right)
-                                .build())
-                        .build();
-                toastr.toast(routesCreateToast);
+                makeAndPushToast(ToastType.Info, ToastPosition.Top_Right,"<b>You can't create more then three interjacent points</b> ");
             }
         }
     }
@@ -205,14 +202,7 @@ public class OrderMaker extends CustomComponent {
 
                 setcountOfTextFields(count-1);
             } else {
-                Toast deleteRoutesTextFieldsToast = ToastBuilder.of(ToastType.Info, "<b>You can't delete this routes points</b> ")
-                        .caption("")
-                        .options(ToastOptionsBuilder.having()
-                                .preventDuplicates(true)
-                                .position(ToastPosition.Top_Right)
-                                .build())
-                        .build();
-                toastr.toast(deleteRoutesTextFieldsToast);
+                makeAndPushToast(ToastType.Info, ToastPosition.Top_Right,"<b>You can't delete this routes points</b> ");
             }
         }
     }
@@ -228,57 +218,36 @@ public class OrderMaker extends CustomComponent {
             if (!(isFieldsEmpty(textFieldsStrings))) {
                 if (orderService.getActiveOrdersByClientId(client.getObjectId()).size() > 0
                         || orderService.getPerformingOrdersByClientId(client.getObjectId()).size() > 0 ) {
-                    Toast toast = ToastBuilder.of(ToastType.Warning, "<b>You have an active order. You can't simultaneously create multiple orders</b> ")
-                            .caption("Attention")
-                            .options(ToastOptionsBuilder.having()
-                                    .preventDuplicates(true)
-                                    .position(ToastPosition.Top_Right)
-                                    .build())
-                            .build();
-                    toastr.toast(toast);
+                    makeAndPushToast(ToastType.Warning, ToastPosition.Top_Right,"<b>You have an active order." + ""
+                           + " You can't simultaneously create multiple orders</b> ");
                 } else {
                     clientService.makeOrder(client.getObjectId(), textFieldsStrings);
+                    makeAndPushToast(ToastType.Success, ToastPosition.Top_Right,"<b>Your order was created successfully</b> ");
 
-                    Toast orderMakerToast = ToastBuilder.of(ToastType.Success, "Your order was created successfully</b> ")
-                            .caption("Succes")
-                            .options(ToastOptionsBuilder.having()
-                                    .preventDuplicates(true)
-                                    .position(ToastPosition.Top_Right)
-                                    .build())
-                            .build();
-                    toastr.toast(orderMakerToast);
-
-                    for (int i = 0; i < fields.length; i++) {
-                        if (fields[i] != null) fields[i].clear();
-                    }
                     orderMakerWindow.close();
                     cancelOrderButton.setVisible(true);
                     newOrderButton.setVisible(false);
 
                     clientOrdersGrid.init();
                     clientCurrentOrderGrid.init();
+                    ordersList = orderService.getCurrentOrderByClientId(client.getObjectId());
                 }
             } else {
-                Toast setAllFieldsToast = ToastBuilder.of(ToastType.Warning, "<b>You haven't fill all information.\nPlease set all fields</b> ")
-                        .caption("Attention")
-                        .options(ToastOptionsBuilder.having()
-                                .preventDuplicates(true)
-                                .position(ToastPosition.Top_Right)
-                                .build())
-                        .build();
-                toastr.toast(setAllFieldsToast);
+                makeAndPushToast(ToastType.Warning, ToastPosition.Top_Right,"<b>You haven't fill" + ""
+                       + " all information.\nPlease set all fields</b> " );
             }
         }
     }
 
-    /*class RadioButtonListener implements RadioButtonGroup.ValueChangeListener {
-
-        @Override
-        public void valueChange(HasValue.ValueChangeEvent valueChangeEvent) {
-            Order order = orderService.getOrder(BigInteger.valueOf(244));
-            clientService.sendDriverRating(order,new BigInteger(valueChangeEvent.toString()));
-        }
-    }*/
+    private void makeAndPushToast(ToastType toastType, ToastPosition toastPosition, String toastText){
+        Toast toast = ToastBuilder.of(toastType, "<b>"+ toastText + "</b>")
+                .options(ToastOptionsBuilder.having()
+                        .preventDuplicates(true)
+                        .position(toastPosition)
+                        .build())
+                .build();
+        toastr.toast(toast);
+    }
 
     private boolean isFieldsEmpty(String[] textFieldsStrings) {
         for (String textFieldString : textFieldsStrings) {

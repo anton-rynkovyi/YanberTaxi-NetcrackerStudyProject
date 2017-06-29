@@ -47,7 +47,7 @@ public class ClientPage extends UI {
     UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    ClientUpdate ClientWindow;
+    ClientUpdate clientWindow;
 
     @Autowired
     Copyright bottomTeamLogo;
@@ -62,54 +62,38 @@ public class ClientPage extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        VerticalLayout rootLayout = getVerticalLayout();
-        rootLayout.setMargin(false);
-        rootLayout.setSpacing(false);
-        rootLayout.setHeight(100, Unit.PERCENTAGE);
-        setContent(rootLayout);
-        //rootLayout.setExpandRatio(viewDisplay, 1.0f);
-        HorizontalLayout panelCaption = new HorizontalLayout();
-        panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        panelCaption.setStyleName(MaterialTheme.LAYOUT_CARD);
-        panelCaption.setMargin(new MarginInfo(false, true, false, true));
-        // panelCaption.addStyleName("v-panel-caption");
-        panelCaption.setWidth("100%");
-        // panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
-        Label label1 = new Label("<h3>YanberTaxi<h3>", ContentMode.HTML);
-        panelCaption.addComponent(label1);
-        panelCaption.setComponentAlignment(label1, Alignment.MIDDLE_LEFT);
-        panelCaption.setExpandRatio(label1, 1);
         client = userDetailsService.getCurrentUser();
-        String clientName = client.getFirstName() + " " + client.getLastName();
-        Label label2 = new Label( "Hello, "+clientName);
-        panelCaption.addComponent(label2);
 
-        Button action = new Button();
-        action.setIcon(FontAwesome.PENCIL);
-        action.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        action.addStyleName(ValoTheme.BUTTON_SMALL);
-        action.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        action.addClickListener(clock -> {
-            ClientWindow.init(userDetailsService.getUser(),client);
-            getUI().addWindow(ClientWindow);
-        });
-        panelCaption.addComponent(action);
-        Button logOutButton = new Button("LogOut");
-        logOutButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        logOutButton.addStyleName(ValoTheme.BUTTON_SMALL);
-        logOutButton.addClickListener(clickEvent -> {
-            SecurityContextHolder.clearContext();
-            getUI().getSession().close();
-            getUI().getPage().setLocation("/authorization");
-        });
-        logOutButton.setIcon(VaadinIcons.EXIT);
+        VerticalLayout rootLayout = getVerticalLayout();
+        setContent(rootLayout);
+
+        HorizontalLayout panelCaption = getPanelCaption();
+
+        Label logo = new Label("<h3>YanberTaxi<h3>", ContentMode.HTML);
+        HorizontalLayout logoLayout = new HorizontalLayout();
+        logoLayout.setMargin(new MarginInfo(false, false, false, false));
+        logoLayout.setSpacing(false);
+        logoLayout.addComponent(logo);
+        panelCaption.addComponent(logoLayout);
+        panelCaption.setComponentAlignment(logoLayout, Alignment.MIDDLE_LEFT);
+        panelCaption.setExpandRatio(logoLayout, 0.3f);
+
+        HorizontalLayout clientPoints = getClientPoints();
+        clientPoints.setMargin(new MarginInfo(false, false, false, false));
+        panelCaption.addComponent(clientPoints);
+        panelCaption.setComponentAlignment(clientPoints, Alignment.MIDDLE_CENTER);
+        panelCaption.setExpandRatio(clientPoints, 1f);
+
+        Label hello = getHelloLable();
+        panelCaption.addComponent(hello);
+
+        Button infoChanger = getInfoChangerButton();
+        panelCaption.addComponent(infoChanger);
+
+        Button logOutButton = getLogOutButton();
         panelCaption.addComponent(logOutButton);
 
         rootLayout.addComponent(panelCaption);
-
-        HorizontalLayout clientPoints = getClientPoints();
-        rootLayout.addComponent(clientPoints);
-        rootLayout.setComponentAlignment(clientPoints, Alignment.BOTTOM_CENTER);
 
         viewDisplay = getViewDisplay();
         rootLayout.addComponent(viewDisplay);
@@ -127,8 +111,55 @@ public class ClientPage extends UI {
     private VerticalLayout getVerticalLayout() {
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setSizeFull();
-        //verticalLayout.setStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
+        verticalLayout.setMargin(false);
+        verticalLayout.setSpacing(false);
+        verticalLayout.setHeight(100, Unit.PERCENTAGE);
         return verticalLayout;
+    }
+
+    private HorizontalLayout getPanelCaption(){
+        HorizontalLayout panelCaption = new HorizontalLayout();
+        panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+        panelCaption.setStyleName(MaterialTheme.LAYOUT_CARD);
+        panelCaption.setMargin(new MarginInfo(false, true, false, true));
+        panelCaption.setWidth("100%");
+
+        return panelCaption;
+    }
+
+    private Label getHelloLable(){
+        String clientName = client.getFirstName() + " " + client.getLastName();
+        Label hello = new Label( "Hello, " + clientName);
+
+        return hello;
+    }
+
+    private Button getInfoChangerButton(){
+        Button action = new Button();
+        action.setIcon(VaadinIcons.PENCIL);
+        action.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        action.addStyleName(ValoTheme.BUTTON_SMALL);
+        action.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        action.addClickListener(clock -> {
+            clientWindow.init(userDetailsService.getUser(), client);
+            getUI().addWindow(clientWindow);
+        });
+
+        return action;
+    }
+
+    private Button getLogOutButton(){
+        Button logOutButton = new Button("LogOut");
+        logOutButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        logOutButton.addStyleName(ValoTheme.BUTTON_SMALL);
+        logOutButton.addClickListener(clickEvent -> {
+            SecurityContextHolder.clearContext();
+            getUI().getSession().close();
+            getUI().getPage().setLocation("/authorization");
+        });
+        logOutButton.setIcon(VaadinIcons.EXIT);
+
+        return logOutButton;
     }
 
     private Panel getViewDisplay() {
@@ -149,8 +180,9 @@ public class ClientPage extends UI {
         BigInteger clientPoints = client.getPoints() != null ? client.getPoints() : BigInteger.ZERO;
         Label icon = new Label();
         icon.setIcon(VaadinIcons.COIN_PILES);
-        Label pointsInfo = new Label("<b>Your points: " + clientPoints + "</b>", ContentMode.HTML);
+        Label pointsInfo = new Label("Your points: " + clientPoints);
         clientPointslayout.addComponents(icon, pointsInfo);
+        clientPointslayout.setComponentAlignment(icon, Alignment.MIDDLE_CENTER);
         return clientPointslayout;
     }
 

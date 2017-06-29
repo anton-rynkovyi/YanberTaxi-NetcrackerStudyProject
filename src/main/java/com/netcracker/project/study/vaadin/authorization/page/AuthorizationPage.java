@@ -135,8 +135,9 @@ public class AuthorizationPage extends UI {
         yanber.setStyleName(MaterialTheme.LABEL_LIGHT);
         horizontalLayout.addComponent(yanber);
         horizontalLayout.setComponentAlignment(yanber, Alignment.MIDDLE_RIGHT);
-
         horizontalLayout.addComponent(yanber);
+
+
         return horizontalLayout;
     }
 
