@@ -2,8 +2,10 @@ package com.netcracker.project.study.vaadin.driver.components.tabs;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.status.DriverStatus;
+import com.netcracker.project.study.model.driver.status.DriverStatusAttr;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.model.order.status.OrderStatus;
@@ -254,6 +256,10 @@ public class NewOrdersTab extends CustomComponent {
         } else {
             Label label = new Label("You have no order performing", ContentMode.HTML);
             currentOrderPanel.setContent(label);
+            if(!driver.getStatus().equals(DriverStatusList.OFF_DUTY)){
+                acceptOrderButton.setEnabled(true);
+                ((DriverPage)getUI()).refreshUI();
+            }
         }
 
     }

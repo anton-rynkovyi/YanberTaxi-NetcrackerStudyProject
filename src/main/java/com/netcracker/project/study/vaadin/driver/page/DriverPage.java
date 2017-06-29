@@ -262,6 +262,7 @@ public class DriverPage extends UI {
     private void changeStatusIcon() {
         if (driver.getStatus().equals(DriverStatusList.FREE)) {
             statusIcon.setIcon(VaadinIcons.COFFEE);
+            setStatusButtonEnabled(true);
         }
         if (driver.getStatus().equals(DriverStatusList.ON_CALL)) {
             statusIcon.setIcon(VaadinIcons.TAXI);
@@ -271,6 +272,7 @@ public class DriverPage extends UI {
         }
         if (driver.getStatus().equals(DriverStatusList.OFF_DUTY)) {
             statusIcon.setIcon(VaadinIcons.HOME_O);
+            setStatusButtonEnabled(true);
         }
         statusValue.setValue(DriverStatusEnum.getStatusValue(driver.getStatus()));
     }
