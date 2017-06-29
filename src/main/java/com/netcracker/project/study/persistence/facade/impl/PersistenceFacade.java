@@ -55,7 +55,7 @@ public class PersistenceFacade implements Facade {
     }
 
     @Override
-    public List getAll(BigInteger objectTypeId, Class modelClass){
+    public List getAll(BigInteger objectTypeId, Class modelClass) {
         List<PersistenceEntity> entities = manager.getAll(objectTypeId);
         List<Model> models = new ArrayList<>();
         for (int i = 0; i < entities.size(); i++) {
@@ -67,20 +67,25 @@ public class PersistenceFacade implements Facade {
     }
 
     @Override
-    public List getSome(String sqlQuery, Class modelClass){
+    public List getSome(String sqlQuery, Class modelClass, boolean isReversed) {
         List<PersistenceEntity> entities = manager.getSome(sqlQuery);
         List<Model> models = new ArrayList<>();
-        /*for (int i = 0; i < entities.size(); i++) {
-            Model model;
-            model = converter.convertToModel(entities.get(i), modelClass);
-            models.add(model);
-        }*/
 
-        for (int i = entities.size() - 1; i >= 0; i--) {
-            Model model;
-            model = converter.convertToModel(entities.get(i), modelClass);
-            models.add(model);
+        if (!isReversed) {
+            for (PersistenceEntity entity:entities) {
+                Model model;
+                model = converter.convertToModel(entity, modelClass);
+                models.add(model);
+            }
+        } else {
+            for (int i = entities.size() - 1; i >= 0; i--) {
+                Model model;
+                model = converter.convertToModel(entities.get(i), modelClass);
+                models.add(model);
+            }
         }
+
+
         return models;
     }
 

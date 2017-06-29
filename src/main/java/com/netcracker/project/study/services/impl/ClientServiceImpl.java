@@ -109,7 +109,7 @@ public class ClientServiceImpl implements ClientService {
                 "obj.object_type_id = 3 "+
                 "and obj_r.REFERENCE= "+driver.getObjectId().toString()+" "+
                 "and obj_r.attr_id=17 ";
-        List<Order> orders = persistenceFacade.getSome(sqlQuery,Order.class);
+        List<Order> orders = persistenceFacade.getSome(sqlQuery,Order.class,false);
         BigInteger rating = BigInteger.valueOf(0);
         BigInteger quantity = BigInteger.valueOf(0);
         for (Order order:orders) {

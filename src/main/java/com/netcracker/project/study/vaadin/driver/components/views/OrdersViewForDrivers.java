@@ -61,11 +61,11 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         rootLayout.addComponent(tabSheet);
 
         rootLayout.setSizeFull();
-        rootLayout.setExpandRatio(tabSheet,0.1f);
+
         setSizeFull();
 
         addComponent(rootLayout);
-
+        setExpandRatio(rootLayout,0.8f);
     }
 
     public void setAcceptButtonEnabled(boolean value){
@@ -141,15 +141,18 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
             ordersGrid.addColumn(OrderInfo::getCost).setCaption("Cost");
             ordersGrid.addColumn(OrderInfo::getDistance).setCaption("Distance");
             allOrdersGrid = ordersGrid;
+            allOrdersGrid.setSizeFull();
 
             HorizontalLayout viewOrderButtonLayout = initViewOrderButton();
             verticalLayout.addComponents(allOrdersGrid,viewOrderButtonLayout);
+            verticalLayout.setExpandRatio(allOrdersGrid,1f);
         }else{
             Label noOrdersLabel = new Label("<h1>Your history of orders is empty yet.</h1>",ContentMode.HTML);
             Panel panel = new Panel();
             panel.setContent(noOrdersLabel);
             verticalLayout.addComponent(panel);
         }
+        verticalLayout.setSizeFull();
         return verticalLayout;
     }
 
@@ -161,8 +164,9 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         tabSheet.addTab(getNewOrdersControlTab(),"New orders (" + getNewOrdersCount() + ")").setIcon(VaadinIcons.LIST_SELECT);
         tabSheet.addTab(allOrdersLayout, "History of orders (" + getAllOrdersCount() + ")").setIcon(VaadinIcons.LIST);
 
-        tabSheet.setHeight(100,Unit.PERCENTAGE);
+       // tabSheet.setHeight(100,Unit.PERCENTAGE);
 
+        tabSheet.setSizeFull();
         return tabSheet;
     }
 

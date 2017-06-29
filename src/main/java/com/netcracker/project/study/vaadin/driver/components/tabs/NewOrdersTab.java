@@ -25,6 +25,7 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
+import com.vaadin.ui.components.grid.HeaderRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,6 +40,7 @@ import org.vaadin.spring.events.EventBus;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.IllegalFormatException;
 import java.util.List;
 
 @ViewScope
@@ -280,34 +282,50 @@ public class NewOrdersTab extends CustomComponent {
             TextField textField = new TextField("Count of km");
             VerticalLayout verticalLayout = new VerticalLayout();
             verticalLayout.addComponent(textField);
+
+            HorizontalLayout errorLayout = new HorizontalLayout();
+            Label iconLabel = new Label();
             Label errorLabel = new Label();
+            errorLayout.addComponents(iconLabel,errorLabel);
+
             Button ok = new Button("OK");
             ok.addClickListener(newEvent -> {
                 try {
                     finishkm = Long.parseLong(textField.getValue());
-                    long distance = finishkm - startkm;
+                    if(finishkm <= startkm){
+                        throw new IllegalArgumentException();
+                    }
+                    if(finishkm <= 0){
+                        iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
+                        errorLabel.setCaption("Incorrect data. Number must be positive..");
+                    }else{
+                        long distance = finishkm - startkm;
 
-                    orderService.setDistance(currentOrder.getObjectId(), distance);
-                    orderService.changeStatus(OrderStatus.PERFORMED, currentOrder.getObjectId());
-                    orderService.setClientPoints(currentOrder.getObjectId());
-                    driverService.changeStatus(DriverStatusList.FREE, driver.getObjectId());
-                    orderService.calcPrice(BigInteger.valueOf(distance), currentOrder.getObjectId());
+                        orderService.setDistance(currentOrder.getObjectId(), distance);
+                        orderService.changeStatus(OrderStatus.PERFORMED, currentOrder.getObjectId());
+                        orderService.setClientPoints(currentOrder.getObjectId());
+                        driverService.changeStatus(DriverStatusList.FREE, driver.getObjectId());
+                        orderService.calcPrice(BigInteger.valueOf(distance), currentOrder.getObjectId());
 
-                    acceptOrderButton.setEnabled(true);
-                    window.close();
-                    refreshContent();
-                    ((DriverPage)getUI()).setStatusButtonEnabled(true);
-                    appEventBus.publish(this, new RefreshClientViewEvent(this,currentOrder.getObjectId()));
-                    currentOrder = null;
-
+                        acceptOrderButton.setEnabled(true);
+                        window.close();
+                        refreshContent();
+                        ((DriverPage)getUI()).setStatusButtonEnabled(true);
+                        appEventBus.publish(this, new RefreshClientViewEvent(this,currentOrder.getObjectId()));
+                        currentOrder = null;
+                    }
 
                 } catch (NumberFormatException e) {
-                    errorLabel.setCaption("Incorrect data. Only digits are admissible");
+                    iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
+                    errorLabel.setCaption("Incorrect data. Only digits are admissible.");
+                }catch (IllegalArgumentException e){
+                    iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
+                    errorLabel.setCaption("Incorrect data. Number must be greater than previous.");
                 }
             });
 
-            verticalLayout.addComponent(errorLabel);
-            verticalLayout.setComponentAlignment(errorLabel, Alignment.MIDDLE_CENTER);
+            verticalLayout.addComponent(errorLayout);
+            verticalLayout.setComponentAlignment(errorLayout, Alignment.MIDDLE_CENTER);
             verticalLayout.setComponentAlignment(textField, Alignment.MIDDLE_CENTER);
             verticalLayout.addComponent(ok);
             verticalLayout.setComponentAlignment(ok, Alignment.MIDDLE_CENTER);
@@ -333,25 +351,36 @@ public class NewOrdersTab extends CustomComponent {
             VerticalLayout verticalLayout = new VerticalLayout();
             verticalLayout.addComponent(textField);
 
+            HorizontalLayout errorLayout = new HorizontalLayout();
+            Label iconLabel = new Label();
             Label errorLabel = new Label();
+            errorLayout.addComponents(iconLabel,errorLabel);
+
             Button ok = new Button("OK");
 
             ok.addClickListener(newEvent -> {
                 try {
                     startkm = Long.parseLong(textField.getValue());
-                    orderService.changeStatus(OrderStatus.PERFORMING, currentOrder.getObjectId());
-                    driverService.changeStatus(DriverStatusList.PERFORMING_ORDER, driver.getObjectId());
-                    window.close();
-                    refreshContent();
-                    ((DriverPage)getUI()).setStatusButtonEnabled(false);
+                    if(startkm < 0){
+                        iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
+                        errorLabel.setCaption("Incorrect data. Number must be positive.");
+                    }else{
+                        orderService.changeStatus(OrderStatus.PERFORMING, currentOrder.getObjectId());
+                        driverService.changeStatus(DriverStatusList.PERFORMING_ORDER, driver.getObjectId());
+                        window.close();
+                        refreshContent();
+                        ((DriverPage)getUI()).setStatusButtonEnabled(false);
+                    }
+
                 } catch (NumberFormatException e) {
-                    errorLabel.setCaption("Incorrect data. Only digits are admissible");
+                    iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
+                    errorLabel.setCaption("Incorrect data. Only digits are admissible.");
                 }
 
             });
 
-            verticalLayout.addComponent(errorLabel);
-            verticalLayout.setComponentAlignment(errorLabel, Alignment.MIDDLE_CENTER);
+            verticalLayout.addComponent(errorLayout);
+            verticalLayout.setComponentAlignment(errorLayout, Alignment.MIDDLE_CENTER);
             verticalLayout.addComponent(ok);
             verticalLayout.setComponentAlignment(textField, Alignment.MIDDLE_CENTER);
             verticalLayout.setComponentAlignment(ok, Alignment.MIDDLE_CENTER);
@@ -431,7 +460,7 @@ public class NewOrdersTab extends CustomComponent {
 
         ordersGrid.setItems(ordersInfo);
 
-        ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("#");
+        ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("№");
         ordersGrid.addColumn(OrderInfo::getStartPoint).setCaption("Start");
         ordersGrid.addColumn(OrderInfo::getDestination).setCaption("Destination");
         ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");

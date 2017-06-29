@@ -64,7 +64,7 @@ public class DriverServiceImpl implements DriverService {
                 "AND attr.list_value_id = " + statusId + " " +
                 "AND attr1.attr_id = " + DriverAttr.UNBAN_DATE_ATTR + " " +
                 "AND attr1.date_value IS NULL";
-        List<Driver> driverList = persistenceFacade.getSome(query, Driver.class);
+        List<Driver> driverList = persistenceFacade.getSome(query, Driver.class,true);
         return driverList;
     }
 
@@ -82,7 +82,7 @@ public class DriverServiceImpl implements DriverService {
                 "AND attr1.attr_id = " + DriverAttr.UNBAN_DATE_ATTR + " " +
                 "AND attr1.date_value IS NULL";
 
-        List<Driver> driverList = persistenceFacade.getSome(query, Driver.class);
+        List<Driver> driverList = persistenceFacade.getSome(query, Driver.class,true);
         return driverList;
     }
 
@@ -95,7 +95,7 @@ public class DriverServiceImpl implements DriverService {
                 "WHERE ref.reference = " + driver.getObjectId() + " " +
                 "AND ref.attr_id = " + CarAttr.DRIVER_ID_ATTR;
 
-        List<Car> carList = persistenceFacade.getSome(query, Car.class);
+        List<Car> carList = persistenceFacade.getSome(query, Car.class,false);
         return carList;
     }
 
@@ -108,7 +108,7 @@ public class DriverServiceImpl implements DriverService {
                 "WHERE obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
                 "AND attr.attr_id = " + DriverAttr.UNBAN_DATE_ATTR + " " +
                 "AND attr.date_value IS NOT NULL";
-        List<Driver> driverBanList = persistenceFacade.getSome(query, Driver.class);
+        List<Driver> driverBanList = persistenceFacade.getSome(query, Driver.class,true);
         return driverBanList;
     }
 
@@ -145,7 +145,7 @@ public class DriverServiceImpl implements DriverService {
                 " AND attr.attr_id = " + DriverAttr.UNBAN_DATE_ATTR + " " +
                 "AND attr.date_value IS NOT NULL";
 
-        List<Driver> driverBanList = persistenceFacade.getSome(query, Driver.class);
+        List<Driver> driverBanList = persistenceFacade.getSome(query, Driver.class,true);
         if(driverBanList.isEmpty()){
             return false;
         }

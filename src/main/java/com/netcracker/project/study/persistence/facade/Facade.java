@@ -19,5 +19,5 @@ public interface Facade{
 
     List<? extends Model> getAll(BigInteger objectTypeId, Class modelClass);
 
-    List<? extends Model> getSome(String sqlQuery, Class modelClass);
+    List<? extends Model> getSome(String sqlQuery, Class modelClass, boolean isReversed);
 }

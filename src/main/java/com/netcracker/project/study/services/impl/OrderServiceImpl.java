@@ -106,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
                         "where attr.object_id=obj.object_id and " +
                         "obj.object_type_id=" + OrderAttr.OBJECT_TYPE_ID +
                         " and attr.list_value_id=" + statusId;
-        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class,true);
         return orderList;
     }
 
@@ -121,7 +121,7 @@ public class OrderServiceImpl implements OrderService {
                       "where attr_id = " + RouteAttr.ORDER_ID_ATTR +
                       " and reference = " + orderId;
 
-        List<Route> routeList = persistenceFacade.getSome(query, Route.class);
+        List<Route> routeList = persistenceFacade.getSome(query, Route.class,false);
         return routeList;
     }
 
@@ -158,7 +158,7 @@ public class OrderServiceImpl implements OrderService {
                     "WHERE obj.object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
                     "AND ref.attr_id = " + OrderAttr.DRIVER_ID_ATTR +
                     "AND ref.reference = " + driverId;
-            List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+            List<Order> orderList = persistenceFacade.getSome(query, Order.class,true);
             return orderList;
         }
         String query = "SELECT obj.object_id " +
@@ -171,7 +171,7 @@ public class OrderServiceImpl implements OrderService {
         " AND reference = " + driverId +
         "AND attr.attr_id = " + Order.STATUS_ATTR +
         " AND attr.list_value_id=" + orderStatusId;
-        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class,true);
         return orderList;
     }
 
@@ -196,7 +196,7 @@ public class OrderServiceImpl implements OrderService {
                 "WHERE object_type_id = " + OrderAttr.OBJECT_TYPE_ID +
                 "AND attr_id = " + OrderAttr.CLIENT_ID_ATTR +
                 "AND reference = " + clientId;
-        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class,true);
         return orderList;
     }
 
@@ -212,7 +212,7 @@ public class OrderServiceImpl implements OrderService {
                 " AND ref.reference = "+clientId+
                 " AND attr.attr_id = 18"+
                 " AND (attr.list_value_id = "+ OrderStatus.NEW+" or attr.list_value_id = "+ OrderStatus.ACCEPTED+")";
-        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class,true);
         return orderList;
     }
 
@@ -228,7 +228,7 @@ public class OrderServiceImpl implements OrderService {
                 " AND ref.reference = "+clientId+
                 " AND attr.attr_id = 18"+
                 " AND attr.list_value_id = "+ OrderStatus.PERFORMING+"";
-        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class,true);
         return orderList;
     }
 
@@ -251,7 +251,7 @@ public class OrderServiceImpl implements OrderService {
                 " attr.object_id = obj.object_id AND" +
                 " obj.object_type_id = " + Order.OBJECT_TYPE_ID + " AND" +
                 "(attr.list_value_id = " + OrderStatus.ACCEPTED + " OR " + "attr.list_value_id = " + OrderStatus.PERFORMING + ")";
-        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class,true);
         return orderList;
     }
 
@@ -268,7 +268,7 @@ public class OrderServiceImpl implements OrderService {
                 " AND attr.attr_id = 18"+
                 " AND (attr.list_value_id = "+ OrderStatus.NEW+" or attr.list_value_id = "+ OrderStatus.ACCEPTED+
                 " OR attr.list_value_id = "+ OrderStatus.PERFORMING+")";
-        List<Order> orderList = persistenceFacade.getSome(query, Order.class);
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class,true);
         return orderList;
     }
 

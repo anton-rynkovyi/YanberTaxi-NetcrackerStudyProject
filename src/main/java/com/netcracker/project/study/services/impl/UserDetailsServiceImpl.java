@@ -126,7 +126,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
                 "WHERE attr.attr_id = " + DriverAttr.EMAIL_ATTR + " " +
                 "AND attr.value = '" + email + "'";
-        List<Driver> drivers = persistenceFacade.getSome(query, Driver.class);
+        List<Driver> drivers = persistenceFacade.getSome(query, Driver.class,false);
         System.out.println("Driver: " + drivers);
         if (drivers.isEmpty()) {
             return false;
@@ -142,7 +142,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
                 "WHERE attr.attr_id = " + AdminAttr.EMAIL_ATTR + " " +
                 "AND attr.value = '" + email + "'";
-        List<Admin> admins = persistenceFacade.getSome(query, Admin.class);
+        List<Admin> admins = persistenceFacade.getSome(query, Admin.class,false);
         if (admins.isEmpty()) {
             return false;
         } else {
