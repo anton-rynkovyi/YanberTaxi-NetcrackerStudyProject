@@ -2,6 +2,7 @@ package com.netcracker.project.study.vaadin.client.components;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
@@ -17,6 +18,7 @@ import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @ViewScope
 @SpringComponent
@@ -46,12 +48,18 @@ public class OrderMaker extends CustomComponent {
 
     private Client client;
 
+
+    private List<Order> ordersList;
+
     private Button newOrderButton, cancelOrderButton;
 
     private void setcountOfTextFields(int number) {countOfTextFields = number;}
 
     private int getcountOfTextFields() {return countOfTextFields;}
 
+    public List<Order> getOrdersList() {
+        return ordersList;
+    }
 
     @PostConstruct
     public void init() {
@@ -222,6 +230,7 @@ public class OrderMaker extends CustomComponent {
 
                     clientOrdersGrid.init();
                     clientCurrentOrderGrid.init();
+                    ordersList = orderService.getCurrentOrderByClientId(client.getObjectId());
                 }
             } else {
                 makeAndPushToast(ToastType.Warning, ToastPosition.Top_Right,"<b>You haven't fill" + ""

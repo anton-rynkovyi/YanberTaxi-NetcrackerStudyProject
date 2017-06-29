@@ -14,6 +14,7 @@ import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 
 import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
+import com.netcracker.project.study.vaadin.client.events.SendClientMessage;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
@@ -289,11 +290,11 @@ public class NewOrdersTab extends CustomComponent {
                     orderService.calcPrice(BigInteger.valueOf(distance), currentOrder.getObjectId());
 
                     acceptOrderButton.setEnabled(true);
-                    currentOrder = null;
                     window.close();
                     refreshContent();
                     ((DriverPage)getUI()).setStatusButtonEnabled(true);
-                    appEventBus.publish(this, new RefreshClientViewEvent(this, "abc"));
+                    appEventBus.publish(this, new RefreshClientViewEvent(this,currentOrder.getObjectId()));
+                    currentOrder = null;
 
 
                 } catch (NumberFormatException e) {
@@ -384,8 +385,10 @@ public class NewOrdersTab extends CustomComponent {
                     OrderInfo order = ordersGrid.asSingleSelect().getValue();
                     driverService.acceptOrder(order.getObjectId(), driver.getObjectId());
                     acceptOrderButton.setEnabled(false);
-                    // setStartEndPointsLayoutsEmpty();
+                    appEventBus.publish(this, new SendClientMessage(this,order.getObjectId()));
+                   // setStartEndPointsLayoutsEmpty();
                 }
+                refreshContent();
                 ((DriverPage)getUI()).setStatusButtonEnabled(false);
                 refreshContent();
 

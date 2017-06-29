@@ -19,4 +19,6 @@ public interface ClientService {
 
     <T extends Model> List<T> allModelsAsList();
 
+    void sendDriverMemo(Order order, String driverMemo);
+
 }
