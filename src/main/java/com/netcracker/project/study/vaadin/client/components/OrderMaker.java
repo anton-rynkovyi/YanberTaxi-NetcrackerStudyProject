@@ -79,13 +79,6 @@ public class OrderMaker extends CustomComponent {
         orderMaker.addComponent(toastr);
         orderMaker.setComponentAlignment(toastr, Alignment.TOP_RIGHT);
 
-        /*HorizontalLayout layoutWithRadioButton = setRadioButton();
-        MarginInfo radioButtonBtnMerginInfo = new MarginInfo(true, false, false, true);
-        layoutWithRadioButton.setMargin(radioButtonBtnMerginInfo);
-        layoutWithRadioButton.setSpacing(false);
-        orderMaker.addComponent(layoutWithRadioButton);
-        orderMaker.setComponentAlignment(layoutWithRadioButton, Alignment.BOTTOM_LEFT);*/
-
         setCompositionRoot(orderMaker);
     }
 
@@ -153,20 +146,6 @@ public class OrderMaker extends CustomComponent {
         return horizontalLayout;
     }
 
-    /*private HorizontalLayout setRadioButton(){
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-
-
-        RadioButtonGroup<Integer> single = new RadioButtonGroup<>("Single Selection");
-        single.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
-        RadioButtonGroup.ValueChangeListener singleListener = new RadioButtonListener();
-        single.setItems(1,2,3,4,5);
-
-        horizontalLayout.addComponent(single);
-
-
-        return horizontalLayout;
-    }*/
     class TextFieldCounter implements Button.ClickListener {
 
         @Override
@@ -270,15 +249,6 @@ public class OrderMaker extends CustomComponent {
             }
         }
     }
-
-    /*class RadioButtonListener implements RadioButtonGroup.ValueChangeListener {
-
-        @Override
-        public void valueChange(HasValue.ValueChangeEvent valueChangeEvent) {
-            Order order = orderService.getOrder(BigInteger.valueOf(244));
-            clientService.sendDriverRating(order,new BigInteger(valueChangeEvent.toString()));
-        }
-    }*/
 
     private boolean isFieldsEmpty(String[] textFieldsStrings) {
         for (String textFieldString : textFieldsStrings) {

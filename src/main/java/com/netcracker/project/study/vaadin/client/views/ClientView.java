@@ -112,13 +112,6 @@ public class ClientView extends VerticalLayout implements View {
         addComponent(toastr);
         setComponentAlignment(toastr, Alignment.TOP_RIGHT);
 
-//        HorizontalLayout clientInformationFields = new HorizontalLayout();
-//        Panel clientPoints = getClientPoints();
-//        clientPoints.setStyleName(MaterialTheme.PANEL_BORDERLESS);
-//        clientInformationFields.setSizeFull();
-//        clientInformationFields.addComponent(clientPoints);
-//        addComponent(clientInformationFields);
-
         HorizontalLayout mainButtons = setMainButtons();
         addComponent(mainButtons);
         setComponentAlignment(mainButtons, Alignment.TOP_CENTER);
@@ -182,18 +175,6 @@ public class ClientView extends VerticalLayout implements View {
         panel.setSizeFull();
         panel.setContent(component);
 
-        return panel;
-    }
-
-    private Panel getClientPoints(){
-        Panel panel = new Panel();
-        HorizontalLayout clientPointslayout = new HorizontalLayout();
-        BigInteger clientPoints = client.getPoints() != null ? client.getPoints() : BigInteger.ZERO;
-        Label icon = new Label();
-        icon.setIcon(VaadinIcons.COIN_PILES);
-        Label pointsInfo = new Label("<b>Your points: " + clientPoints + "</b>", ContentMode.HTML);
-        clientPointslayout.addComponents(icon, pointsInfo);
-        panel.setContent(clientPointslayout);
         return panel;
     }
 
