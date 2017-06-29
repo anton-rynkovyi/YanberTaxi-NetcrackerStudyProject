@@ -28,13 +28,7 @@ public class BanDaysPopUp extends VerticalLayout {
 
     private DriversGrid driversGrid;
 
-   /* @Autowired
-    RefreshListener refreshListener;*/
-
     private Toastr toastr;
-
-   /* @Autowired
-    private EventBus eventBus;*/
 
     private List<String> banDayList = Arrays.asList("1 min", "3 min", "5 min", "7 min");
 
@@ -45,10 +39,8 @@ public class BanDaysPopUp extends VerticalLayout {
         Panel panel = generatePanel();
         rootLayout.addComponent(panel);
         toastr = new Toastr();
-        //eventBus = new EventBus();
         rootLayout.addComponent(toastr);
 
-        //eventBus.register(refreshListener);
         addComponent(rootLayout);
     }
 
@@ -72,12 +64,7 @@ public class BanDaysPopUp extends VerticalLayout {
         btnOk.addClickListener(clickEvent -> {
             String radioValue[] = String.valueOf(radioButtonGroup.getValue()).split(" ");
             int days = Integer.parseInt(radioValue[0]);
-            Driver driver = driverInfoPopUP.getDriver();
-            if (driver.getStatus().compareTo(DriverStatusList.OFF_DUTY) != 0 &&
-                    driver.getStatus().compareTo(DriverStatusList.FREE) != 0) {
-                toastr.toast(ToastBuilder.error("This driver has order. Try again later.").build());
-                return;
-            }
+            Driver driver = adminService.getModelById(driverInfoPopUP.getDriver().getObjectId(), Driver.class);
             adminService.giveBan(driver, days);
             driversGrid.refreshGrid();
             driverInfoPopUP.getBanDaysWindow().close();

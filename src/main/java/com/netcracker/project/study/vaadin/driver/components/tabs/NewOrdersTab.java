@@ -57,7 +57,6 @@ public class NewOrdersTab extends CustomComponent {
     @Autowired
     private EventBus.ApplicationEventBus appEventBus;
 
-    private Toastr toastr;
 
     private OrdersViewForDrivers view;
 
@@ -85,7 +84,6 @@ public class NewOrdersTab extends CustomComponent {
     public void init() {
         initRootLayout();
 
-        toastr = new Toastr();
         VerticalLayout ordersGridLayout = generateOrdersGrid();
 
         setTakeOrderButton();
@@ -370,14 +368,7 @@ public class NewOrdersTab extends CustomComponent {
             acceptOrderButton.setEnabled(false);
         }
         acceptOrderButton.addClickListener(event -> {
-            if (isBanned()) {
-                SecurityContextHolder.clearContext();
-                return;
-            }
-            if (isDismissed()) {
-                logout();
-                return;
-            }
+
             if (!ordersGrid.asSingleSelect().isEmpty()) {
                 List<Order> currentOrder = orderService.getCurrentOrderByDriverId(driver.getObjectId());
                 if (currentOrder.size() == 0) {
@@ -459,45 +450,6 @@ public class NewOrdersTab extends CustomComponent {
         return verticalLayout;
     }
 
-
-    private void logout() {
-        SecurityContextHolder.clearContext();
-        getUI().getSession().close();
-        getUI().getPage().setLocation("/authorization");
-    }
-
-    private boolean isDismissed() {
-        if (driver.getStatus().compareTo(DriverStatusList.DISMISSED) == 0) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isBanned() {
-        User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
-        if (!user.isEnabled()) {
-            UI.getCurrent().setContent(toastr);
-            Driver driver = adminService.getModelById(this.driver.getObjectId(), Driver.class);
-            Toast banToast = ToastBuilder.of(ToastType.Warning,
-                    "You have been banned." +
-                            "\nUnban date: " + new Timestamp(driver.getUnbanDate().getTime()) +
-                            "\n Contacts: yanbertaxi.netcracker@gmail.com")
-                    .caption("Information")
-                    .options(ToastOptionsBuilder.having()
-                            .closeButton(false)
-                            .debug(false)
-                            .progressBar(false)
-                            .preventDuplicates(true)
-                            .position(ToastPosition.Top_Full_Width)
-                            .tapToDismiss(false)
-                            .extendedTimeOut(600000)
-                            .build())
-                    .build();
-            toastr.toast(banToast);
-            return true;
-        }
-        return false;
-    }
 
     public void setView(OrdersViewForDrivers view) {
         this.view = view;

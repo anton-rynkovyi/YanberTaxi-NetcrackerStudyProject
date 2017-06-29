@@ -267,7 +267,7 @@ public class DriversGrid extends CustomComponent{
         controlButtonsLayout.setComponentAlignment(btnDriverInfo, Alignment.BOTTOM_RIGHT);
         btnDriverInfo.addClickListener(event ->{
             if(!driversGrid.asSingleSelect().isEmpty() ) {
-                Driver driver = driversGrid.asSingleSelect().getValue();
+                Driver driver = adminService.getModelById(driversGrid.asSingleSelect().getValue().getObjectId(), Driver.class);
                 driverInfoPopUp.setDriversGrid(this);
                 driverInfoPopUp.setDriversBanGrid(driversBanGrid);
                 driverInfoPopUp.init(driver);

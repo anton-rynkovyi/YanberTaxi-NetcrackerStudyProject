@@ -98,7 +98,7 @@ public class DriverPage extends UI {
         rootLayout.setMargin(false);
         rootLayout.setSpacing(false);
         rootLayout.setHeight(100, Unit.PERCENTAGE);
-
+        toastr = new Toastr();
         setContent(rootLayout);
 
         HorizontalLayout panelCaption = new HorizontalLayout();
@@ -181,7 +181,7 @@ public class DriverPage extends UI {
                 return;
             }
             if (isDismissed()) {
-                logout();
+                SecurityContextHolder.clearContext();
                 return;
             }
 
@@ -207,6 +207,22 @@ public class DriverPage extends UI {
 
     private boolean isDismissed() {
         if (driver.getStatus().compareTo(DriverStatusList.DISMISSED) == 0) {
+            UI.getCurrent().setContent(toastr);
+            Toast banToast = ToastBuilder.of(ToastType.Warning,
+                    "You have been dismissed." +
+                            "\n Contacts: yanbertaxi.netcracker@gmail.com")
+                    .caption("Information")
+                    .options(ToastOptionsBuilder.having()
+                            .closeButton(false)
+                            .debug(false)
+                            .progressBar(false)
+                            .preventDuplicates(true)
+                            .position(ToastPosition.Top_Full_Width)
+                            .tapToDismiss(false)
+                            .extendedTimeOut(600000)
+                            .build())
+                    .build();
+            toastr.toast(banToast);
             return true;
         }
         return false;

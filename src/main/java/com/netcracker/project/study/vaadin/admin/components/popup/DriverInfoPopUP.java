@@ -3,6 +3,7 @@ package com.netcracker.project.study.vaadin.admin.components.popup;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
+import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.services.AdminService;
@@ -16,7 +17,10 @@ import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.vaadin.addons.Toastr;
+import org.vaadin.addons.builder.ToastBuilder;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @SpringComponent
@@ -25,9 +29,9 @@ public class DriverInfoPopUP extends VerticalLayout {
 
     private Driver driver;
 
-    DriversGrid driversGrid;
+    private DriversGrid driversGrid;
 
-    DriversBanGrid driversBanGrid;
+    private DriversBanGrid driversBanGrid;
 
     @Autowired
     AdminService adminService;
@@ -43,6 +47,8 @@ public class DriverInfoPopUP extends VerticalLayout {
 
     private Window banDaysWindow;
 
+    private Toastr toastr;
+
     //private List<Car> driverCarList;
 
     public void init(Driver driver) {
@@ -56,6 +62,8 @@ public class DriverInfoPopUP extends VerticalLayout {
         rootLayout.setMargin(true);
         setTextFields(rootLayout);
         addComponent(rootLayout);
+        toastr = new Toastr();
+        rootLayout.addComponent(toastr);
     }
 
     private void initBanDaysWindow() {
@@ -125,6 +133,13 @@ public class DriverInfoPopUP extends VerticalLayout {
 
         Button btnFire = new Button("Fire");
         btnFire.addClickListener(clickEvent -> {
+            BigInteger driverId = driver.getObjectId();
+            Driver driver = adminService.getModelById(driverId, Driver.class);
+            if (driver.getStatus().compareTo(DriverStatusList.OFF_DUTY) != 0 &&
+                    driver.getStatus().compareTo(DriverStatusList.FREE) != 0) {
+                toastr.toast(ToastBuilder.error("This driver has order. Try again later.").build());
+                return;
+            }
             String firstName = driver.getFirstName();
             String lastName = driver.getLastName();
             MessageBox
@@ -132,19 +147,25 @@ public class DriverInfoPopUP extends VerticalLayout {
                     .withCaption("Dismissal")
                     .withMessage("Are you want to fire " + firstName + " " + lastName + "?")
                     .withYesButton(() -> {
+
                         adminService.fireDriver(driver);
                         driversGrid.refreshGrid();
                     })
                     .withNoButton(() -> {})
                     .open();
-
             driversGrid.getDriverInfoWindow().close();
-
         });
         horizontalLayout.addComponent(btnFire);
 
         Button btnBan = new Button("Ban");
         btnBan.addClickListener(clickEvent -> {
+            BigInteger driverId = driver.getObjectId();
+            Driver driver = adminService.getModelById(driverId, Driver.class);
+            if (driver.getStatus().compareTo(DriverStatusList.OFF_DUTY) != 0 &&
+                    driver.getStatus().compareTo(DriverStatusList.FREE) != 0) {
+                toastr.toast(ToastBuilder.error("This driver has order. Try again later.").build());
+                return;
+            }
             banDaysPopUp.setDriversGrid(driversGrid);
             banDaysPopUp.setDriverInfoPopUP(this);
             UI.getCurrent().addWindow(banDaysWindow);
