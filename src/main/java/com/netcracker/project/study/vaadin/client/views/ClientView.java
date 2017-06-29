@@ -2,7 +2,9 @@ package com.netcracker.project.study.vaadin.client.views;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusList;
+import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
@@ -323,7 +325,14 @@ public class ClientView extends VerticalLayout implements View {
                 message.setResizable(false);
                 currentUi.addWindow(message);
                 message.setContent(verticalLayout);*/
-                toastr.toast(ToastBuilder.success("Your order is already accepter").build());
+                Driver driver = event.getDriver();
+                String driverName = driver.getLastName() + " " + driver.getFirstName();
+
+                Car car = event.getCar();
+                String carName = car.getMakeOfCar() + " " + car.getModelType();
+
+                toastr.toast(ToastBuilder.success("Your order has just been accepted by " + driverName +
+                         ". " + "Car: " + carName).build());
             }
         }
 

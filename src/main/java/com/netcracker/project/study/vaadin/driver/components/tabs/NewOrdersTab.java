@@ -4,6 +4,7 @@ import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
+import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.driver.status.DriverStatus;
 import com.netcracker.project.study.model.driver.status.DriverStatusAttr;
 import com.netcracker.project.study.model.order.Order;
@@ -63,8 +64,6 @@ public class NewOrdersTab extends CustomComponent {
     private EventBus.ApplicationEventBus appEventBus;
 
 
-    private OrdersViewForDrivers view;
-
     private Grid<OrderInfo> ordersGrid;
     private HorizontalLayout componentLayout;
     private List<Order> ordersList;
@@ -75,6 +74,7 @@ public class NewOrdersTab extends CustomComponent {
     private Window window;
 
     private Driver driver;
+    private Car car;
 
     private Panel currentOrderPanel;
 
@@ -230,6 +230,8 @@ public class NewOrdersTab extends CustomComponent {
 
     public void setDriver(Driver driver) {
         this.driver = driver;
+        List<Car> cars = driverService.getCarByDriver(driver);
+        this.car = cars.get(0);
     }
 
     private void initRootLayout() {
@@ -411,7 +413,7 @@ public class NewOrdersTab extends CustomComponent {
                     OrderInfo order = ordersGrid.asSingleSelect().getValue();
                     driverService.acceptOrder(order.getObjectId(), driver.getObjectId());
                     acceptOrderButton.setEnabled(false);
-                    appEventBus.publish(this, new SendClientMessage(this,order.getObjectId()));
+                    appEventBus.publish(this, new SendClientMessage(this,order.getObjectId(),driver,car));
                    // setStartEndPointsLayoutsEmpty();
                 }
                 refreshContent();
@@ -486,11 +488,6 @@ public class NewOrdersTab extends CustomComponent {
         verticalLayout.addComponent(ordersGrid);
 
         return verticalLayout;
-    }
-
-
-    public void setView(OrdersViewForDrivers view) {
-        this.view = view;
     }
 
     public List getOrdersList() {

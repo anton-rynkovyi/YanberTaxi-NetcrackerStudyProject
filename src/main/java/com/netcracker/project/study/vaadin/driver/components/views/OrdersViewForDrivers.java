@@ -54,7 +54,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         initDriver();
 
         newOrders.setDriver(driver);
-        newOrders.setView(this);
         newOrders.init();
 
         tabSheet = getTabSheet();
@@ -197,7 +196,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     private VerticalLayout getNewOrdersControlTab(){
         VerticalLayout controlLayout = new VerticalLayout();
-        newOrders.setView(this);
         newOrders.setDriver(driver);
         controlLayout.addComponent(newOrders);
         return controlLayout;
