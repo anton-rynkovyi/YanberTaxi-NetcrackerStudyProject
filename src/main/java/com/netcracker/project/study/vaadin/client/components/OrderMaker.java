@@ -88,7 +88,24 @@ public class OrderMaker extends CustomComponent {
 
     public void enableCancelOrderButton(Button button) {cancelOrderButton = button;}
 
-    public void closeOrderMakerWindow(Window orderMakerWindow) {this.orderMakerWindow = orderMakerWindow;}
+    public void closeOrderMakerWindow(Window orderMakerWindow) {
+        this.orderMakerWindow = orderMakerWindow;
+        orderMakerWindow.addCloseListener(new Window.CloseListener() {
+            @Override
+            public void windowClose(Window.CloseEvent closeEvent) {
+                for (int i = 0; i < fields.length; i++) {
+                    if (fields[i] != null) fields[i].clear();
+                }
+                for (int i = 1; i < 4; i++){
+                    if (fields[i] != null) {
+                        fieldsLayout.removeComponent(fields[i]);
+                        fields[i] = null;
+                    }
+                    setcountOfTextFields(1);
+                }
+            }
+        });
+    }
 
     public void showSuccesToaster(Toastr toastr) {this.toastr = toastr;}
 
@@ -159,14 +176,7 @@ public class OrderMaker extends CustomComponent {
 
                 setcountOfTextFields(++count);
             } else {
-                Toast routesCreateToast = ToastBuilder.of(ToastType.Info, "<b>You can't create more then three interjacent points</b> ")
-                        .caption("")
-                        .options(ToastOptionsBuilder.having()
-                                .preventDuplicates(true)
-                                .position(ToastPosition.Top_Right)
-                                .build())
-                        .build();
-                toastr.toast(routesCreateToast);
+                makeAndPushToast(ToastType.Info, ToastPosition.Top_Right,"<b>You can't create more then three interjacent points</b> ");
             }
         }
     }
@@ -184,14 +194,7 @@ public class OrderMaker extends CustomComponent {
 
                 setcountOfTextFields(count-1);
             } else {
-                Toast deleteRoutesTextFieldsToast = ToastBuilder.of(ToastType.Info, "<b>You can't delete this routes points</b> ")
-                        .caption("")
-                        .options(ToastOptionsBuilder.having()
-                                .preventDuplicates(true)
-                                .position(ToastPosition.Top_Right)
-                                .build())
-                        .build();
-                toastr.toast(deleteRoutesTextFieldsToast);
+                makeAndPushToast(ToastType.Info, ToastPosition.Top_Right,"<b>You can't delete this routes points</b> ");
             }
         }
     }
@@ -207,29 +210,12 @@ public class OrderMaker extends CustomComponent {
             if (!(isFieldsEmpty(textFieldsStrings))) {
                 if (orderService.getActiveOrdersByClientId(client.getObjectId()).size() > 0
                         || orderService.getPerformingOrdersByClientId(client.getObjectId()).size() > 0 ) {
-                    Toast toast = ToastBuilder.of(ToastType.Warning, "<b>You have an active order. You can't simultaneously create multiple orders</b> ")
-                            .caption("Attention")
-                            .options(ToastOptionsBuilder.having()
-                                    .preventDuplicates(true)
-                                    .position(ToastPosition.Top_Right)
-                                    .build())
-                            .build();
-                    toastr.toast(toast);
+                    makeAndPushToast(ToastType.Warning, ToastPosition.Top_Right,"<b>You have an active order." + ""
+                           + " You can't simultaneously create multiple orders</b> ");
                 } else {
                     clientService.makeOrder(client.getObjectId(), textFieldsStrings);
+                    makeAndPushToast(ToastType.Success, ToastPosition.Top_Right,"<b>Your order was created successfully</b> ");
 
-                    Toast orderMakerToast = ToastBuilder.of(ToastType.Success, "Your order was created successfully</b> ")
-                            .caption("Succes")
-                            .options(ToastOptionsBuilder.having()
-                                    .preventDuplicates(true)
-                                    .position(ToastPosition.Top_Right)
-                                    .build())
-                            .build();
-                    toastr.toast(orderMakerToast);
-
-                    for (int i = 0; i < fields.length; i++) {
-                        if (fields[i] != null) fields[i].clear();
-                    }
                     orderMakerWindow.close();
                     cancelOrderButton.setVisible(true);
                     newOrderButton.setVisible(false);
@@ -238,16 +224,20 @@ public class OrderMaker extends CustomComponent {
                     clientCurrentOrderGrid.init();
                 }
             } else {
-                Toast setAllFieldsToast = ToastBuilder.of(ToastType.Warning, "<b>You haven't fill all information.\nPlease set all fields</b> ")
-                        .caption("Attention")
-                        .options(ToastOptionsBuilder.having()
-                                .preventDuplicates(true)
-                                .position(ToastPosition.Top_Right)
-                                .build())
-                        .build();
-                toastr.toast(setAllFieldsToast);
+                makeAndPushToast(ToastType.Warning, ToastPosition.Top_Right,"<b>You haven't fill" + ""
+                       + " all information.\nPlease set all fields</b> " );
             }
         }
+    }
+
+    private void makeAndPushToast(ToastType toastType, ToastPosition toastPosition, String toastText){
+        Toast toast = ToastBuilder.of(toastType, "<b>"+ toastText + "</b>")
+                .options(ToastOptionsBuilder.having()
+                        .preventDuplicates(true)
+                        .position(toastPosition)
+                        .build())
+                .build();
+        toastr.toast(toast);
     }
 
     private boolean isFieldsEmpty(String[] textFieldsStrings) {
