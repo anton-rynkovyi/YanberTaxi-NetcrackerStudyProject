@@ -298,7 +298,6 @@ public class ClientView extends VerticalLayout implements View {
                 }
             }
         }
-
     }
 
     @EventBusListenerMethod
@@ -311,7 +310,7 @@ public class ClientView extends VerticalLayout implements View {
             if (currentOrder.getObjectId().equals(event.getOrderId())) {
                 clientOrdersGrid.init();
                 clientCurrentOrderGrid.init();
-                Window message = new Window();
+                /*Window message = new Window();
                 VerticalLayout verticalLayout = new VerticalLayout();
                 verticalLayout.setWidth(400, Unit.PIXELS);
                 verticalLayout.setMargin(true);
@@ -323,7 +322,8 @@ public class ClientView extends VerticalLayout implements View {
                 message.setModal(true);
                 message.setResizable(false);
                 currentUi.addWindow(message);
-                message.setContent(verticalLayout);
+                message.setContent(verticalLayout);*/
+                toastr.toast(ToastBuilder.success("Your order is already accepter").build());
             }
         }
 

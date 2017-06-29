@@ -82,10 +82,11 @@ public class AdminOrderInfoPopUp extends VerticalLayout{
         }
 
         Label status = new Label("Status: <i>" + order.getStatus() + "</i>", ContentMode.HTML);
-        Label cost = new Label("Cost: <i>" + order.getCost() + "</i>", ContentMode.HTML);
+        Label cost = new Label("Cost: <i>" + order.getCost() != null ? order.getCost() + " hrn" : "-" + "</i>",
+                ContentMode.HTML);
         Label distance = new Label("Distance: <i>" + order.getDistance() + " km</i>", ContentMode.HTML);
         Label driverRating = new Label("Driver rating: <i>" +
-                (order.getDriverRating() != null ? order.getDriverRating() + " hrn" : "-")+
+                (order.getDriverRating() != null ? order.getDriverRating() : "-")+
                 "</i>", ContentMode.HTML);
 
 

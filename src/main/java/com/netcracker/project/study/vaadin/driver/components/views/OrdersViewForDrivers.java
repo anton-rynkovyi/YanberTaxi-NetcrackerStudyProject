@@ -123,6 +123,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     public VerticalLayout generateOrdersGrid() {
         VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.setSizeFull();
         allOrdersList = orderService.getOrdersByDriverId(driver.getObjectId(),null);
 
         if(allOrdersList != null) {
@@ -149,7 +150,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
             panel.setContent(noOrdersLabel);
             verticalLayout.addComponent(panel);
         }
-        verticalLayout.setSizeFull();
         return verticalLayout;
     }
 
@@ -157,6 +157,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         TabSheet tabSheet = new TabSheet();
 
         VerticalLayout allOrdersLayout = generateOrdersGrid();
+        allOrdersLayout.setSizeFull();
         tabSheet.addTab(getNewOrdersControlTab(),"New orders (" + getNewOrdersCount() + ")").setIcon(VaadinIcons.LIST_SELECT);
         tabSheet.addTab(allOrdersLayout, "History of orders (" + getAllOrdersCount() + ")").setIcon(VaadinIcons.LIST);
 

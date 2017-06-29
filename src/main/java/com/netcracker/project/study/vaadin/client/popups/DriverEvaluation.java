@@ -71,6 +71,7 @@ public class DriverEvaluation extends Window {
         verticalLayout.addComponents(orderCost,single,driverMemo,ok);
         ok.addClickListener(event -> {
             clientService.sendDriverMemo(order,driverMemo.getValue());
+            orderService.setDriverRating(order, single.getValue() != null ? single.getValue() : 4);
             //UI.getCurrent().setContent(toastr);
             driverMemo.clear();
             close();

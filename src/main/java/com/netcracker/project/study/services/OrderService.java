@@ -53,6 +53,5 @@ public interface OrderService {
 
     void refreshOrders();
 
-
     void setDriverRating(Order order, int rating);
 }

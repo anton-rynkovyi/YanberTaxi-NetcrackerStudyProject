@@ -69,11 +69,9 @@ public class OrdersGrid extends CustomComponent {
         ordersGrid.addColumn(Order -> Order.getClientOnOrder() != null ? Order.getClientOnOrder().getFirstName() + " " +
                 Order.getClientOnOrder().getLastName() : "").setCaption("Client");
         ordersGrid.addColumn(order -> OrderStatusEnum.getStatusValue(order.getStatus())).setCaption("Status");
-        ordersGrid.addColumn(Order::getCost).setCaption("Cost");
-        ordersGrid.addColumn(Order::getDistance).setCaption("Distance");
-        ordersGrid.addColumn(Order::getDriverRating).setCaption("Driver rating");
-        //ordersGrid.addColumn(Order::getDriverMemo).setCaption("Driver comment");
-
+        ordersGrid.addColumn(order -> order.getCost() != null ? order.getCost() + " hrn" : "").setCaption("Cost");
+        ordersGrid.addColumn(order -> order.getDistance() != null ? order.getDistance() + " km" : "").setCaption("Distance");
+        ordersGrid.addColumn(order -> order.getDriverRating()).setCaption("Driver rating");
         return ordersGrid;
     }
 
