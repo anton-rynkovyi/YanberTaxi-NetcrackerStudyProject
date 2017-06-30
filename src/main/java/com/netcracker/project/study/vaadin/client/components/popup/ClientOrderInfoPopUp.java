@@ -6,6 +6,7 @@ import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.model.order.OrderStatusList;
 import com.netcracker.project.study.model.order.route.Route;
+import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.OrderService;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
@@ -30,6 +31,9 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
 
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    ClientService clientService;
 
     private Order order;
 
@@ -196,8 +200,8 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
                 if (rateRudioButtons.getValue() != null) {
-                    int rating = Integer.parseInt(rateRudioButtons.getValue().toString());
-                    orderService.setDriverRating(order, rating);
+                    BigInteger rating = BigInteger.valueOf(Long.parseLong(rateRudioButtons.getValue().toString()));
+                    clientService.sendDriverRating(order, rating);
                     makeAndPushToast(ToastType.Success, ToastPosition.Top_Right, "You have successfully evaluated the driver");
                     init(order, toastr);
                 } else {
@@ -283,7 +287,7 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
             String value = "<b>Address " + (i+1) + ": </b>";
             if (i == 0) value = "<b>Starting Point (Address 1): </b>";
             if (i == routes.size() - 1) value = "<b>Destination (Address " + routes.size() + "): </b>";
-            Label label = new Label(value + routes.get((routes.size()-1)-i).getCheckPoint(), ContentMode.HTML);
+            Label label = new Label(value + routes.get(i).getCheckPoint(), ContentMode.HTML);
             label.setIcon(VaadinIcons.MAP_MARKER);
             if (i == 0) label.setIcon(VaadinIcons.HOME_O);
             if (i == routes.size() - 1) label.setIcon(VaadinIcons.FLAG_CHECKERED);
@@ -330,7 +334,7 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
             if (comment.isEmpty()){
                 makeAndPushToast(ToastType.Warning, ToastPosition.Top_Right, "You can't leave empty comment");
             } else {
-                orderService.setCommentAboutDriver(order, comment);
+                clientService.sendDriverMemo(order, comment);
                 makeAndPushToast(ToastType.Success, ToastPosition.Top_Right, "Your comment added successfully");
                 init(order, toastr);
             }

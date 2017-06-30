@@ -24,14 +24,11 @@ import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewFor
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.*;
 import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.vaadin.addons.Toast;
 import org.vaadin.addons.ToastPosition;
 import org.vaadin.addons.ToastType;
@@ -42,9 +39,6 @@ import org.vaadin.spring.events.EventBus;
 import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 
 import javax.annotation.PostConstruct;
-import javax.swing.event.CaretListener;
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringView(name = ClientView.VIEW_NAME)
@@ -115,13 +109,6 @@ public class ClientView extends VerticalLayout implements View {
         toastr = new Toastr();
         addComponent(toastr);
         setComponentAlignment(toastr, Alignment.TOP_RIGHT);
-
-//        HorizontalLayout clientInformationFields = new HorizontalLayout();
-//        Panel clientPoints = getClientPoints();
-//        clientPoints.setStyleName(MaterialTheme.PANEL_BORDERLESS);
-//        clientInformationFields.setSizeFull();
-//        clientInformationFields.addComponent(clientPoints);
-//        addComponent(clientInformationFields);
 
         HorizontalLayout mainButtons = setMainButtons();
         addComponent(mainButtons);

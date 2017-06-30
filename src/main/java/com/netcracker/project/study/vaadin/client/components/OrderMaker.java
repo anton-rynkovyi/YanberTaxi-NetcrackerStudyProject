@@ -48,7 +48,6 @@ public class OrderMaker extends CustomComponent {
 
     private Client client;
 
-
     private List<Order> ordersList;
 
     private Button newOrderButton, cancelOrderButton;

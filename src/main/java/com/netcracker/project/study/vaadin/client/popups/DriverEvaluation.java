@@ -7,6 +7,7 @@ import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.services.ClientService;
 import com.netcracker.project.study.services.OrderService;
+import com.netcracker.project.study.vaadin.client.components.grids.ClientOrdersGrid;
 import com.netcracker.project.study.vaadin.common.components.PhoneField;
 import com.vaadin.data.HasValue;
 import com.vaadin.icons.VaadinIcons;
@@ -28,6 +29,9 @@ public class DriverEvaluation extends Window {
 
     @Autowired
     ClientService clientService;
+
+    @Autowired
+    ClientOrdersGrid clientOrdersGrid;
 
     private BigInteger orderId;
     private TextField driverMemo;
@@ -71,9 +75,12 @@ public class DriverEvaluation extends Window {
         verticalLayout.addComponents(orderCost,single,driverMemo,ok);
         ok.addClickListener(event -> {
             clientService.sendDriverMemo(order,driverMemo.getValue());
-            orderService.setDriverRating(order, single.getValue() != null ? single.getValue() : 4);
+            if (single.getValue() != null) {
+                clientService.sendDriverRating(order, BigInteger.valueOf(Long.parseLong(single.getValue().toString())));
+            }
             //UI.getCurrent().setContent(toastr);
             driverMemo.clear();
+            clientOrdersGrid.init();
             close();
            /* toastr.toast(ToastBuilder.success(
                     "Thank you!\nYour opinion is very important")

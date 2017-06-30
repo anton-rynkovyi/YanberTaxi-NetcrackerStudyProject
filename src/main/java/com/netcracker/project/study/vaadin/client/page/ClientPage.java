@@ -4,15 +4,12 @@ import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
-import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
-import com.netcracker.project.study.vaadin.client.popups.DriverEvaluation;
 import com.netcracker.project.study.vaadin.client.views.ClientView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
@@ -22,18 +19,8 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.vaadin.addons.Toast;
-import org.vaadin.addons.ToastPosition;
-import org.vaadin.addons.ToastType;
-import org.vaadin.addons.Toastr;
-import org.vaadin.addons.builder.ToastBuilder;
-import org.vaadin.addons.builder.ToastOptionsBuilder;
-import org.vaadin.spring.events.EventBus;
-import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 
-import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.util.ArrayList;
 
 @Theme("valo")
 @SpringUI(path = "/client")
