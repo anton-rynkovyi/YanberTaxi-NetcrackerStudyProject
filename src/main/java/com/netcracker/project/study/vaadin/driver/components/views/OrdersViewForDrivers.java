@@ -173,8 +173,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         initDriver();
         newOrders.setDriver(driver);
 
-        //((DriverPage)getUI()).refreshUI();
-
         tabSheet.getTab(0).setCaption("New orders (" + getNewOrdersCount() + ")");
         tabSheet.getTab(1).setCaption("History of orders (" + getAllOrdersCount() + ")");
 

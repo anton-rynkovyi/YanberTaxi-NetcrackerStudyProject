@@ -277,8 +277,7 @@ public class NewOrdersTab extends CustomComponent {
     public void refreshContent() {
         refreshGrid();
         acceptOrderButton.setEnabled(false);
-        //((DriverPage)getUI()).refreshUI();
-        //view.refresh();
+        ((DriverPage)getUI()).refreshUI();
         refreshCurrentOrderPanel();
         setButtonsEnabled();
     }

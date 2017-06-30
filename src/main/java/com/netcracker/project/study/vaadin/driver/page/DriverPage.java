@@ -19,6 +19,7 @@ import com.vaadin.event.UIEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringUI;
@@ -60,13 +61,13 @@ public class DriverPage extends UI {
     @Autowired
     DriverUpdate DriverWindow;
 
-    Driver driver;
+    private Driver driver;
 
     @Autowired
-    DriverService driverService;
+    private DriverService driverService;
 
-    Label statusIcon;
-    Label statusValue;
+    private Label statusIcon;
+    private Label statusValue;
 
     Button changeStatusButton;
 
@@ -95,7 +96,6 @@ public class DriverPage extends UI {
         HorizontalLayout panelCaption = new HorizontalLayout();
         panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         panelCaption.setStyleName(MaterialTheme.LAYOUT_CARD);
-        panelCaption.setStyleName("panel");
         panelCaption.setMargin(new MarginInfo(false, true, false, true));
         panelCaption.setSpacing(true);
         panelCaption.setWidth("100%");
@@ -129,7 +129,6 @@ public class DriverPage extends UI {
         panelCaption.setComponentAlignment(logOutButtonLayout, Alignment.TOP_RIGHT);
         rootLayout.addComponent(panelCaption);
 
-
         viewDisplay = new Panel();
         viewDisplay.setSizeFull();
 
@@ -141,13 +140,31 @@ public class DriverPage extends UI {
         navigator.addProvider(provider);
         navigator.navigateTo(OrdersViewForDrivers.VIEW_NAME);
 
-        /*setPollInterval(timerInterval);
+        setPollInterval(timerInterval);
         addPollListener(new UIEvents.PollListener() {
             @Override
             public void poll(UIEvents.PollEvent event) {
-                ((OrdersViewForDrivers)navigator.getCurrentView()).refresh();
+                getCurrentView().refresh();
+                getCurrentUI().refreshUI();
             }
-        });*/
+        });
+    }
+
+    public void refreshUI() {
+        getCurrentDriver();
+        changeStatusIcon();
+    }
+
+    private DriverPage getCurrentUI(){
+        return (DriverPage)UI.getCurrent();
+    }
+
+    private OrdersViewForDrivers getCurrentView(){
+        return ((OrdersViewForDrivers)(UI.getCurrent()).getNavigator().getCurrentView());
+    }
+
+    private void getCurrentDriver() {
+        driver = userDetailsService.getCurrentUser();
     }
 
     public void setStatusButtonEnabled(boolean value){
@@ -177,13 +194,13 @@ public class DriverPage extends UI {
 
             if(driver.getStatus().equals(DriverStatusList.FREE)){
                 driverService.changeStatus(DriverStatusList.OFF_DUTY,driver.getObjectId());
-                ((OrdersViewForDrivers)navigator.getCurrentView()).setAcceptButtonEnabled(false);
+                getCurrentView().setAcceptButtonEnabled(false);
             }
             if(driver.getStatus().equals(DriverStatusList.OFF_DUTY)){
                 driverService.changeStatus(DriverStatusList.FREE,driver.getObjectId());
-                ((OrdersViewForDrivers)navigator.getCurrentView()).setAcceptButtonEnabled(true);
+                getCurrentView().setAcceptButtonEnabled(true);
             }
-            ((OrdersViewForDrivers)navigator.getCurrentView()).refresh();
+            getCurrentUI().refreshUI();
         });
 
         return horizontalLayout;
@@ -244,11 +261,6 @@ public class DriverPage extends UI {
         return false;
     }
 
-    public void refreshUI() {
-        getCurrentDriver();
-        changeStatusIcon();
-    }
-
     private void changeStatusIcon() {
         if (driver.getStatus().equals(DriverStatusList.FREE)) {
             statusIcon.setIcon(VaadinIcons.COFFEE);
@@ -256,9 +268,11 @@ public class DriverPage extends UI {
         }
         if (driver.getStatus().equals(DriverStatusList.ON_CALL)) {
             statusIcon.setIcon(VaadinIcons.TAXI);
+            setStatusButtonEnabled(false);
         }
         if (driver.getStatus().equals(DriverStatusList.PERFORMING_ORDER)) {
             statusIcon.setIcon(VaadinIcons.ROAD);
+            setStatusButtonEnabled(false);
         }
         if (driver.getStatus().equals(DriverStatusList.OFF_DUTY)) {
             statusIcon.setIcon(VaadinIcons.HOME_O);
@@ -296,7 +310,6 @@ public class DriverPage extends UI {
         return horizontalLayout;
     }
 
-
     private HorizontalLayout getLogOutButton() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
@@ -333,11 +346,7 @@ public class DriverPage extends UI {
         horizontalLayout.addComponents(iconUser, helloLabel, separator);
         return horizontalLayout;
     }
-
-    private void getCurrentDriver() {
-        driver = userDetailsService.getCurrentUser();
-    }
-
+    
     private HorizontalLayout getDriverRatingLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         int total = 5;
