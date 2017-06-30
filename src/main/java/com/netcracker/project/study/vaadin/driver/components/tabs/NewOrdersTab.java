@@ -24,10 +24,12 @@ import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.HeaderRow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.method.P;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.vaadin.addons.Toast;
@@ -44,7 +46,7 @@ import java.util.ArrayList;
 import java.util.IllegalFormatException;
 import java.util.List;
 
-@ViewScope
+@Scope(value = "prototype")
 @SpringComponent
 public class NewOrdersTab extends CustomComponent {
 
@@ -275,8 +277,8 @@ public class NewOrdersTab extends CustomComponent {
     public void refreshContent() {
         refreshGrid();
         acceptOrderButton.setEnabled(false);
-        ((DriverPage)getUI()).refreshUI();
-       // view.refresh();
+        //((DriverPage)getUI()).refreshUI();
+        //view.refresh();
         refreshCurrentOrderPanel();
         setButtonsEnabled();
     }
@@ -284,7 +286,6 @@ public class NewOrdersTab extends CustomComponent {
     private void initFinishPerformingButton() {
         finishPerformingButton = new Button("Finish Performing");
         finishPerformingButton.addClickListener(event -> {
-
             TextField textField = new TextField("Count of km");
             VerticalLayout verticalLayout = new VerticalLayout();
             verticalLayout.addComponent(textField);
@@ -328,6 +329,7 @@ public class NewOrdersTab extends CustomComponent {
                     iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
                     errorLabel.setCaption("Incorrect data. Number must be greater than previous.");
                 }
+                System.out.println("заказ <"+currentOrder.getObjectId()+"> сменил статус  на <"+currentOrder.getStatus()+">");
             });
 
             verticalLayout.addComponent(errorLayout);
@@ -352,7 +354,6 @@ public class NewOrdersTab extends CustomComponent {
     private void initStartPerformingButton() {
         startPerformingButton = new Button("Start Performing");
         startPerformingButton.addClickListener(event -> {
-
             TextField textField = new TextField("Count of km");
             VerticalLayout verticalLayout = new VerticalLayout();
             verticalLayout.addComponent(textField);
@@ -382,7 +383,7 @@ public class NewOrdersTab extends CustomComponent {
                     iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
                     errorLabel.setCaption("Incorrect data. Only digits are admissible.");
                 }
-
+                System.out.println("заказ <"+currentOrder.getObjectId()+"> сменил статус  на <"+currentOrder.getStatus()+">");
             });
 
             verticalLayout.addComponent(errorLayout);
@@ -410,15 +411,21 @@ public class NewOrdersTab extends CustomComponent {
             acceptOrderButton.setEnabled(false);
         }
         acceptOrderButton.addClickListener(event -> {
-
             if (!ordersGrid.asSingleSelect().isEmpty()) {
                 List<Order> currentOrder = orderService.getCurrentOrderByDriverId(driver.getObjectId());
                 if (currentOrder.size() == 0) {
-                    OrderInfo order = ordersGrid.asSingleSelect().getValue();
+                    OrderInfo orderInfo = ordersGrid.asSingleSelect().getValue();
                     try {
-                        driverService.acceptOrder(order.getObjectId(), driver.getObjectId());
-                        acceptOrderButton.setEnabled(false);
-                        appEventBus.publish(this, new SendClientMessage(this,order.getObjectId(),driver,car));
+                        Order order = orderService.getOrder(orderInfo.getObjectId());
+                        if (order.getDriverId() == null) {
+                            System.out.println("driver + <" + driver.getObjectId() + "> take order <" + order.getObjectId() + ">");
+                            System.out.println("order <" + order.getObjectId() + "> change status on <" + order.getStatus() + ">");
+                            driverService.acceptOrder(order.getObjectId(), driver.getObjectId());
+                            acceptOrderButton.setEnabled(false);
+                            appEventBus.publish(this, new SendClientMessage(this, order.getObjectId(), driver, car));
+                        } else {
+                            toastr.toast(ToastBuilder.info("This order has been accepted by another driver").build());
+                        }
                     } catch (Exception e) {
                         toastr.toast(ToastBuilder.info("This order has been accepted by another driver").build());
                     }

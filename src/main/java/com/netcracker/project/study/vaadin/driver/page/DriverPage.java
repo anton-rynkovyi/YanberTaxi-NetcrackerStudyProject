@@ -141,14 +141,13 @@ public class DriverPage extends UI {
         navigator.addProvider(provider);
         navigator.navigateTo(OrdersViewForDrivers.VIEW_NAME);
 
-        setPollInterval(timerInterval);
+        /*setPollInterval(timerInterval);
         addPollListener(new UIEvents.PollListener() {
             @Override
             public void poll(UIEvents.PollEvent event) {
                 ((OrdersViewForDrivers)navigator.getCurrentView()).refresh();
             }
-        });
-
+        });*/
     }
 
     public void setStatusButtonEnabled(boolean value){
