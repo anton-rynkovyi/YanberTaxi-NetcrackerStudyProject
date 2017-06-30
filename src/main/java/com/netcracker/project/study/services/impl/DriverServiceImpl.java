@@ -29,7 +29,6 @@ public class DriverServiceImpl implements DriverService {
 
 
 
-
     @Override
     public void acceptOrder(BigInteger orderId, BigInteger driverId) {
         Order order = persistenceFacade.getOne(orderId,Order.class);

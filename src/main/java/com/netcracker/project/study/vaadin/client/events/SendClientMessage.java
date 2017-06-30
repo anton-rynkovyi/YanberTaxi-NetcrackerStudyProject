@@ -8,6 +8,7 @@ import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
 import java.math.BigInteger;
 
 public class SendClientMessage {
+
     private final BigInteger orderId;
     private final NewOrdersTab page;
     private final Driver driver;

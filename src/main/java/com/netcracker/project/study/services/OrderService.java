@@ -49,9 +49,5 @@ public interface OrderService {
 
     void setClientPoints(BigInteger orderId);
 
-    void setNewOrdersTab(NewOrdersTab newOrdersTab);
-
-    void refreshOrders();
-
     void setDriverRating(Order order, int rating);
 }

@@ -30,8 +30,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     PersistenceFacade persistenceFacade;
 
-    private NewOrdersTab newOrdersTab;
-
     public static final BigDecimal COST_PER_KILOMETER = new BigDecimal("5");
 
     @Override
@@ -285,14 +283,4 @@ public class OrderServiceImpl implements OrderService {
         order.setDriverRating(BigInteger.valueOf(rating));
         persistenceFacade.update(order);
     }
-
-    public void setNewOrdersTab(NewOrdersTab newOrdersTab) {
-        this.newOrdersTab = newOrdersTab;
-    }
-
-    public void refreshOrders() {
-        System.out.println(newOrdersTab);
-        newOrdersTab.refreshContent();
-    }
-
 }

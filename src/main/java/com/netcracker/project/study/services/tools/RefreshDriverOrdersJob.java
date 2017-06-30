@@ -15,6 +15,6 @@ public class RefreshDriverOrdersJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        orderService.refreshOrders();
+
     }
 }

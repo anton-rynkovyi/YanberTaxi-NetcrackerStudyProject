@@ -2,27 +2,22 @@ package com.netcracker.project.study.vaadin.driver.page;
 
 
 import com.github.appreciated.material.MaterialTheme;
-import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
-import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
-import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.driver.components.popup.DriverUpdate;
-import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.event.UIEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
@@ -38,13 +33,9 @@ import org.vaadin.addons.ToastType;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
-import org.vaadin.spring.events.EventBus;
 
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Theme("valo")
 @SpringUI(path = "/driver")
@@ -154,7 +145,7 @@ public class DriverPage extends UI {
         addPollListener(new UIEvents.PollListener() {
             @Override
             public void poll(UIEvents.PollEvent event) {
-                ((OrdersViewForDrivers)navigator.getCurrentView()).Refresh();
+                ((OrdersViewForDrivers)navigator.getCurrentView()).refresh();
             }
         });
 
@@ -193,7 +184,7 @@ public class DriverPage extends UI {
                 driverService.changeStatus(DriverStatusList.FREE,driver.getObjectId());
                 ((OrdersViewForDrivers)navigator.getCurrentView()).setAcceptButtonEnabled(true);
             }
-            ((OrdersViewForDrivers)navigator.getCurrentView()).Refresh();
+            ((OrdersViewForDrivers)navigator.getCurrentView()).refresh();
         });
 
         return horizontalLayout;

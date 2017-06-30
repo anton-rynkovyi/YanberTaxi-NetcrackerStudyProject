@@ -63,6 +63,8 @@ public class NewOrdersTab extends CustomComponent {
     @Autowired
     private EventBus.ApplicationEventBus appEventBus;
 
+    private Toastr toastr;
+
 
     private Grid<OrderInfo> ordersGrid;
     private HorizontalLayout componentLayout;
@@ -88,7 +90,7 @@ public class NewOrdersTab extends CustomComponent {
 
     public void init() {
         initRootLayout();
-
+        toastr = new Toastr();
         VerticalLayout ordersGridLayout = generateOrdersGrid();
 
         setTakeOrderButton();
@@ -109,11 +111,13 @@ public class NewOrdersTab extends CustomComponent {
         HorizontalLayout buttonsLayout = new HorizontalLayout();
         buttonsLayout.addComponents(acceptOrderButton);
         buttonsLayout.setSpacing(true);
+        verticalLayout.addComponent(toastr);
         verticalLayout.addComponents(horizontalSplitPanel, buttonsLayout);
         verticalLayout.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
 
         componentLayout.addComponent(verticalLayout);
         componentLayout.setSizeFull();
+
 
         setCompositionRoot(componentLayout);
     }
@@ -272,7 +276,7 @@ public class NewOrdersTab extends CustomComponent {
         refreshGrid();
         acceptOrderButton.setEnabled(false);
         ((DriverPage)getUI()).refreshUI();
-       // view.Refresh();
+       // view.refresh();
         refreshCurrentOrderPanel();
         setButtonsEnabled();
     }
@@ -411,15 +415,18 @@ public class NewOrdersTab extends CustomComponent {
                 List<Order> currentOrder = orderService.getCurrentOrderByDriverId(driver.getObjectId());
                 if (currentOrder.size() == 0) {
                     OrderInfo order = ordersGrid.asSingleSelect().getValue();
-                    driverService.acceptOrder(order.getObjectId(), driver.getObjectId());
-                    acceptOrderButton.setEnabled(false);
-                    appEventBus.publish(this, new SendClientMessage(this,order.getObjectId(),driver,car));
+                    try {
+                        driverService.acceptOrder(order.getObjectId(), driver.getObjectId());
+                        acceptOrderButton.setEnabled(false);
+                        appEventBus.publish(this, new SendClientMessage(this,order.getObjectId(),driver,car));
+                    } catch (Exception e) {
+                        toastr.toast(ToastBuilder.info("This order has been accepted by another driver").build());
+                    }
                    // setStartEndPointsLayoutsEmpty();
                 }
                 refreshContent();
                 ((DriverPage)getUI()).setStatusButtonEnabled(false);
                 refreshContent();
-
             }
         });
 

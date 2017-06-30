@@ -169,7 +169,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         return tabSheet;
     }
 
-    public void Refresh(){
+    public void refresh(){
         initDriver();
         newOrders.setDriver(driver);
 
@@ -202,7 +202,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     }
 
     public void refreshOrdersGrid() {
-        System.out.println("REFRESH FROM VIEW");
         allOrdersGrid.setItems(orderService.getOrdersInfo(allOrdersList));
     }
 
@@ -210,7 +209,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         init();
         newOrders.refreshGrid();
-        orderService.setNewOrdersTab(newOrders);
         //orderService.setOrdersViewForDrivers(this);
     }
 }
