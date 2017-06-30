@@ -76,7 +76,7 @@ public class ClientCurrentOrderGrid extends CustomComponent {
             String value = "<b>Address " + (i+1) + ": </b>";
             if (i == 0) value = "<b>Starting Point (Address 1): </b>";
             if (i == routes.size() - 1) value = "<b>Destination (Address " + routes.size() + "): </b>";
-            Label label = new Label(value + routes.get((routes.size()-1)-i).getCheckPoint(), ContentMode.HTML);
+            Label label = new Label(value + routes.get(i).getCheckPoint(), ContentMode.HTML);
             label.setIcon(VaadinIcons.MAP_MARKER);
             if (i == 0) label.setIcon(VaadinIcons.HOME_O);
             if (i == routes.size() - 1) label.setIcon(VaadinIcons.FLAG_CHECKERED);

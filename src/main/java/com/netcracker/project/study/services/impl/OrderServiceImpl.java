@@ -180,13 +180,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void setCommentAboutDriver(Order order, String comment) {
-        order.setDriverMemo(comment);
-        persistenceFacade.update(order);
-    }
-
-
-    @Override
     public List<Order> getOrdersByClientId(BigInteger clientId) {
         String query = "" +
                 "SELECT object_id " +
@@ -276,11 +269,5 @@ public class OrderServiceImpl implements OrderService {
         Client client = order.getClientOnOrder();
         client.setPoints(client.getPoints().add(order.getDistance()));
         persistenceFacade.update(client);
-    }
-
-    @Override
-    public void setDriverRating(Order order, int rating) {
-        order.setDriverRating(BigInteger.valueOf(rating));
-        persistenceFacade.update(order);
     }
 }
