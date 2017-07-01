@@ -346,7 +346,7 @@ public class DriverPage extends UI {
         horizontalLayout.addComponents(iconUser, helloLabel, separator);
         return horizontalLayout;
     }
-    
+
     private HorizontalLayout getDriverRatingLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         int total = 5;
