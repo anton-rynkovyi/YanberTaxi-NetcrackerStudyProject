@@ -314,7 +314,6 @@ public class CarRegistration extends Window {
         return horizontalLayout;
     }
 */
-
     public void setDriverAndPassword(Driver driver, String password) {
         this.driver = driver;
         this.password = password;
