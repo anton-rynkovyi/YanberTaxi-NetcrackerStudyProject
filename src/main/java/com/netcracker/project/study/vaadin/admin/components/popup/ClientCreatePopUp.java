@@ -23,7 +23,7 @@ public class ClientCreatePopUp extends VerticalLayout {
 
     @Autowired AdminService adminService;
 
-    ClientsGrid clientsGrid;
+    private ClientsGrid clientsGrid;
 
     @PostConstruct
     public void init() {

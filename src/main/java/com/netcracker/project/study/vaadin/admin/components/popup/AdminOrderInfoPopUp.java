@@ -4,6 +4,7 @@ import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.order.Order;
+import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.services.AdminService;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.LayoutEvents;
@@ -81,13 +82,13 @@ public class AdminOrderInfoPopUp extends VerticalLayout{
                     "</i>");
         }
 
-        Label status = new Label("Status: <i>" + order.getStatus() + "</i>", ContentMode.HTML);
-        Label cost = new Label("Cost: <i>" + order.getCost() != null ? order.getCost() + " hrn" : "-" + "</i>",
-                ContentMode.HTML);
-        Label distance = new Label("Distance: <i>" + order.getDistance() + " km</i>", ContentMode.HTML);
+        Label status = new Label("Status: <i>" + OrderStatusEnum.getStatusValue(order.getStatus()) + "</i>", ContentMode.HTML);
+        Label cost = new Label("Cost: <i>" +
+                (order.getCost() != null ? order.getCost() + " hrn" : "-") + "</i>", ContentMode.HTML);
+        Label distance = new Label("Distance: <i>" +
+                (order.getDistance() != null ? order.getDistance() + " km" : "-") + "</i>", ContentMode.HTML);
         Label driverRating = new Label("Driver rating: <i>" +
-                (order.getDriverRating() != null ? order.getDriverRating() : "-")+
-                "</i>", ContentMode.HTML);
+                (order.getDriverRating() != null ? order.getDriverRating() : "-")+ "</i>", ContentMode.HTML);
 
 
 

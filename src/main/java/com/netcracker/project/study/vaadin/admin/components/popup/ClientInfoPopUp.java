@@ -37,10 +37,11 @@ public class ClientInfoPopUp extends VerticalLayout {
         this.client = client;
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
+        rootLayout.setMargin(false);
+        rootLayout.setSpacing(false);
         rootLayout.setWidthUndefined();
-        rootLayout.setSpacing(true);
-        rootLayout.setMargin(true);
         setTextFields(rootLayout);
+
         addComponent(rootLayout);
     }
 
@@ -49,12 +50,17 @@ public class ClientInfoPopUp extends VerticalLayout {
     private void setTextFields(VerticalLayout rootLayout) {
         rootLayout.addComponent(setOrderInfoLayout());
         //rootLayout.addComponent(setControlButtonsLayout());
-        rootLayout.addComponent(setClientCommentsLayout());
+        VerticalLayout comments = new VerticalLayout();
+        comments.addComponent(setClientCommentsLayout());
+        comments.setMargin(false);
+        comments.setSpacing(false);
+        rootLayout.addComponent(comments);
     }
 
     private HorizontalLayout setOrderInfoLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
-
+        horizontalLayout.setMargin(false);
+        horizontalLayout.setSpacing(false);
         VerticalLayout orderForm = new VerticalLayout();
         orderForm.setSizeFull();
 

@@ -12,6 +12,7 @@ import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.driver.components.popup.OrderInfoPopUp;
 import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
+import com.netcracker.project.study.vaadin.driver.events.CancelClientOrderEvent;
 import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 import com.vaadin.icons.VaadinIcons;
@@ -21,12 +22,17 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.addons.Toastr;
+import org.vaadin.addons.builder.ToastBuilder;
+import org.vaadin.spring.events.annotation.EventBusListenerMethod;
+
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @SpringView(name = OrdersViewForDrivers.VIEW_NAME)
 public class OrdersViewForDrivers extends VerticalLayout implements View {
 
-    public static final String VIEW_NAME = "ordersForDriverPage";
+    public static final String VIEW_NAME = "driver.orders";
 
     @Autowired
     private NewOrdersTab newOrders;
@@ -37,6 +43,13 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     @Autowired
     private OrderInfoPopUp orderInfoPopUp;
 
+    @Autowired
+    org.vaadin.spring.events.EventBus.ViewEventBus viewEventBus;
+
+    @Autowired
+    DriverService driverService;
+
+    private Toastr toastr;
     private Driver driver;
     private TabSheet tabSheet;
     private VerticalLayout rootLayout;
@@ -50,6 +63,8 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     UserDetailsServiceImpl userDetailsService;
 
     public void init() {
+        toastr = new Toastr();
+        addComponent(toastr);
         rootLayout = new VerticalLayout();
         initDriver();
 
@@ -57,6 +72,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         newOrders.init();
 
         tabSheet = getTabSheet();
+
         rootLayout.addComponent(tabSheet);
 
         rootLayout.setSizeFull();
@@ -65,7 +81,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
         addComponent(rootLayout);
         setExpandRatio(rootLayout,0.8f);
-    }
+      }
 
     public void setAcceptButtonEnabled(boolean value){
         newOrders.setAcceptButtonEnabled(value);
@@ -209,4 +225,41 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         newOrders.refreshGrid();
         //orderService.setOrdersViewForDrivers(this);
     }
+
+    @PostConstruct
+    public void afterPropertiesSet() {
+        viewEventBus.subscribe(this,true);
+    }
+
+    @EventBusListenerMethod
+    public void sendCancelMessage(CancelClientOrderEvent event) {
+        Order order = orderService.getOrder(event.getOrderId());
+        List<Driver> drivers = driverService.getActiveDrivers();
+
+        if (driver == null || toastr == null) {
+            return;
+        }
+
+        if (driver.getObjectId().compareTo(order.getDriverId()) == 0) {
+            toastr.toast(ToastBuilder.warning("Order has been canceled").build());
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -21,6 +21,7 @@ import com.netcracker.project.study.vaadin.client.events.SendClientMessage;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.client.popups.DriverEvaluation;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
+import com.netcracker.project.study.vaadin.driver.events.CancelClientOrderEvent;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -81,6 +82,9 @@ public class ClientView extends VerticalLayout implements View {
 
     @Autowired
     private EventBus.UIEventBus viewEventBus;
+
+    @Autowired
+    EventBus.ApplicationEventBus appEventBus;
 
     @Autowired
     private DriverEvaluation driverEvaluation;
@@ -224,6 +228,7 @@ public class ClientView extends VerticalLayout implements View {
 
                 clientOrdersGrid.init();
                 clientCurrentOrderGrid.init();
+                appEventBus.publish(this, new CancelClientOrderEvent(currentOrder.getObjectId()));
             } else {
                 Toast cancelPerformingOrderToast = ToastBuilder.of(ToastType.Warning, "<b>You can't cancel performing order</b> ")
                     .caption("Attention")
@@ -318,7 +323,7 @@ public class ClientView extends VerticalLayout implements View {
                 Car car = event.getCar();
                 String carName = car.getMakeOfCar() + " " + car.getModelType();
 
-                toastr.toast(ToastBuilder.success("Your order has just been accepted by " + driverName +
+                toastr.toast(ToastBuilder.success("Your order has been accepted by " + driverName +
                          ". " + "Car: " + carName).build());
             }
         }

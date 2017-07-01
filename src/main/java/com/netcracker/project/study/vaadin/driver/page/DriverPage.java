@@ -177,7 +177,6 @@ public class DriverPage extends UI {
         changeStatusButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
         changeStatusButton.addStyleName(ValoTheme.BUTTON_SMALL);
 
-
         changeStatusButton.setIcon(VaadinIcons.POWER_OFF);
         changeStatusButton.setDescription("Press to start/stop working");
         horizontalLayout.addComponent(changeStatusButton);
@@ -261,7 +260,7 @@ public class DriverPage extends UI {
         return false;
     }
 
-    private void changeStatusIcon() {
+    public void changeStatusIcon() {
         if (driver.getStatus().equals(DriverStatusList.FREE)) {
             statusIcon.setIcon(VaadinIcons.COFFEE);
             setStatusButtonEnabled(true);
@@ -391,7 +390,6 @@ public class DriverPage extends UI {
 
         HorizontalLayout separator = getSeparator();
         horizontalLayout.addComponent(separator);
-
 
         return horizontalLayout;
     }

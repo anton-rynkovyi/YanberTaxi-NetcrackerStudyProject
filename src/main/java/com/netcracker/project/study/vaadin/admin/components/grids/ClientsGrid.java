@@ -93,7 +93,7 @@ public class ClientsGrid extends CustomComponent {
         viewClientWindow.setIcon(VaadinIcons.INFO);
         viewClientWindow.center();
         viewClientWindow.setModal(true);
-        viewClientWindow.setClosable(false);
+        viewClientWindow.setResizable(false);
         clientCreatePopUp.setClientsGrid(this);
         viewClientWindow.setContent(clientInfoPopUp);
     }

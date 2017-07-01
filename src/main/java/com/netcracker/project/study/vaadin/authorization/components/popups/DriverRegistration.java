@@ -17,6 +17,7 @@ import org.vaadin.addons.builder.ToastBuilder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 
 @SpringComponent
 @Scope(value = "prototype")
@@ -77,7 +78,7 @@ public class DriverRegistration extends Window {
 
         VerticalLayout verticalLayout2 = new VerticalLayout();
         phone = new PhoneField("Phone number");
-        phone.setPlaceholder("(068)067-68-53");
+        phone.setPlaceholder("(068)000-00-00");
         password1 = new PasswordField("Password");
         password2 = new PasswordField("Confirm password");
         email = new TextField("Email");
@@ -148,6 +149,7 @@ public class DriverRegistration extends Window {
             driver.setRating(BigDecimal.valueOf(4));
             driver.setStatus(DriverStatusList.APPROVAL);
             driver.setUnbanDate(null);
+            driver.setHireDate(new Date(System.currentTimeMillis()));
             carRegistration.setDriverAndPassword(driver, password2.getValue());
             persistenceFacade.create(driver);
             //userFacade.createUser(user);
