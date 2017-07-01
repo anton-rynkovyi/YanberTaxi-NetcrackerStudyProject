@@ -105,7 +105,7 @@ public class NewOrdersTab extends CustomComponent {
 
         componentLayout.addComponent(verticalLayout);
         componentLayout.setSizeFull();
-        
+
         setCompositionRoot(componentLayout);
     }
 
