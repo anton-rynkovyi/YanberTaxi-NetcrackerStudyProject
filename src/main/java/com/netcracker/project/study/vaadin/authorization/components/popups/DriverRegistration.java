@@ -154,6 +154,7 @@ public class DriverRegistration extends Window {
             carRegistration.setDriverAndPassword(driver, password2.getValue());
             //persistenceFacade.create(driver);
             //userFacade.createUser(user);
+            carRegistration.init();
             carRegistration.initDriverRegWindow(this, this);
             setContent(carRegistration.getContent());
         });

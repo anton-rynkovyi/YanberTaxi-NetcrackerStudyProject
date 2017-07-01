@@ -58,7 +58,7 @@ public class CarRegistration extends Window {
     private ArrayList<Integer> yearsDate;
     private ArrayList<Integer> seats;
 
-    public CarRegistration() {
+    public void init() {
         genFieldsArray();
         setWindowSettings();
         carsComponent.add(genFields());
@@ -198,20 +198,14 @@ public class CarRegistration extends Window {
             stateNumbers.clear();
             prodDates.clear();
             stateNumbers.clear();
+            driverBackWindow.init();
             driverRegWindow.close();
-            UI.getCurrent().getPage().setLocation("/authorization");
+            //close();
+            //UI.getCurrent().getPage().setLocation("/authorization");
         });
 
         addCloseListener(e -> {
-            for (int i = 0; i < carsLayout.getComponentCount(); i++) {
-                names.get(i).clear();
-                models.get(i).clear();
-                stateNumbers.get(i).clear();
-                prodDates.get(i).clear();
-                seatsCounts.get(i).clear();
-            }
-            driverRegWindow.close();
-            //setContent(null);
+           prev.click();
         });
 
         return horizontalLayout;
