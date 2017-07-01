@@ -192,8 +192,10 @@ public class DriverInfoPopUP extends VerticalLayout {
                     Client client = adminService.getModelById(orderList.get(i).getClientId(), Client.class);
                     TextArea textArea = new TextArea();
                     textArea.setCaptionAsHtml(true);
-                    textArea.setSizeFull();
+                    textArea.setWidth(100, Unit.PERCENTAGE);
+                    textArea.setHeight(80, Unit.PIXELS);
                     textArea.setCaption(client.getFirstName() + " " + client.getLastName());
+                    textArea.setReadOnly(true);
                     textArea.setEnabled(false);
                     textArea.setValue(orderList.get(i).getDriverMemo());
                     verticalLayout.addComponent(textArea);

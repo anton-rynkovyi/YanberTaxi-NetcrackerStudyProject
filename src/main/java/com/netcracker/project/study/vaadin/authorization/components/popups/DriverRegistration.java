@@ -17,7 +17,7 @@ import org.vaadin.addons.builder.ToastBuilder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
+import java.sql.Date;
 
 @SpringComponent
 @Scope(value = "prototype")
@@ -148,8 +148,8 @@ public class DriverRegistration extends Window {
             driver.setExperience(new BigInteger(exp.getValue()));
             driver.setRating(BigDecimal.valueOf(4));
             driver.setStatus(DriverStatusList.APPROVAL);
-            driver.setUnbanDate(null);
             driver.setHireDate(new Date(System.currentTimeMillis()));
+            driver.setUnbanDate(null);
             carRegistration.setDriverAndPassword(driver, password2.getValue());
             persistenceFacade.create(driver);
             //userFacade.createUser(user);

@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
 
+import java.sql.Date;
 import java.util.List;
 
 @SpringComponent
@@ -160,6 +161,7 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
             }
             emailMassageSender.sendMessage(driver.getEmail(), richTextArea.getValue());
             driver.setStatus(DriverStatusList.OFF_DUTY);
+            driver.setHireDate(new Date(System.currentTimeMillis()));
             adminService.updateModel(driver);
             driversRequestsGrid.refreshGrid();
 

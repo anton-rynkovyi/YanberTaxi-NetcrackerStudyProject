@@ -15,6 +15,7 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @SpringComponent
@@ -79,7 +80,7 @@ public class DriversRequestsGrid  extends CustomComponent{
         controlButtonsLayout.setMargin(true);
         controlButtonsLayout.setSpacing(true);
 
-        Button btnViewDriver = new Button("View driver", FontAwesome.EYE);
+        Button btnViewDriver = new Button("View driver", VaadinIcons.EYE);
         controlButtonsLayout.addComponent(btnViewDriver);
         btnViewDriver.addClickListener(clickEvent -> {
             if(!driversRequestsGrid.asSingleSelect().isEmpty() ) {
@@ -95,6 +96,7 @@ public class DriversRequestsGrid  extends CustomComponent{
 
     private Grid<Driver> generateDriversGrid() {
         driversRequestsGrid = new Grid<>();
+        driversRequestsGrid.addColumn(driver -> new Timestamp(driver.getHireDate().getTime())).setCaption("Request date");
         driversRequestsGrid.addColumn(Driver::getLastName).setCaption("Last name");
         driversRequestsGrid.addColumn(Driver::getFirstName).setCaption("First name");
         driversRequestsGrid.addColumn(Driver::getMiddleName).setCaption("Middle name");

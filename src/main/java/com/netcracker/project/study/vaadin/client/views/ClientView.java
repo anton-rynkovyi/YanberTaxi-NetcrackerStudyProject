@@ -304,27 +304,15 @@ public class ClientView extends VerticalLayout implements View {
             if (currentOrder.getObjectId().equals(event.getOrderId())) {
                 clientOrdersGrid.init();
                 clientCurrentOrderGrid.init();
-                /*Window message = new Window();
-                VerticalLayout verticalLayout = new VerticalLayout();
-                verticalLayout.setWidth(400, Unit.PIXELS);
-                verticalLayout.setMargin(true);
-                verticalLayout.setSpacing(true);
-                TextField text = new TextField();
-                text.setData("Your order is already accepted");
-                text.setReadOnly(true);
-                verticalLayout.addComponent(text);
-                message.setModal(true);
-                message.setResizable(false);
-                currentUi.addWindow(message);
-                message.setContent(verticalLayout);*/
                 Driver driver = event.getDriver();
                 String driverName = driver.getLastName() + " " + driver.getFirstName();
 
                 Car car = event.getCar();
                 String carName = car.getMakeOfCar() + " " + car.getModelType();
+                String stateNumber = car.getStateNumber();
 
                 toastr.toast(ToastBuilder.success("Your order has been accepted by " + driverName +
-                         ". " + "Car: " + carName).build());
+                         ". " + "Car: " + carName + ", state number: " + stateNumber).build());
             }
         }
 

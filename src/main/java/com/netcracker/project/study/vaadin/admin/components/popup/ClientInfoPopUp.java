@@ -8,9 +8,11 @@ import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.admin.components.grids.ClientsGrid;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
@@ -37,30 +39,26 @@ public class ClientInfoPopUp extends VerticalLayout {
         this.client = client;
         removeAllComponents();
         VerticalLayout rootLayout = new VerticalLayout();
-        rootLayout.setMargin(false);
-        rootLayout.setSpacing(false);
         rootLayout.setWidthUndefined();
-        setTextFields(rootLayout);
-
+        rootLayout.setSpacing(true);
+        rootLayout.setMargin(true);
+        setAllContent(rootLayout);
         addComponent(rootLayout);
     }
 
 
 
-    private void setTextFields(VerticalLayout rootLayout) {
+    private void setAllContent(VerticalLayout rootLayout) {
         rootLayout.addComponent(setOrderInfoLayout());
-        //rootLayout.addComponent(setControlButtonsLayout());
-        VerticalLayout comments = new VerticalLayout();
-        comments.addComponent(setClientCommentsLayout());
-        comments.setMargin(false);
-        comments.setSpacing(false);
-        rootLayout.addComponent(comments);
+        HorizontalLayout cancelBtn = setControlButtonsLayout();
+        rootLayout.addComponent(cancelBtn);
+        rootLayout.setComponentAlignment(cancelBtn, Alignment.BOTTOM_CENTER);
+        rootLayout.addComponent(setClientCommentsLayout());
     }
 
     private HorizontalLayout setOrderInfoLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setMargin(false);
-        horizontalLayout.setSpacing(false);
+
         VerticalLayout orderForm = new VerticalLayout();
         orderForm.setSizeFull();
 
@@ -81,11 +79,14 @@ public class ClientInfoPopUp extends VerticalLayout {
 
     private HorizontalLayout setControlButtonsLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
+        horizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
         Button btnCancel = new Button("Cancel");
         btnCancel.addClickListener(clickEvent -> {
-            clientsGrid.getViewClientWindow().close();
+//            clientsGrid.getViewClientWindow().close();
+            for (Window window :UI.getCurrent().getWindows()){
+                window.close();
+            }
         });
         horizontalLayout.addComponent(btnCancel);
         return horizontalLayout;
@@ -108,6 +109,9 @@ public class ClientInfoPopUp extends VerticalLayout {
                 if (orderList.get(i).getDriverId() != null) {
                     Driver driver = adminService.getModelById(orderList.get(i).getDriverId(), Driver.class);
                     textArea.setCaption("To " + driver.getFirstName() + " " + driver.getLastName());
+                    textArea.setIcon(VaadinIcons.COMMENT_ELLIPSIS);
+                    textArea.setWidth(100, Unit.PERCENTAGE);
+                    textArea.setHeight(80, Unit.PIXELS);
                     textArea.setEnabled(false);
                     textArea.setValue(orderList.get(i).getDriverMemo());
                     verticalLayout.addComponent(textArea);

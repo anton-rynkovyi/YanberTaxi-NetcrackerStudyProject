@@ -4,7 +4,10 @@ import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.vaadin.admin.components.popup.ClientCreatePopUp;
 import com.netcracker.project.study.vaadin.admin.components.popup.ClientInfoPopUp;
+import com.vaadin.data.HasValue;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +36,24 @@ public class ClientsGrid extends CustomComponent {
 
     private Window viewClientWindow;
 
+    private HorizontalLayout filtersLayout;
+
+    private TextField fieldFilter;
+
     public void init() {
+        initFilters();
         clientsGrid = generateClientsGrid();
         VerticalLayout componentLayout = getFilledComponentLayout();
         //initCreateWindow();
         initViewClientWindow();
         setCompositionRoot(componentLayout);
+    }
+
+    private void initFilters(){
+        filtersLayout = new HorizontalLayout();
+        filtersLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
+        initTextFieldFilter();
+        filtersLayout.addComponent(fieldFilter);
     }
 
     private VerticalLayout getFilledComponentLayout() {
@@ -49,10 +64,30 @@ public class ClientsGrid extends CustomComponent {
 
         HorizontalLayout controlButtons = getControlButtons();
 
+        componentLayout.addComponent(filtersLayout);
         componentLayout.addComponents(clientsGrid);
         componentLayout.addComponent(controlButtons);
 
         return componentLayout;
+    }
+
+    private void initTextFieldFilter() {
+        fieldFilter = new TextField();
+        fieldFilter.addValueChangeListener(this::onNameFilterTextChange);
+        fieldFilter.setPlaceholder("Search");
+    }
+
+    private void onNameFilterTextChange(HasValue.ValueChangeEvent<String> event) {
+        ListDataProvider<Client> dataProvider = (ListDataProvider<Client>) clientsGrid.getDataProvider();
+        dataProvider.setFilter(Client::getLastName, s -> caseInsensitiveContains(s, event.getValue()));
+    }
+
+    private Boolean caseInsensitiveContains(String where, String what) {
+        if (where != null) {
+            System.out.println(where + " : " + what);
+            return where.toLowerCase().contains(what.toLowerCase());
+        }
+        return false;
     }
 
     private Grid<Client> generateClientsGrid() {
