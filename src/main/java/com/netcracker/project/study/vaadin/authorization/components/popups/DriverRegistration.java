@@ -67,7 +67,7 @@ public class DriverRegistration extends Window {
 
     private VerticalLayout genRootLayout() {
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setWidth(600, Unit.PIXELS);
+        verticalLayout.setWidth(590, Unit.PIXELS);
         verticalLayout.setMargin(true);
         verticalLayout.setSpacing(true);
         return verticalLayout;
@@ -133,7 +133,8 @@ public class DriverRegistration extends Window {
                 return;
             }
             for (int i = 0; i < exp.getValue().length(); i++) {
-                if (!Character.isDigit(exp.getValue().charAt(i))) {
+                if (!Character.isDigit(exp.getValue().charAt(i)) ||
+                        (Integer.parseInt(exp.getValue()) < 0 || Integer.parseInt(exp.getValue()) > 100)) {
                     toastr.toast(ToastBuilder.error("Wrong experience format!").build());
                     return;
                 }
@@ -151,11 +152,10 @@ public class DriverRegistration extends Window {
             driver.setHireDate(new Date(System.currentTimeMillis()));
             driver.setUnbanDate(null);
             carRegistration.setDriverAndPassword(driver, password2.getValue());
-            persistenceFacade.create(driver);
+            //persistenceFacade.create(driver);
             //userFacade.createUser(user);
-            carRegistration.initDriverRegWindow(this);
+            carRegistration.initDriverRegWindow(this, this);
             setContent(carRegistration.getContent());
-            carRegistration.setDriverBackWindow(this);
         });
 
         cancel.addClickListener(event -> {

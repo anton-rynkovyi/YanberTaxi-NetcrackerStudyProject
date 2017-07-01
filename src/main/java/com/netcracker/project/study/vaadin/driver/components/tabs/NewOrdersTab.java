@@ -21,7 +21,9 @@ import com.netcracker.project.study.vaadin.client.events.SendClientMessage;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
+import com.vaadin.annotations.Push;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -320,7 +322,6 @@ public class NewOrdersTab extends CustomComponent {
                         appEventBus.publish(this, new RefreshClientViewEvent(this,currentOrder.getObjectId()));
                         currentOrder = null;
                     }
-
                 } catch (NumberFormatException e) {
                     iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
                     errorLabel.setCaption("Incorrect data. Only digits are admissible.");
@@ -328,7 +329,6 @@ public class NewOrdersTab extends CustomComponent {
                     iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
                     errorLabel.setCaption("Incorrect data. Number must be greater than previous.");
                 }
-                System.out.println("заказ <"+currentOrder.getObjectId()+"> сменил статус  на <"+currentOrder.getStatus()+">");
             });
 
             verticalLayout.addComponent(errorLayout);
@@ -382,7 +382,6 @@ public class NewOrdersTab extends CustomComponent {
                     iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
                     errorLabel.setCaption("Incorrect data. Only digits are admissible.");
                 }
-                System.out.println("заказ <"+currentOrder.getObjectId()+"> сменил статус  на <"+currentOrder.getStatus()+">");
             });
 
             verticalLayout.addComponent(errorLayout);
@@ -410,6 +409,14 @@ public class NewOrdersTab extends CustomComponent {
             acceptOrderButton.setEnabled(false);
         }
         acceptOrderButton.addClickListener(event -> {
+            if (isBanned()) {
+                SecurityContextHolder.clearContext();
+                return;
+            }
+            if (isDismissed()) {
+                SecurityContextHolder.clearContext();
+                return;
+            }
             if (!ordersGrid.asSingleSelect().isEmpty()) {
                 List<Order> currentOrder = orderService.getCurrentOrderByDriverId(driver.getObjectId());
                 if (currentOrder.size() == 0) {
@@ -417,8 +424,6 @@ public class NewOrdersTab extends CustomComponent {
                     try {
                         Order order = orderService.getOrder(orderInfo.getObjectId());
                         if (order.getDriverId() == null) {
-                            System.out.println("driver + <" + driver.getObjectId() + "> take order <" + order.getObjectId() + ">");
-                            System.out.println("order <" + order.getObjectId() + "> change status on <" + order.getStatus() + ">");
                             driverService.acceptOrder(order.getObjectId(), driver.getObjectId());
                             acceptOrderButton.setEnabled(false);
                             appEventBus.publish(this, new SendClientMessage(this, order.getObjectId(), driver, car));
@@ -505,6 +510,55 @@ public class NewOrdersTab extends CustomComponent {
 
     public List getOrdersList() {
         return ordersList;
+    }
+
+    private boolean isDismissed() {
+        if (driver.getStatus().compareTo(DriverStatusList.DISMISSED) == 0) {
+            UI.getCurrent().setContent(toastr);
+            Toast banToast = ToastBuilder.of(ToastType.Warning,
+                    "You have been dismissed." +
+                            "\n Contacts: yanbertaxi.netcracker@gmail.com")
+                    .caption("Information")
+                    .options(ToastOptionsBuilder.having()
+                            .closeButton(false)
+                            .debug(false)
+                            .progressBar(false)
+                            .preventDuplicates(true)
+                            .position(ToastPosition.Top_Full_Width)
+                            .tapToDismiss(false)
+                            .extendedTimeOut(600000)
+                            .build())
+                    .build();
+            toastr.toast(banToast);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isBanned() {
+        User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
+        if (!user.isEnabled()) {
+            UI.getCurrent().setContent(toastr);
+            Driver driver = adminService.getModelById(this.driver.getObjectId(), Driver.class);
+            Toast banToast = ToastBuilder.of(ToastType.Warning,
+                    "You have been banned." +
+                            "\nUnban date: " + new Timestamp(driver.getUnbanDate().getTime()) +
+                            "\n Contacts: yanbertaxi.netcracker@gmail.com")
+                    .caption("Information")
+                    .options(ToastOptionsBuilder.having()
+                            .closeButton(false)
+                            .debug(false)
+                            .progressBar(false)
+                            .preventDuplicates(true)
+                            .position(ToastPosition.Top_Full_Width)
+                            .tapToDismiss(false)
+                            .extendedTimeOut(600000)
+                            .build())
+                    .build();
+            toastr.toast(banToast);
+            return true;
+        }
+        return false;
     }
 
 }

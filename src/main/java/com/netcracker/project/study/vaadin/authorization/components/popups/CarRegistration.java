@@ -38,9 +38,8 @@ public class CarRegistration extends Window {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    private Window driverBackWindow;
-
     private Window driverRegWindow;
+    private DriverRegistration driverBackWindow;
 
     private Driver driver;
     private String password;
@@ -67,21 +66,23 @@ public class CarRegistration extends Window {
         carsLayout = genCarsLayout();
         carsLayout.addComponent(carsComponent.get(0));
         root.addComponent(carsLayout);
-        root.addComponent(genButtons());
+        //root.addComponent(genButtons());
         toastr = new Toastr();
         root.addComponent(toastr);
         setContent(root);
     }
 
-    public void initDriverRegWindow(Window window) {
+    public void initDriverRegWindow(Window window, DriverRegistration driverRegWindow) {
         this.driverRegWindow = window;
+        this.driverBackWindow = driverRegWindow;
     }
+
 
     private VerticalLayout genRootLayout() {
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setWidth(600, Unit.PIXELS);
-        verticalLayout.setMargin(false);
-        verticalLayout.setSpacing(false);
+        verticalLayout.setWidth(590, Unit.PIXELS);
+        verticalLayout.setMargin(true);
+        verticalLayout.setSpacing(true);
         return verticalLayout;
     }
 
@@ -121,7 +122,10 @@ public class CarRegistration extends Window {
     }
 
     private Component genFields() {
-        VerticalLayout verticalLayout = new VerticalLayout();
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        VerticalLayout left = new VerticalLayout();
+        VerticalLayout right = new VerticalLayout();
+        horizontalLayout.addComponents(left, right);
         names.add(new TextField("Name of car"));
         models.add(new TextField("Model"));
         stateNumbers.add(new TextField("State number"));
@@ -133,16 +137,87 @@ public class CarRegistration extends Window {
         seatsCounts.add(seatsCountsCb);
         childSeats.add(new CheckBox("Child seat"));
         int lastCar = models.size() - 1;
-        verticalLayout.addComponents(
+       /* verticalLayout.addComponents(
                 names.get(lastCar), models.get(lastCar),
                 stateNumbers.get(lastCar), prodDates.get(lastCar),
-                seatsCounts.get(lastCar), childSeats.get(lastCar));
-        Panel panel = new Panel();
-        panel.setContent(verticalLayout);
-        return panel;
+                seatsCounts.get(lastCar), childSeats.get(lastCar));*/
+        Button ok = new Button("Ok", VaadinIcons.USER_CHECK);
+        ok.setWidth(114, Unit.PIXELS);
+        Button prev = new Button("Cancel", VaadinIcons.EXIT);
+        prev.setWidth(114, Unit.PIXELS);
+
+        left.addComponents(names.get(lastCar), models.get(lastCar), stateNumbers.get(lastCar), prev);
+        right.addComponents(prodDates.get(lastCar), seatsCounts.get(lastCar),  new Label(), childSeats.get(lastCar), ok);
+        right.setComponentAlignment(ok, Alignment.MIDDLE_RIGHT);
+
+        ok.addClickListener(event -> {
+            for (int i = 0; i < carsLayout.getComponentCount(); i++) {
+                if (names.get(i).isEmpty()
+                        || models.get(i).isEmpty()
+                        || stateNumbers.get(i).isEmpty()
+                        || prodDates.get(i).isEmpty()
+                        || seatsCounts.get(i).isEmpty()) {
+                    toastr.toast(ToastBuilder.error("All fields must be filled!").build());
+                    return;
+                } else {
+                    Car car = new Car();
+                    car.setDriverId(driver.getObjectId());
+                    car.setMakeOfCar(names.get(i).getValue());
+                    car.setModelType(models.get(i).getValue());
+                    car.setStateNumber(stateNumbers.get(i).getValue());
+                    car.setReleaseDate(java.sql.Date.valueOf(prodDates.get(i).getValue() + "-01-01"));
+                    car.setSeatsCount(new BigInteger(String.valueOf(seatsCounts.get(i).getValue())));
+                    car.setChildSeat(childSeats.get(i).getValue() ? true : false);
+                    cars.add(car);
+                }
+            }
+            System.out.println(driver);
+            persistenceFacade.create(driver);
+            User user = new User();
+            user.setObjectId(driver.getObjectId());
+            user.setUsername(driver.getPhoneNumber());
+            user.setPassword(passwordEncoder.encode(password));
+            user.setEnabled(true);
+            user.setAuthorities(ImmutableList.of(Role.ROLE_DRIVER));
+            userFacade.createUser(user);
+            for (int i = 0; i < cars.size(); i++) {
+                persistenceFacade.create(cars.get(i));
+            }
+
+            UI.getCurrent().setContent(toastr);
+            driverRegWindow.close();
+            driverBackWindow.init();
+            toastr.toast(ToastBuilder.success(
+                    "You are successfully registered!\nAdministrator will contact you by email.")
+                    .build());
+        });
+
+        prev.addClickListener(event -> {
+            names.clear();
+            models.clear();
+            stateNumbers.clear();
+            prodDates.clear();
+            stateNumbers.clear();
+            driverRegWindow.close();
+            UI.getCurrent().getPage().setLocation("/authorization");
+        });
+
+        addCloseListener(e -> {
+            for (int i = 0; i < carsLayout.getComponentCount(); i++) {
+                names.get(i).clear();
+                models.get(i).clear();
+                stateNumbers.get(i).clear();
+                prodDates.get(i).clear();
+                seatsCounts.get(i).clear();
+            }
+            driverRegWindow.close();
+            //setContent(null);
+        });
+
+        return horizontalLayout;
     }
 
-    private HorizontalLayout genButtons() {
+   /* private HorizontalLayout genButtons() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setSizeFull();
         Button ok = new Button("Ok", VaadinIcons.USER_CHECK);
@@ -154,7 +229,7 @@ public class CarRegistration extends Window {
         Button del = new Button("Delete car", VaadinIcons.MINUS);
         prev.setWidth(114, Unit.PIXELS);
         horizontalLayout.addComponents(prev, del, add, ok);
-        //horizontalLayout.setExpandRatio(prev, 0.8f);
+        horizontalLayout.setExpandRatio(prev, 0.8f);
         ok.addClickListener(event -> {
             for (int i = 0; i < carsLayout.getComponentCount(); i++) {
                 if (names.get(i).isEmpty()
@@ -242,16 +317,12 @@ public class CarRegistration extends Window {
             driverRegWindow.close();
             //setContent(null);
         });
-
         return horizontalLayout;
     }
+*/
 
     public void setDriverAndPassword(Driver driver, String password) {
         this.driver = driver;
         this.password = password;
-    }
-
-    public void setDriverBackWindow(Window driverBackWindow) {
-        this.driverBackWindow = driverBackWindow;
     }
 }

@@ -180,10 +180,9 @@ public class AuthorizationPage extends UI {
                         toastr.toast(ToastBuilder.error("Wrong login or password!").build());
                     }
                     if (driver.getStatus() == DriverStatusList.APPROVAL) {
-                        toastr.toast(ToastBuilder.info("You are not recruited yet. Watch your email address.").build());
+                        toastr.toast(ToastBuilder.info("You are not recruited yet. Check your email address.").build());
                         return;
                     }
-                    System.out.println(driver.getStatus());
                     if (driver.getStatus() == DriverStatusList.DISMISSED) {
                         toastr.toast(ToastBuilder.of(ToastType.Info,
                                 "You are dismissed.\nContacts:\nyanbertaxi.netcracker@gmail.com").build());

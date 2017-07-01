@@ -57,20 +57,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     public <T extends Model> T getCurrentUser() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        long objectTypeId = userFacade.getObjectTypeIdByUser(user);
-        if (objectTypeId == ClientAttr.OBJECT_TYPE_ID) {
-            Client client = persistenceFacade.getOne(user.getObjectId(), Client.class);
-            return (T) client;
-        }
-        if (objectTypeId == DriverAttr.OBJECT_TYPE_ID) {
-            Driver driver = persistenceFacade.getOne(user.getObjectId(), Driver.class);
-            return (T) driver;
-        }
-        if (objectTypeId == AdminAttr.OBJECT_TYPE_ID) {
-            Admin admin = persistenceFacade.getOne(user.getObjectId(), Admin.class);
-            return (T) admin;
-        }
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            System.out.println(user);
+            long objectTypeId = userFacade.getObjectTypeIdByUser(user);
+            if (objectTypeId == ClientAttr.OBJECT_TYPE_ID) {
+                Client client = persistenceFacade.getOne(user.getObjectId(), Client.class);
+                return (T) client;
+            }
+            if (objectTypeId == DriverAttr.OBJECT_TYPE_ID) {
+                Driver driver = persistenceFacade.getOne(user.getObjectId(), Driver.class);
+                return (T) driver;
+            }
+            if (objectTypeId == AdminAttr.OBJECT_TYPE_ID) {
+                Admin admin = persistenceFacade.getOne(user.getObjectId(), Admin.class);
+                return (T) admin;
+            }
+        } catch (Exception e) {}
         return null;
     }
 

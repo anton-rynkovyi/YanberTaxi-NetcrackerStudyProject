@@ -13,6 +13,7 @@ import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.driver.components.popup.DriverUpdate;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
+import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.event.UIEvents;
@@ -20,6 +21,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringUI;
@@ -144,8 +146,10 @@ public class DriverPage extends UI {
         addPollListener(new UIEvents.PollListener() {
             @Override
             public void poll(UIEvents.PollEvent event) {
-                getCurrentView().refresh();
-                getCurrentUI().refreshUI();
+                try {
+                    getCurrentView().refresh();
+                    getCurrentUI().refreshUI();
+                }catch (Exception e) {}
             }
         });
     }
@@ -212,6 +216,7 @@ public class DriverPage extends UI {
     }
 
     private boolean isDismissed() {
+        Driver driver = adminService.getModelById(this.driver.getObjectId(), Driver.class);
         if (driver.getStatus().compareTo(DriverStatusList.DISMISSED) == 0) {
             UI.getCurrent().setContent(toastr);
             Toast banToast = ToastBuilder.of(ToastType.Warning,
