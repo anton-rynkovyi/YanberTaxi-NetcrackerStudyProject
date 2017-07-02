@@ -151,6 +151,7 @@ public class CarRegistration extends Window {
         right.setComponentAlignment(ok, Alignment.MIDDLE_RIGHT);
 
         ok.addClickListener(event -> {
+
             for (int i = 0; i < carsLayout.getComponentCount(); i++) {
                 if (names.get(i).isEmpty()
                         || models.get(i).isEmpty()
@@ -169,10 +170,12 @@ public class CarRegistration extends Window {
                     car.setSeatsCount(new BigInteger(String.valueOf(seatsCounts.get(i).getValue())));
                     car.setChildSeat(childSeats.get(i).getValue() ? true : false);
                     cars.add(car);
+                    System.out.println(car);
                 }
             }
-            System.out.println(driver);
-            persistenceFacade.create(driver);
+            for (int i = 0; i < cars.size(); i++) {
+                persistenceFacade.create(cars.get(i));
+            }
             User user = new User();
             user.setObjectId(driver.getObjectId());
             user.setUsername(driver.getPhoneNumber());
@@ -180,9 +183,6 @@ public class CarRegistration extends Window {
             user.setEnabled(true);
             user.setAuthorities(ImmutableList.of(Role.ROLE_DRIVER));
             userFacade.createUser(user);
-            for (int i = 0; i < cars.size(); i++) {
-                persistenceFacade.create(cars.get(i));
-            }
 
             UI.getCurrent().setContent(toastr);
             driverRegWindow.close();
@@ -200,6 +200,7 @@ public class CarRegistration extends Window {
             stateNumbers.clear();
             driverBackWindow.init();
             driverRegWindow.close();
+            persistenceFacade.delete(driver.getObjectId());
             //close();
             //UI.getCurrent().getPage().setLocation("/authorization");
         });

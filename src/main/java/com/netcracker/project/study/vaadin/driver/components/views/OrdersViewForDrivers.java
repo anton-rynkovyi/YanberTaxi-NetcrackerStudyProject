@@ -238,7 +238,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         Order order = orderService.getOrder(event.getOrderId());
         List<Driver> drivers = driverService.getActiveDrivers();
 
-        if (driver == null || toastr == null) {
+        if (driver == null || toastr == null || order == null) {
             return;
         }
 

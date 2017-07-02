@@ -80,6 +80,7 @@ public class DriverPage extends UI {
     Button changeStatusButton;
 
     private Toastr toastr;
+    private Toastr banToastr;
 
     @Autowired
     private UserFacade userFacade;
@@ -169,8 +170,6 @@ public class DriverPage extends UI {
                 }catch (Exception e) {}
             }
         });
-
-        System.out.println(vaadinRequest.getUserPrincipal());
     }
 
     public void refreshUI() {
