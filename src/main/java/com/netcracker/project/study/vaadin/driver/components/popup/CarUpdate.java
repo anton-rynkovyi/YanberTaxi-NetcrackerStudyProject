@@ -57,7 +57,7 @@ public class CarUpdate extends Window {
     private ArrayList<Car> cars;
     private ArrayList<Integer> yearsDate;
 
-    public CarUpdate() {
+    public void init() {
         genFieldsArray();
         setWindowSettings();
         carsComponent.add(genFields());

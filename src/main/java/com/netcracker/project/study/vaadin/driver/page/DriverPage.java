@@ -11,6 +11,7 @@ import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
+import com.netcracker.project.study.vaadin.driver.components.popup.CarUpdate;
 import com.netcracker.project.study.vaadin.driver.components.popup.DriverUpdate;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.vaadin.annotations.Push;
@@ -43,6 +44,7 @@ import java.sql.Timestamp;
 @Theme("valo")
 @SpringUI(path = "/driver")
 @Title("YanberTaxi-Driver")
+@Push
 public class DriverPage extends UI {
 
     @Autowired
@@ -62,6 +64,9 @@ public class DriverPage extends UI {
 
     @Autowired
     DriverUpdate DriverWindow;
+
+    @Autowired
+    CarUpdate CarWindow;
 
     private Driver driver;
 
@@ -295,23 +300,51 @@ public class DriverPage extends UI {
 
     }
 
+    PopupView popupView;
     private HorizontalLayout getEditButtonLayout() {
-        Button editButton = new Button();
+       /* Button editButton = new Button();
         editButton.setIcon(VaadinIcons.PENCIL);
         editButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
         editButton.addStyleName(ValoTheme.BUTTON_SMALL);
         editButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
         editButton.addClickListener(clock -> {
-            DriverWindow.init();
-            getUI().addWindow(DriverWindow);
-        });
-
+            settings();
+        });*/
+        popupView = new PopupView("Settings", settings());
         HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.addComponents(editButton);
+        horizontalLayout.addComponents(popupView);
 
         HorizontalLayout separator = getSeparator();
         horizontalLayout.addComponent(separator);
         return horizontalLayout;
+    }
+
+    private VerticalLayout settings() {
+        VerticalLayout verticalLayout = new VerticalLayout();
+
+        Button editButtonDriver = new Button("My settintgs");
+        editButtonDriver.setIcon(VaadinIcons.USER);
+        editButtonDriver.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        editButtonDriver.addStyleName(ValoTheme.BUTTON_SMALL);
+        editButtonDriver.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        verticalLayout.addComponent(editButtonDriver);
+        editButtonDriver.addClickListener(clock -> {
+            DriverWindow.init();
+            getUI().addWindow(DriverWindow);
+        });
+
+        Button editButtonCar = new Button("My car settings");
+        editButtonCar.setIcon(VaadinIcons.CAR);
+        editButtonCar.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        editButtonCar.addStyleName(ValoTheme.BUTTON_SMALL);
+        editButtonCar.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        verticalLayout.addComponent(editButtonCar);
+        editButtonCar.addClickListener(clock -> {
+            CarWindow.init();
+            getUI().addWindow(CarWindow);
+        });
+
+        return verticalLayout;
     }
 
     private HorizontalLayout getLogOutButton() {

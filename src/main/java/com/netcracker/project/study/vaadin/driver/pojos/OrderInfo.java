@@ -1,7 +1,7 @@
 package com.netcracker.project.study.vaadin.driver.pojos;
 
 
-import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
+
 
 import java.math.BigInteger;
 

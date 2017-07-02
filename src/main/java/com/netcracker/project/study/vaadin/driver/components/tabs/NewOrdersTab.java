@@ -16,6 +16,7 @@ import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 
+import com.netcracker.project.study.vaadin.client.events.RefreshClientOrderInfoEvent;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.client.events.SendClientMessage;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
@@ -376,6 +377,8 @@ public class NewOrdersTab extends CustomComponent {
                         window.close();
                         refreshContent();
                         ((DriverPage)getUI()).setStatusButtonEnabled(false);
+                        appEventBus.publish(this, new RefreshClientOrderInfoEvent(this,currentOrder.getObjectId()));
+
                     }
 
                 } catch (NumberFormatException e) {

@@ -5,6 +5,7 @@ import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
+import com.netcracker.project.study.vaadin.client.popups.DriverEvaluation;
 import com.netcracker.project.study.vaadin.client.views.ClientView;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
@@ -21,12 +22,14 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.vaadin.spring.events.EventBus;
 
 import java.math.BigInteger;
 
 @Theme("valo")
 @SpringUI(path = "/client")
 @Title("YanberTaxi-Client")
+@Push
 public class ClientPage extends UI {
 
     @Autowired
@@ -41,7 +44,6 @@ public class ClientPage extends UI {
     @Autowired
     Copyright bottomTeamLogo;
 
-
     private Client client;
 
     private Panel viewDisplay;
@@ -54,6 +56,9 @@ public class ClientPage extends UI {
         client = userDetailsService.getCurrentUser();
 
         VerticalLayout rootLayout = getVerticalLayout();
+        rootLayout.setMargin(false);
+        rootLayout.setSpacing(false);
+        rootLayout.setHeight(100, Unit.PERCENTAGE);
         setContent(rootLayout);
 
         HorizontalLayout panelCaption = getPanelCaption();
@@ -111,6 +116,7 @@ public class ClientPage extends UI {
         panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         panelCaption.setStyleName(MaterialTheme.LAYOUT_CARD);
         panelCaption.setMargin(new MarginInfo(false, true, false, true));
+        // panelCaption.addStyleName("v-panel-caption");
         panelCaption.setWidth("100%");
 
         return panelCaption;
@@ -147,7 +153,6 @@ public class ClientPage extends UI {
             getUI().getPage().setLocation("/authorization");
         });
         logOutButton.setIcon(VaadinIcons.EXIT);
-
         return logOutButton;
     }
 

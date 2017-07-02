@@ -16,6 +16,7 @@ import com.netcracker.project.study.vaadin.authorization.components.popups.Clien
 import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientOrdersGrid;
 import com.netcracker.project.study.vaadin.client.components.OrderMaker;
+import com.netcracker.project.study.vaadin.client.events.RefreshClientOrderInfoEvent;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.client.events.SendClientMessage;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
@@ -274,6 +275,22 @@ public class ClientView extends VerticalLayout implements View {
     public void afterPropertiesSet() {
         viewEventBus.subscribe(this,true);
 
+    }
+
+    @EventBusListenerMethod
+    public void refreshClientOrderInfo(RefreshClientOrderInfoEvent event) {
+        currentOrders = orderMaker.getOrdersList();
+        if (currentOrders == null) {
+            return;
+        }
+        for (Order currentOrder:currentOrders) {
+            if (currentOrder.getObjectId().equals(event.getOrderId())) {
+                clientOrdersGrid.init();
+                clientCurrentOrderGrid.init();
+                newOrder.setVisible(true);
+                cancelOrder.setVisible(false);
+            }
+        }
     }
 
     @EventBusListenerMethod
