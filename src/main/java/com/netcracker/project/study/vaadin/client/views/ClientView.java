@@ -161,13 +161,7 @@ public class ClientView extends VerticalLayout implements View {
         Button.ClickListener orderCancelListener = new OrderCancelListener();
         cancelOrder.addClickListener(orderCancelListener);
 
-        if (isActiveOrderExist()) {
-            newOrder.setVisible(false);
-            cancelOrder.setVisible(true);
-        } else {
-            newOrder.setVisible(true);
-            cancelOrder.setVisible(false);
-        }
+        changeButtonsVisible();
 
         root.addComponent(newOrder);
         root.addComponent(cancelOrder);
@@ -183,13 +177,28 @@ public class ClientView extends VerticalLayout implements View {
         return panel;
     }
 
+    private void changeButtonsVisible() {
+        if (orderService.getActiveOrdersByClientId(client.getObjectId()).size() > 0){
+            newOrder.setVisible(false);
+            cancelOrder.setVisible(true);
+        } else if (orderService.getPerformingOrdersByClientId(client.getObjectId()).size() > 0){
+            newOrder.setVisible(false);
+            cancelOrder.setVisible(false);
+        } else {
+            newOrder.setVisible(true);
+            cancelOrder.setVisible(false);
+        }
+    }
+
     class NewOrderCreater implements Button.ClickListener {
 
         @Override
         public void buttonClick(Button.ClickEvent clickEvent) {
-            initWindow("");
-            window.setCaption(" Add information about your order");
+            window = new Window(" Add information about your order");
+            window.setResizable(false);
             window.setIcon(VaadinIcons.KEYBOARD);
+            window.center();
+            window.setModal(true);
             window.setContent(orderMaker);
             UI.getCurrent().addWindow(window);
             orderMaker.enableCancelOrderButton(cancelOrder);
@@ -245,26 +254,6 @@ public class ClientView extends VerticalLayout implements View {
         }
     }
 
-    private boolean isActiveOrderExist() {
-        List<Order> orderList = orderService.getActiveOrdersByClientId(client.getObjectId());
-        List<Order> orderPerformingList = orderService.getPerformingOrdersByClientId(client.getObjectId());
-        if (orderList.size() > 0 || orderPerformingList.size() > 0) return true;
-
-        return false;
-    }
-
-    private void initWindow(String text){
-        window = new Window(" Information");
-        window.setResizable(false);
-        window.setIcon(VaadinIcons.INFO_CIRCLE);
-        window.center();
-        window.setModal(true);
-        VerticalLayout verticalLayout = new VerticalLayout();
-        Label content = new Label(text, ContentMode.HTML);
-        verticalLayout.addComponent(content);
-        window.setContent(verticalLayout);
-    }
-
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         init();
@@ -287,7 +276,7 @@ public class ClientView extends VerticalLayout implements View {
             if (currentOrder.getObjectId().equals(event.getOrderId())) {
                 clientOrdersGrid.init();
                 clientCurrentOrderGrid.init();
-                newOrder.setVisible(true);
+                newOrder.setVisible(false);
                 cancelOrder.setVisible(false);
             }
         }
