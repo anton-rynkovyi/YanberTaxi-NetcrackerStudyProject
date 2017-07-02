@@ -12,6 +12,7 @@ import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversBanGrid;
 import com.netcracker.project.study.vaadin.admin.components.grids.DriversGrid;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
@@ -75,6 +76,7 @@ public class DriverInfoPopUP extends VerticalLayout {
 
     private void setTextFields(VerticalLayout rootLayout) {
         //rootLayout.addComponent(lastSeen());
+
         rootLayout.addComponent(setDriverAndCarInfoLayout());
         rootLayout.addComponent(setControlButtonsLayout());
         rootLayout.addComponent(setDriverCommentsLayout());
@@ -90,7 +92,8 @@ public class DriverInfoPopUP extends VerticalLayout {
 
     private HorizontalLayout setDriverAndCarInfoLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
-
+        MarginInfo marginInfo = new MarginInfo(true, true, false, true);
+        horizontalLayout.setMargin(marginInfo);
         VerticalLayout driverForm = new VerticalLayout();
         Label name = new Label("<h2><b>" + driver.getFirstName() + " " + driver.getLastName() + "</b></h2><hr>",
                 ContentMode.HTML);
@@ -128,15 +131,22 @@ public class DriverInfoPopUP extends VerticalLayout {
 
     private HorizontalLayout setControlButtonsLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
+        MarginInfo marginInfo = new MarginInfo(true, true, false, true);
+        horizontalLayout.setMargin(marginInfo);
         horizontalLayout.setWidth(100, Unit.PERCENTAGE);
         horizontalLayout.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
 
-        Button btnFire = new Button("Fire");
+        Button btnFire = new Button("Dismiss");
+        btnFire.setWidth(100, Unit.PIXELS);
         btnFire.addClickListener(clickEvent -> {
             BigInteger driverId = driver.getObjectId();
             Driver driver = adminService.getModelById(driverId, Driver.class);
-            if (driver.getStatus().compareTo(DriverStatusList.OFF_DUTY) != 0 &&
-                    driver.getStatus().compareTo(DriverStatusList.FREE) != 0) {
+            if (driver.getStatus().compareTo(DriverStatusList.DISMISSED) == 0) {
+                toastr.toast(ToastBuilder.error("This driver is already dismissed.").build());
+                return;
+            }
+            if (driver.getStatus().compareTo(DriverStatusList.ON_CALL) == 0 &&
+                    driver.getStatus().compareTo(DriverStatusList.PERFORMING_ORDER) == 0) {
                 toastr.toast(ToastBuilder.error("This driver has order. Try again later.").build());
                 return;
             }
@@ -145,9 +155,8 @@ public class DriverInfoPopUP extends VerticalLayout {
             MessageBox
                     .createQuestion()
                     .withCaption("Dismissal")
-                    .withMessage("Are you want to fire " + firstName + " " + lastName + "?")
+                    .withMessage("Are you want to dismiss " + firstName + " " + lastName + "?")
                     .withYesButton(() -> {
-
                         adminService.fireDriver(driver);
                         driversGrid.refreshGrid();
                     })
@@ -158,11 +167,20 @@ public class DriverInfoPopUP extends VerticalLayout {
         horizontalLayout.addComponent(btnFire);
 
         Button btnBan = new Button("Ban");
+        btnBan.setWidth(100, Unit.PIXELS);
         btnBan.addClickListener(clickEvent -> {
             BigInteger driverId = driver.getObjectId();
             Driver driver = adminService.getModelById(driverId, Driver.class);
-            if (driver.getStatus().compareTo(DriverStatusList.OFF_DUTY) != 0 &&
-                    driver.getStatus().compareTo(DriverStatusList.FREE) != 0) {
+            if (driver.getStatus().compareTo(DriverStatusList.DISMISSED) == 0) {
+                toastr.toast(ToastBuilder.error("You cannot ban a dismissed driver.").build());
+                return;
+            }
+            if (driver.getUnbanDate() != null) {
+                toastr.toast(ToastBuilder.error("This driver already has ban.").build());
+                return;
+            }
+            if (driver.getStatus().compareTo(DriverStatusList.ON_CALL) == 0 &&
+                    driver.getStatus().compareTo(DriverStatusList.PERFORMING_ORDER) == 0) {
                 toastr.toast(ToastBuilder.error("This driver has order. Try again later.").build());
                 return;
             }

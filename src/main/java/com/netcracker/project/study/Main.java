@@ -42,8 +42,13 @@ public class Main {
         PersistenceManager manager = ctx.getBean(PersistenceManager.class);
 
 
-        Driver driver = facade.getOne(BigInteger.valueOf(6), Driver.class);
-        System.out.println(driver);
+        DriverService driverService1 = ctx.getBean(DriverService.class);
+        List<Driver> driverList = driverService1.getActiveDrivers();
+
+        for (int i = 0; i < driverList.size(); i++) {
+            System.out.println(driverList.get(i));
+        }
+
 
     /*    Driver driver = userDetailsService.findDriverByUserName("(666)666-66-66");
         System.out.println(driver.getStatus());*/

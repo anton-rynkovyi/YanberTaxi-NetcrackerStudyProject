@@ -51,6 +51,8 @@ public class ClientsGrid extends CustomComponent {
 
     private void initFilters(){
         filtersLayout = new HorizontalLayout();
+        filtersLayout.setMargin(false);
+        filtersLayout.setSpacing(false);
         filtersLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
         initTextFieldFilter();
         filtersLayout.addComponent(fieldFilter);
@@ -74,7 +76,7 @@ public class ClientsGrid extends CustomComponent {
     private void initTextFieldFilter() {
         fieldFilter = new TextField();
         fieldFilter.addValueChangeListener(this::onNameFilterTextChange);
-        fieldFilter.setPlaceholder("Search");
+        fieldFilter.setPlaceholder("Search by last name");
     }
 
     private void onNameFilterTextChange(HasValue.ValueChangeEvent<String> event) {

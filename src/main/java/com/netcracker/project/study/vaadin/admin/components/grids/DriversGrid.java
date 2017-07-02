@@ -100,7 +100,7 @@ public class DriversGrid extends CustomComponent{
         fieldFilter = new TextField();
         fieldFilter.addValueChangeListener(this::onNameFilterTextChange);
         //fieldFilter.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        fieldFilter.setPlaceholder("Search");
+        fieldFilter.setPlaceholder("Search by last name");
     }
 
     private void onNameFilterTextChange(HasValue.ValueChangeEvent<String> event) {
@@ -315,5 +315,9 @@ public class DriversGrid extends CustomComponent{
 
     public DriversGrid getDriverssGrid() {
         return this;
+    }
+
+    public NativeSelect getStatusSelect() {
+        return statusSelect;
     }
 }

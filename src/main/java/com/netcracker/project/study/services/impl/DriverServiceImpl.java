@@ -75,6 +75,7 @@ public class DriverServiceImpl implements DriverService {
                 "WHERE obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
                 "AND attr.attr_id = " + DriverAttr.STATUS_ATTR + " " +
                 "AND attr.list_value_id <> " + DriverStatusList.APPROVAL + " " +
+                "AND attr.list_value_id <> " + DriverStatusList.DISMISSED + " " +
                 "AND attr1.attr_id = " + DriverAttr.UNBAN_DATE_ATTR + " " +
                 "AND attr1.date_value IS NULL";
 
