@@ -77,7 +77,6 @@ public class DriverPage extends UI {
 
     Button changeStatusButton;
 
-    private Toastr toastr;
     private Toastr banToastr;
 
     @Autowired
@@ -101,8 +100,8 @@ public class DriverPage extends UI {
         rootLayout.setMargin(false);
         rootLayout.setSpacing(false);
         rootLayout.setHeight(100, Unit.PERCENTAGE);
-        toastr = new Toastr();
-        toastr.registerToastrListener(new ToastrListenerAdapter(){
+        banToastr = new Toastr();
+        banToastr.registerToastrListener(new ToastrListenerAdapter(){
             @Override
             public void onClick() {
                 UI.getCurrent().getPage().setLocation("/authorization");
@@ -242,7 +241,7 @@ public class DriverPage extends UI {
     private boolean isDismissed() {
         Driver driver = adminService.getModelById(this.driver.getObjectId(), Driver.class);
         if (driver.getStatus().compareTo(DriverStatusList.DISMISSED) == 0) {
-            UI.getCurrent().setContent(toastr);
+            UI.getCurrent().setContent(banToastr);
             Toast banToast = ToastBuilder.of(ToastType.Warning,
                     "You have been dismissed." +
                             "\n Contacts: yanbertaxi.netcracker@gmail.com")
@@ -257,7 +256,7 @@ public class DriverPage extends UI {
                             .extendedTimeOut(10000)
                             .build())
                     .build();
-            toastr.toast(banToast);
+            banToastr.toast(banToast);
             return true;
         }
         return false;
@@ -266,7 +265,7 @@ public class DriverPage extends UI {
     private boolean isBanned() {
         User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
         if (!user.isEnabled()) {
-            UI.getCurrent().setContent(toastr);
+            UI.getCurrent().setContent(banToastr);
             Driver driver = adminService.getModelById(this.driver.getObjectId(), Driver.class);
             Toast banToast = ToastBuilder.of(ToastType.Warning,
                     "You have been banned." +
@@ -283,7 +282,7 @@ public class DriverPage extends UI {
                             .extendedTimeOut(10000)
                             .build())
                     .build();
-            toastr.toast(banToast);
+            banToastr.toast(banToast);
             return true;
         }
         return false;

@@ -55,6 +55,7 @@ public class NewOrdersTab extends CustomComponent {
     private EventBus.ApplicationEventBus appEventBus;
 
     private Toastr toastr;
+    private Toastr banToastr;
 
 
     private Grid<OrderInfo> ordersGrid;
@@ -84,7 +85,8 @@ public class NewOrdersTab extends CustomComponent {
     public void init() {
         initRootLayout();
         toastr = new Toastr();
-        toastr.registerToastrListener(new ToastrListenerAdapter(){
+        banToastr = new Toastr();
+        banToastr.registerToastrListener(new ToastrListenerAdapter(){
             @Override
             public void onClick() {
                 UI.getCurrent().getPage().setLocation("/authorization");
@@ -118,6 +120,7 @@ public class NewOrdersTab extends CustomComponent {
         buttonsLayout.addComponents(viewRouteButton,acceptOrderButton);
         buttonsLayout.setSpacing(true);
         verticalLayout.addComponent(toastr);
+        //verticalLayout.addComponent(banToastr);
         verticalLayout.addComponents(horizontalSplitPanel, buttonsLayout);
         verticalLayout.setComponentAlignment(horizontalSplitPanel, Alignment.MIDDLE_CENTER);
         verticalLayout.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
@@ -521,7 +524,7 @@ public class NewOrdersTab extends CustomComponent {
 
     private boolean isDismissed() {
         if (driver.getStatus().compareTo(DriverStatusList.DISMISSED) == 0) {
-            UI.getCurrent().setContent(toastr);
+            UI.getCurrent().setContent(banToastr);
             Toast banToast = ToastBuilder.of(ToastType.Warning,
                     "You have been dismissed." +
                             "\n Contacts: yanbertaxi.netcracker@gmail.com")
@@ -536,7 +539,7 @@ public class NewOrdersTab extends CustomComponent {
                             .extendedTimeOut(600000)
                             .build())
                     .build();
-            toastr.toast(banToast);
+            banToastr.toast(banToast);
             return true;
         }
         return false;
@@ -545,7 +548,7 @@ public class NewOrdersTab extends CustomComponent {
     private boolean isBanned() {
         User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
         if (!user.isEnabled()) {
-            UI.getCurrent().setContent(toastr);
+            UI.getCurrent().setContent(banToastr);
             Driver driver = adminService.getModelById(this.driver.getObjectId(), Driver.class);
             Toast banToast = ToastBuilder.of(ToastType.Warning,
                     "You have been banned." +
@@ -562,7 +565,7 @@ public class NewOrdersTab extends CustomComponent {
                             .extendedTimeOut(600000)
                             .build())
                     .build();
-            toastr.toast(banToast);
+            banToastr.toast(banToast);
             return true;
         }
         return false;
