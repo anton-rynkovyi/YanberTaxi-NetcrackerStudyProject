@@ -64,10 +64,8 @@ public class DriverPage extends UI {
     UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    DriverUpdate DriverWindow;
+    DriverUpdate driverWindow;
 
-    @Autowired
-    CarUpdate CarWindow;
 
     private Driver driver;
 
@@ -86,6 +84,10 @@ public class DriverPage extends UI {
 
     @Autowired
     private AdminService adminService;
+
+
+    @Autowired
+    CarUpdate carWindow;
 
     //10 seconds
     private final int timerInterval = 10000;
@@ -142,6 +144,10 @@ public class DriverPage extends UI {
         HorizontalLayout editButtonLayout = getEditButtonLayout();
         panelCaption.addComponent(editButtonLayout);
         panelCaption.setComponentAlignment(editButtonLayout, Alignment.TOP_RIGHT);
+
+        HorizontalLayout editButtonCarLayout = getEditButtonCarLayout();
+        panelCaption.addComponent(editButtonCarLayout);
+        panelCaption.setComponentAlignment(editButtonCarLayout, Alignment.TOP_RIGHT);
 
         HorizontalLayout logOutButtonLayout = getLogOutButton();
         panelCaption.addComponent(logOutButtonLayout);
@@ -314,51 +320,41 @@ public class DriverPage extends UI {
 
     }
 
-    PopupView popupView;
+
     private HorizontalLayout getEditButtonLayout() {
-       /* Button editButton = new Button();
+        Button editButton = new Button();
         editButton.setIcon(VaadinIcons.PENCIL);
         editButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
         editButton.addStyleName(ValoTheme.BUTTON_SMALL);
         editButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
         editButton.addClickListener(clock -> {
-            settings();
-        });*/
-        popupView = new PopupView("Settings", settings());
+            driverWindow.init();
+            getUI().addWindow(driverWindow);
+        });
         HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.addComponents(popupView);
+        horizontalLayout.addComponents(editButton);
 
-        HorizontalLayout separator = getSeparator();
-        horizontalLayout.addComponent(separator);
+
         return horizontalLayout;
     }
 
-    private VerticalLayout settings() {
-        VerticalLayout verticalLayout = new VerticalLayout();
-
-        Button editButtonDriver = new Button("My settintgs");
-        editButtonDriver.setIcon(VaadinIcons.USER);
-        editButtonDriver.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        editButtonDriver.addStyleName(ValoTheme.BUTTON_SMALL);
-        editButtonDriver.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        verticalLayout.addComponent(editButtonDriver);
-        editButtonDriver.addClickListener(clock -> {
-            DriverWindow.init();
-            getUI().addWindow(DriverWindow);
-        });
-
-        Button editButtonCar = new Button("My car settings");
+    private HorizontalLayout getEditButtonCarLayout() {
+        Button editButtonCar = new Button();
         editButtonCar.setIcon(VaadinIcons.CAR);
         editButtonCar.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
         editButtonCar.addStyleName(ValoTheme.BUTTON_SMALL);
         editButtonCar.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        verticalLayout.addComponent(editButtonCar);
         editButtonCar.addClickListener(clock -> {
-            CarWindow.init();
-            getUI().addWindow(CarWindow);
+            carWindow.init();
+            getUI().addWindow(carWindow);
         });
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.addComponents(editButtonCar);
 
-        return verticalLayout;
+        HorizontalLayout separator = getSeparator();
+        horizontalLayout.addComponent(separator);
+
+        return horizontalLayout;
     }
 
     private HorizontalLayout getLogOutButton() {
