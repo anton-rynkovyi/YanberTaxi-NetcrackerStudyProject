@@ -2,9 +2,11 @@ package com.netcracker.project.study.vaadin.client.components.grids;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.model.order.route.Route;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.driver.components.popup.OrderInfoPopUp;
 import com.vaadin.annotations.Push;
@@ -30,6 +32,9 @@ public class ClientCurrentOrderGrid extends CustomComponent {
     @Autowired
     OrderService orderService;
 
+    @Autowired
+    DriverService driverService;
+
     Client client;
 
     public void init() {
@@ -53,9 +58,20 @@ public class ClientCurrentOrderGrid extends CustomComponent {
             Label driverName = new Label("<b>Driver: </b>" + (currentOrder.getDriverOnOrder() != null ? currentOrder.getDriverOnOrder().getFirstName() + " " +
                     currentOrder.getDriverOnOrder().getLastName() : "N/A"), ContentMode.HTML);
             driverName.setIcon(VaadinIcons.MALE);
+
+            Label carInfo;
+            if (currentOrder.getDriverOnOrder() != null) {
+                Car car = driverService.getCarByDriver(currentOrder.getDriverOnOrder()).get(0);
+                carInfo = new Label("<b>Car: </b>" + car.getMakeOfCar() + " " + car.getModelType() + ", <b> state number: </b>"
+                        + car.getStateNumber(), ContentMode.HTML);
+                carInfo.setIcon(VaadinIcons.CAR);
+            } else {
+                carInfo = new Label("<b>Car: </b>" + "N/A", ContentMode.HTML);
+                carInfo.setIcon(VaadinIcons.CAR);
+            }
             Label status = new Label("<b>Status: </b>" + OrderStatusEnum.getStatusValue(currentOrder.getStatus()), ContentMode.HTML);
 
-            VerticalLayout allRoutes = getLayoutWithRoutes(getRoutes(currentOrder.getObjectId()), number, status, driverName);
+            VerticalLayout allRoutes = getLayoutWithRoutes(getRoutes(currentOrder.getObjectId()), number, status, driverName, carInfo);
             allRoutes.setMargin(margin);
 
             currentOrderLayout.addComponents(allRoutes);
