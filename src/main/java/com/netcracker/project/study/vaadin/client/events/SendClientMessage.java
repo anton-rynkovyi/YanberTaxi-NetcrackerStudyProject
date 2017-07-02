@@ -4,6 +4,8 @@ package com.netcracker.project.study.vaadin.client.events;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
+import com.vaadin.annotations.Push;
+import com.vaadin.shared.communication.PushMode;
 
 import java.math.BigInteger;
 

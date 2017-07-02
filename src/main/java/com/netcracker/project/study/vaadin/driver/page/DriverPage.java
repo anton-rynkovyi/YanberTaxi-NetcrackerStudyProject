@@ -44,7 +44,6 @@ import java.sql.Timestamp;
 @Theme("valo")
 @SpringUI(path = "/driver")
 @Title("YanberTaxi-Driver")
-//@Push
 public class DriverPage extends UI {
 
     @Autowired
