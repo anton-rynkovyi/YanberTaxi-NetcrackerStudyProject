@@ -83,7 +83,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
         addComponent(rootLayout);
         setExpandRatio(rootLayout,0.8f);
-      }
+    }
 
     public void setAcceptButtonEnabled(boolean value){
         newOrders.setAcceptButtonEnabled(value);
@@ -181,7 +181,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         tabSheet.addTab(getNewOrdersControlTab(),"New orders (" + getNewOrdersCount() + ")").setIcon(VaadinIcons.LIST_SELECT);
         tabSheet.addTab(allOrdersLayout, "History of orders (" + getAllOrdersCount() + ")").setIcon(VaadinIcons.LIST);
 
-       // tabSheet.setHeight(100,Unit.PERCENTAGE);
+        // tabSheet.setHeight(100,Unit.PERCENTAGE);
 
         tabSheet.setSizeFull();
         return tabSheet;

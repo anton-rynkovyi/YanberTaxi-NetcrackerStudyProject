@@ -436,7 +436,7 @@ public class NewOrdersTab extends CustomComponent {
                     } catch (Exception e) {
                         toastr.toast(ToastBuilder.info("This order has been accepted by another driver").build());
                     }
-                   // setStartEndPointsLayoutsEmpty();
+                    // setStartEndPointsLayoutsEmpty();
                 }
                 refreshContent();
                 ((DriverPage)getUI()).setStatusButtonEnabled(false);

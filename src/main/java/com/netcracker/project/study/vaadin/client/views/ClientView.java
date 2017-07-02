@@ -19,16 +19,19 @@ import com.netcracker.project.study.vaadin.client.components.OrderMaker;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientOrderInfoEvent;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.client.events.SendClientMessage;
+import com.netcracker.project.study.vaadin.client.page.ClientPage;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.client.popups.DriverEvaluation;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.events.CancelClientOrderEvent;
 import com.vaadin.annotations.Push;
+import com.vaadin.event.UIEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.spring.annotation.*;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +105,9 @@ public class ClientView extends VerticalLayout implements View {
 
     private UI currentUi;
 
+    @Autowired
+    ClientPage clientPage;
+
     List<Order> currentOrders ;
 
     public void init() {
@@ -138,6 +144,15 @@ public class ClientView extends VerticalLayout implements View {
         addComponent(horizontalSplitPanel);
         setComponentAlignment(horizontalSplitPanel, Alignment.MIDDLE_CENTER);
 
+        clientPage.setPollInterval(1000);
+        clientPage.addPollListener(new UIEvents.PollListener() {
+            @Override
+            public void poll(UIEvents.PollEvent event) {
+                try {
+                    clientCurrentOrderGrid.init();
+                }catch (Exception e) {}
+            }
+        });
     }
 
     public void initClient() {
@@ -334,6 +349,5 @@ public class ClientView extends VerticalLayout implements View {
                          ". " + "Car: " + carName + ", state number: " + stateNumber).build());
             }
         }
-
     }
 }

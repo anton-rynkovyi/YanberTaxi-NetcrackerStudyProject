@@ -4,18 +4,21 @@ import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
+import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
 import com.netcracker.project.study.vaadin.client.popups.ClientUpdate;
 import com.netcracker.project.study.vaadin.client.popups.DriverEvaluation;
 import com.netcracker.project.study.vaadin.client.views.ClientView;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.event.UIEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.*;
@@ -29,7 +32,6 @@ import java.math.BigInteger;
 @Theme("valo")
 @SpringUI(path = "/client")
 @Title("YanberTaxi-Client")
-@Push
 public class ClientPage extends UI {
 
     @Autowired
@@ -47,6 +49,9 @@ public class ClientPage extends UI {
     private Client client;
 
     private Panel viewDisplay;
+
+    @Autowired
+    EventBus.UIEventBus uiEventBus;
 
 
     public static Navigator navigator;
@@ -97,8 +102,11 @@ public class ClientPage extends UI {
         navigator = new Navigator(this, viewDisplay);
         navigator.addProvider(provider);
         navigator.navigateTo(ClientView.VIEW_NAME);
+    }
 
 
+    public ClientPage getClientPage() {
+        return this;
     }
 
 
