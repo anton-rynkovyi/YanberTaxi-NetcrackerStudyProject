@@ -34,18 +34,10 @@ public class StartPage extends UI {
                 UI.getCurrent().getPage().setLocation("/client");
             }
         }
-
-        /*  VerticalLayout layoutContent = genLayoutContent();
-        setContent(layoutContent);
-
-        Window window = new Window("  Enter menu", getStartWindow());
-        window.center();
-        window.setIcon(FontAwesome.HOME);
-        UI.getCurrent().addWindow(window);*/
     }
 
 
-    private VerticalLayout getStartWindow(){
+    /*private VerticalLayout getStartWindow(){
         VerticalLayout form = new VerticalLayout();
         form.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         form.setMargin(true);
@@ -77,6 +69,6 @@ public class StartPage extends UI {
         layoutContent.setMargin(false);
         layoutContent.setSpacing(false);
         return layoutContent;
-    }
+    }*/
 
 }
