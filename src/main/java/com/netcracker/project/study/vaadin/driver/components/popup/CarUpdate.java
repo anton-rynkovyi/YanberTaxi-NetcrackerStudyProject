@@ -7,6 +7,7 @@ import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -16,9 +17,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.vaadin.addons.Toastr;
 import org.vaadin.addons.builder.ToastBuilder;
+import org.vaadin.spring.events.EventBus;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 
 @SpringComponent
@@ -37,49 +40,43 @@ public class CarUpdate extends Window {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    Window driverRegWindow;
+    @Autowired
+    DriverService driverService;
 
-    private Driver driver;
-    private String password;
 
-    /*@Autowired
-    DriverRegistration driverRegistration;*/
-    private  VerticalLayout root;
+
+    private VerticalLayout root;
     private HorizontalLayout carsLayout;
     private Toastr toastr;
-    private ArrayList<TextField> names;
-    private ArrayList<TextField> models;
-    private ArrayList<TextField> stateNumbers;
-    private ArrayList<ComboBox<Integer>> prodDates;
-    private ArrayList<TextField> seatsCounts;
-    private ArrayList<CheckBox> childSeats;
+    private TextField name;
+    private TextField model;
+    private TextField stateNumber;
+    private ComboBox<Integer> prodYear;
+    private  ComboBox<Integer> seatsCountsCb;
+    private CheckBox childSeat;
     private ArrayList<Component> carsComponent;
-    private ArrayList<Car> cars;
+    private List<Car> cars;
     private ArrayList<Integer> yearsDate;
+    private ArrayList<Integer> seats;
 
     public void init() {
-        genFieldsArray();
         setWindowSettings();
-        carsComponent.add(genFields());
-        root = genRootLayout();
-        carsLayout = genCarsLayout();
-        carsLayout.addComponent(carsComponent.get(0));
-        root.addComponent(carsLayout);
-        root.addComponent(genButtons());
+        VerticalLayout root = genRootLayout();
+        root.addComponent(genFields());
+        //root.addComponent(genButtons());
         toastr = new Toastr();
         root.addComponent(toastr);
         setContent(root);
     }
 
-    public void initDriverRegWindow(Window window) {
-        this.driverRegWindow = window;
-    }
+
+
 
     private VerticalLayout genRootLayout() {
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setWidth(600, Unit.PIXELS);
-        verticalLayout.setMargin(false);
-        verticalLayout.setSpacing(false);
+        verticalLayout.setWidth(590, Unit.PIXELS);
+        verticalLayout.setMargin(true);
+        verticalLayout.setSpacing(true);
         return verticalLayout;
     }
 
@@ -96,146 +93,83 @@ public class CarUpdate extends Window {
         setIcon(VaadinIcons.TAXI);
         setModal(true);
         setResizable(false);
-        setCaption(" Car registration");
+        setCaption(" Car card");
     }
 
-    private void genFieldsArray() {
-        names = new ArrayList<>();
-        models = new ArrayList<>();
-        stateNumbers = new ArrayList<>();
-        prodDates = new ArrayList<>();
-        seatsCounts = new ArrayList<>();
-        childSeats = new ArrayList<>();
-        carsComponent = new ArrayList<>();
-        cars = new ArrayList<>();
+
+
+    private Component genFields() {
+        Driver driver = userDetailsService.getCurrentUser();
+        cars = driverService.getCarByDriver(driver);
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        VerticalLayout left = new VerticalLayout();
+        VerticalLayout right = new VerticalLayout();
         yearsDate = new ArrayList<>();
+        seats = new ArrayList<>();
         for (int i = 2000; i < 2018; i++) {
             yearsDate.add(i);
         }
-    }
-
-    private Component genFields() {
-
-        VerticalLayout verticalLayout = new VerticalLayout();
-        names.add(new TextField("Name of car"));
-        models.add(new TextField("Model"));
-        stateNumbers.add(new TextField("State number"));
-        ComboBox<Integer> prodYear = new ComboBox<>("Production year");
-        prodYear.setItems(yearsDate);
-        prodDates.add(prodYear);
-        seatsCounts.add(new TextField("Seats count"));
-        childSeats.add(new CheckBox("Child seat"));
-        int lastCar = models.size()-1;
-        verticalLayout.addComponents(
-                names.get(lastCar), models.get(lastCar),
-                stateNumbers.get(lastCar), prodDates.get(lastCar),
-                seatsCounts.get(lastCar), childSeats.get(lastCar));
-        Panel panel = new Panel();
-        panel.setContent(verticalLayout);
-        return panel;
-    }
-
-    private HorizontalLayout genButtons() {
-        User user = userDetailsService.getUser();
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setSizeFull();
+        for (int i = 2; i < 17; i++) {
+            seats.add(i);
+        }
+        for (Car car : cars ) {
+            horizontalLayout.addComponents(left, right);
+            name = new TextField("Name of car");
+            name.setValue(car.getMakeOfCar());
+            model = new TextField("Model");
+            model.setValue(car.getModelType());
+            stateNumber = new TextField("State number");
+            stateNumber.setValue(car.getStateNumber());
+            prodYear = new ComboBox<>("Production year");
+            prodYear.setItems(yearsDate);
+            prodYear.setValue(Integer.parseInt(car.getReleaseDate().toString().replace("-01","")));
+            seatsCountsCb = new ComboBox<>("Seats count");
+            seatsCountsCb.setItems(seats);
+            seatsCountsCb.setValue(car.getSeatsCount().intValue());
+            childSeat = new CheckBox("Child seat");
+            childSeat.setValue(car.isChildSeat());
+        }
         Button ok = new Button("Ok", VaadinIcons.USER_CHECK);
         ok.setWidth(114, Unit.PIXELS);
         Button prev = new Button("Cancel", VaadinIcons.EXIT);
         prev.setWidth(114, Unit.PIXELS);
-        Button add = new Button("Add car", VaadinIcons.PLUS);
-        prev.setWidth(114, Unit.PIXELS);
-        Button del = new Button("Delete car", VaadinIcons.MINUS);
-        prev.setWidth(114, Unit.PIXELS);
-        horizontalLayout.addComponents(prev, del, add, ok);
-        //horizontalLayout.setExpandRatio(prev, 0.8f);
+
+        left.addComponents(name, model, stateNumber, prev);
+        right.addComponents(prodYear, seatsCountsCb, new Label(), childSeat, ok);
+        right.setComponentAlignment(ok, Alignment.MIDDLE_RIGHT);
         ok.addClickListener(event -> {
-            for (int i = 0; i < carsLayout.getComponentCount(); i++) {
-                if (names.get(i).isEmpty()
-                        || models.get(i).isEmpty()
-                        || stateNumbers.get(i).isEmpty()
-                        || prodDates.get(i).isEmpty()
-                        || seatsCounts.get(i).isEmpty()) {
-                    toastr.toast(ToastBuilder.error("All fields must be filled!").build());
-                    return;
-                } else {
-                    Car car = new Car();
-                    car.setDriverId(driver.getObjectId());
-                    car.setMakeOfCar(names.get(i).getValue());
-                    car.setModelType(models.get(i).getValue());
-                    car.setStateNumber(stateNumbers.get(i).getValue());
-                    car.setReleaseDate(java.sql.Date.valueOf(prodDates.get(i).getValue()+"-01-01"));
-                    car.setSeatsCount(new BigInteger(seatsCounts.get(i).getValue()));
-                    car.setChildSeat(childSeats.get(i).getValue() ? true : false);
-                    cars.add(car);
-                }
+            for (Car car : cars) {
+                car.setMakeOfCar(name.getValue());
+                car.setModelType(model.getValue());
+                car.setStateNumber(stateNumber.getValue());
+                car.setReleaseDate(java.sql.Date.valueOf(prodYear.getValue() + "-01-01"));
+                car.setSeatsCount(new BigInteger(String.valueOf(seatsCountsCb.getValue())));
+                car.setChildSeat(childSeat.getValue() ? true : false);
+                persistenceFacade.update(car);
             }
-            for (int i = 0; i < cars.size(); i++) {
-                persistenceFacade.update(cars.get(i));
-            }
+            
+            close();
 
-            user.setObjectId(driver.getObjectId());
-            user.setUsername(driver.getPhoneNumber());
-            user.setPassword(passwordEncoder.encode(password));
-            user.setEnabled(true);
-            user.setAuthorities(ImmutableList.of(Role.ROLE_DRIVER));
-            userFacade.updateUser(user);
-
-            UI.getCurrent().setContent(toastr);
-            driverRegWindow.close();
-            toastr.toast(ToastBuilder.success(
-                    "You are successfully registered!\nAdministrator will contact you by email.")
-                    .build());
-        });
-
-        add.addClickListener(event -> {
-                if  (carsComponent.size() == 2) {
-                    toastr.toast(ToastBuilder.warning("You cannot add more than two cars!").build());
-                    return;
-            }
-            carsComponent.add(genFields());
-            carsLayout.addComponent(carsComponent.get(carsComponent.size()-1));
-        });
-
-        del.addClickListener(event -> {
-            if (carsComponent.size() == 1) {
-                toastr.toast(ToastBuilder.warning("You must have one car at least!").build());
-                return;
-            }
-            if (cars.size() > 1) {
-                cars.remove(cars.size()-1);
-            }
-            carsLayout.removeComponent(carsComponent.get(carsComponent.size()-1));
-            //cars.remove(cars.size()-1);
-            carsComponent.remove(carsComponent.get(carsComponent.size()-1));
-            names.remove(names.size()-1);
-            models.remove(models.size()-1);
-            stateNumbers.remove(stateNumbers.size()-1);
-            prodDates.remove(prodDates.size()-1);
-            seatsCounts.remove(seatsCounts.size()-1);
         });
 
         prev.addClickListener(event -> {
-           driverRegWindow.close();
+            name.clear();
+            model.clear();
+            stateNumber.clear();
+            stateNumber.clear();
+            prodYear.clear();
+            seatsCountsCb.clear();
+            childSeat.clear();
+            close();
         });
 
         addCloseListener(e -> {
-            for (int i = 0; i < carsLayout.getComponentCount(); i++) {
-               names.get(i).clear();
-               models.get(i).clear();
-               stateNumbers.get(i).clear();
-               prodDates.get(i).clear();
-               seatsCounts.get(i).clear();
-            }
-            driverRegWindow.close();
-            //setContent(null);
+            prev.click();
         });
 
         return horizontalLayout;
     }
 
-    public void setDriverAndPassword(Driver driver, String password) {
-        this.driver = driver;
-        this.password = password;
-    }
+
+
 }

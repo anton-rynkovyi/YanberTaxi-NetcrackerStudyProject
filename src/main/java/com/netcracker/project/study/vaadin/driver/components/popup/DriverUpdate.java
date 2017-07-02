@@ -14,6 +14,7 @@ import com.netcracker.project.study.vaadin.common.components.PhoneField;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,6 +44,7 @@ public class DriverUpdate extends Window {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+
     private Toastr toastr;
     private PhoneField phone;
     private PasswordField password1;
@@ -66,9 +68,12 @@ public class DriverUpdate extends Window {
         setIcon(VaadinIcons.USER);
         setModal(true);
         setResizable(false);
-        setCaption(" Driver registration");
+        setCaption(" Driver card");
         setContent(root);
     }
+
+
+
 
     private VerticalLayout genRootLayout() {
         VerticalLayout verticalLayout = new VerticalLayout();
