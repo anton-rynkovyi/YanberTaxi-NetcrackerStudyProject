@@ -35,10 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.method.P;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.vaadin.addons.Toast;
-import org.vaadin.addons.ToastPosition;
-import org.vaadin.addons.ToastType;
-import org.vaadin.addons.Toastr;
+import org.vaadin.addons.*;
 import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
 import org.vaadin.spring.events.EventBus;
@@ -96,6 +93,17 @@ public class NewOrdersTab extends CustomComponent {
     public void init() {
         initRootLayout();
         toastr = new Toastr();
+        toastr.registerToastrListener(new ToastrListenerAdapter(){
+            @Override
+            public void onClick() {
+                UI.getCurrent().getPage().setLocation("/authorization");
+            }
+
+            @Override
+            public void onHidden() {
+                UI.getCurrent().getPage().setLocation("/authorization");
+            }
+        });
         VerticalLayout ordersGridLayout = generateOrdersGrid();
 
         setTakeOrderButton();

@@ -4,7 +4,8 @@ import com.vaadin.spring.server.SpringVaadinServlet;
 
 import javax.servlet.annotation.WebServlet;
 
-@WebServlet(urlPatterns = "/*", name = "vaadinUiServlet", asyncSupported = true)
+@WebServlet(urlPatterns = {"/*", "/VAADIN/*"},
+        name = "vaadinUiServlet", asyncSupported = true)
 public class VaadinUIServlet extends SpringVaadinServlet {
     /*@Override
     protected void servletInitialized() throws ServletException {

@@ -90,7 +90,7 @@ public class DriverRegistration extends Window {
         lastName = new TextField("Last name");
         firstName = new TextField("First name");
         middleName = new TextField("Middle name");
-        exp = new TextField("Experience(years)");
+        exp = new TextField("Experience of driving(years)");
         Button next = new Button("Next", VaadinIcons.ARROW_CIRCLE_RIGHT);
         next.setWidth(100, Unit.PIXELS);
         verticalLayout1.addComponents(lastName, firstName, middleName, exp, next);

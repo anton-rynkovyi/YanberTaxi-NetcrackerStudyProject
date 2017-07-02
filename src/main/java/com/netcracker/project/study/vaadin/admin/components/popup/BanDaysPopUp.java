@@ -62,12 +62,14 @@ public class BanDaysPopUp extends VerticalLayout {
         Button btnOk = new Button("Ok");
         horizontalLayout.addComponent(btnOk);
         btnOk.addClickListener(clickEvent -> {
-            String radioValue[] = String.valueOf(radioButtonGroup.getValue()).split(" ");
-            int days = Integer.parseInt(radioValue[0]);
-            Driver driver = adminService.getModelById(driverInfoPopUP.getDriver().getObjectId(), Driver.class);
-            adminService.giveBan(driver, days);
-            driversGrid.refreshGrid();
-            driverInfoPopUP.getBanDaysWindow().close();
+            if (radioButtonGroup.getValue() != null) {
+                String radioValue[] = String.valueOf(radioButtonGroup.getValue()).split(" ");
+                int days = Integer.parseInt(radioValue[0]);
+                Driver driver = adminService.getModelById(driverInfoPopUP.getDriver().getObjectId(), Driver.class);
+                adminService.giveBan(driver, days);
+                driversGrid.refreshGrid();
+                driverInfoPopUP.getBanDaysWindow().close();
+            }
         });
 
 

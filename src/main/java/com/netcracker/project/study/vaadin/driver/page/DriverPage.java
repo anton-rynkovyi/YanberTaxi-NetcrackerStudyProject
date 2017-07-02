@@ -10,6 +10,7 @@ import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
+import com.netcracker.project.study.vaadin.StartPage;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.driver.components.popup.CarUpdate;
 import com.netcracker.project.study.vaadin.driver.components.popup.DriverUpdate;
@@ -31,14 +32,12 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.vaadin.addons.Toast;
-import org.vaadin.addons.ToastPosition;
-import org.vaadin.addons.ToastType;
-import org.vaadin.addons.Toastr;
+import org.vaadin.addons.*;
 import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
 
 
+import java.net.URI;
 import java.sql.Timestamp;
 
 @Theme("valo")
@@ -57,6 +56,9 @@ public class DriverPage extends UI {
 
     @Autowired
     Copyright bottomTeamLogo;
+
+    @Autowired
+    StartPage startPage;
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -97,6 +99,17 @@ public class DriverPage extends UI {
         rootLayout.setSpacing(false);
         rootLayout.setHeight(100, Unit.PERCENTAGE);
         toastr = new Toastr();
+        toastr.registerToastrListener(new ToastrListenerAdapter(){
+            @Override
+            public void onClick() {
+                UI.getCurrent().getPage().setLocation("/authorization");
+            }
+
+            @Override
+            public void onHidden() {
+                UI.getCurrent().getPage().setLocation("/authorization");
+            }
+        });
         setContent(rootLayout);
 
         HorizontalLayout panelCaption = new HorizontalLayout();
@@ -156,6 +169,8 @@ public class DriverPage extends UI {
                 }catch (Exception e) {}
             }
         });
+
+        System.out.println(vaadinRequest.getUserPrincipal());
     }
 
     public void refreshUI() {
@@ -234,7 +249,7 @@ public class DriverPage extends UI {
                             .preventDuplicates(true)
                             .position(ToastPosition.Top_Full_Width)
                             .tapToDismiss(false)
-                            .extendedTimeOut(600000)
+                            .extendedTimeOut(10000)
                             .build())
                     .build();
             toastr.toast(banToast);
@@ -260,7 +275,7 @@ public class DriverPage extends UI {
                             .preventDuplicates(true)
                             .position(ToastPosition.Top_Full_Width)
                             .tapToDismiss(false)
-                            .extendedTimeOut(600000)
+                            .extendedTimeOut(10000)
                             .build())
                     .build();
             toastr.toast(banToast);
