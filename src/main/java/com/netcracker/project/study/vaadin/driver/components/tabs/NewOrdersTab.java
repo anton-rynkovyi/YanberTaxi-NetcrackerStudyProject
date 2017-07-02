@@ -2,11 +2,8 @@ package com.netcracker.project.study.vaadin.driver.components.tabs;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.car.Car;
-import com.netcracker.project.study.model.driver.status.DriverStatus;
-import com.netcracker.project.study.model.driver.status.DriverStatusAttr;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.model.order.status.OrderStatus;
@@ -19,21 +16,14 @@ import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientOrderInfoEvent;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.client.events.SendClientMessage;
-import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
-import com.vaadin.annotations.Push;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
-import com.vaadin.ui.components.grid.HeaderRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.access.method.P;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.vaadin.addons.*;
 import org.vaadin.addons.builder.ToastBuilder;
@@ -43,7 +33,6 @@ import org.vaadin.spring.events.EventBus;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.IllegalFormatException;
 import java.util.List;
 
 @Scope(value = "prototype")
@@ -86,9 +75,11 @@ public class NewOrdersTab extends CustomComponent {
 
     private Button startPerformingButton;
     private Button finishPerformingButton;
-    private Button goHomeButton;
+
     private long startkm;
     private long finishkm;
+
+    private Button viewRouteButton;
 
     public void init() {
         initRootLayout();
@@ -107,6 +98,7 @@ public class NewOrdersTab extends CustomComponent {
         VerticalLayout ordersGridLayout = generateOrdersGrid();
 
         setTakeOrderButton();
+        setViewRouteButton();
 
         ordersHistoryPanel = getFilledHighPanel(ordersGridLayout);
         ordersHistoryPanel.setIcon(VaadinIcons.CLIPBOARD_TEXT);
@@ -114,18 +106,20 @@ public class NewOrdersTab extends CustomComponent {
         initStartPerformingButton();
         initFinishPerformingButton();
 
-        currentOrderPanel = getCurrentorderPanel();
+        currentOrderPanel = getCurrentOrderPanel();
         currentOrderPanel.setIcon(VaadinIcons.CLIPBOARD_USER);
         setButtonsEnabled();
 
         VerticalLayout verticalLayout = new VerticalLayout();
         HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel(ordersHistoryPanel, currentOrderPanel);
+        horizontalSplitPanel.setSizeFull();
 
         HorizontalLayout buttonsLayout = new HorizontalLayout();
-        buttonsLayout.addComponents(acceptOrderButton);
+        buttonsLayout.addComponents(viewRouteButton,acceptOrderButton);
         buttonsLayout.setSpacing(true);
         verticalLayout.addComponent(toastr);
         verticalLayout.addComponents(horizontalSplitPanel, buttonsLayout);
+        verticalLayout.setComponentAlignment(horizontalSplitPanel, Alignment.MIDDLE_CENTER);
         verticalLayout.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
 
         componentLayout.addComponent(verticalLayout);
@@ -133,6 +127,7 @@ public class NewOrdersTab extends CustomComponent {
 
 
         setCompositionRoot(componentLayout);
+        setSizeFull();
     }
 
     public void setAcceptButtonEnabled(boolean value) {
@@ -154,9 +149,15 @@ public class NewOrdersTab extends CustomComponent {
             }
         }
 
+        if(ordersList.isEmpty()){
+            viewRouteButton.setEnabled(false);
+            acceptOrderButton.setEnabled(false);
+        }else{
+            viewRouteButton.setEnabled(true);
+            acceptOrderButton.setEnabled(true);
+        }
+
     }
-
-
 
     private HorizontalLayout getOrderInfoLayout() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -175,53 +176,78 @@ public class NewOrdersTab extends CustomComponent {
         Label status = new Label("<b>Status:</b> " + currentOrder.getStatus(), ContentMode.HTML);
         statusLayout.addComponents(statusIcon, status);
 
-        HorizontalLayout costLabel = new HorizontalLayout();
-        Label costIcon = new Label();
-        costIcon.setIcon(VaadinIcons.CASH);
-        Label cost = new Label("<b>Cost:</b> " + currentOrder.getCost(), ContentMode.HTML);
-        costLabel.addComponents(costIcon, cost);
+        orderLayout.addComponents(clientLayout, statusLayout);
 
-        HorizontalLayout distanceLayout = new HorizontalLayout();
-        Label distanceIcon = new Label();
-        distanceIcon.setIcon(VaadinIcons.ARROWS_LONG_H);
-        Label distance = new Label("<b>Distance:</b> " + currentOrder.getDistance(), ContentMode.HTML);
-        distanceLayout.addComponents(distanceIcon, distance);
-        orderLayout.addComponents(clientLayout, statusLayout, costLabel, distanceLayout);
-
-        List<Label> labels = getRoutesLayout();
-        VerticalLayout routeLayout = new VerticalLayout();
-
-        if (labels.size() == 0) {
-            Label noRouteLabel = new Label("No route provided");
-            routeLayout.addComponent(noRouteLabel);
-        } else {
-            for (Label label : labels) {
-                routeLayout.addComponent(label);
-            }
-        }
+        VerticalLayout routeLayout = routeInfoLayout(currentOrder.getObjectId());
 
         horizontalLayout.addComponents(orderLayout, routeLayout);
 
         return horizontalLayout;
     }
 
-    private List<Label> getRoutesLayout() {
-        List<Route> routes = orderService.getRoutes(currentOrder.getObjectId());
-        List<Label> labels = new ArrayList<>();
+    private void setViewRouteButton() {
+        viewRouteButton = new Button("View route");
+        viewRouteButton.addClickListener(event -> {
+            if (!ordersGrid.asSingleSelect().isEmpty()) {
+                List<Order> currentOrder = orderService.getCurrentOrderByDriverId(driver.getObjectId());
+                if (currentOrder.size() == 0) {
+                    OrderInfo orderInfo = ordersGrid.asSingleSelect().getValue();
 
-        int i = 0;
-        for (Route route : routes) {
-            Label label = new Label("<b>Address " + i + ": </b>" + route.getCheckPoint(), ContentMode.HTML);
-            labels.add(label);
-            label.setIcon(VaadinIcons.MAP_MARKER);
-            i++;
-        }
+                    Window window = new Window(" Full route");
+                    window.setModal(false);
+                    window.setContent(routeInfoLayout(orderInfo.getObjectId()));
 
-        return labels;
+                    UI.getCurrent().addWindow(window);
+                }
+            }
+
+        });
     }
 
 
-    private Panel getCurrentorderPanel() {
+    private VerticalLayout routeInfoLayout(BigInteger orderId) {
+        List<Route> routes = orderService.getRoutes(orderId);
+
+        VerticalLayout routeLayout = new VerticalLayout();
+        if (routes.size() != 0) {
+            HorizontalLayout departureLayout = new HorizontalLayout();
+            Label homeIcon = new Label();
+            homeIcon.setIcon(VaadinIcons.HOME_O);
+            Label departureLabel = new Label(routes.get(0).getCheckPoint());
+            departureLayout.addComponents(homeIcon, departureLabel);
+            routeLayout.addComponent(departureLayout);
+
+
+            for (int i = 1; i < routes.size() - 1; i++) {
+                HorizontalLayout middlePointLayout = new HorizontalLayout();
+                Label middlePoint = new Label(routes.get(i).getCheckPoint());
+                Label mapMarkerLabel = new Label();
+                mapMarkerLabel.setIcon(VaadinIcons.MAP_MARKER);
+                middlePointLayout.addComponents(mapMarkerLabel, middlePoint);
+                routeLayout.addComponent(middlePointLayout);
+            }
+
+            HorizontalLayout destinationLayout = new HorizontalLayout();
+            Label finishIcon = new Label();
+            finishIcon.setIcon(VaadinIcons.FLAG_CHECKERED);
+            Label destinationLabel = new Label(routes.get(routes.size() - 1).getCheckPoint());
+            destinationLayout.addComponents(finishIcon, destinationLabel);
+            routeLayout.addComponent(destinationLayout);
+
+        } else {
+            HorizontalLayout noRouteLayout = new HorizontalLayout();
+            Label noRouteIcon = new Label();
+            noRouteIcon.setIcon(VaadinIcons.BAN);
+            Label noRouteLabel = new Label("There is no route");
+            noRouteLayout.addComponents(noRouteIcon, noRouteLabel);
+            routeLayout.addComponent(noRouteLayout);
+        }
+
+        return routeLayout;
+    }
+
+
+    private Panel getCurrentOrderPanel() {
         List<Order> orders = orderService.getCurrentOrderByDriverId(driver.getObjectId());
         Panel panel = new Panel("Current order");
         VerticalLayout verticalLayout = new VerticalLayout();
@@ -444,7 +470,6 @@ public class NewOrdersTab extends CustomComponent {
                     } catch (Exception e) {
                         toastr.toast(ToastBuilder.info("This order has been accepted by another driver").build());
                     }
-                    // setStartEndPointsLayoutsEmpty();
                 }
                 refreshContent();
                 ((DriverPage)getUI()).setStatusButtonEnabled(false);
@@ -459,27 +484,6 @@ public class NewOrdersTab extends CustomComponent {
         ordersList = orderService.getOrders(OrderStatus.NEW);
         ordersGrid.setItems(orderService.getOrdersInfo(ordersList));
     }
-
-
-    /*private void setStartEndPointsLayout(String source,String destination){
-        startEndPointsLayout.removeAllComponents();
-        Label sourceLabel = new Label(source);
-        Label destinationLabel = new Label(destination);
-
-        Label iconLabel = new Label();
-        iconLabel.setIcon(VaadinIcons.ARROW_RIGHT);
-
-        startEndPointsLayout.addComponents(sourceLabel,iconLabel,destinationLabel);
-        startEndPointsLayout.setComponentAlignment(sourceLabel,Alignment.MIDDLE_CENTER);
-        startEndPointsLayout.setComponentAlignment(iconLabel,Alignment.MIDDLE_CENTER);
-        startEndPointsLayout.setComponentAlignment(destinationLabel,Alignment.MIDDLE_CENTER);
-        startEndPointsLayout.setSizeFull();
-        routePanel.setContent(startEndPointsLayout);
-    }*/
-
-    /*private void setStartEndPointsLayoutsEmpty(){
-        setStartEndPointsLayout("----------------","----------------");
-    }*/
 
     private VerticalLayout generateOrdersGrid() {
         VerticalLayout verticalLayout = new VerticalLayout();
@@ -503,14 +507,6 @@ public class NewOrdersTab extends CustomComponent {
                         acceptOrderButton.setEnabled(true);
                     }
                 }
-                OrderInfo orderInfo = ordersGrid.asSingleSelect().getValue();
-                List<Route> routes = orderService.getRoutes(orderInfo.getObjectId());
-                /*if(!routes.isEmpty()){
-                    setStartEndPointsLayout(routes.get(0).getCheckPoint(),
-                            routes.get(routes.size() - 1).getCheckPoint());
-                }else{
-                   setStartEndPointsLayoutsEmpty();
-                }*/
             }
         });
 
