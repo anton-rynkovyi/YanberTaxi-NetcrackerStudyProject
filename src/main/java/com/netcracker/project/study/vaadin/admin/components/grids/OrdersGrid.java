@@ -48,6 +48,7 @@ public class OrdersGrid extends CustomComponent {
     public void init() {
         initFilters();
         ordersGrid = generateOrdersGrid();
+        ordersGrid.setHeightByRows(8.8);
         initOrderInfoWindow();
         componentLayout = getFilledComponentLayout();
         componentLayout.addComponent(getButtons());
@@ -147,6 +148,7 @@ public class OrdersGrid extends CustomComponent {
 
     private Grid<Order> generateOrdersGrid() {
         Grid<Order> ordersGrid = new Grid<>();
+        ordersGrid.setHeightByRows(8.8);
         ordersGrid.addColumn(Order::getObjectId).setCaption("№").setId("№");
         ordersGrid.addColumn(Order -> Order.getDriverOnOrder() != null ? Order.getDriverOnOrder().getFirstName() + " " +
                 Order.getDriverOnOrder().getLastName() : "").setCaption("Driver");

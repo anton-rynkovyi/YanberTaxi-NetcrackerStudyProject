@@ -148,4 +148,20 @@ public class DriverServiceImpl implements DriverService {
         }
         return true;
     }
+
+    public Driver getDriverByPhoneNumber(String phone) {
+        String query = "" +
+                "SELECT obj.object_id " +
+                "FROM Objects obj " +
+                "INNER JOIN Attributes attr ON obj.object_id = attr.object_id " +
+                "WHERE obj.object_type_id = " + DriverAttr.OBJECT_TYPE_ID + " " +
+                "AND attr.attr_id = " + DriverAttr.PHONE_NUMBER_ATTR + " " +
+                "AND attr.value = '" + phone + "'";
+        List<Driver> driverList = persistenceFacade.getSome(query, Driver.class,false);
+        if (driverList.isEmpty()) {
+            return null;
+        }
+        Driver driver = driverList.get(0);
+        return driver;
+    }
 }

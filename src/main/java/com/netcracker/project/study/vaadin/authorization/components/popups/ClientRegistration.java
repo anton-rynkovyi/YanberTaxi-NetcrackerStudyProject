@@ -69,7 +69,7 @@ public class ClientRegistration extends Window {
 
         VerticalLayout verticalLayout2 = new VerticalLayout();
         phone = new PhoneField("Phone number");
-        phone.setPlaceholder("(068)067-68-53");
+        phone.setPlaceholder("(000)000-00-00");
         password1 = new PasswordField("Password");
         password2 = new PasswordField("Confirm password");
         Button cancel = new Button("Cancel", VaadinIcons.EXIT);

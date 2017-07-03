@@ -11,6 +11,7 @@ public class PhoneField extends TextField implements HasValue.ValueChangeListene
 
     private boolean isDelete = false;
     private boolean isAdd = true;
+    private String str;
 
     public PhoneField(String caption) {
         super(caption);
@@ -23,6 +24,7 @@ public class PhoneField extends TextField implements HasValue.ValueChangeListene
 
     @Override
     public void valueChange(ValueChangeEvent event) {
+        str += getValue();
       /*  if (getValue().length() == 2) {
             setValue("+38()");
             setCursorPosition(4);

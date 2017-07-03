@@ -27,4 +27,5 @@ public interface DriverService {
 
     void changeStatus(BigInteger status, BigInteger driverId);
 
+    Driver getDriverByPhoneNumber(String phone);
 }

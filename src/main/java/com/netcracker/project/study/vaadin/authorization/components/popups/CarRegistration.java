@@ -7,6 +7,7 @@ import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -34,6 +35,9 @@ public class CarRegistration extends Window {
 
     @Autowired
     UserFacade userFacade;
+
+    @Autowired
+    DriverService driverService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -161,8 +165,17 @@ public class CarRegistration extends Window {
                     toastr.toast(ToastBuilder.error("All fields must be filled!").build());
                     return;
                 } else {
+                    persistenceFacade.create(driver);
+                    Driver tempDriver = driverService.getDriverByPhoneNumber(driver.getPhoneNumber());
+                    User user = new User();
+                    user.setObjectId(tempDriver.getObjectId());
+                    user.setUsername(tempDriver.getPhoneNumber());
+                    user.setPassword(passwordEncoder.encode(password));
+                    user.setEnabled(true);
+                    user.setAuthorities(ImmutableList.of(Role.ROLE_DRIVER));
+                    userFacade.createUser(user);
                     Car car = new Car();
-                    car.setDriverId(driver.getObjectId());
+                    car.setDriverId(tempDriver.getObjectId());
                     car.setMakeOfCar(names.get(i).getValue());
                     car.setModelType(models.get(i).getValue());
                     car.setStateNumber(stateNumbers.get(i).getValue());
@@ -170,19 +183,11 @@ public class CarRegistration extends Window {
                     car.setSeatsCount(new BigInteger(String.valueOf(seatsCounts.get(i).getValue())));
                     car.setChildSeat(childSeats.get(i).getValue() ? true : false);
                     cars.add(car);
-                    System.out.println(car);
                 }
             }
             for (int i = 0; i < cars.size(); i++) {
                 persistenceFacade.create(cars.get(i));
             }
-            User user = new User();
-            user.setObjectId(driver.getObjectId());
-            user.setUsername(driver.getPhoneNumber());
-            user.setPassword(passwordEncoder.encode(password));
-            user.setEnabled(true);
-            user.setAuthorities(ImmutableList.of(Role.ROLE_DRIVER));
-            userFacade.createUser(user);
 
             UI.getCurrent().setContent(toastr);
             driverRegWindow.close();
@@ -200,7 +205,6 @@ public class CarRegistration extends Window {
             stateNumbers.clear();
             driverBackWindow.init();
             driverRegWindow.close();
-            persistenceFacade.delete(driver.getObjectId());
             //close();
             //UI.getCurrent().getPage().setLocation("/authorization");
         });

@@ -43,11 +43,8 @@ public class Main {
 
 
         DriverService driverService1 = ctx.getBean(DriverService.class);
-        List<Driver> driverList = driverService1.getActiveDrivers();
-
-        for (int i = 0; i < driverList.size(); i++) {
-            System.out.println(driverList.get(i));
-        }
+        Driver driverList = driverService1.getDriverByPhoneNumber("(111)111-11-11");
+        System.out.println(driverList);
 
 
     /*    Driver driver = userDetailsService.findDriverByUserName("(666)666-66-66");

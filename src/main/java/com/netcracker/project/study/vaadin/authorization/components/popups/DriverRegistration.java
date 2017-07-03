@@ -152,7 +152,7 @@ public class DriverRegistration extends Window {
             driver.setHireDate(new Date(System.currentTimeMillis()));
             driver.setUnbanDate(null);
             carRegistration.setDriverAndPassword(driver, password2.getValue());
-            persistenceFacade.create(driver);
+            //persistenceFacade.create(driver);
             //userFacade.createUser(user);
             carRegistration.init();
             carRegistration.initDriverRegWindow(this, this);

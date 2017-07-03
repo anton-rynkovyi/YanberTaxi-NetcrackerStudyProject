@@ -192,9 +192,9 @@ public class AuthorizationPage extends UI {
                 } else if (userDetailsService.hasRole(Role.ROLE_ADMIN.name())) {
                     getPage().setLocation("/admin");
                 }
-                if (rememberMe.isEnabled()) {
+                /*if (rememberMe.isEnabled()) {
 
-                }
+                }*/
             } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
                 toastr.toast(ToastBuilder.error("Wrong login or password!").build());
                 username.clear();
@@ -219,10 +219,13 @@ public class AuthorizationPage extends UI {
         horizontalLayout.setMargin(false);
         horizontalLayout.setWidth(100, Unit.PERCENTAGE);
 
-        rememberMe = new CheckBox("Remember me");
-        horizontalLayout.addComponent(rememberMe);
-        horizontalLayout.setComponentAlignment(rememberMe, Alignment.BOTTOM_LEFT);
-        horizontalLayout.setExpandRatio(rememberMe, 0.6f);
+        //rememberMe = new CheckBox("Remember me");
+        //horizontalLayout.addComponent(rememberMe);
+        //horizontalLayout.setComponentAlignment(rememberMe, Alignment.BOTTOM_LEFT);
+        //horizontalLayout.setExpandRatio(rememberMe, 0.6f);
+        Label label = new Label();
+        horizontalLayout.addComponent(label);
+        horizontalLayout.setExpandRatio(label, 0.55f);
 
         popupView = new PopupView("Registration", genAsWho());
         horizontalLayout.addComponent(popupView);
@@ -236,7 +239,7 @@ public class AuthorizationPage extends UI {
     private VerticalLayout genAsWho() {
         VerticalLayout verticalLayout = new VerticalLayout();
 
-        Button asDriver = new Button("As driver");
+        Button asDriver = new Button("as driver");
         asDriver.setIcon(VaadinIcons.CAR);
         asDriver.setStyleName(MaterialTheme.BUTTON_LINK);
         verticalLayout.addComponent(asDriver);
@@ -247,7 +250,7 @@ public class AuthorizationPage extends UI {
             }
         });
 
-        Button asClient = new Button("As Client");
+        Button asClient = new Button("as client");
         asClient.setIcon(VaadinIcons.USER);
         asClient.setStyleName(MaterialTheme.BUTTON_LINK);
         verticalLayout.addComponent(asClient);
