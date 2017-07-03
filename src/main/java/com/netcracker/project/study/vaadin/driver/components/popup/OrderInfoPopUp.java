@@ -131,6 +131,7 @@ public class OrderInfoPopUp extends VerticalLayout {
             }
 
             commentLayout.setEnabled(false);
+
             rootLayout.addComponent(horizontalLayout);
             rootLayout.addComponent(commentPanel);
         }
@@ -139,8 +140,6 @@ public class OrderInfoPopUp extends VerticalLayout {
     private List<HorizontalLayout> getRoutesLayout(){
         List<Route> routes = orderService.getRoutes(orderInfo.getObjectId());
         List<HorizontalLayout>routesLayout = new ArrayList<>();
-
-
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         Label label = new Label("<b>Departure " + ": </b>"+ routes.get(0).getCheckPoint(), ContentMode.HTML);

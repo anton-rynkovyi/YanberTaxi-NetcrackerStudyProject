@@ -1,25 +1,17 @@
 package com.netcracker.project.study.vaadin.driver.components.views;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.netcracker.project.study.model.driver.Driver;
-import com.netcracker.project.study.model.driver.DriverStatusEnum;
-import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.order.Order;
-import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.driver.components.popup.OrderInfoPopUp;
 import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
 import com.netcracker.project.study.vaadin.driver.events.CancelClientOrderEvent;
-import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
-import com.vaadin.annotations.Push;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
@@ -68,19 +60,17 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     public void init() {
         toastr = new Toastr();
         addComponent(toastr);
+
+        initDriver();
+        newOrders.setDriver(driver);
+        newOrders.init();
+        tabSheet = getTabSheet();
+
         rootLayout = new VerticalLayout();
         MarginInfo marginInfo = new MarginInfo(false, true, true, true);
         rootLayout.setMargin(marginInfo);
         rootLayout.setSpacing(false);
-        initDriver();
-
-        newOrders.setDriver(driver);
-        newOrders.init();
-
-        tabSheet = getTabSheet();
-
         rootLayout.addComponent(tabSheet);
-
         rootLayout.setSizeFull();
 
         setSizeFull();
@@ -108,6 +98,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         });
         verticalLayout.addComponent(okButton);
         verticalLayout.setComponentAlignment(okButton,Alignment.MIDDLE_CENTER);
+        verticalLayout.setMargin(false);
         orderInfoWindow.setContent(verticalLayout);
     }
 
@@ -130,19 +121,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         return horizontalLayout;
     }
 
-    public Driver getDriver(){
-        return driver;
-    }
-
-    private void initDriver(){
-        driver = userDetailsService.getCurrentUser();
-    }
-
-    public void setDriver(Driver driver){
-        this.driver = driver;
-    }
-
-    public VerticalLayout generateOrdersGrid() {
+    private VerticalLayout generateOrdersGrid() {
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setSizeFull();
         allOrdersList = orderService.getOrdersByDriverId(driver.getObjectId(),null);
@@ -162,7 +141,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
             ordersGrid.addColumn(OrderInfo::getCost).setCaption("Cost");
             ordersGrid.addColumn(OrderInfo::getDistance).setCaption("Distance");
             allOrdersGrid = ordersGrid;
-            allOrdersGrid.setSizeFull();
 
             HorizontalLayout viewOrderButtonLayout = initViewOrderButton();
             verticalLayout.addComponents(allOrdersGrid,viewOrderButtonLayout);
@@ -184,33 +162,8 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         tabSheet.addTab(getNewOrdersControlTab(),"New orders (" + getNewOrdersCount() + ")").setIcon(VaadinIcons.LIST_SELECT);
         tabSheet.addTab(allOrdersLayout, "History of orders (" + getAllOrdersCount() + ")").setIcon(VaadinIcons.LIST);
 
-        // tabSheet.setHeight(100,Unit.PERCENTAGE);
-
         tabSheet.setSizeFull();
         return tabSheet;
-    }
-
-    public void refresh(){
-        initDriver();
-        newOrders.setDriver(driver);
-
-        tabSheet.getTab(0).setCaption("New orders (" + getNewOrdersCount() + ")");
-        tabSheet.getTab(1).setCaption("History of orders (" + getAllOrdersCount() + ")");
-
-        allOrdersList = orderService.getOrdersByDriverId(driver.getObjectId(),null);
-        if(allOrdersList != null) {
-            refreshOrdersGrid();
-        }
-        newOrders.refreshContent();
-    }
-
-
-    private int getAllOrdersCount(){
-        return allOrdersList.size();
-    }
-
-    private int getNewOrdersCount(){
-        return newOrders.getOrdersList().size();
     }
 
     private VerticalLayout getNewOrdersControlTab(){
@@ -223,7 +176,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         return controlLayout;
     }
 
-    public void refreshOrdersGrid() {
+    private void refreshOrdersGrid() {
         allOrdersGrid.setItems(orderService.getOrdersInfo(allOrdersList));
     }
 
@@ -231,7 +184,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         init();
         newOrders.refreshGrid();
-        //orderService.setOrdersViewForDrivers(this);
     }
 
     @PostConstruct
@@ -253,21 +205,42 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         }
     }
 
+    public void refresh(){
+        initDriver();
+        newOrders.setDriver(driver);
+
+        tabSheet.getTab(0).setCaption("New orders (" + getNewOrdersCount() + ")");
+        tabSheet.getTab(1).setCaption("History of orders (" + getAllOrdersCount() + ")");
+
+        allOrdersList = orderService.getOrdersByDriverId(driver.getObjectId(),null);
+        if(allOrdersList != null) {
+            refreshOrdersGrid();
+        }
+        newOrders.refreshContent();
+    }
+
+    public void refreshNewOrdersTab(){
+        newOrders.refreshContent();
+    }
+
+    private int getAllOrdersCount(){
+        return allOrdersList.size();
+    }
+
+    private int getNewOrdersCount(){
+        return newOrders.getOrdersList().size();
+    }
+
+    public Driver getDriver(){
+        return driver;
+    }
+
+    private void initDriver(){
+        driver = userDetailsService.getCurrentUser();
+    }
+
+    public void setDriver(Driver driver){
+        this.driver = driver;
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

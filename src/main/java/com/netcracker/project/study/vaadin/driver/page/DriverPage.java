@@ -124,14 +124,7 @@ public class DriverPage extends UI {
         HorizontalLayout yanberLabel = getYanberLabel();
         panelCaption.addComponent(yanberLabel);
         panelCaption.setComponentAlignment(yanberLabel, Alignment.TOP_LEFT);
-        panelCaption.setExpandRatio(yanberLabel, 0.1f);
-
-
-        HorizontalLayout driverNameLayout = getDriverNameLayout();
-        panelCaption.addComponent(driverNameLayout);
-
-        HorizontalLayout ratingLayout = getDriverRatingLayout();
-        panelCaption.addComponent(ratingLayout);
+        panelCaption.setExpandRatio(yanberLabel, 0.01f);
 
         HorizontalLayout driverStatusLayout = new HorizontalLayout();
         HorizontalLayout changeStatusLayout = getChangeStatusButton();
@@ -139,7 +132,15 @@ public class DriverPage extends UI {
         HorizontalLayout driverStatus = getDriverStatus();
         driverStatusLayout.addComponents(changeStatusLayout,driverStatus);
         panelCaption.addComponent(driverStatusLayout);
+        panelCaption.setExpandRatio(driverStatusLayout,0.05f);
         panelCaption.setComponentAlignment(driverStatusLayout, Alignment.TOP_LEFT);
+
+
+        HorizontalLayout driverNameLayout = getDriverNameLayout();
+        panelCaption.addComponent(driverNameLayout);
+
+        HorizontalLayout ratingLayout = getDriverRatingLayout();
+        panelCaption.addComponent(ratingLayout);
 
         HorizontalLayout editButtonLayout = getEditButtonLayout();
         panelCaption.addComponent(editButtonLayout);
@@ -170,7 +171,7 @@ public class DriverPage extends UI {
             @Override
             public void poll(UIEvents.PollEvent event) {
                 try {
-                    getCurrentView().refresh();
+                    getCurrentView().refreshNewOrdersTab();
                     getCurrentUI().refreshUI();
                 }catch (Exception e) {}
             }
@@ -313,6 +314,8 @@ public class DriverPage extends UI {
         Label yanberLabel = new Label("YanberTaxi", ContentMode.HTML);
 
         horizontalLayout.addComponents(yanberLabel);
+        horizontalLayout.setHeight("100%");
+        horizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
         return horizontalLayout;
 
@@ -331,6 +334,8 @@ public class DriverPage extends UI {
         });
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.addComponents(editButton);
+        horizontalLayout.setHeight("100%");
+        horizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
 
         return horizontalLayout;
@@ -351,6 +356,8 @@ public class DriverPage extends UI {
 
         HorizontalLayout separator = getSeparator();
         horizontalLayout.addComponent(separator);
+        horizontalLayout.setHeight("100%");
+        horizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
         return horizontalLayout;
     }
@@ -370,6 +377,8 @@ public class DriverPage extends UI {
         logOutButton.setIcon(VaadinIcons.EXIT);
 
         horizontalLayout.addComponents(logOutButton);
+        horizontalLayout.setHeight("100%");
+        horizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
         return horizontalLayout;
     }
@@ -389,6 +398,8 @@ public class DriverPage extends UI {
         HorizontalLayout separator = getSeparator();
 
         horizontalLayout.addComponents(iconUser, helloLabel, separator);
+        horizontalLayout.setHeight("100%");
+        horizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         return horizontalLayout;
     }
 
@@ -419,6 +430,8 @@ public class DriverPage extends UI {
 
         HorizontalLayout separator = getSeparator();
         horizontalLayout.addComponents(separator);
+        horizontalLayout.setHeight("100%");
+        horizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         return horizontalLayout;
     }
 
@@ -434,8 +447,8 @@ public class DriverPage extends UI {
         statusValue = new Label(DriverStatusEnum.getStatusValue(driver.getStatus()));
         horizontalLayout.addComponent(statusValue);
 
-        HorizontalLayout separator = getSeparator();
-        horizontalLayout.addComponent(separator);
+        horizontalLayout.setHeight("100%");
+        horizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
         return horizontalLayout;
     }
