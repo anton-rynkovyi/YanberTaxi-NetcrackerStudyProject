@@ -108,6 +108,17 @@ public class OrderServiceImpl implements OrderService {
         return orderList;
     }
 
+    @Override
+    public List<Order> getAllOrders(){
+        String query =
+                "SELECT obj.object_id " +
+                        "FROM objects obj,attributes attr " +
+                        "where attr.object_id=obj.object_id and " +
+                        "obj.object_type_id=" + OrderAttr.OBJECT_TYPE_ID;
+        List<Order> orderList = persistenceFacade.getSome(query, Order.class,true);
+        return orderList;
+    }
+
     public Order getOrder(BigInteger orderId){
         return persistenceFacade.getOne(orderId,Order.class);
     }

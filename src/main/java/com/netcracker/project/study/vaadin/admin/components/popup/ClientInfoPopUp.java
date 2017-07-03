@@ -83,7 +83,6 @@ public class ClientInfoPopUp extends VerticalLayout {
 
         Button btnCancel = new Button("Cancel");
         btnCancel.addClickListener(clickEvent -> {
-//            clientsGrid.getViewClientWindow().close();
             for (Window window :UI.getCurrent().getWindows()){
                 window.close();
             }

@@ -99,7 +99,6 @@ public class DriversGrid extends CustomComponent{
     private void initTextFieldFilter() {
         fieldFilter = new TextField();
         fieldFilter.addValueChangeListener(this::onNameFilterTextChange);
-        //fieldFilter.setStyleName(ValoTheme.TEXTFIELD_TINY);
         fieldFilter.setPlaceholder("Search by last name");
     }
 
@@ -111,7 +110,6 @@ public class DriversGrid extends CustomComponent{
 
     private Boolean caseInsensitiveContains(String where, String what) {
         if (where != null) {
-            System.out.println(where + " : " + what);
             return where.toLowerCase().contains(what.toLowerCase());
         }
         return false;

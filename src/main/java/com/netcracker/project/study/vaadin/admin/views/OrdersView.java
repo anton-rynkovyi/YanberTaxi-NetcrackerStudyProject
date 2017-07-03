@@ -41,7 +41,6 @@ public class OrdersView extends VerticalLayout implements View {
 
     private VerticalLayout getControlTab() {
         VerticalLayout controlLayout = new VerticalLayout();
-        controlLayout.addComponent(new Label());
         controlLayout.addComponent(ordersGrid);
         return controlLayout;
     }

@@ -9,6 +9,7 @@ import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.vaadin.admin.components.popup.DriverRequestInfoPopUp;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.spring.annotation.SpringComponent;
 
 import com.vaadin.ui.*;
@@ -96,7 +97,7 @@ public class DriversRequestsGrid  extends CustomComponent{
 
     private Grid<Driver> generateDriversGrid() {
         driversRequestsGrid = new Grid<>();
-        driversRequestsGrid.addColumn(driver -> new Timestamp(driver.getHireDate().getTime())).setCaption("Request date");
+        driversRequestsGrid.addColumn(driver -> new Timestamp(driver.getHireDate().getTime())).setCaption("Request date").setId("Req");
         driversRequestsGrid.addColumn(Driver::getLastName).setCaption("Last name");
         driversRequestsGrid.addColumn(Driver::getFirstName).setCaption("First name");
         driversRequestsGrid.addColumn(Driver::getMiddleName).setCaption("Middle name");
@@ -104,6 +105,8 @@ public class DriversRequestsGrid  extends CustomComponent{
         driversRequestsGrid.addColumn(Driver::getPhoneNumber).setCaption("Phone number");
         driversRequestsGrid.addColumn(driver -> driver.getExperience() + " years").setCaption("Experience");
         driversRequestsGrid.addColumn(driver -> DriverStatusEnum.getStatusValue(driver.getStatus())).setCaption("Status");
+
+        driversRequestsGrid.sort("Req", SortDirection.ASCENDING);
 
         return driversRequestsGrid;
     }

@@ -23,6 +23,8 @@ public interface OrderService {
 
     List<Order> getOrders(BigInteger statusId);
 
+    List<Order> getAllOrders();
+
     List<Route> getRoutes(BigInteger orderId);
 
     List<Order> allModelsAsList();
