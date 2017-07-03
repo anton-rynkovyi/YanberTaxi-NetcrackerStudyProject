@@ -32,7 +32,6 @@ import org.vaadin.spring.events.EventBus;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @Scope(value = "prototype")
@@ -46,10 +45,10 @@ public class NewOrdersTab extends CustomComponent {
     private DriverService driverService;
 
     @Autowired
-    UserFacade userFacade;
+    private UserFacade userFacade;
 
     @Autowired
-    AdminService adminService;
+    private AdminService adminService;
 
     @Autowired
     private EventBus.ApplicationEventBus appEventBus;
@@ -57,33 +56,31 @@ public class NewOrdersTab extends CustomComponent {
     private Toastr toastr;
     private Toastr banToastr;
 
-
     private Grid<OrderInfo> ordersGrid;
     private HorizontalLayout componentLayout;
     private List<Order> ordersList;
-    private Button acceptOrderButton;
-
-    private Panel ordersHistoryPanel;
 
     private Window window;
 
     private Driver driver;
     private Car car;
 
+    private Panel ordersHistoryPanel;
     private Panel currentOrderPanel;
 
     private OrderInfo currentOrder;
 
+    private long startKm;
+    private long finishKm;
+
+    private Button acceptOrderButton;
     private Button startPerformingButton;
     private Button finishPerformingButton;
-
-    private long startkm;
-    private long finishkm;
-
     private Button viewRouteButton;
 
     public void init() {
         initRootLayout();
+
         toastr = new Toastr();
         banToastr = new Toastr();
         banToastr.registerToastrListener(new ToastrListenerAdapter(){
@@ -97,11 +94,11 @@ public class NewOrdersTab extends CustomComponent {
                 UI.getCurrent().getPage().setLocation("/authorization");
             }
         });
-        VerticalLayout ordersGridLayout = generateOrdersGrid();
 
         setTakeOrderButton();
         setViewRouteButton();
 
+        VerticalLayout ordersGridLayout = generateOrdersGrid();
         ordersHistoryPanel = getFilledHighPanel(ordersGridLayout);
         ordersHistoryPanel.setIcon(VaadinIcons.CLIPBOARD_TEXT);
 
@@ -112,29 +109,46 @@ public class NewOrdersTab extends CustomComponent {
         currentOrderPanel.setIcon(VaadinIcons.CLIPBOARD_USER);
         setButtonsEnabled();
 
-        VerticalLayout verticalLayout = new VerticalLayout();
         HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel(ordersHistoryPanel, currentOrderPanel);
         horizontalSplitPanel.setSizeFull();
 
         HorizontalLayout buttonsLayout = new HorizontalLayout();
         buttonsLayout.addComponents(viewRouteButton,acceptOrderButton);
         buttonsLayout.setSpacing(true);
+
+        VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.addComponent(toastr);
-        //verticalLayout.addComponent(banToastr);
         verticalLayout.addComponents(horizontalSplitPanel, buttonsLayout);
         verticalLayout.setComponentAlignment(horizontalSplitPanel, Alignment.MIDDLE_CENTER);
         verticalLayout.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
+        verticalLayout.setSizeFull();
+        verticalLayout.setMargin(false);
 
         componentLayout.addComponent(verticalLayout);
         componentLayout.setSizeFull();
-
+        componentLayout.setMargin(false);
 
         setCompositionRoot(componentLayout);
         setSizeFull();
     }
 
-    public void setAcceptButtonEnabled(boolean value) {
-        acceptOrderButton.setEnabled(value);
+    private void initRootLayout() {
+        componentLayout = new HorizontalLayout();
+        componentLayout.setMargin(false);
+        componentLayout.setSpacing(true);
+    }
+
+    public void refreshContent() {
+        refreshGrid();
+        acceptOrderButton.setEnabled(false);
+        //((DriverPage)getUI()).refreshUI();
+        refreshCurrentOrderPanel();
+        setButtonsEnabled();
+    }
+
+    public void refreshGrid() {
+        ordersList = orderService.getOrders(OrderStatus.NEW);
+        ordersGrid.setItems(orderService.getOrdersInfo(ordersList));
     }
 
     private void setButtonsEnabled() {
@@ -197,7 +211,9 @@ public class NewOrdersTab extends CustomComponent {
                     OrderInfo orderInfo = ordersGrid.asSingleSelect().getValue();
 
                     Window window = new Window(" Full route");
-                    window.setModal(false);
+                    window.setModal(true);
+                    window.center();
+                    window.setResizable(false);
                     window.setContent(routeInfoLayout(orderInfo.getObjectId()));
 
                     UI.getCurrent().addWindow(window);
@@ -206,7 +222,6 @@ public class NewOrdersTab extends CustomComponent {
 
         });
     }
-
 
     private VerticalLayout routeInfoLayout(BigInteger orderId) {
         List<Route> routes = orderService.getRoutes(orderId);
@@ -249,7 +264,6 @@ public class NewOrdersTab extends CustomComponent {
         return routeLayout;
     }
 
-
     private Panel getCurrentOrderPanel() {
         List<Order> orders = orderService.getCurrentOrderByDriverId(driver.getObjectId());
         Panel panel = new Panel("Current order");
@@ -272,18 +286,6 @@ public class NewOrdersTab extends CustomComponent {
         }
         return panel;
 
-    }
-
-    public void setDriver(Driver driver) {
-        this.driver = driver;
-        List<Car> cars = driverService.getCarByDriver(driver);
-        this.car = cars.get(0);
-    }
-
-    private void initRootLayout() {
-        componentLayout = new HorizontalLayout();
-        componentLayout.setMargin(false);
-        componentLayout.setSpacing(true);
     }
 
     private Panel getFilledHighPanel(VerticalLayout verticalLayout) {
@@ -314,14 +316,6 @@ public class NewOrdersTab extends CustomComponent {
 
     }
 
-    public void refreshContent() {
-        refreshGrid();
-        acceptOrderButton.setEnabled(false);
-        ((DriverPage)getUI()).refreshUI();
-        refreshCurrentOrderPanel();
-        setButtonsEnabled();
-    }
-
     private void initFinishPerformingButton() {
         finishPerformingButton = new Button("Finish Performing");
         finishPerformingButton.addClickListener(event -> {
@@ -337,15 +331,15 @@ public class NewOrdersTab extends CustomComponent {
             Button ok = new Button("OK");
             ok.addClickListener(newEvent -> {
                 try {
-                    finishkm = Long.parseLong(textField.getValue());
-                    if(finishkm <= startkm){
+                    finishKm = Long.parseLong(textField.getValue());
+                    if(finishKm <= startKm){
                         throw new IllegalArgumentException();
                     }
-                    if(finishkm <= 0){
+                    if(finishKm <= 0){
                         iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
                         errorLabel.setCaption("Incorrect data. Number must be positive..");
                     }else{
-                        long distance = finishkm - startkm;
+                        long distance = finishKm - startKm;
 
                         orderService.setDistance(currentOrder.getObjectId(), distance);
                         orderService.changeStatus(OrderStatus.PERFORMED, currentOrder.getObjectId());
@@ -404,8 +398,8 @@ public class NewOrdersTab extends CustomComponent {
 
             ok.addClickListener(newEvent -> {
                 try {
-                    startkm = Long.parseLong(textField.getValue());
-                    if(startkm < 0){
+                    startKm = Long.parseLong(textField.getValue());
+                    if(startKm < 0){
                         iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
                         errorLabel.setCaption("Incorrect data. Number must be positive.");
                     }else{
@@ -483,12 +477,8 @@ public class NewOrdersTab extends CustomComponent {
         acceptOrderButton.setEnabled(false);
     }
 
-    public void refreshGrid() {
-        ordersList = orderService.getOrders(OrderStatus.NEW);
-        ordersGrid.setItems(orderService.getOrdersInfo(ordersList));
-    }
-
     private VerticalLayout generateOrdersGrid() {
+
         VerticalLayout verticalLayout = new VerticalLayout();
         ordersGrid = new Grid<>();
         ordersGrid.setSizeFull();
@@ -499,7 +489,7 @@ public class NewOrdersTab extends CustomComponent {
         ordersGrid.setItems(ordersInfo);
 
         ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("№");
-        ordersGrid.addColumn(OrderInfo::getStartPoint).setCaption("Start");
+        ordersGrid.addColumn(OrderInfo::getStartPoint).setCaption("Departure");
         ordersGrid.addColumn(OrderInfo::getDestination).setCaption("Destination");
         ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");
 
@@ -516,10 +506,6 @@ public class NewOrdersTab extends CustomComponent {
         verticalLayout.addComponent(ordersGrid);
 
         return verticalLayout;
-    }
-
-    public List getOrdersList() {
-        return ordersList;
     }
 
     private boolean isDismissed() {
@@ -569,6 +555,20 @@ public class NewOrdersTab extends CustomComponent {
             return true;
         }
         return false;
+    }
+
+    public List getOrdersList() {
+        return ordersList;
+    }
+
+    public void setAcceptButtonEnabled(boolean value) {
+        acceptOrderButton.setEnabled(value);
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+        List<Car> cars = driverService.getCarByDriver(driver);
+        this.car = cars.get(0);
     }
 
 }
