@@ -27,6 +27,9 @@ public class DriverServiceImpl implements DriverService {
     @Autowired
     PersistenceFacade persistenceFacade;
 
+    @Autowired
+    OrderServiceImpl orderService;
+
     @Override
     public void acceptOrder(BigInteger orderId, BigInteger driverId) {
         Order order = persistenceFacade.getOne(orderId,Order.class);
@@ -37,6 +40,7 @@ public class DriverServiceImpl implements DriverService {
             driver.setStatus(DriverStatusList.ON_CALL);
             persistenceFacade.update(order);
             persistenceFacade.update(driver);
+            orderService.changeStatus(OrderStatus.ACCEPTED,order.getObjectId());
         }else{
             throw new RuntimeException("The order must have status equals to new");
         }

@@ -7,6 +7,9 @@ import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewFor
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 
 import java.math.BigInteger;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 public interface OrderService {
@@ -48,5 +51,7 @@ public interface OrderService {
     List<OrderInfo> getOrdersInfoByDriverId(BigInteger driverId, BigInteger orderStatusId);
 
     void setClientPoints(BigInteger orderId);
+
+    Timestamp getLastDateFromOrdersLog(Order order);
 
 }

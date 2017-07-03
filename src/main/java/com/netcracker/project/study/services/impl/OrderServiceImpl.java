@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = persistenceFacade.getOne(orderId,Order.class);
         order.setStatus(status);
         persistenceFacade.update(order);
-        //orderStatusLog(order);
+        orderStatusLog(order);
     }
 
     @Override
@@ -280,5 +281,23 @@ public class OrderServiceImpl implements OrderService {
         Client client = order.getClientOnOrder();
         client.setPoints(client.getPoints().add(order.getDistance()));
         persistenceFacade.update(client);
+    }
+
+    @Override
+    public Timestamp getLastDateFromOrdersLog(Order order) {
+        String query = "select attributes.object_id " +
+                " from  attributes,OBJREFERENCE " +
+                " where attributes.ATTR_ID = 32 " +
+                " AND OBJREFERENCE.attr_ID = 30 " +
+                " AND OBJREFERENCE.REFERENCE = " + order.getObjectId() +
+                " AND OBJREFERENCE.OBJECT_ID = attributes.OBJECT_ID " +
+                " AND attributes.DATE_VALUE = (select MAX(attributes.date_value) " +
+                " from  attributes,OBJREFERENCE " +
+                " where attributes.ATTR_ID = 32 " +
+                " AND OBJREFERENCE.attr_ID = 30 " +
+                " AND OBJREFERENCE.REFERENCE = " + order.getObjectId() +
+                " AND OBJREFERENCE.OBJECT_ID = attributes.OBJECT_ID)";
+        List<OrderStatus> orderStatusList = persistenceFacade.getSome(query, OrderStatus.class,true);
+        return new Timestamp(orderStatusList.get(orderStatusList.size()-1).getTimeStamp().getTime());
     }
 }

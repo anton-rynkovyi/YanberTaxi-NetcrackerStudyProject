@@ -41,6 +41,7 @@ public class ClientServiceImpl implements ClientService {
         order.setName(addresses[0] + " - " + addresses[4]);
 
         persistenceFacade.create(order);
+        orderService.changeStatus(OrderStatus.NEW,order.getObjectId());
 
         int count = 1;
         for (int i = 0; i < addresses.length; i++) {
