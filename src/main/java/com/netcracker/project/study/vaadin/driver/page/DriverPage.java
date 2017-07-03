@@ -5,6 +5,7 @@ import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusEnum;
 import com.netcracker.project.study.model.driver.DriverStatusList;
+import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.services.AdminService;
@@ -39,6 +40,7 @@ import org.vaadin.addons.builder.ToastOptionsBuilder;
 
 import java.net.URI;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Theme("valo")
 @SpringUI(path = "/driver")
@@ -66,8 +68,8 @@ public class DriverPage extends UI {
     @Autowired
     DriverUpdate driverWindow;
 
-
     private Driver driver;
+    private Car car;
 
     @Autowired
     private DriverService driverService;
@@ -75,7 +77,7 @@ public class DriverPage extends UI {
     private Label statusIcon;
     private Label statusValue;
 
-    Button changeStatusButton;
+    private Button changeStatusButton;
 
     private Toastr banToastr;
 
@@ -193,6 +195,8 @@ public class DriverPage extends UI {
 
     private void getCurrentDriver() {
         driver = userDetailsService.getCurrentUser();
+        List<Car> cars = driverService.getCarByDriver(driver);
+        car = cars.get(0);
     }
 
     public void setStatusButtonEnabled(boolean value){
@@ -343,6 +347,7 @@ public class DriverPage extends UI {
 
     private HorizontalLayout getEditButtonCarLayout() {
         Button editButtonCar = new Button();
+        editButtonCar.setDescription(car.getMakeOfCar() + " " + car.getModelType());
         editButtonCar.setIcon(VaadinIcons.CAR);
         editButtonCar.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
         editButtonCar.addStyleName(ValoTheme.BUTTON_SMALL);

@@ -88,18 +88,19 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         orderInfoWindow.setIcon(VaadinIcons.INFO_CIRCLE);
         orderInfoWindow.center();
         orderInfoWindow.setModal(true);
+        orderInfoWindow.setResizable(false);
+        orderInfoWindow.setHeight("95%");
 
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.addComponent(orderInfoPopUp);
 
-        Button okButton = new Button("OK");
-        okButton.addClickListener(event->{
+        orderInfoPopUp.okButton.addClickListener(event->{
             orderInfoWindow.close();
         });
-        verticalLayout.addComponent(okButton);
-        verticalLayout.setComponentAlignment(okButton,Alignment.MIDDLE_CENTER);
+
         verticalLayout.setMargin(false);
         orderInfoWindow.setContent(verticalLayout);
+
     }
 
     private HorizontalLayout initViewOrderButton(){
@@ -117,7 +118,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         });
 
         horizontalLayout.addComponent(viewOrderButton);
-        horizontalLayout.setComponentAlignment(viewOrderButton, Alignment.BOTTOM_LEFT);
+        horizontalLayout.setComponentAlignment(viewOrderButton, Alignment.BOTTOM_RIGHT);
         return horizontalLayout;
     }
 
@@ -133,7 +134,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
             ordersGrid.setItems(ordersInfo);
 
-            ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("#");
+            ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("№");
             ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");
             ordersGrid.addColumn(OrderInfo::getStatus).setCaption("Status");
             ordersGrid.addColumn(OrderInfo::getStartPoint).setCaption("Departure");

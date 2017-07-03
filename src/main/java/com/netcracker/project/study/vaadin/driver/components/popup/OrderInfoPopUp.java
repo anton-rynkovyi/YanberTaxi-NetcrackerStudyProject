@@ -24,6 +24,7 @@ public class OrderInfoPopUp extends VerticalLayout {
     VerticalLayout rootLayout;
     @Autowired private OrderServiceImpl orderService;
 
+    public Button okButton;
 
     public void init(OrderInfo orderInfo) {
         this.orderInfo = orderInfo;
@@ -36,13 +37,12 @@ public class OrderInfoPopUp extends VerticalLayout {
     private void initRootLayout(){
         rootLayout = new VerticalLayout();
         rootLayout.setSizeFull();
-        rootLayout.setSpacing(true);
-        rootLayout.setMargin(true);
     }
 
     private void initOrderInfoLayout() {
 
         VerticalLayout orderLayout = new VerticalLayout();
+        orderLayout.setSpacing(false);
         if (orderInfo != null) {
             Label header = new Label("<h2><center>General information</center></h2>", ContentMode.HTML);
 
@@ -88,9 +88,6 @@ public class OrderInfoPopUp extends VerticalLayout {
             generalInfoPanel.setContent(orderLayout);
             generalInfoPanel.setIcon(VaadinIcons.CLIPBOARD_TEXT);
 
-            HorizontalLayout horizontalLayout = new HorizontalLayout();
-            horizontalLayout.addComponent(generalInfoPanel);
-
 
             Panel routeInfoPanel = new Panel();
 
@@ -107,11 +104,15 @@ public class OrderInfoPopUp extends VerticalLayout {
                 }
             }
             routeLayout.setSizeFull();
+            routeLayout.setSpacing(false);
+
             routeInfoPanel.setContent(routeLayout);
             routeInfoPanel.setIcon(VaadinIcons.ROAD);
 
             routeInfoPanel.setSizeFull();
 
+            HorizontalLayout horizontalLayout = new HorizontalLayout();
+            horizontalLayout.addComponent(generalInfoPanel);
             horizontalLayout.addComponent(routeInfoPanel);
 
             TextArea commentLayout = new TextArea();
@@ -134,6 +135,10 @@ public class OrderInfoPopUp extends VerticalLayout {
 
             rootLayout.addComponent(horizontalLayout);
             rootLayout.addComponent(commentPanel);
+
+            okButton = new Button("OK");
+            rootLayout.addComponent(okButton);
+            rootLayout.setComponentAlignment(okButton,Alignment.MIDDLE_RIGHT);
         }
     }
 
