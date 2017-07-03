@@ -1,16 +1,12 @@
 package com.netcracker.project.study.vaadin.common.components;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.event.Action;
-import com.vaadin.event.ShortcutAction;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.TextField;
 
 public class PhoneField extends TextField implements HasValue.ValueChangeListener {
 
     private boolean isDelete = false;
-    private boolean isAdd = true;
     private String str;
 
     public PhoneField(String caption) {
