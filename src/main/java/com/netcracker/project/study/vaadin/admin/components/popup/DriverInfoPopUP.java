@@ -164,7 +164,6 @@ public class DriverInfoPopUP extends VerticalLayout {
                     .open();
             driversGrid.getDriverInfoWindow().close();
         });
-        horizontalLayout.addComponent(btnFire);
 
         Button btnBan = new Button("Ban");
         btnBan.setWidth(100, Unit.PIXELS);
@@ -190,6 +189,15 @@ public class DriverInfoPopUP extends VerticalLayout {
 
         });
 
+        Button btnClose = new Button("Close");
+        btnClose.addClickListener(clickEvent -> {
+            for (Window window : UI.getCurrent().getWindows()){
+                window.close();
+            }
+        });
+
+        horizontalLayout.addComponent(btnClose);
+        horizontalLayout.addComponent(btnFire);
         horizontalLayout.addComponent(btnBan);
         horizontalLayout.setExpandRatio(btnFire, 0.9f);
         horizontalLayout.setExpandRatio(btnBan, 0.1f);

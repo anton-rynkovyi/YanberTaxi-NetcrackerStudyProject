@@ -119,7 +119,7 @@ public class DriverBanInfoPopUp extends VerticalLayout{
         });
         horizontalLayout.addComponent(btnFire);
 
-        Button btnBan = new Button("Cancel");
+        Button btnBan = new Button("Close");
         btnBan.addClickListener(clickEvent -> {
             driversBanGrid.getDriverBanInfoWindow().close();
         });

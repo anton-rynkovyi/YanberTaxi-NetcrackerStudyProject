@@ -81,7 +81,7 @@ public class ClientInfoPopUp extends VerticalLayout {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
-        Button btnCancel = new Button("Cancel");
+        Button btnCancel = new Button("Close");
         btnCancel.addClickListener(clickEvent -> {
             for (Window window :UI.getCurrent().getWindows()){
                 window.close();
