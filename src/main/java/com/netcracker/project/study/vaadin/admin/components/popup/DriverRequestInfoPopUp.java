@@ -151,7 +151,6 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
             driversRequestsGrid.getDriversRequestSubWindow().close();
             driver.getEmail();
         });
-        horizontalLayout.addComponent(btnDecline);
 
         Button btnApprove = new Button("Approve");
         btnApprove.addClickListener(clickEvent -> {
@@ -168,8 +167,18 @@ public class DriverRequestInfoPopUp extends VerticalLayout{
             driversRequestsGrid.getDriversRequestSubWindow().close();
         });
 
+        Button btnClose = new Button("Close");
+        btnClose.addClickListener(clickEvent -> {
+            for (Window window : UI.getCurrent().getWindows()){
+                window.close();
+            }
+        });
+
+        horizontalLayout.addComponent(btnClose);
+        horizontalLayout.addComponent(btnDecline);
+        horizontalLayout.setComponentAlignment(btnClose, Alignment.BOTTOM_LEFT);
         horizontalLayout.addComponent(btnApprove);
-        horizontalLayout.setExpandRatio(btnDecline, 0.88f);
+        horizontalLayout.setExpandRatio(btnDecline, 0.78f);
         horizontalLayout.setExpandRatio(btnApprove, 0.12f);
 
         return horizontalLayout;

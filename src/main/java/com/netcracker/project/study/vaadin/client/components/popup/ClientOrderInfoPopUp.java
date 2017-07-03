@@ -39,7 +39,7 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
 
     private RadioButtonGroup rateRudioButtons;
 
-    private Button btnComment;
+    private Button btnComment, btnClose;
 
     private TextArea textArea;
 
@@ -91,6 +91,9 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
         allInfo.addComponent(routesAndDetalies);
 
         btnComment = getBtnComment();
+        btnClose = getBtnClose();
+        HorizontalLayout buttons = new HorizontalLayout();
+        buttons.addComponents(btnComment, btnClose);
 
         textArea = getTextAreaForComment();
 
@@ -98,8 +101,8 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
 
         allInfo.addComponent(textArea);
         allInfo.setComponentAlignment(textArea, Alignment.BOTTOM_CENTER);
-        allInfo.addComponent(btnComment);
-        allInfo.setComponentAlignment(btnComment, Alignment.BOTTOM_LEFT);
+        allInfo.addComponent(buttons);
+        allInfo.setComponentAlignment(buttons, Alignment.BOTTOM_CENTER);
 
         Panel orderPanel = new Panel(allInfo);
         orderPanel.setWidth(600, Unit.PIXELS);
@@ -118,6 +121,18 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
         button.addClickListener(commentLeaverListener);
 
         return button;
+    }
+
+    private Button getBtnClose(){
+        Button btnClose = new Button("Close", VaadinIcons.CLOSE);
+        btnClose.setStyleName(MaterialTheme.BUTTON_ICON_ALIGN_RIGHT);
+        btnClose.addClickListener(clickEvent -> {
+            for (Window window : UI.getCurrent().getWindows()){
+                window.close();
+            }
+        });
+
+        return btnClose;
     }
 
     private TextArea getTextAreaForComment(){
