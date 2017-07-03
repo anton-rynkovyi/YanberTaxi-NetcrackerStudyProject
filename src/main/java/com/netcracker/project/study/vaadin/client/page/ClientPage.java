@@ -50,6 +50,10 @@ public class ClientPage extends UI {
 
     private Panel viewDisplay;
 
+    private Label pointsInfo;
+
+    private BigInteger clientPoints;
+
     @Autowired
     EventBus.UIEventBus uiEventBus;
 
@@ -102,6 +106,8 @@ public class ClientPage extends UI {
         navigator = new Navigator(this, viewDisplay);
         navigator.addProvider(provider);
         navigator.navigateTo(ClientView.VIEW_NAME);
+
+
     }
 
 
@@ -179,13 +185,17 @@ public class ClientPage extends UI {
 
     private HorizontalLayout getClientPoints(){
         HorizontalLayout clientPointslayout = new HorizontalLayout();
-        BigInteger clientPoints = client.getPoints() != null ? client.getPoints() : BigInteger.ZERO;
+        clientPoints = client.getPoints() != null ? client.getPoints() : BigInteger.ZERO;
         Label icon = new Label();
         icon.setIcon(VaadinIcons.COIN_PILES);
-        Label pointsInfo = new Label("Your points: " + clientPoints);
+        pointsInfo = new Label("Your points: " + clientPoints);
         clientPointslayout.addComponents(icon, pointsInfo);
         clientPointslayout.setComponentAlignment(icon, Alignment.MIDDLE_CENTER);
         return clientPointslayout;
     }
 
+    public void updatePoints() {
+        client = userDetailsService.getCurrentUser();
+        pointsInfo.setValue("Your points: " + client.getPoints());
+    }
 }

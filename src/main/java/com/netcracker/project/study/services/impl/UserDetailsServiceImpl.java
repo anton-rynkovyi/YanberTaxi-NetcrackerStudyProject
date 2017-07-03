@@ -59,7 +59,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public <T extends Model> T getCurrentUser() {
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            System.out.println(user);
             long objectTypeId = userFacade.getObjectTypeIdByUser(user);
             if (objectTypeId == ClientAttr.OBJECT_TYPE_ID) {
                 Client client = persistenceFacade.getOne(user.getObjectId(), Client.class);
@@ -130,7 +129,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 "WHERE attr.attr_id = " + DriverAttr.EMAIL_ATTR + " " +
                 "AND attr.value = '" + email + "'";
         List<Driver> drivers = persistenceFacade.getSome(query, Driver.class,false);
-        System.out.println("Driver: " + drivers);
         if (drivers.isEmpty()) {
             return false;
         } else {

@@ -150,6 +150,7 @@ public class ClientView extends VerticalLayout implements View {
             public void poll(UIEvents.PollEvent event) {
                 try {
                     clientCurrentOrderGrid.init();
+                    ((ClientPage)UI.getCurrent()).updatePoints();
                 }catch (Exception e) {}
             }
         });
@@ -255,7 +256,9 @@ public class ClientView extends VerticalLayout implements View {
 
                 clientOrdersGrid.init();
                 clientCurrentOrderGrid.init();
-                appEventBus.publish(this, new CancelClientOrderEvent(currentOrder.getObjectId()));
+                try {
+                    appEventBus.publish(this, new CancelClientOrderEvent(currentOrder.getObjectId()));
+                }catch (Exception e) {}
             } else {
                 Toast cancelPerformingOrderToast = ToastBuilder.of(ToastType.Warning, "<b>You can't cancel performing order</b> ")
                     .caption("Attention")

@@ -21,6 +21,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,9 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         toastr = new Toastr();
         addComponent(toastr);
         rootLayout = new VerticalLayout();
+        MarginInfo marginInfo = new MarginInfo(false, true, true, true);
+        rootLayout.setMargin(marginInfo);
+        rootLayout.setSpacing(false);
         initDriver();
 
         newOrders.setDriver(driver);
@@ -175,7 +179,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     private TabSheet getTabSheet() {
         TabSheet tabSheet = new TabSheet();
-
         VerticalLayout allOrdersLayout = generateOrdersGrid();
         allOrdersLayout.setSizeFull();
         tabSheet.addTab(getNewOrdersControlTab(),"New orders (" + getNewOrdersCount() + ")").setIcon(VaadinIcons.LIST_SELECT);
@@ -212,6 +215,9 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
     private VerticalLayout getNewOrdersControlTab(){
         VerticalLayout controlLayout = new VerticalLayout();
+        MarginInfo marginInfo = new MarginInfo(false, true, true, true);
+        controlLayout.setMargin(marginInfo);
+        controlLayout.setSpacing(false);
         newOrders.setDriver(driver);
         controlLayout.addComponent(newOrders);
         return controlLayout;

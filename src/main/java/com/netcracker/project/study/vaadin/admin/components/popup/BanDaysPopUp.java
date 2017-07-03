@@ -30,7 +30,7 @@ public class BanDaysPopUp extends VerticalLayout {
 
     private Toastr toastr;
 
-    private List<String> banDayList = Arrays.asList("1 min", "3 min", "5 min", "7 min");
+    private List<String> banDayList = Arrays.asList("1 day", "3 days", "5 days", "7 days");
 
 
     @PostConstruct

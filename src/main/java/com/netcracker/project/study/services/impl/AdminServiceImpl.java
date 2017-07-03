@@ -58,7 +58,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void giveBan(Driver driver, int days) {
-        Date date = new Date(System.currentTimeMillis() + 1000 * 60 * days); //todo "1000*60" change to ONE_DAY_MILLS const
+        Date date = new Date(System.currentTimeMillis() + ONE_DAY_MILLS * days); //todo "1000*60" change to ONE_DAY_MILLS const
         User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
         driver.setUnbanDate(date);
         driver.setStatus(DriverStatusList.OFF_DUTY);
@@ -88,11 +88,10 @@ public class AdminServiceImpl implements AdminService {
                User user = userFacade.findDriverDetailsByUsername(driver.getPhoneNumber());
                user.setEnabled(true);
                userFacade.updateUser(user);
-               System.out.println("FINISH");
 /*               driversGrid.refreshGrid();
                driversBanGrid.refreshGrid()*/;
            } else {
-               System.out.println(driver.getObjectId()+": " + dif / 1000);
+               //System.out.println(driver.getObjectId()+": " + dif / 1000);
            }
         }
     }
