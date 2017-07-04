@@ -86,6 +86,7 @@ public class DriverPage extends UI {
 
     @Autowired
     private AdminService adminService;
+    private Label helloLabel;
 
 
     @Autowired
@@ -389,9 +390,9 @@ public class DriverPage extends UI {
 
     private HorizontalLayout getDriverNameLayout() {
         Driver driver = userDetailsService.getCurrentUser();
-        String driverName = driver.getFirstName() + " " + driver.getLastName();
 
-        Label helloLabel = new Label("Hello, " + driverName, ContentMode.HTML);
+        String driverName = driver.getFirstName() + " " + driver.getLastName();
+        helloLabel = new Label("Hello, " + driverName, ContentMode.HTML);
         Label iconUser = new Label();
         iconUser.setIcon(VaadinIcons.USER);
         Label separatorLabel = new Label();
@@ -405,6 +406,10 @@ public class DriverPage extends UI {
         horizontalLayout.setHeight("100%");
         horizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         return horizontalLayout;
+    }
+
+    public void updateDriverName(String driverName) {
+        helloLabel.setValue("Hello, " + driverName);
     }
 
     private HorizontalLayout getDriverRatingLayout() {

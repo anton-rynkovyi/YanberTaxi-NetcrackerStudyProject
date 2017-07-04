@@ -11,6 +11,7 @@ import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.services.tools.EmailValidator;
 import com.netcracker.project.study.vaadin.authorization.components.popups.CarRegistration;
 import com.netcracker.project.study.vaadin.common.components.PhoneField;
+import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -71,8 +72,6 @@ public class DriverUpdate extends Window {
         setCaption(" Driver card");
         setContent(root);
     }
-
-
 
 
     private VerticalLayout genRootLayout() {
@@ -176,6 +175,8 @@ public class DriverUpdate extends Window {
             firstName.clear();
             middleName.clear();
             exp.clear();
+            String driverName = driver.getFirstName() + " " + driver.getLastName();
+            ((DriverPage) UI.getCurrent()).updateDriverName(driverName);
             close();
         });
 

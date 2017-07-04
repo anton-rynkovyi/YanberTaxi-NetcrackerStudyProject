@@ -53,6 +53,7 @@ public class ClientPage extends UI {
     private Label pointsInfo;
 
     private BigInteger clientPoints;
+    private Label hello;
 
     @Autowired
     EventBus.UIEventBus uiEventBus;
@@ -138,7 +139,7 @@ public class ClientPage extends UI {
 
     private Label getHelloLable(){
         String clientName = client.getFirstName() + " " + client.getLastName();
-        Label hello = new Label( "Hello, " + clientName);
+        hello = new Label( "Hello, " + clientName);
 
         return hello;
     }
@@ -197,5 +198,9 @@ public class ClientPage extends UI {
     public void updatePoints() {
         client = userDetailsService.getCurrentUser();
         pointsInfo.setValue("Your points: " + client.getPoints());
+    }
+
+    public void updateClientName(String driverName) {
+        hello.setValue("Hello, " + driverName);
     }
 }

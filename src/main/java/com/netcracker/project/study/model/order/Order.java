@@ -30,7 +30,7 @@ public class Order extends Model implements OrderAttr{
     private @AttrValue BigDecimal cost;
 
     @Attribute(attrId = OrderAttr.DISTANCE_ATTR)
-    private @AttrValue BigInteger distance;
+    private @AttrValue BigDecimal distance;
 
     @Attribute(attrId = OrderAttr.DRIVER_RATING_ATTR)
     private @AttrValue BigInteger driverRating;
@@ -80,11 +80,11 @@ public class Order extends Model implements OrderAttr{
         this.cost = cost;
     }
 
-    public BigInteger getDistance() {
+    public BigDecimal getDistance() {
         return distance;
     }
 
-    public void setDistance(BigInteger distance) {
+    public void setDistance(BigDecimal distance) {
         this.distance = distance;
     }
 

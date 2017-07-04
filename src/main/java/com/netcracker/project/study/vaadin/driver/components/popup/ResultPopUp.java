@@ -20,10 +20,10 @@ public class ResultPopUp extends Window {
     OrderService orderService;
 
     private BigDecimal cost;
-    private long distance;
+    private BigDecimal distance;
 
 
-    public void init(BigDecimal cost, long distance) {
+    public void init(BigDecimal cost, BigDecimal distance) {
         this.cost = cost;
         this.distance = distance;
         setCaption(" Cost of order");
@@ -48,10 +48,10 @@ public class ResultPopUp extends Window {
         verticalLayout.setMargin(false);
         verticalLayout.setSpacing(false);
         verticalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        Label distance = new Label("<h3>Distance: " + this.distance + " km</h3>", ContentMode.HTML);
+        Label distance = new Label("<h3>Distance: " + this.distance.doubleValue() + " km</h3>", ContentMode.HTML);
         Label distanceIcon = new Label();
         distanceIcon.setIcon(VaadinIcons.ROAD);
-        Label cost = new Label("<h2>Cost: " + this.cost.intValue() + " hrn</h2>", ContentMode.HTML);
+        Label cost = new Label("<h2>Cost: " + this.cost.doubleValue() + " hrn</h2>", ContentMode.HTML);
         Label costIcon = new Label();
         costIcon.setIcon(VaadinIcons.CASH);
         Button button = new Button("Ok");

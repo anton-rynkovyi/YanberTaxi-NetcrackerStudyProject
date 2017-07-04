@@ -25,6 +25,7 @@ import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.util.List;
@@ -42,9 +43,11 @@ public class Main {
         PersistenceManager manager = ctx.getBean(PersistenceManager.class);
 
 
-        DriverService driverService1 = ctx.getBean(DriverService.class);
-        Driver driverList = driverService1.getDriverByPhoneNumber("(111)111-11-11");
-        System.out.println(driverList);
+        BigDecimal b1 = new BigDecimal(57.3);
+        BigDecimal b2 = new BigDecimal(102.2);
+        BigDecimal b3 = b2.subtract(b1);
+        BigDecimal b = b3.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        System.out.println(b3);
 
 
     /*    Driver driver = userDetailsService.findDriverByUserName("(666)666-66-66");

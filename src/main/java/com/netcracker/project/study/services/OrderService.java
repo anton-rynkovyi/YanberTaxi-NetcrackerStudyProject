@@ -15,11 +15,11 @@ import java.util.List;
 
 public interface OrderService {
 
-    BigDecimal calcPrice(BigInteger distance, BigInteger orderId);
+    BigDecimal calcPrice(BigDecimal distance, BigInteger orderId);
 
     void changeStatus(BigInteger status, BigInteger orderId);
 
-    void setDistance(BigInteger orderId, long distance);
+    void setDistance(BigInteger orderId, double distance);
 
     String getStatusValue(BigInteger statusId);
 

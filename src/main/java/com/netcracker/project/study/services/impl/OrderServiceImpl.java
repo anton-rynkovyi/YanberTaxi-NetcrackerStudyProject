@@ -34,13 +34,14 @@ public class OrderServiceImpl implements OrderService {
     public static final BigDecimal COST_PER_KILOMETER = new BigDecimal("5");
 
     @Override
-    public BigDecimal calcPrice(BigInteger distance, BigInteger orderId) {
+    public BigDecimal calcPrice(BigDecimal distance, BigInteger orderId) {
         Order order = persistenceFacade.getOne(orderId,Order.class);
-        BigDecimal decimalDistance = new BigDecimal(distance);
+        BigDecimal decimalDistance = distance;
         BigDecimal cost = decimalDistance.multiply(COST_PER_KILOMETER);
-        order.setCost(cost);
+        BigDecimal resultCost = cost.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        order.setCost(resultCost);
         persistenceFacade.update(order);
-        return cost;
+        return resultCost;
     }
 
 
@@ -59,9 +60,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void setDistance(BigInteger orderId, long distance){
+    public void setDistance(BigInteger orderId, double distance){
         Order order = persistenceFacade.getOne(orderId,Order.class);
-        order.setDistance(BigInteger.valueOf(distance));
+        BigDecimal orderDistance = new BigDecimal(distance);
+        BigDecimal resultOrderDistance = orderDistance.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        order.setDistance(resultOrderDistance);
         persistenceFacade.update(order);
     }
 
@@ -281,7 +284,7 @@ public class OrderServiceImpl implements OrderService {
     public void setClientPoints(BigInteger orderId) {
         Order order = persistenceFacade.getOne(orderId, Order.class);
         Client client = order.getClientOnOrder();
-        client.setPoints(client.getPoints().add(order.getDistance()));
+        client.setPoints(client.getPoints().add(BigInteger.valueOf(order.getDistance().longValue())));
         persistenceFacade.update(client);
     }
 

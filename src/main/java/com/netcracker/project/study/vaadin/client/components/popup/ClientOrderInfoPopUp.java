@@ -213,7 +213,7 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
 
     private HorizontalLayout getDistanceInfoLayout(Order order){
         HorizontalLayout distanceInfo = new HorizontalLayout();
-        BigInteger orderDistance = order.getDistance() != null ? order.getDistance() : BigInteger.ZERO;
+        BigDecimal orderDistance = order.getDistance() != null ? order.getDistance() : BigDecimal.ZERO;
         Label distance = new Label("Distance: <i>" + orderDistance + " km</i>", ContentMode.HTML);
         Label distanceIcon = new Label();
         distanceIcon.setIcon(VaadinIcons.ARROWS_LONG_H);

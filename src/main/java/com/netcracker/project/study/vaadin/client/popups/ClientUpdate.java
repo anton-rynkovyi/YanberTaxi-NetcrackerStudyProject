@@ -7,7 +7,9 @@ import com.netcracker.project.study.model.user.User;
 import com.netcracker.project.study.persistence.facade.UserFacade;
 import com.netcracker.project.study.persistence.facade.impl.PersistenceFacade;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
+import com.netcracker.project.study.vaadin.client.page.ClientPage;
 import com.netcracker.project.study.vaadin.common.components.PhoneField;
+import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -136,6 +138,8 @@ public class ClientUpdate extends Window{
             lastName.clear();
             firstName.clear();
             middleName.clear();
+            String driverName = client.getFirstName() + " " + client.getLastName();
+            ((ClientPage) UI.getCurrent()).updateClientName(driverName);
         });
         cancel.addClickListener(event -> {
             close();

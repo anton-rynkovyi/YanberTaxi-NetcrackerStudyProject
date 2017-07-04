@@ -79,8 +79,8 @@ public class NewOrdersTab extends CustomComponent {
 
     private OrderInfo currentOrder;
 
-    private long startKm;
-    private long finishKm;
+    private double startKm;
+    private double finishKm;
 
     private Button acceptOrderButton;
     private Button startPerformingButton;
@@ -334,7 +334,7 @@ public class NewOrdersTab extends CustomComponent {
             Button ok = new Button("OK");
             ok.addClickListener(newEvent -> {
                 try {
-                    finishKm = Long.parseLong(textField.getValue());
+                    finishKm = Double.parseDouble(textField.getValue());
                     if(finishKm <= startKm){
                         throw new IllegalArgumentException();
                     }
@@ -342,14 +342,14 @@ public class NewOrdersTab extends CustomComponent {
                         iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
                         errorLabel.setCaption("Incorrect data. Number must be positive..");
                     }else{
-                        long distance = finishKm - startKm;
+                        double distance = finishKm - startKm;
 
                         orderService.setDistance(currentOrder.getObjectId(), distance);
                         orderService.changeStatus(OrderStatus.PERFORMED, currentOrder.getObjectId());
                         orderService.setClientPoints(currentOrder.getObjectId());
                         driverService.changeStatus(DriverStatusList.FREE, driver.getObjectId());
-                        BigDecimal cost = orderService.calcPrice(BigInteger.valueOf(distance), currentOrder.getObjectId());
-
+                        BigDecimal cost = orderService.calcPrice(BigDecimal.valueOf(distance), currentOrder.getObjectId());
+                        cost.setScale(2, BigDecimal.ROUND_HALF_UP);
                         acceptOrderButton.setEnabled(true);
                         window.close();
                         refreshContent();
@@ -357,7 +357,8 @@ public class NewOrdersTab extends CustomComponent {
                         appEventBus.publish(this, new RefreshClientViewEvent(this,currentOrder.getObjectId()));
                         currentOrder = null;
                         toastr.toast(ToastBuilder.info("Order has been successfully performed. Distance: " + distance + ". " + "Cost: " + cost).build());
-                        resultPopUp.init(cost, distance);
+                        BigDecimal bdDistance = new BigDecimal(distance).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        resultPopUp.init(cost, bdDistance);
                         UI.getCurrent().addWindow(resultPopUp);
                     }
                 } catch (NumberFormatException e) {
@@ -406,7 +407,7 @@ public class NewOrdersTab extends CustomComponent {
 
             ok.addClickListener(newEvent -> {
                 try {
-                    startKm = Long.parseLong(textField.getValue());
+                    startKm = Double.parseDouble(textField.getValue());
                     if(startKm < 0){
                         iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
                         errorLabel.setCaption("Incorrect data. Number must be positive.");
