@@ -34,6 +34,7 @@ import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
 import org.vaadin.spring.events.EventBus;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
@@ -345,7 +346,7 @@ public class NewOrdersTab extends CustomComponent {
                         orderService.changeStatus(OrderStatus.PERFORMED, currentOrder.getObjectId());
                         orderService.setClientPoints(currentOrder.getObjectId());
                         driverService.changeStatus(DriverStatusList.FREE, driver.getObjectId());
-                        orderService.calcPrice(BigInteger.valueOf(distance), currentOrder.getObjectId());
+                        BigDecimal cost = orderService.calcPrice(BigInteger.valueOf(distance), currentOrder.getObjectId());
 
                         acceptOrderButton.setEnabled(true);
                         window.close();
@@ -353,6 +354,8 @@ public class NewOrdersTab extends CustomComponent {
                         ((DriverPage)getUI()).setStatusButtonEnabled(true);
                         appEventBus.publish(this, new RefreshClientViewEvent(this,currentOrder.getObjectId()));
                         currentOrder = null;
+
+                        toastr.toast(ToastBuilder.info("Order has been successfully performed. Distance: " + distance + ". " + "Cost: " + cost).build());
                     }
                 } catch (NumberFormatException e) {
                     iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);

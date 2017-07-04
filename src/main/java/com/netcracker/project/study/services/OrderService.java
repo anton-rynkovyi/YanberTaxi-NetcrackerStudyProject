@@ -6,6 +6,7 @@ import com.netcracker.project.study.vaadin.driver.components.tabs.NewOrdersTab;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    void calcPrice(BigInteger distance, BigInteger orderId);
+    BigDecimal calcPrice(BigInteger distance, BigInteger orderId);
 
     void changeStatus(BigInteger status, BigInteger orderId);
 

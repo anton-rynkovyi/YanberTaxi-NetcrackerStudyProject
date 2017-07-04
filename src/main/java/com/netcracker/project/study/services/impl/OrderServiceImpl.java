@@ -34,12 +34,13 @@ public class OrderServiceImpl implements OrderService {
     public static final BigDecimal COST_PER_KILOMETER = new BigDecimal("5");
 
     @Override
-    public void calcPrice(BigInteger distance, BigInteger orderId) {
+    public BigDecimal calcPrice(BigInteger distance, BigInteger orderId) {
         Order order = persistenceFacade.getOne(orderId,Order.class);
         BigDecimal decimalDistance = new BigDecimal(distance);
         BigDecimal cost = decimalDistance.multiply(COST_PER_KILOMETER);
         order.setCost(cost);
         persistenceFacade.update(order);
+        return cost;
     }
 
 
