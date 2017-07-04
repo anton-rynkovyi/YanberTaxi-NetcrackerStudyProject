@@ -4,6 +4,7 @@ import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.driver.Driver;
 import com.netcracker.project.study.model.driver.DriverStatusList;
 import com.netcracker.project.study.model.driver.car.Car;
+import com.netcracker.project.study.model.driver.status.DriverStatus;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.model.order.status.OrderStatus;
@@ -13,9 +14,11 @@ import com.netcracker.project.study.services.AdminService;
 import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 
+import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientOrderInfoEvent;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.client.events.SendClientMessage;
+import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 import com.vaadin.icons.VaadinIcons;
@@ -25,6 +28,7 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.vaadin.addons.*;
 import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
@@ -77,6 +81,9 @@ public class NewOrdersTab extends CustomComponent {
     private Button startPerformingButton;
     private Button finishPerformingButton;
     private Button viewRouteButton;
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
 
     public void init() {
         initRootLayout();
@@ -140,10 +147,11 @@ public class NewOrdersTab extends CustomComponent {
 
     public void refreshContent() {
         refreshGrid();
-        acceptOrderButton.setEnabled(false);
         //((DriverPage)getUI()).refreshUI();
+        ((OrdersViewForDrivers)(UI.getCurrent()).getNavigator().getCurrentView()).refreshAllOrdersGrid();
         refreshCurrentOrderPanel();
         setButtonsEnabled();
+        setAcceptButtonEnabled();
     }
 
     public void refreshGrid() {
@@ -164,14 +172,6 @@ public class NewOrdersTab extends CustomComponent {
                 startPerformingButton.setEnabled(false);
                 finishPerformingButton.setEnabled(true);
             }
-        }
-
-        if(ordersList.isEmpty()){
-            viewRouteButton.setEnabled(false);
-            acceptOrderButton.setEnabled(false);
-        }else{
-            viewRouteButton.setEnabled(true);
-            acceptOrderButton.setEnabled(true);
         }
 
     }
@@ -379,6 +379,8 @@ public class NewOrdersTab extends CustomComponent {
 
             startPerformingButton.setEnabled(false);
             finishPerformingButton.setEnabled(false);
+
+            setAcceptButtonEnabled();
         });
     }
 
@@ -432,6 +434,7 @@ public class NewOrdersTab extends CustomComponent {
             window.setContent(verticalLayout);
             UI.getCurrent().addWindow(window);
             refreshContent();
+            setAcceptButtonEnabled();
 
         });
     }
@@ -470,7 +473,6 @@ public class NewOrdersTab extends CustomComponent {
                 }
                 refreshContent();
                 ((DriverPage)getUI()).setStatusButtonEnabled(false);
-                refreshContent();
             }
         });
 
@@ -497,7 +499,8 @@ public class NewOrdersTab extends CustomComponent {
             if (!ordersGrid.asSingleSelect().isEmpty()) {
                 if (currentOrder == null) {
                     if (!driver.getStatus().equals(DriverStatusList.OFF_DUTY)) {
-                        acceptOrderButton.setEnabled(true);
+                       // acceptOrderButton.setEnabled(true);
+                        setAcceptButtonEnabled();
                     }
                 }
             }
@@ -561,8 +564,17 @@ public class NewOrdersTab extends CustomComponent {
         return ordersList;
     }
 
-    public void setAcceptButtonEnabled(boolean value) {
-        acceptOrderButton.setEnabled(value);
+    public void setAcceptButtonEnabled() {
+        driver = userDetailsService.getCurrentUser();
+        if(ordersList.isEmpty()){
+            acceptOrderButton.setEnabled(false);
+        }else{
+            if(driver.getStatus().equals(DriverStatusList.FREE)){
+                acceptOrderButton.setEnabled(true);
+            }else{
+                acceptOrderButton.setEnabled(false);
+            }
+        }
     }
 
     public void setDriver(Driver driver) {

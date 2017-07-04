@@ -79,8 +79,8 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         setExpandRatio(rootLayout,0.8f);
     }
 
-    public void setAcceptButtonEnabled(boolean value){
-        newOrders.setAcceptButtonEnabled(value);
+    public void setAcceptButtonEnabled(){
+        newOrders.setAcceptButtonEnabled();
     }
 
     private void initOrderInfoWindow() {
@@ -177,10 +177,6 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         return controlLayout;
     }
 
-    private void refreshOrdersGrid() {
-        allOrdersGrid.setItems(orderService.getOrdersInfo(allOrdersList));
-    }
-
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         init();
@@ -206,6 +202,18 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         }
     }
 
+    public void refreshAllOrdersGrid(){
+        initDriver();
+        newOrders.setDriver(driver);
+
+        tabSheet.getTab(0).setCaption("New orders (" + getNewOrdersCount() + ")");
+        tabSheet.getTab(1).setCaption("History of orders (" + getAllOrdersCount() + ")");
+
+        allOrdersList = orderService.getOrdersByDriverId(driver.getObjectId(),null);
+        if(allOrdersList != null) {
+            allOrdersGrid.setItems(orderService.getOrdersInfo(allOrdersList));
+        }
+    }
     public void refresh(){
         initDriver();
         newOrders.setDriver(driver);
@@ -215,7 +223,7 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
         allOrdersList = orderService.getOrdersByDriverId(driver.getObjectId(),null);
         if(allOrdersList != null) {
-            refreshOrdersGrid();
+            allOrdersGrid.setItems(orderService.getOrdersInfo(allOrdersList));
         }
         newOrders.refreshContent();
     }

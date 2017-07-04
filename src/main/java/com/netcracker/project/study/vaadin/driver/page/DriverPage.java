@@ -225,12 +225,11 @@ public class DriverPage extends UI {
 
             if(driver.getStatus().equals(DriverStatusList.FREE)){
                 driverService.changeStatus(DriverStatusList.OFF_DUTY,driver.getObjectId());
-                getCurrentView().setAcceptButtonEnabled(false);
             }
             if(driver.getStatus().equals(DriverStatusList.OFF_DUTY)){
                 driverService.changeStatus(DriverStatusList.FREE,driver.getObjectId());
-                getCurrentView().setAcceptButtonEnabled(true);
             }
+            getCurrentView().setAcceptButtonEnabled();
             getCurrentUI().refreshUI();
         });
 
