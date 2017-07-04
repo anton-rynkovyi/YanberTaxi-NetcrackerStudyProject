@@ -152,8 +152,9 @@ public class OrdersGrid extends CustomComponent {
         ordersGrid.setHeightByRows(8.8);
         ordersGrid.addColumn(Order::getObjectId).setCaption("№").setId("№");
         ordersGrid.addColumn(order -> orderService.getLastDateFromOrdersLog(order)).setCaption("Date");
-        ordersGrid.addColumn(Order -> Order.getName().substring(0, Order.getName().indexOf(" "))).setCaption("Start point");
-        ordersGrid.addColumn(Order -> Order.getName().substring((Order.getName().indexOf("- "))+1)).setCaption("Destination");
+        ordersGrid.addColumn(order -> orderService.getRoutes(order.getObjectId()).get(0).getCheckPoint()).setCaption("Start point");
+        ordersGrid.addColumn(order -> orderService.getRoutes(order.getObjectId()).get((orderService.getRoutes(order.getObjectId()).size()-1)).getCheckPoint())
+                .setCaption("Destination");
         ordersGrid.addColumn(Order -> Order.getDriverOnOrder() != null ? Order.getDriverOnOrder().getFirstName() + " " +
                 Order.getDriverOnOrder().getLastName() : "").setCaption("Driver");
         ordersGrid.addColumn(Order -> Order.getClientOnOrder() != null ? Order.getClientOnOrder().getFirstName() + " " +

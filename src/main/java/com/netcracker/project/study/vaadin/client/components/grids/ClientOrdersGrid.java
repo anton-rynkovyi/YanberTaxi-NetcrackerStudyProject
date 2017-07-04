@@ -3,6 +3,7 @@ package com.netcracker.project.study.vaadin.client.components.grids;
 import com.netcracker.project.study.model.client.Client;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderStatusEnum;
+import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.model.order.status.OrderStatus;
 import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.vaadin.client.components.popup.ClientOrderInfoPopUp;
@@ -142,8 +143,9 @@ public class ClientOrdersGrid  extends CustomComponent {
 
         ordersGrid.addColumn(Order::getObjectId).setCaption("№").setId("№");
         ordersGrid.addColumn(order -> orderService.getLastDateFromOrdersLog(order)).setCaption("Date");
-        ordersGrid.addColumn(Order -> Order.getName().substring(0, Order.getName().indexOf(" "))).setCaption("Start point");
-        ordersGrid.addColumn(Order -> Order.getName().substring((Order.getName().indexOf("- "))+1)).setCaption("Destination");
+        ordersGrid.addColumn(order -> orderService.getRoutes(order.getObjectId()).get(0).getCheckPoint()).setCaption("Start point");
+        ordersGrid.addColumn(order -> orderService.getRoutes(order.getObjectId()).get((orderService.getRoutes(order.getObjectId()).size()-1)).getCheckPoint())
+                .setCaption("Destination");
         ordersGrid.addColumn(Order -> Order.getDriverOnOrder() != null ? Order.getDriverOnOrder().getFirstName() + " " +
                 Order.getDriverOnOrder().getLastName() : "absent").setCaption("Driver");
         ordersGrid.addColumn(order -> OrderStatusEnum.getStatusValue(order.getStatus())).setCaption("Status");
