@@ -18,6 +18,7 @@ import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientOrderInfoEvent;
 import com.netcracker.project.study.vaadin.client.events.RefreshClientViewEvent;
 import com.netcracker.project.study.vaadin.client.events.SendClientMessage;
+import com.netcracker.project.study.vaadin.driver.components.popup.ResultPopUp;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
 import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
@@ -57,6 +58,9 @@ public class NewOrdersTab extends CustomComponent {
 
     @Autowired
     private EventBus.ApplicationEventBus appEventBus;
+
+    @Autowired
+    ResultPopUp resultPopUp;
 
     private Toastr toastr;
     private Toastr banToastr;
@@ -286,7 +290,6 @@ public class NewOrdersTab extends CustomComponent {
             panel.setContent(label);
         }
         return panel;
-
     }
 
     private Panel getFilledHighPanel(VerticalLayout verticalLayout) {
@@ -314,7 +317,6 @@ public class NewOrdersTab extends CustomComponent {
                 ((DriverPage)getUI()).refreshUI();
             }
         }
-
     }
 
     private void initFinishPerformingButton() {
@@ -354,8 +356,9 @@ public class NewOrdersTab extends CustomComponent {
                         ((DriverPage)getUI()).setStatusButtonEnabled(true);
                         appEventBus.publish(this, new RefreshClientViewEvent(this,currentOrder.getObjectId()));
                         currentOrder = null;
-
                         toastr.toast(ToastBuilder.info("Order has been successfully performed. Distance: " + distance + ". " + "Cost: " + cost).build());
+                        resultPopUp.init(cost, distance);
+                        UI.getCurrent().addWindow(resultPopUp);
                     }
                 } catch (NumberFormatException e) {
                     iconLabel.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);

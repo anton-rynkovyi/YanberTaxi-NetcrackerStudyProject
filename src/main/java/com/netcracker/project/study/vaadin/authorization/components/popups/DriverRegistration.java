@@ -78,7 +78,7 @@ public class DriverRegistration extends Window {
 
         VerticalLayout verticalLayout2 = new VerticalLayout();
         phone = new PhoneField("Phone number");
-        phone.setPlaceholder("(068)000-00-00");
+        phone.setPlaceholder("(000)000-00-00");
         password1 = new PasswordField("Password");
         password2 = new PasswordField("Confirm password");
         email = new TextField("Email");

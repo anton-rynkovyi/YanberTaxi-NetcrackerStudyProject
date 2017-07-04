@@ -37,7 +37,6 @@ public class DriverEvaluation extends Window {
     private BigInteger orderId;
     private TextArea driverMemo;
     private TextField orderCost;
-    private Toastr toastr;
 
     public void init(BigInteger orderId) {
         this.orderId = orderId;
