@@ -61,8 +61,8 @@ public class OrdersGrid extends CustomComponent {
         filtersLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
         initStatusChooser();
         filtersLayout.addComponent(statusSelect);
-        //initTextFieldFilter();
-//        filtersLayout.addComponent(fieldFilter);
+        initTextFieldFilter();
+        filtersLayout.addComponent(fieldFilter);
     }
 
     private void initOrderInfoWindow() {
@@ -89,12 +89,13 @@ public class OrdersGrid extends CustomComponent {
     private void initTextFieldFilter() {
         fieldFilter = new TextField();
         fieldFilter.addValueChangeListener(this::onNameFilterTextChange);
-        fieldFilter.setPlaceholder("Search");
+        fieldFilter.setPlaceholder("Search by date");
     }
 
     private void onNameFilterTextChange(HasValue.ValueChangeEvent<String> event) {
         ListDataProvider<Order> dataProvider = (ListDataProvider<Order>) ordersGrid.getDataProvider();
-        dataProvider.setFilter(Order::getDriverMemo, s -> caseInsensitiveContains(s, event.getValue()));
+        dataProvider.setFilter(order -> orderService.getLastDateFromOrdersLog(order).toString(),
+                s -> caseInsensitiveContains(s, event.getValue()));
     }
 
 
@@ -150,6 +151,9 @@ public class OrdersGrid extends CustomComponent {
         Grid<Order> ordersGrid = new Grid<>();
         ordersGrid.setHeightByRows(8.8);
         ordersGrid.addColumn(Order::getObjectId).setCaption("№").setId("№");
+        ordersGrid.addColumn(order -> orderService.getLastDateFromOrdersLog(order)).setCaption("Date");
+        ordersGrid.addColumn(Order -> Order.getName().substring(0, Order.getName().indexOf(" "))).setCaption("Start point");
+        ordersGrid.addColumn(Order -> Order.getName().substring((Order.getName().indexOf("- "))+1)).setCaption("Destination");
         ordersGrid.addColumn(Order -> Order.getDriverOnOrder() != null ? Order.getDriverOnOrder().getFirstName() + " " +
                 Order.getDriverOnOrder().getLastName() : "").setCaption("Driver");
         ordersGrid.addColumn(Order -> Order.getClientOnOrder() != null ? Order.getClientOnOrder().getFirstName() + " " +
