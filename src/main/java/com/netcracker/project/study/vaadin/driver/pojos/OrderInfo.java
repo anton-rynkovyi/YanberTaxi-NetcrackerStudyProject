@@ -19,6 +19,7 @@ public class OrderInfo {
     private String startPoint;
     private String destination;
     private String driverMemo;
+    private String description;
 
     public void setQueueN(int queueN) {
         this.queueN = queueN;
@@ -106,5 +107,13 @@ public class OrderInfo {
 
     public void setDriverMemo(String driverMemo) {
         this.driverMemo = driverMemo;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

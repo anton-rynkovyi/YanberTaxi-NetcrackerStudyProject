@@ -39,12 +39,13 @@ public class ClientServiceImpl implements ClientService {
         order.setClientId(clientId);
         order.setStatus(OrderStatus.NEW);
         order.setName(addresses[0] + " - " + addresses[4]);
+        order.setDescription(addresses[5] + " - " + addresses[6]);
 
         persistenceFacade.create(order);
         orderService.changeStatus(OrderStatus.NEW,order.getObjectId());
 
         int count = 1;
-        for (int i = 0; i < addresses.length; i++) {
+        for (int i = 0; i < addresses.length-2; i++) {
             if (addresses[i] != null) {
                 Route route = new Route(addresses[i]);
                 route.setOrderId(order.getObjectId());

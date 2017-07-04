@@ -82,6 +82,7 @@ public class OrderServiceImpl implements OrderService {
                 BigInteger status = order.getStatus();
                 orderInfo.setStatus((status == null)? OrderConstants.NULL_STATUS:getStatusValue(status));
                 orderInfo.setDriverMemo(order.getDriverMemo());
+                orderInfo.setDescription(order.getDescription());
 
                 List<Route> orderRoute = getRoutes(order.getObjectId());
                 if(!orderRoute.isEmpty()){

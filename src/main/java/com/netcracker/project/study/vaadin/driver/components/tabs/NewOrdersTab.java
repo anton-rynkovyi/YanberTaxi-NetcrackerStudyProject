@@ -497,6 +497,9 @@ public class NewOrdersTab extends CustomComponent {
         ordersGrid.addColumn(OrderInfo::getStartPoint).setCaption("Departure");
         ordersGrid.addColumn(OrderInfo::getDestination).setCaption("Destination");
         ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");
+        ordersGrid.addColumn(OrderInfo -> OrderInfo.getDescription().substring(0, OrderInfo.getDescription().indexOf(" -")) +" seats " +
+                (OrderInfo.getDescription().substring((OrderInfo.getDescription().indexOf("- "))+1).contains("true") ? "(child)" : ""))
+                .setCaption("Description");
 
         ordersGrid.addSelectionListener(selectionEvent -> {
             if (!ordersGrid.asSingleSelect().isEmpty()) {

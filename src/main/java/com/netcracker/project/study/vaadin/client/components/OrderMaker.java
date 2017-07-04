@@ -20,6 +20,7 @@ import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 @ViewScope
@@ -41,6 +42,12 @@ public class OrderMaker extends CustomComponent {
     private TextField[] fields = new TextField[5];
 
     private VerticalLayout fieldsLayout = new VerticalLayout();
+
+    private ComboBox<Integer> seatsCb;
+
+    private CheckBox childSeat;
+
+    private ArrayList<Integer> seats;
 
     private int countOfTextFields = 1;
 
@@ -105,6 +112,8 @@ public class OrderMaker extends CustomComponent {
                 for (int i = 0; i < fields.length; i++) {
                     if (fields[i] != null) fields[i].clear();
                 }
+                seatsCb.clear();
+                childSeat.clear();
                 for (int i = 1; i < 4; i++){
                     if (fields[i] != null) {
                         fieldsLayout.removeComponent(fields[i]);
@@ -131,6 +140,20 @@ public class OrderMaker extends CustomComponent {
         fields[4].setIcon(VaadinIcons.FLAG_CHECKERED);
 
         fieldsLayout.addComponents(fields[0], fields[4]);
+
+        seats = new ArrayList<>();
+        for (int i = 2; i < 17; i++){
+            seats.add(i);
+        }
+        seatsCb = new ComboBox<>();
+        seatsCb.setItems(seats);
+        seatsCb.setCaption("Number of seats");
+        seatsCb.setIcon(VaadinIcons.USERS);
+        fieldsLayout.addComponents(seatsCb);
+
+        childSeat = new CheckBox("Child seat", false);
+        childSeat.setIcon(VaadinIcons.CHILD);
+        fieldsLayout.addComponents(childSeat);
 
         Button btnAddTextField = new Button("Add address", VaadinIcons.PLUS);
         btnAddTextField.setWidth(170, Unit.PIXELS);
@@ -212,16 +235,18 @@ public class OrderMaker extends CustomComponent {
 
         @Override
         public void buttonClick(Button.ClickEvent clickEvent) {
-            String[] textFieldsStrings = new String[5];
+            String[] textFieldsStrings = new String[7];
             for (int i = 0; i < fields.length; i++) {
                 if (fields[i] != null) textFieldsStrings[i] = fields[i].getValue();
             }
-            if (!(isFieldsEmpty(textFieldsStrings))) {
+            if (!seatsCb.isEmpty() && !(isFieldsEmpty(textFieldsStrings))) {
                 if (orderService.getActiveOrdersByClientId(client.getObjectId()).size() > 0
                         || orderService.getPerformingOrdersByClientId(client.getObjectId()).size() > 0 ) {
                     makeAndPushToast(ToastType.Warning, ToastPosition.Top_Right,"<b>You have an active order." + ""
                            + " You can't simultaneously create multiple orders</b> ");
                 } else {
+                    textFieldsStrings[5] = seatsCb.getValue().toString();
+                    textFieldsStrings[6] = childSeat.getValue().toString();
                     clientService.makeOrder(client.getObjectId(), textFieldsStrings);
                     makeAndPushToast(ToastType.Success, ToastPosition.Top_Right,"<b>Your order was created successfully</b> ");
 
