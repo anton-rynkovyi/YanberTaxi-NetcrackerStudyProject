@@ -23,6 +23,7 @@ import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewFor
 import com.netcracker.project.study.vaadin.driver.page.DriverPage;
 import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -356,7 +357,6 @@ public class NewOrdersTab extends CustomComponent {
                         ((DriverPage)getUI()).setStatusButtonEnabled(true);
                         appEventBus.publish(this, new RefreshClientViewEvent(this,currentOrder.getObjectId()));
                         currentOrder = null;
-                        toastr.toast(ToastBuilder.info("Order has been successfully performed. Distance: " + distance + ". " + "Cost: " + cost).build());
                         BigDecimal bdDistance = new BigDecimal(distance).setScale(2, BigDecimal.ROUND_HALF_UP);
                         resultPopUp.init(cost, bdDistance);
                         UI.getCurrent().addWindow(resultPopUp);
@@ -497,13 +497,15 @@ public class NewOrdersTab extends CustomComponent {
 
         ordersGrid.setItems(ordersInfo);
 
-        ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("№");
+        ordersGrid.addColumn(OrderInfo::getObjectId).setCaption("№").setId("№");
         ordersGrid.addColumn(OrderInfo::getStartPoint).setCaption("Departure");
         ordersGrid.addColumn(OrderInfo::getDestination).setCaption("Destination");
         ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");
         ordersGrid.addColumn(OrderInfo -> OrderInfo.getDescription().substring(0, OrderInfo.getDescription().indexOf(" -")) +" seats " +
                 (OrderInfo.getDescription().substring((OrderInfo.getDescription().indexOf("- "))+1).contains("true") ? "(child)" : ""))
                 .setCaption("Description");
+
+        ordersGrid.sort("№", SortDirection.DESCENDING);
 
         ordersGrid.addSelectionListener(selectionEvent -> {
             if (!ordersGrid.asSingleSelect().isEmpty()) {

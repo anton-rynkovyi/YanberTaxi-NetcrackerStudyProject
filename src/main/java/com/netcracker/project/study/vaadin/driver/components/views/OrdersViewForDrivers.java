@@ -12,6 +12,7 @@ import com.netcracker.project.study.vaadin.driver.pojos.OrderInfo;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
@@ -134,13 +135,17 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
 
             ordersGrid.setItems(ordersInfo);
 
-            ordersGrid.addColumn(OrderInfo::getQueueN).setCaption("№");
+            ordersGrid.addColumn(OrderInfo::getObjectId).setCaption("№").setId("№");
+            ordersGrid.addColumn(orderInfo -> orderService.getLastDateFromOrdersLog(orderService.getOrder(orderInfo.getObjectId()))).setCaption("Date");
             ordersGrid.addColumn(OrderInfo::getClientName).setCaption("Client");
             ordersGrid.addColumn(OrderInfo::getStatus).setCaption("Status");
             ordersGrid.addColumn(OrderInfo::getStartPoint).setCaption("Departure");
             ordersGrid.addColumn(OrderInfo::getDestination).setCaption("Destination");
             ordersGrid.addColumn(OrderInfo::getCost).setCaption("Cost");
             ordersGrid.addColumn(OrderInfo::getDistance).setCaption("Distance");
+
+            ordersGrid.sort("№", SortDirection.DESCENDING);
+
             allOrdersGrid = ordersGrid;
 
             HorizontalLayout viewOrderButtonLayout = initViewOrderButton();
