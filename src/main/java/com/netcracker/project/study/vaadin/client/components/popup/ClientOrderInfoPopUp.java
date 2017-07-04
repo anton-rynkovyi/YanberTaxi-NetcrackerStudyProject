@@ -2,11 +2,13 @@ package com.netcracker.project.study.vaadin.client.components.popup;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.driver.Driver;
+import com.netcracker.project.study.model.driver.car.Car;
 import com.netcracker.project.study.model.order.Order;
 import com.netcracker.project.study.model.order.OrderStatusEnum;
 import com.netcracker.project.study.model.order.OrderStatusList;
 import com.netcracker.project.study.model.order.route.Route;
 import com.netcracker.project.study.services.ClientService;
+import com.netcracker.project.study.services.DriverService;
 import com.netcracker.project.study.services.OrderService;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
@@ -34,6 +36,9 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
 
     @Autowired
     ClientService clientService;
+
+    @Autowired
+    DriverService driverService;
 
     private Order order;
 
@@ -72,12 +77,13 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
 
         HorizontalLayout orderNumberInfo = getOrderNumberInfoLayout(order);
         HorizontalLayout driverNameInfo = getDriverNameInfoLayout(order);
+        HorizontalLayout carInfo = getCarInfoLayout(order);
         HorizontalLayout statusInfo = getOrderStatusInfoLayout(order);
         HorizontalLayout orderCostInfo = getOrderCostInfoLayout(order);
         HorizontalLayout distanceInfo = getDistanceInfoLayout(order);
         HorizontalLayout[] driverRatingInfo = getDriverRatingLayoutWithPermission(order);
 
-        orderForm.addComponents(orderNumberInfo, driverNameInfo, statusInfo, orderCostInfo, distanceInfo);
+        orderForm.addComponents(orderNumberInfo, carInfo, driverNameInfo, statusInfo, orderCostInfo, distanceInfo);
         for (int i = 0; i < driverRatingInfo.length; i++){
             orderForm.addComponent(driverRatingInfo[i]);
         }
@@ -165,6 +171,23 @@ public class ClientOrderInfoPopUp extends VerticalLayout {
         driverNameInfo.addComponents(driverNameIcon, driverName);
 
         return driverNameInfo;
+    }
+
+    private HorizontalLayout getCarInfoLayout(Order order){
+        HorizontalLayout carInfoLayout = new HorizontalLayout();
+        Label carInfo;
+        Label carIcon = new Label();
+        carIcon.setIcon(VaadinIcons.CAR);
+        if (order.getDriverOnOrder() != null) {
+            Car car = driverService.getCarByDriver(order.getDriverOnOrder()).get(0);
+            carInfo = new Label("Car: <i>" + car.getMakeOfCar() + " " + car.getModelType() + "</i>, state number: <i>"
+                    + car.getStateNumber() + "</i>", ContentMode.HTML);
+        } else {
+            carInfo = new Label("Car: " + "<i>N/A</i>", ContentMode.HTML);
+        }
+        carInfoLayout.addComponents(carIcon, carInfo);
+
+        return carInfoLayout;
     }
 
     private HorizontalLayout getOrderStatusInfoLayout(Order order){

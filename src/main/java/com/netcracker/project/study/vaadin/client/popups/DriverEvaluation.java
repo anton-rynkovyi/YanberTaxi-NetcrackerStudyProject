@@ -35,7 +35,7 @@ public class DriverEvaluation extends Window {
     ClientOrdersGrid clientOrdersGrid;
 
     private BigInteger orderId;
-    private TextField driverMemo;
+    private TextArea driverMemo;
     private TextField orderCost;
     private Toastr toastr;
 
@@ -67,7 +67,8 @@ public class DriverEvaluation extends Window {
        single.addValueChangeListener(new RadioButtonListener());
         single.setItems(1,2,3,4,5);
         single.setIcon(VaadinIcons.STAR);
-        driverMemo = new TextField("Leave your review about the driver");
+        driverMemo = new TextArea("Leave your review about the driver");
+        driverMemo.setWidth(320, Unit.PIXELS);
         orderCost = new TextField("The cost of you trip is");
         orderCost.setValue(order.getCost().toString());
         orderCost.setReadOnly(true);

@@ -243,9 +243,8 @@ public class ClientView extends VerticalLayout implements View {
                         .options(ToastOptionsBuilder.having()
                                 .closeButton(true)
                                 .debug(false)
-                                .progressBar(true)
                                 .preventDuplicates(true)
-                                .position(ToastPosition.Top_Full_Width)
+                                .position(ToastPosition.Top_Right)
                                 .timeOut(10000)
                                 .build())
                         .build();
