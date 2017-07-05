@@ -80,6 +80,7 @@ public class DriverPage extends UI {
     private Button changeStatusButton;
 
     private Toastr banToastr;
+    private Toastr toastr;
 
     @Autowired
     private UserFacade userFacade;
@@ -103,6 +104,7 @@ public class DriverPage extends UI {
         rootLayout.setMargin(false);
         rootLayout.setSpacing(false);
         rootLayout.setHeight(100, Unit.PERCENTAGE);
+        toastr = new Toastr();
         banToastr = new Toastr();
         banToastr.registerToastrListener(new ToastrListenerAdapter(){
             @Override
@@ -161,6 +163,7 @@ public class DriverPage extends UI {
         viewDisplay = new Panel();
         viewDisplay.setSizeFull();
 
+        rootLayout.addComponent(toastr);
         rootLayout.addComponent(viewDisplay);
         rootLayout.addComponent(bottomTeamLogo);
         rootLayout.setExpandRatio(viewDisplay, 0.8f);
@@ -238,6 +241,7 @@ public class DriverPage extends UI {
     }
 
     private void logout() {
+        driverService.changeStatus(DriverStatusList.OFF_DUTY,driver);
         SecurityContextHolder.clearContext();
         getUI().getSession().close();
         getUI().getPage().setLocation("/authorization");
@@ -374,6 +378,11 @@ public class DriverPage extends UI {
         logOutButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
         logOutButton.addStyleName(ValoTheme.BUTTON_SMALL);
         logOutButton.addClickListener(clickEvent -> {
+            if (DriverStatusList.ON_CALL.equals(driver.getStatus()) || DriverStatusList.PERFORMING_ORDER.equals(driver.getStatus())) {
+                toastr.toast(ToastBuilder.warning("You must complete the order").build());
+                return;
+            }
+            driverService.changeStatus(DriverStatusList.OFF_DUTY,driver);
             SecurityContextHolder.clearContext();
             getUI().getSession().close();
             getUI().getPage().setLocation("/authorization");

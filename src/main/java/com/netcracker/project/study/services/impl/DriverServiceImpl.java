@@ -134,6 +134,7 @@ public class DriverServiceImpl implements DriverService {
         Driver driver = persistenceFacade.getOne(driverId,Driver.class);
         driver.setStatus(status);
         persistenceFacade.update(driver);
+        driverStatusLog(driver);
     }
 
     public boolean isBanned(BigInteger driverId){

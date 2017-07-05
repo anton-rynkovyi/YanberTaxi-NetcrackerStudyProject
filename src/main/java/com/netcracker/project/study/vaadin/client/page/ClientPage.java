@@ -2,6 +2,11 @@ package com.netcracker.project.study.vaadin.client.page;
 
 import com.github.appreciated.material.MaterialTheme;
 import com.netcracker.project.study.model.client.Client;
+import com.netcracker.project.study.model.driver.DriverStatusList;
+import com.netcracker.project.study.model.order.Order;
+import com.netcracker.project.study.model.order.OrderStatusList;
+import com.netcracker.project.study.services.ClientService;
+import com.netcracker.project.study.services.OrderService;
 import com.netcracker.project.study.services.impl.UserDetailsServiceImpl;
 import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.client.components.grids.ClientCurrentOrderGrid;
@@ -25,9 +30,12 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.vaadin.addons.Toastr;
+import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.spring.events.EventBus;
 
 import java.math.BigInteger;
+import java.util.List;
 
 @Theme("valo")
 @SpringUI(path = "/client")
@@ -46,6 +54,9 @@ public class ClientPage extends UI {
     @Autowired
     Copyright bottomTeamLogo;
 
+    @Autowired
+    OrderService orderService;
+
     private Client client;
 
     private Panel viewDisplay;
@@ -60,11 +71,12 @@ public class ClientPage extends UI {
 
 
     public static Navigator navigator;
+    private Toastr toastr;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         client = userDetailsService.getCurrentUser();
-
+        toastr = new Toastr();
         VerticalLayout rootLayout = getVerticalLayout();
         rootLayout.setMargin(false);
         rootLayout.setSpacing(false);
@@ -97,6 +109,7 @@ public class ClientPage extends UI {
         Button logOutButton = getLogOutButton();
         panelCaption.addComponent(logOutButton);
 
+        rootLayout.addComponent(toastr);
         rootLayout.addComponent(panelCaption);
 
         viewDisplay = getViewDisplay();
@@ -163,6 +176,13 @@ public class ClientPage extends UI {
         logOutButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
         logOutButton.addStyleName(ValoTheme.BUTTON_SMALL);
         logOutButton.addClickListener(clickEvent -> {
+            List<Order> orders = orderService.getActiveOrdersByClientId(client.getObjectId());
+            for (Order order : orders) {
+                if (OrderStatusList.ACCEPTED.equals(order.getStatus()) || OrderStatusList.PERFORMING.equals(order.getStatus())) {
+                    toastr.toast(ToastBuilder.warning("Your order must be completed").build());
+                    return;
+                }
+            };
             SecurityContextHolder.clearContext();
             getUI().getSession().close();
             getUI().getPage().setLocation("/authorization");
