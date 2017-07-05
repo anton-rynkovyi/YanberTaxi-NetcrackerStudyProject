@@ -90,17 +90,11 @@ public class OrdersViewForDrivers extends VerticalLayout implements View {
         orderInfoWindow.center();
         orderInfoWindow.setModal(true);
         orderInfoWindow.setResizable(false);
-        orderInfoWindow.setHeight("95%");
-
-        VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.addComponent(orderInfoPopUp);
 
         orderInfoPopUp.okButton.addClickListener(event->{
             orderInfoWindow.close();
         });
-
-        verticalLayout.setMargin(false);
-        orderInfoWindow.setContent(verticalLayout);
+        orderInfoWindow.setContent(orderInfoPopUp);
 
     }
 
