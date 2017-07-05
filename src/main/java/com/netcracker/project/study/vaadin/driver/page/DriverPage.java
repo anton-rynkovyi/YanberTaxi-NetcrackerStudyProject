@@ -16,15 +16,12 @@ import com.netcracker.project.study.vaadin.admin.components.logo.Copyright;
 import com.netcracker.project.study.vaadin.driver.components.popup.CarUpdate;
 import com.netcracker.project.study.vaadin.driver.components.popup.DriverUpdate;
 import com.netcracker.project.study.vaadin.driver.components.views.OrdersViewForDrivers;
-import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.event.UIEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringUI;
@@ -38,7 +35,6 @@ import org.vaadin.addons.builder.ToastBuilder;
 import org.vaadin.addons.builder.ToastOptionsBuilder;
 
 
-import java.net.URI;
 import java.sql.Timestamp;
 import java.util.List;
 
