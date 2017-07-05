@@ -217,16 +217,59 @@ public class NewOrdersTab extends CustomComponent {
                     OrderInfo orderInfo = ordersGrid.asSingleSelect().getValue();
 
                     Window window = new Window(" Full route");
-                    window.setModal(true);
                     window.center();
                     window.setResizable(false);
-                    window.setContent(routeInfoLayout(orderInfo.getObjectId()));
-
+//                    window.setContent(routeInfoLayout(orderInfo.getObjectId()));
+                    VerticalLayout mainContent = getLayoutWithRoutes(getRoutes(orderInfo.getObjectId()));
+                    Button button = getOkButton();
+                    mainContent.addComponent(button);
+                    mainContent.setComponentAlignment(button, Alignment.BOTTOM_CENTER);
+                    window.setContent(mainContent);
+//                    window.setContent(getLayoutWithRoutes(getRoutes(orderInfo.getObjectId())));
                     UI.getCurrent().addWindow(window);
                 }
             }
 
         });
+    }
+
+    private Button getOkButton(){
+        Button button = new Button("Ok");
+        button.addClickListener(event -> {
+            for (Window window :UI.getCurrent().getWindows()){
+                window.close();
+            }
+        });
+        return button;
+    }
+
+    private Label[] getRoutes(BigInteger orderId){
+        List<Route> routes = orderService.getRoutes(orderId);
+        Label[] routesLables = new Label[routes.size()];
+
+        for(int i = 0; i < routes.size(); i++){
+            String value = "<b>Address " + (i+1) + ": </b>";
+            if (i == 0) value = "<b>Starting Point (Address 1): </b>";
+            if (i == routes.size() - 1) value = "<b>Destination (Address " + routes.size() + "): </b>";
+            Label label = new Label(value + routes.get(i).getCheckPoint(), ContentMode.HTML);
+            label.setIcon(VaadinIcons.MAP_MARKER);
+            if (i == 0) label.setIcon(VaadinIcons.HOME_O);
+            if (i == routes.size() - 1) label.setIcon(VaadinIcons.FLAG_CHECKERED);
+            routesLables[i] = label;
+        }
+
+        return routesLables;
+    }
+
+    private VerticalLayout getLayoutWithRoutes(Label[] routes, Label...labels) {
+        VerticalLayout layoutWithRoutes = new VerticalLayout();
+        for (Label label : labels) {
+            layoutWithRoutes.addComponent(label);
+        }
+        for (Label route : routes) {
+            layoutWithRoutes.addComponent(route);
+        }
+        return layoutWithRoutes;
     }
 
     private VerticalLayout routeInfoLayout(BigInteger orderId) {

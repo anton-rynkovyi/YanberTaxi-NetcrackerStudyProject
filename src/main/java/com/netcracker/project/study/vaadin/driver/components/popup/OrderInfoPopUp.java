@@ -72,9 +72,9 @@ public class OrderInfoPopUp extends VerticalLayout {
             Label distance = new Label("<b>Distance: </b>" + orderInfo.getDistance(), ContentMode.HTML);
             distanceLayout.addComponents(iconDistance, distance);
 
-            HorizontalLayout ratingLayout = new HorizontalLayout();
-            Label iconRating = new Label();
-            iconRating.setIcon(VaadinIcons.STAR);
+//            HorizontalLayout ratingLayout = new HorizontalLayout();
+//            Label iconRating = new Label();
+//            iconRating.setIcon(VaadinIcons.STAR);
 
             BigInteger rating = orderInfo.getRating();
             if(rating == null){
@@ -85,7 +85,8 @@ public class OrderInfoPopUp extends VerticalLayout {
             //ratingLayout.addComponents(iconRating,ratingLabel);
 
 
-            orderLayout.addComponents(header, clientIdLayout, statusIdLayout, costLayout, distanceLayout,ratingLayout);
+//            orderLayout.addComponents(header, clientIdLayout, statusIdLayout, costLayout, distanceLayout,ratingLayout);
+            orderLayout.addComponents(header, clientIdLayout, statusIdLayout, costLayout, distanceLayout);
             generalInfoPanel.setContent(orderLayout);
             generalInfoPanel.setIcon(VaadinIcons.CLIPBOARD_TEXT);
 
@@ -139,7 +140,7 @@ public class OrderInfoPopUp extends VerticalLayout {
 
             okButton = new Button("OK");
             rootLayout.addComponent(okButton);
-            rootLayout.setComponentAlignment(okButton,Alignment.MIDDLE_RIGHT);
+            rootLayout.setComponentAlignment(okButton,Alignment.BOTTOM_CENTER);
         }
     }
 
