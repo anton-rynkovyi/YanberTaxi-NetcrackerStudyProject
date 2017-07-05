@@ -100,15 +100,13 @@ public class ClientPage extends UI {
 
         Button logOutButton = getLogOutButton();
         panelCaption.addComponent(logOutButton);
-
-        rootLayout.addComponent(toastr);
         rootLayout.addComponent(panelCaption);
 
         viewDisplay = getViewDisplay();
         rootLayout.addComponent(viewDisplay);
         rootLayout.addComponent(bottomTeamLogo);
         rootLayout.setExpandRatio(viewDisplay, 0.8f);
-
+        rootLayout.addComponent(toastr);
         navigator = new Navigator(this, viewDisplay);
         navigator.addProvider(provider);
         navigator.navigateTo(ClientView.VIEW_NAME);
@@ -170,6 +168,10 @@ public class ClientPage extends UI {
         logOutButton.addClickListener(clickEvent -> {
             List<Order> orders = orderService.getActiveOrdersByClientId(client.getObjectId());
             for (Order order : orders) {
+                if (OrderStatusList.NEW.equals(order.getStatus())) {
+                    toastr.toast(ToastBuilder.warning("At first you must cancel the order").build());
+                    return;
+                }
                 if (OrderStatusList.ACCEPTED.equals(order.getStatus()) || OrderStatusList.PERFORMING.equals(order.getStatus())) {
                     toastr.toast(ToastBuilder.warning("Your order must be completed").build());
                     return;

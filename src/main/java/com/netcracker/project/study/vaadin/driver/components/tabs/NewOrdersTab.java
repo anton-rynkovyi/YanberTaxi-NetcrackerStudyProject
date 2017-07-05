@@ -414,6 +414,7 @@ public class NewOrdersTab extends CustomComponent {
                     }else{
                         orderService.changeStatus(OrderStatus.PERFORMING, currentOrder.getObjectId());
                         driverService.changeStatus(DriverStatusList.PERFORMING_ORDER, driver.getObjectId());
+                        window.setResizable(false);
                         window.close();
                         refreshContent();
                         ((DriverPage)getUI()).setStatusButtonEnabled(false);

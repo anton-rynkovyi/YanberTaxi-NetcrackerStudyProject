@@ -159,11 +159,11 @@ public class DriverPage extends UI {
         viewDisplay = new Panel();
         viewDisplay.setSizeFull();
 
-        rootLayout.addComponent(toastr);
+
         rootLayout.addComponent(viewDisplay);
         rootLayout.addComponent(bottomTeamLogo);
         rootLayout.setExpandRatio(viewDisplay, 0.8f);
-
+        rootLayout.addComponent(toastr);
         navigator = new Navigator(this, viewDisplay);
         navigator.addProvider(provider);
         navigator.navigateTo(OrdersViewForDrivers.VIEW_NAME);

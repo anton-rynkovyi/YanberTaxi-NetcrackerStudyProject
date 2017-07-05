@@ -31,12 +31,13 @@ public class OrderInfoPopUp extends VerticalLayout {
         removeAllComponents();
         initRootLayout();
         initOrderInfoLayout();
+        setHeightUndefined();
         addComponent(rootLayout);
     }
 
     private void initRootLayout(){
         rootLayout = new VerticalLayout();
-        rootLayout.setSizeFull();
+        rootLayout.setHeightUndefined();
     }
 
     private void initOrderInfoLayout() {
@@ -80,8 +81,8 @@ public class OrderInfoPopUp extends VerticalLayout {
                 rating = BigInteger.valueOf(0);
             }
 
-            Label ratingLabel = new Label("<b>Rating: </b>" + rating.toString(), ContentMode.HTML);
-            ratingLayout.addComponents(iconRating,ratingLabel);
+            //Label ratingLabel = new Label("<b>Rating: </b>" + rating.toString(), ContentMode.HTML);
+            //ratingLayout.addComponents(iconRating,ratingLabel);
 
 
             orderLayout.addComponents(header, clientIdLayout, statusIdLayout, costLayout, distanceLayout,ratingLayout);
@@ -115,26 +116,26 @@ public class OrderInfoPopUp extends VerticalLayout {
             horizontalLayout.addComponent(generalInfoPanel);
             horizontalLayout.addComponent(routeInfoPanel);
 
-            TextArea commentLayout = new TextArea();
-            String driverMemo = orderInfo.getDriverMemo();
+            //TextArea commentLayout = new TextArea();
+            //String driverMemo = orderInfo.getDriverMemo();
 
-            Panel commentPanel = new Panel("Comment");
-            commentPanel.setIcon(VaadinIcons.COMMENT_ELLIPSIS_O);
+            //Panel commentPanel = new Panel("Comment");
+            //commentPanel.setIcon(VaadinIcons.COMMENT_ELLIPSIS_O);
 
-            commentPanel.setContent(commentLayout);
-            commentLayout.setSizeFull();
-            commentPanel.setSizeFull();
+            //commentPanel.setContent(commentLayout);
+            //commentLayout.setSizeFull();
+            //commentPanel.setSizeFull();
 
-            if(driverMemo == null){
+            /*if(driverMemo == null){
                 commentLayout.setValue("Client has not left comment yet.");
             }else{
                 commentLayout.setValue(driverMemo);
-            }
+            }*/
 
-            commentLayout.setEnabled(false);
+            //commentLayout.setEnabled(false);
 
             rootLayout.addComponent(horizontalLayout);
-            rootLayout.addComponent(commentPanel);
+            //rootLayout.addComponent(commentPanel);
 
             okButton = new Button("OK");
             rootLayout.addComponent(okButton);
