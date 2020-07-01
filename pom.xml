@@ -27,7 +27,7 @@
 		<tomcat.jdbc.version>7.0.35</tomcat.jdbc.version>
 		<log4j.version>1.2.17</log4j.version>
 		<vaadin.spring.version>2.0.0</vaadin.spring.version>
-		<quartz.scheduling.version>2.2.1</quartz.scheduling.version>
+		<quartz.scheduling.version>2.3.2</quartz.scheduling.version>
 	</properties>
 
 	<repositories>
